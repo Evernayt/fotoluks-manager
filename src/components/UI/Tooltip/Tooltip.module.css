@@ -1,0 +1,8 @@
+.tooltip {
+  background: var(--tooltip-color);
+  color: var(--tooltip-text-color);
+  pointer-events: none;
+  border-radius: var(--border-radius);
+  padding: 8px 12px;
+  box-shadow: 0 4px 8px 0 var(--shadow-2);
+}

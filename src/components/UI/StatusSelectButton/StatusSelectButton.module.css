@@ -1,0 +1,68 @@
+.container {
+  display: inline-block;
+  position: relative;
+  font-weight: 500;
+}
+
+.status_select_btn {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  width: max-content;
+  border: 1px solid #eeede8;
+  padding: 0 12px;
+  border-radius: 19px;
+  cursor: pointer;
+}
+
+.status_select_btn:hover {
+  border-color: var(--hover-secondary-color);
+}
+
+.input {
+  display: none;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  border-radius: var(--border-radius);
+  padding: 8px;
+  margin-top: 4px;
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+  background-color: var(--card-background);
+  list-style-type: none;
+  z-index: 99;
+}
+
+.menu li {
+  display: flex;
+  align-items: center;
+}
+
+.item {
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  width: 100%;
+  cursor: default;
+}
+
+.container
+  input:not(:checked)
+  + .item:hover {
+  background-color: var(--hover-card-color);
+  cursor: pointer;
+}
+
+.container input:checked + .item {
+  background-color: var(--primary-deemphasized-color);
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  margin-right: 6px;
+}

@@ -1,0 +1,74 @@
+.container {
+  display: inline-block;
+  position: relative;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.select_btn {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  background-color: var(--secondary-color);
+  padding: 0 12px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.disabled {
+  background-color: var(--disabled-background);
+  color: var(--disabled-text);
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--border-radius);
+  cursor: no-drop;
+}
+
+.select_btn:hover {
+  background-color: var(--hover-secondary-color);
+}
+
+.input {
+  display: none;
+}
+
+.menu {
+  position: absolute;
+  border-radius: var(--border-radius);
+  padding: 8px;
+  margin-top: 12px;
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+  background-color: var(--card-background);
+  list-style-type: none;
+  z-index: 9999;
+}
+
+.menu li {
+  display: flex;
+  align-items: center;
+}
+
+.item {
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  width: 100%;
+  cursor: default;
+}
+
+.container .input:not(:checked) + .item:hover {
+  background-color: var(--hover-card-color);
+  cursor: pointer;
+}
+
+.container .input:checked + .item {
+  background-color: var(--primary-deemphasized-color);
+}
+
+.select_btn:active,
+.item:active {
+  transform: scale(0.98);
+}

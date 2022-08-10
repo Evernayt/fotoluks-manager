@@ -1,0 +1,50 @@
+.default,
+.link {
+  min-height: 36px;
+  min-width: max-content;
+  color: var(--primary-text-color);
+  padding: 0 12px;
+  font-weight: 500;
+  border: 0;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  max-height: 24px;
+  max-width: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.default {
+  background-color: var(--secondary-color);
+}
+
+.default:hover {
+  background-color: var(--hover-secondary-color);
+}
+
+.link {
+  background-color: var(--card-background);
+}
+
+.link:hover {
+  background-color: var(--hover-card-color);
+}
+
+.default:active,
+.link:active {
+  transform: scale(0.98);
+}
+
+.default:disabled,
+.link:disabled {
+  background-color: var(--disabled-background);
+  color: var(--disabled-text);
+  cursor: no-drop;
+}

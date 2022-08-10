@@ -1,0 +1,36 @@
+.container {
+  position: absolute;
+  z-index: 999;
+  height: 100%;
+  width: 100%;
+  background-color: var(--overlay-alpha-80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form_container {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-1);
+  box-shadow: 0 12px 28px var(--shadow-2);
+  margin: 24px;
+}
+
+.form_header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.form_header_title {
+  flex: 1;
+  text-align: center;
+  margin-left: 36px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.form {
+  padding: 16px;
+}

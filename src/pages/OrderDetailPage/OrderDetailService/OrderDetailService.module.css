@@ -1,0 +1,33 @@
+.card {
+  background-color: var(--card-background);
+  padding: 16px;
+  max-height: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 2px var(--shadow-2);
+  display: flex;
+  cursor: default;
+}
+
+.img {
+  height: 90px;
+  width: 90px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin-right: 12px;
+  margin-bottom: 4px;
+  pointer-events: none;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+.text {
+  margin-bottom: 4px;
+}
+
+.controls {
+  margin-left: auto;
+}

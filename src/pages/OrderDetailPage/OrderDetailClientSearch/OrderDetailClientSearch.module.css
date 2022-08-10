@@ -1,0 +1,51 @@
+.result {
+  background-color: var(--card-background);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--border-radius);
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.result:hover {
+  background-color: var(--hover-card-color);
+}
+
+.user_avatar {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.user_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.user_name {
+  margin-bottom: 2px;
+}
+
+.user_phone {
+  font-size: 12px;
+}
+
+.create_icon {
+  min-height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.create_btn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

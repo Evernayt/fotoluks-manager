@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  /* COLORS */
+  --primary-color: #ffd60a;
+  --primary-deemphasized-color: #ffea83;
+  --secondary-color: #ebeae4;
+  --primary-text-color: #050505;
+  --secondary-text-color: #6b6a65;
+  --secondary-text-on-bg-color: #706d60;
+  --background-color: #f5f4f0;
+  --separator-color: #d4d3ce;
+  --border-color: #e2e1dd;
+  --tooltip-color: #3c3c3c;
+  --tooltip-text-color: #ffffff;
+  --card-background: #ffffff;
+  --danger-color: #eb5c5c;
+
+  /* COLORS: HOVER */
+  --hover-primary-color: #f5cd0a;
+  --hover-primary-deemphasized-color: #f2dc7c;
+  --hover-secondary-color: #dfded8;
+  --hover-background-color: #e9e8e4;
+  --hover-card-color: #f2f2f2;
+
+  /* COLORS: DISABLED */
+  --disabled-background: #ebeae4;
+  --disabled-text: #c4c3bc;
+
+  /* SIZES */
+  --border-radius: 8px;
+
+  /* SHADOWS */
+  --shadow-1: rgba(0, 0, 0, 0.1);
+  --shadow-2: rgba(0, 0, 0, 0.2);
+  --shadow-5: rgba(0, 0, 0, 0.5);
+  --shadow-8: rgba(0, 0, 0, 0.8);
+
+  /* OVERLAY */
+  --overlay-alpha-80: rgba(244, 244, 244, 0.8);
+}
+
+* {
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+input,
+button,
+a {
+  outline: 0;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.separator {
+  border: 0;
+  border-top: 1px solid var(--separator-color);
+  margin: 12px 0;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  font-weight: 500;
+}
+
+.pagination-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 16px;
+  height: 33px;
+  padding: 0 8px;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.pagination-active {
+  border-radius: var(--border-radius);
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
+  cursor: default;
+}
+
+.pagination-previous-next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 16px;
+  min-height: 33px;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.pagination-disabled {
+  color: var(--secondary-text-on-bg-color);
+  cursor: default;
+}
+
+.pagination-break {
+  padding: 8px;
+  cursor: pointer;
+}

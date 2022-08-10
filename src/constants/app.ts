@@ -1,0 +1,6 @@
+const ADD_MODE = 'ADD_MODE';
+const EDIT_MODE = 'EDIT_MODE';
+const INPUT_FORMAT = 'YYYY-MM-DDTHH:mm';
+const DEF_FORMAT = 'DD.MM.YYYY HH:mm';
+
+export { ADD_MODE, EDIT_MODE, INPUT_FORMAT, DEF_FORMAT };
