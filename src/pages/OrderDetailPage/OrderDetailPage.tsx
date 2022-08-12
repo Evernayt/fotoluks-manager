@@ -19,6 +19,7 @@ import UserRegistrationModal from './Modals/UserRegistrationModal/UserRegistrati
 import EditUserModal from 'components/UserCard/EditUserModal/EditUserModal';
 import styles from './OrderDetailPage.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
+import OrderDetailMembersModal from './Modals/OrderDetailMembersModal/OrderDetailMembersModal';
 
 type LocationState = {
   state: {
@@ -57,6 +58,12 @@ const OrderDetailPage = () => {
   const order = useAppSelector((state) => state.order.order);
   const user = useAppSelector((state) => state.user.user);
   const activeShop = useAppSelector((state) => state.app.activeShop);
+  const orderMembersForCreate = useAppSelector(
+    (state) => state.order.orderMembersForCreate
+  );
+  const orderMembersForDelete = useAppSelector(
+    (state) => state.order.orderMembersForDelete
+  );
 
   const dispatch = useAppDispatch();
 
@@ -106,7 +113,9 @@ const OrderDetailPage = () => {
       order,
       sum,
       user.id,
-      activeShop.id
+      activeShop.id,
+      orderMembersForCreate,
+      orderMembersForDelete
     );
 
     saveOrderAPI(body).then((data) => {
@@ -150,6 +159,7 @@ const OrderDetailPage = () => {
       )}
       <UserRegistrationModal />
       <EditUserModal />
+      <OrderDetailMembersModal />
       <OrderDetailNavmenu unsavedDataModal={unsavedDataModal} />
       <div className={styles.section}>
         <OrderDetailSidemenu

@@ -21,6 +21,7 @@ type ModalState = {
   userRegistrationModal: IUserRegistrationModal;
   editUserModal: IUserModal;
   controlPanelEditUserModal: IUserModal;
+  orderMembersModal: IModal;
 };
 
 const initialState: ModalState = {
@@ -32,6 +33,7 @@ const initialState: ModalState = {
   userRegistrationModal: initialUserRegistrationModal,
   editUserModal: initialUserModal,
   controlPanelEditUserModal: initialUserModal,
+  orderMembersModal: initialModal
 };
 
 export const modalSlice = createSlice({
@@ -91,6 +93,12 @@ export const modalSlice = createSlice({
     closeControlPanelEditUserModal(state) {
       state.controlPanelEditUserModal = initialUserModal;
     },
+    openOrderMembersModal(state) {
+      state.orderMembersModal.isShowing = true;
+    },
+    closeOrderMembersModal(state) {
+      state.orderMembersModal.isShowing = false;
+    },
   },
 });
 
@@ -111,6 +119,8 @@ export const {
   closeEditUserModal,
   openControlPanelEditUserModal,
   closeControlPanelEditUserModal,
+  openOrderMembersModal,
+  closeOrderMembersModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
