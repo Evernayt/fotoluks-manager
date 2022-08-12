@@ -28,7 +28,7 @@ import editIcon from './edit-icon.svg';
 import dotsMenuIcon from './dots-menu-icon.svg';
 import close2Icon from './close-2-icon.svg';
 import createIcon from './create-icon.svg';
-import settingsIcon from './settings.svg';
+import settingsIcon from './settings-icon.svg';
 import controlPanelIcon from './control-panel-icon.svg';
 import controlPanelCheckedIcon from './control-panel-checked-icon.svg';
 import userIcon from './user-icon.svg';
