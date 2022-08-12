@@ -30,7 +30,7 @@
 }
 
 .link {
-  background-color: var(--card-background);
+  background-color: transparent;
 }
 
 .link:hover {
