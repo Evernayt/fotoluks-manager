@@ -53,18 +53,25 @@ export const updateUserAPI = async (user: IUser): Promise<IUser> => {
 };
 
 interface IFetchUsers {
-  (limit: number, page: number, roles?: UserRoles[]): Promise<IUserData>;
+  (
+    limit: number,
+    page: number,
+    roles?: UserRoles[],
+    shopId?: number
+  ): Promise<IUserData>;
 }
 
 export const fetchUsersAPI: IFetchUsers = async (
   limit = 15,
   page = 1,
-  roles
+  roles,
+  shopId
 ) => {
   const { data } = await $host.post('api/user/all/', {
     limit,
     page,
     roles,
+    shopId,
   });
   return data;
 };
