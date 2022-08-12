@@ -1,0 +1,15 @@
+.container {
+  max-width: 680px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.items_container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.items_container_gap {
+  margin-top: 12px;
+}

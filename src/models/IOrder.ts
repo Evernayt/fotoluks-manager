@@ -1,5 +1,6 @@
 import { IFilter } from './IFilter';
 import { IFinishedProduct } from './IFinishedProduct';
+import { IOrderMember } from './IOrderMember';
 import { IShop } from './IShop';
 import { IStatus } from './IStatus';
 import { IUser } from './IUser';
@@ -15,6 +16,7 @@ export interface IOrder {
   prepayment: number;
   sum: number;
   comment: string;
+  orderMembers: IOrderMember[];
 }
 
 export interface IOrderData {

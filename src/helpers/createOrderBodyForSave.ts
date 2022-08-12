@@ -1,5 +1,6 @@
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { IOrder } from 'models/IOrder';
+import { IOrderMember } from 'models/IOrderMember';
 import { ISelectedParam } from 'models/ISelectedParam';
 import createClone from './createClone';
 
@@ -12,6 +13,11 @@ interface ICreatedFinishedProduct {
   price: number;
   comment: string;
   selectedParams: ISelectedParam[];
+}
+
+interface ICreatedOrderMember {
+  id: null;
+  userId: number;
 }
 
 const createFinishedProductBody = (
@@ -71,13 +77,17 @@ interface ICreateOrderBodyForSave {
     order: IOrder,
     sum: number,
     creatorUserId: number,
-    activeShopId: number
+    activeShopId: number,
+    orderMembersForCreate: IOrderMember[],
+    orderMembersForDelete: number[]
   ): {
     orderBody: IOrderBody;
     orderInfoBody: IOrderInfoBody;
     finishedProductsForCreateBody: ICreatedFinishedProduct[];
     finishedProductsForUpdateBody: ICreatedFinishedProduct[];
     finishedProductsForDeleteBody: number[];
+    orderMembersForCreateBody: ICreatedOrderMember[];
+    orderMembersForDeleteBody: number[];
   };
 }
 
@@ -88,9 +98,10 @@ const createOrderBodyForSave: ICreateOrderBodyForSave = (
   order,
   sum,
   creatorUserId,
-  activeShopId
+  activeShopId,
+  orderMembersForCreate,
+  orderMembersForDelete
 ) => {
-  
   const orderBody: IOrderBody = {
     id: order.id,
     userId: order.user?.id === undefined ? null : order.user.id,
@@ -125,12 +136,23 @@ const createOrderBodyForSave: ICreateOrderBodyForSave = (
     finishedProductsForUpdateBody.push(createdFinishedProduct);
   });
 
+  const orderMembersForCreateBody: ICreatedOrderMember[] = [];
+  orderMembersForCreate.forEach((orderMemberForCreate) => {
+    const createdOrderMember: ICreatedOrderMember = {
+      id: null,
+      userId: orderMemberForCreate.user.id,
+    };
+    orderMembersForCreateBody.push(createdOrderMember);
+  });
+
   return {
     orderBody,
     orderInfoBody,
     finishedProductsForCreateBody,
     finishedProductsForUpdateBody,
     finishedProductsForDeleteBody: finishedProductsForDelete,
+    orderMembersForCreateBody,
+    orderMembersForDeleteBody: orderMembersForDelete,
   };
 };
 

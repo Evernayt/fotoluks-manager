@@ -15,6 +15,7 @@ export const initialOrder: IOrder = {
   prepayment: 0,
   sum: 0,
   comment: '',
+  orderMembers: [],
 };
 
 export const initialFoundOrders: IFoundOrders = {

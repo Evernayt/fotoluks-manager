@@ -6,6 +6,7 @@ import {
 } from 'constants/InitialStates/initialOrderState';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { IFoundOrders, IOrder, IOrdersFilter } from 'models/IOrder';
+import { IOrderMember } from 'models/IOrderMember';
 import { IShop } from 'models/IShop';
 import { IStatus } from 'models/IStatus';
 import { IUser } from 'models/IUser';
@@ -23,6 +24,8 @@ type OrderState = {
   ordersFilter: IOrdersFilter;
   foundOrders: IFoundOrders;
   isLoading: boolean;
+  orderMembersForCreate: IOrderMember[];
+  orderMembersForDelete: number[];
 };
 
 const initialState: OrderState = {
@@ -38,6 +41,8 @@ const initialState: OrderState = {
   ordersFilter: initialOrdersFilter,
   foundOrders: initialFoundOrders,
   isLoading: false,
+  orderMembersForCreate: [],
+  orderMembersForDelete: [],
 };
 
 export const orderSlice = createSlice({
@@ -76,6 +81,8 @@ export const orderSlice = createSlice({
       state.finishedProductsForCreate = [];
       state.finishedProductsForUpdate = [];
       state.finishedProductsForDelete = [];
+      state.orderMembersForCreate = [];
+      state.orderMembersForDelete = [];
     },
     deleteFinishedProduct(state, action: PayloadAction<number>) {
       const finishedProducts = state.order.finishedProducts.filter(
@@ -92,6 +99,8 @@ export const orderSlice = createSlice({
       state.finishedProductsForCreate = [];
       state.finishedProductsForUpdate = [];
       state.finishedProductsForDelete = [];
+      state.orderMembersForCreate = [];
+      state.orderMembersForDelete = [];
     },
     addFinishedProduct(state, action: PayloadAction<IFinishedProduct>) {
       state.order.finishedProducts.unshift(action.payload);
@@ -122,6 +131,8 @@ export const orderSlice = createSlice({
       state.finishedProductsForCreate = [];
       state.finishedProductsForUpdate = [];
       state.finishedProductsForDelete = [];
+      state.orderMembersForCreate = [];
+      state.orderMembersForDelete = [];
     },
     activeOrdersFilter(
       state,
@@ -151,6 +162,21 @@ export const orderSlice = createSlice({
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
+    addOrderMember(state, action: PayloadAction<IOrderMember>) {
+      state.order.orderMembers.push(action.payload);
+    },
+    addOrderMembersForCreate(state, action: PayloadAction<IOrderMember>) {
+      state.orderMembersForCreate.push(action.payload);
+    },
+    deleteOrderMemberByUserId(state, action: PayloadAction<number>) {
+      const orderMembers = state.order.orderMembers.filter(
+        (orderMember) => orderMember.user.id !== action.payload
+      );
+      state.order.orderMembers = orderMembers;
+    },
+    addOrderMembersForDeleteByUserId(state, action: PayloadAction<number>) {
+      state.orderMembersForDelete.push(action.payload);
+    },
   },
 });
 
@@ -179,6 +205,10 @@ export const {
   setForceUpdate,
   setFoundOrders,
   setIsLoading,
+  addOrderMember,
+  addOrderMembersForCreate,
+  deleteOrderMemberByUserId,
+  addOrderMembersForDeleteByUserId,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

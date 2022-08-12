@@ -1,5 +1,5 @@
 import logoBird from '../../../../assets/logo-bird.png';
-import { CircleButton } from 'components';
+import { Button, CircleButton } from 'components';
 import { closeIcon } from 'icons';
 import { useNavigate } from 'react-router-dom';
 import { IModal } from 'hooks/useModal';
@@ -7,6 +7,7 @@ import { FC } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import styles from './OrderDetailNavmenu.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
+import { modalSlice } from 'store/reducers/ModalSlice';
 
 interface OrderDetailNavmenuProps {
   unsavedDataModal: IModal;
@@ -38,6 +39,10 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
     unsavedDataModal.toggle();
   };
 
+  const openMembersModal = () => {
+    dispatch(modalSlice.actions.openOrderMembersModal());
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.left_section}>
@@ -52,8 +57,9 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
         <span style={{ fontSize: '18px', fontWeight: '500' }}>{title}</span>
       </div>
       <div className={styles.right_section}>
-        {/* <CircleButton style={{ marginRight: '8px' }} />
-        <CircleButton /> */}
+        <Button onClick={openMembersModal}>
+          Участники: {order.orderMembers.length}
+        </Button>
       </div>
     </div>
   );
