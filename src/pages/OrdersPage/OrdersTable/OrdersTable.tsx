@@ -247,7 +247,10 @@ const OrdersTable = () => {
                         const isStatus = cell.column.id === 'status';
                         const isDeadlinePass =
                           cell.column.id === 'deadline' &&
-                          Date.parse(cell.value) < Date.now();
+                          Date.parse(cell.value) < Date.now() &&
+                          ['Новый', 'В работе'].includes(
+                            row.original.status!.name
+                          );
 
                         if (isStatus) {
                           return (
