@@ -35,6 +35,8 @@ import userIcon from './user-icon.svg';
 import userCheckedIcon from './user-checked-icon.svg';
 import eyeIcon from './eye-icon.svg';
 import eyeOffIcon from './eye-off-icon.svg';
+import plusIcon from './plus-icon.svg';
+import minusIcon from './minus-icon.svg';
 
 export {
   searchIcon,
@@ -73,5 +75,7 @@ export {
   userIcon,
   userCheckedIcon,
   eyeIcon,
-  eyeOffIcon
+  eyeOffIcon,
+  plusIcon,
+  minusIcon,
 };
