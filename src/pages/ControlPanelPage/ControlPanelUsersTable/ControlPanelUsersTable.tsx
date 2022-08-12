@@ -88,7 +88,7 @@ const ControlPanelUsersTable = () => {
   useEffect(() => {
     if (usersFilter.filter.isActive) {
       const { role } = usersFilter;
-      fetchUsers(page, role.role);
+      fetchUsers(page, [role.role]);
     } else if (usersFilter.filter.isPendingDeactivation) {
       dispatch(controlPanelSlice.actions.deactiveUsersFilter());
       fetchUsers(page);
@@ -99,10 +99,10 @@ const ControlPanelUsersTable = () => {
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchUsers = (page: number, role?: UserRoles | null) => {
+  const fetchUsers = (page: number, roles?: UserRoles[]) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
 
-    fetchUsersAPI(limit, page, role)
+    fetchUsersAPI(limit, page, roles)
       .then((data) => {
         setUsers(data.rows);
         const count = Math.ceil(data.count / limit);
@@ -119,7 +119,7 @@ const ControlPanelUsersTable = () => {
   const reload = () => {
     if (usersFilter.filter.isActive) {
       const { role } = usersFilter;
-      fetchUsers(page, role.role);
+      fetchUsers(page, [role.role]);
     } else {
       fetchUsers(page);
     }

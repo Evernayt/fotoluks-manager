@@ -22,7 +22,7 @@ export interface IUser {
 export interface IRole {
   id: number;
   name: string;
-  role: UserRoles | null;
+  role: UserRoles;
 }
 
 export interface IUserData {
