@@ -12,7 +12,7 @@ import { createClone, createOrderBodyForSave } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchOrderAPI, saveOrderAPI } from 'http/orderAPI';
 import { IFinishedProduct } from 'models/IFinishedProduct';
-import { ADD_MODE } from 'constants/app';
+import { ADD_MODE, DEF_FORMAT } from 'constants/app';
 import { IconButtonVariants } from 'components/UI/IconButton/IconButton';
 import { IOrder } from 'models/IOrder';
 import UserRegistrationModal from './Modals/UserRegistrationModal/UserRegistrationModal';
@@ -20,6 +20,9 @@ import EditUserModal from 'components/UserCard/EditUserModal/EditUserModal';
 import styles from './OrderDetailPage.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import OrderDetailMembersModal from './Modals/OrderDetailMembersModal/OrderDetailMembersModal';
+import { createNotificationAPI } from 'http/notificationAPI';
+import { IUser } from 'models/IUser';
+import moment from 'moment';
 
 type LocationState = {
   state: {
@@ -56,6 +59,7 @@ const OrderDetailPage = () => {
     (state) => state.order.haveUnsavedData
   );
   const order = useAppSelector((state) => state.order.order);
+  const beforeOrder = useAppSelector((state) => state.order.beforeOrder);
   const user = useAppSelector((state) => state.user.user);
   const activeShop = useAppSelector((state) => state.app.activeShop);
   const orderMembersForCreate = useAppSelector(
@@ -99,6 +103,46 @@ const OrderDetailPage = () => {
     serviceModal.toggle();
   };
 
+  const notifyMembersEdit = (user: IUser, order: IOrder) => {
+    if (orderMembersForCreate.length > 0) {
+      const userIds = [];
+
+      for (let i = 0; i < orderMembersForCreate.length; i++) {
+        userIds.push(orderMembersForCreate[i].user.id);
+      }
+
+      const title = 'Добавлен в участники';
+      const text = `${user.name} добавил вас в участники заказа № ${order.id}`;
+
+      createNotificationAPI(title, text, userIds);
+    }
+
+    if (orderMembersForDelete.length > 0) {
+      const title = 'Удален из участников';
+      const text = `${user.name} удалил вас из участников заказа № ${order.id}`;
+
+      createNotificationAPI(title, text, orderMembersForDelete);
+    }
+  };
+
+  const notifyMembers = (orderClone: IOrder, beforeOrderClone: IOrder) => {
+    if (orderClone.id === 0) return;
+
+    const orderMembersIds = [];
+    for (let i = 0; i < orderClone.orderMembers.length; i++) {
+      orderMembersIds.push(orderClone.orderMembers[i].user.id);
+    }
+
+    if (orderClone.deadline !== beforeOrderClone.deadline) {
+      const title = 'Изменен срок заказа';
+      const text = `${user?.name} изменил срок заказа № ${orderClone.id}
+      с ${moment(beforeOrderClone.deadline).format(DEF_FORMAT)} 
+      на ${moment(orderClone.deadline).format(DEF_FORMAT)}`;
+
+      createNotificationAPI(title, text, orderMembersIds);
+    }
+  };
+
   const saveOrder = () => {
     if (!haveUnsavedData) {
       return;
@@ -120,6 +164,7 @@ const OrderDetailPage = () => {
 
     saveOrderAPI(body).then((data) => {
       let orderClone: IOrder = createClone(order);
+      const beforeOrderClone: IOrder = createClone(beforeOrder);
 
       if (data.finishedProducts.length > 0) {
         orderClone = { ...orderClone, finishedProducts: data.finishedProducts };
@@ -131,6 +176,9 @@ const OrderDetailPage = () => {
       dispatch(orderSlice.actions.setOrder(orderClone));
       dispatch(orderSlice.actions.saveOrder(orderClone));
       dispatch(orderSlice.actions.setHaveUnsavedData(false));
+
+      notifyMembersEdit(user, data.order);
+      notifyMembers(orderClone, beforeOrderClone);
     });
   };
 

@@ -15,6 +15,7 @@ import { DEF_FORMAT } from 'constants/app';
 import OrdersToolbar from './OrdersToolbar/OrdersToolbar';
 import styles from './OrdersTable.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
+import { createNotificationAPI } from 'http/notificationAPI';
 
 const OrdersTable = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -188,10 +189,30 @@ const OrdersTable = () => {
     }
   };
 
-  const updateStatus = (statusId: number, orderId: number) => {
+  const notifyStatusChange = (orderId: number, status: IStatus) => {
+    const order = orders.find((order) => order.id === orderId);
+    if (!order) return;
+
+    const orderMemberIds = [];
+    for (let i = 0; i < order.orderMembers.length; i++) {
+      orderMemberIds.push(order.orderMembers[i].user.id);
+    }
+
+    const oldStatusName = order.status?.name;
+
+    const title = 'Изменен статус';
+    const text = `${user?.name} изменил статус заказа № ${orderId}
+     c "${oldStatusName}" на "${status.name}"`;
+
+    createNotificationAPI(title, text, orderMemberIds);
+  };
+
+  const updateStatus = (status: IStatus, orderId: number) => {
     if (user) {
       const userId = user.id;
-      updateStatusAPI(statusId, orderId, userId);
+      updateStatusAPI(status.id, orderId, userId);
+
+      notifyStatusChange(orderId, status);
     }
   };
 
@@ -263,7 +284,7 @@ const OrdersTable = () => {
                                 changeHandler={(
                                   status: IStatus,
                                   orderId: number
-                                ) => updateStatus(status.id, orderId)}
+                                ) => updateStatus(status, orderId)}
                                 defaultSelectedStatus={cell.value}
                                 orderId={cell.row.values.id}
                                 key={cell.row.values.id}
