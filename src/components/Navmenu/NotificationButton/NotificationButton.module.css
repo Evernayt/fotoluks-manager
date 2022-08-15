@@ -16,6 +16,13 @@
 }
 
 .no_notifications {
-  min-width: 300px;
+  min-width: 260px;
   padding: 8px;
+}
+
+.loader_container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
