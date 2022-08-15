@@ -9,7 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, Notification } from 'electron';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import * as fs from 'fs';
@@ -27,6 +27,10 @@ const isDebug =
 if (isDebug) {
   require('electron-debug')();
 }
+
+const RESOURCES_PATH = app.isPackaged
+  ? path.join(process.resourcesPath, 'assets')
+  : path.join(__dirname, '../../assets');
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -46,9 +50,9 @@ const createWindow = async () => {
     await installExtensions();
   }
 
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
+  // const RESOURCES_PATH = app.isPackaged
+  //   ? path.join(process.resourcesPath, 'assets')
+  //   : path.join(__dirname, '../../assets');
 
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
@@ -93,6 +97,23 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 };
+
+const showNotification = (title: string, body: string) => {
+  const options = {
+    title,
+    body,
+    icon: path.join(RESOURCES_PATH, '/logo-bird.png'),
+  };
+
+  new Notification(options).show();
+};
+
+ipcMain.on('show-notification', async (_event, args) => {
+  const title = args[0];
+  const text = args[1];
+
+  showNotification(title, text);
+});
 
 /**
  * Add event listeners...
