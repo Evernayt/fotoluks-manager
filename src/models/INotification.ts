@@ -4,3 +4,8 @@ export interface INotification {
   text: string;
   createdAt: string;
 }
+
+export interface INotificationData {
+  rows: INotification[];
+  count: number;
+}

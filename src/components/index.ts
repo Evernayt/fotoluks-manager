@@ -15,6 +15,7 @@ import MaskedTextbox from './UI/MaskedTextbox/MaskedTextbox';
 import Accordion from './UI/Accordion/Accordion';
 import UserCard from './UserCard/UserCard';
 import Loader from './Loader/Loader';
+import Notification from './Notification/Notification';
 
 export {
   Navmenu,
@@ -34,4 +35,5 @@ export {
   Accordion,
   UserCard,
   Loader,
+  Notification,
 };

@@ -37,6 +37,8 @@ import eyeIcon from './eye-icon.svg';
 import eyeOffIcon from './eye-off-icon.svg';
 import plusIcon from './plus-icon.svg';
 import minusIcon from './minus-icon.svg';
+import notificationIcon from './notification-icon.svg';
+import clearAllIcon from './clear-all-icon.svg';
 
 export {
   searchIcon,
@@ -78,4 +80,6 @@ export {
   eyeOffIcon,
   plusIcon,
   minusIcon,
+  notificationIcon,
+  clearAllIcon,
 };

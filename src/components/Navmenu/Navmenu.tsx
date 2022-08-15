@@ -2,8 +2,6 @@ import styles from './Navmenu.module.css';
 import {
   ordersIcon,
   ordersCheckedIcon,
-  messengerIcon,
-  messengerCheckedIcon,
   tasksIcon,
   tasksCheckedIcon,
   controlPanelCheckedIcon,
@@ -12,7 +10,6 @@ import {
 import logoBird from '../../../assets/logo-bird.png';
 import {
   CONTROL_PANEL_ROUTE,
-  MESSENGER_ROUTE,
   ORDERS_ROUTE,
   PROFILE_ROUTE,
   TASKS_ROUTE,
@@ -24,6 +21,7 @@ import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { defaultAvatar } from 'constants/images';
 import { UserRoles } from 'models/IUser';
 import { appSlice } from 'store/reducers/AppSlice';
+import NotificationButton from './NotificationButton/NotificationButton';
 
 interface INavmenu {
   searchRender?: () => ReactNode;
@@ -59,14 +57,6 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
     //   checkedIcon: tasksCheckedIcon,
     //   icon: tasksIcon,
     //   name: 'Задачи',
-    //   access: UserRoles.EMPLOYEE,
-    // },
-    // {
-    //   id: 'messenger_navmenu',
-    //   route: MESSENGER_ROUTE,
-    //   checkedIcon: messengerCheckedIcon,
-    //   icon: messengerIcon,
-    //   name: 'Чат',
     //   access: UserRoles.EMPLOYEE,
     // },
     {
@@ -136,24 +126,7 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
           />
           <span>{user?.name}</span>
         </label>
-        <div
-          style={{
-            height: '40px',
-            width: '40px',
-            backgroundColor: '#EBEAE4',
-            borderRadius: '20px',
-            marginLeft: '8px',
-          }}
-        />
-        <div
-          style={{
-            height: '40px',
-            width: '40px',
-            backgroundColor: '#EBEAE4',
-            borderRadius: '20px',
-            marginLeft: '8px',
-          }}
-        />
+        <NotificationButton />
       </div>
     </div>
   );

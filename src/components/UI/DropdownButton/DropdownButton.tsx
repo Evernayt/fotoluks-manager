@@ -1,7 +1,7 @@
 import { calcPlacement } from 'helpers';
 import { Placements } from 'helpers/calcPlacement';
 import { useOnClickOutside } from 'hooks';
-import { forwardRef, HTMLAttributes, useRef, useState } from 'react';
+import { forwardRef, HTMLAttributes, ReactNode, useRef, useState } from 'react';
 import styles from './DropdownButton.module.css';
 
 interface OptionsProps {
@@ -15,11 +15,13 @@ export enum DropdownButtonVariants {
 }
 
 interface DropdownButtonProps extends HTMLAttributes<HTMLElement> {
-  options: OptionsProps[];
+  options?: OptionsProps[];
   icon?: string;
   text?: string;
   placement: Placements;
   variant?: DropdownButtonVariants;
+  circle?: boolean;
+  itemRender?: () => ReactNode;
 }
 
 const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
@@ -30,6 +32,8 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
       text,
       placement,
       variant = DropdownButtonVariants.default,
+      circle,
+      itemRender,
       ...props
     },
     ref
@@ -51,6 +55,9 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
           className={[styles.dropdown_btn, styles[variant]].join(' ')}
           onClick={() => setIsHidden((prevState) => !prevState)}
           ref={ref}
+          style={
+            circle ? { borderRadius: '50%', height: '40px', width: '16px' } : {}
+          }
         >
           {icon ? <img src={icon} alt="" /> : <span>{text}</span>}
         </div>
@@ -61,16 +68,18 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
             ...calcPlacement(placement),
           }}
         >
-          {options?.map((option, index) => (
-            <li key={index}>
-              <div
-                className={styles.item}
-                onClick={() => clickHandler(option.onClick)}
-              >
-                {option.name}
-              </div>
-            </li>
-          ))}
+          {itemRender === undefined
+            ? options?.map((option, index) => (
+                <li key={index}>
+                  <div
+                    className={styles.item}
+                    onClick={() => clickHandler(option.onClick)}
+                  >
+                    {option.name}
+                  </div>
+                </li>
+              ))
+            : itemRender()}
         </ul>
       </div>
     );
