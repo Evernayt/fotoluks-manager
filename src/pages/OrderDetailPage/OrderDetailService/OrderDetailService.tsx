@@ -43,14 +43,17 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
 
   const serviceMenu = [
     {
+      id: 1,
       name: 'Создать папку',
       onClick: () => console.log(finishedProduct),
     },
     {
+      id: 2,
       name: 'Файлы',
       onClick: () => console.log('fa'),
     },
     {
+      id: 3,
       name: 'Удалить',
       onClick: deleteFinishedProduct,
     },

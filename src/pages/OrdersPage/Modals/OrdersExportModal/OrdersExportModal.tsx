@@ -41,6 +41,7 @@ const OrdersExportModal = () => {
   const periods = useMemo(
     () => [
       {
+        id: 1,
         name: 'Текущий месяц',
         onClick: () => {
           const start = moment().startOf('month').format(INPUT_FORMAT);
@@ -51,6 +52,7 @@ const OrdersExportModal = () => {
         },
       },
       {
+        id: 2,
         name: 'Предыдущий месяц',
         onClick: () => {
           const start = moment()

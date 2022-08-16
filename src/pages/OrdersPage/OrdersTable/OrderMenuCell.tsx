@@ -30,10 +30,12 @@ const OrderMenuCell = ({ row }: Cell<IOrder>) => {
 
   const orderMenu = [
     {
+      id: 1,
       name: 'О заказе',
       onClick: openOrderInfoModal,
     },
     {
+      id: 2,
       name: 'Перемещение',
       onClick: openOrderShopModal,
     },

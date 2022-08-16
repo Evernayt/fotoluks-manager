@@ -41,6 +41,7 @@ const OrdersFilterModal = () => {
   const periods = useMemo(
     () => [
       {
+        id: 1,
         name: 'Текущий день',
         onClick: () => {
           const start = moment().startOf('day').format(INPUT_FORMAT);
@@ -51,6 +52,7 @@ const OrdersFilterModal = () => {
         },
       },
       {
+        id: 2,
         name: 'Предыдущий день',
         onClick: () => {
           const start = moment()
@@ -67,6 +69,7 @@ const OrdersFilterModal = () => {
         },
       },
       {
+        id: 3,
         name: 'Текущая неделя',
         onClick: () => {
           const start = moment().startOf('week').format(INPUT_FORMAT);
@@ -77,6 +80,7 @@ const OrdersFilterModal = () => {
         },
       },
       {
+        id: 4,
         name: 'Предыдущая неделя',
         onClick: () => {
           const start = moment()
@@ -93,6 +97,7 @@ const OrdersFilterModal = () => {
         },
       },
       {
+        id: 5,
         name: 'Текущий месяц',
         onClick: () => {
           const start = moment().startOf('month').format(INPUT_FORMAT);
@@ -103,6 +108,7 @@ const OrdersFilterModal = () => {
         },
       },
       {
+        id: 6,
         name: 'Предыдущий месяц',
         onClick: () => {
           const start = moment()
