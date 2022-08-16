@@ -136,7 +136,7 @@ const ControlPanelEditTypeModal = () => {
       isShowing={controlPanelEditTypeModal.isShowing}
       hide={close}
     >
-      <div className={styles.container}>
+      <div>
         <div className={styles.columns}>
           <img
             className={styles.image}
