@@ -1,5 +1,6 @@
 import { DropdownButton, IconButton } from 'components';
-import { EDIT_MODE } from 'constants/app';
+import { Modes } from 'constants/app';
+import { noImage } from 'constants/images';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { dotsMenuIcon, editIcon } from 'icons';
@@ -10,7 +11,7 @@ import styles from './OrderDetailService.module.css';
 
 interface OrderDetailServiceProps {
   finishedProduct: IFinishedProduct;
-  openServiceModal: (mode: string, finishedProduct: IFinishedProduct) => void;
+  openServiceModal: (mode: Modes, finishedProduct: IFinishedProduct) => void;
 }
 
 const OrderDetailService: FC<OrderDetailServiceProps> = ({
@@ -59,7 +60,15 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
     <div className={styles.card}>
       <div style={{ marginRight: '12px' }}>
         <div style={{ display: 'flex' }}>
-          <img className={styles.img} src={finishedProduct.type.image} alt="" />
+          <img
+            className={styles.img}
+            src={
+              finishedProduct.type.image === ''
+                ? noImage
+                : finishedProduct.type.image
+            }
+            alt=""
+          />
           <div className={styles.info}>
             <span className={styles.text} style={{ fontSize: '16px' }}>
               {finishedProduct.product.name},{' '}
@@ -123,7 +132,7 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
         <IconButton
           icon={editIcon}
           style={{ marginBottom: '8px' }}
-          onClick={() => openServiceModal(EDIT_MODE, finishedProduct)}
+          onClick={() => openServiceModal(Modes.EDIT_MODE, finishedProduct)}
         />
         <DropdownButton
           options={serviceMenu}
