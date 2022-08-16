@@ -1,9 +1,9 @@
 import { Button, Modal, SelectButton, Textarea, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { ADD_MODE, EDIT_MODE } from 'constants/app';
+import { Modes } from 'constants/app';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchProductsAPI } from 'http/productAPI';
-import { fetchTypesAPI } from 'http/typeAPI';
+import { fetchTypesByProductIdAPI } from 'http/typeAPI';
 import { IFeature } from 'models/IFeature';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { IParam } from 'models/IParam';
@@ -18,7 +18,7 @@ import OrderDetailServiceSearch from '../../OrderDetailServiceSearch/OrderDetail
 interface OrderDetailServiceModalProps {
   isShowing: boolean;
   hide: () => void;
-  mode: string;
+  mode: Modes;
   finishedProduct: IFinishedProduct | null;
 }
 
@@ -61,43 +61,46 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (mode === EDIT_MODE && finishedProduct) {
+    if (mode === Modes.EDIT_MODE && finishedProduct) {
       setPrice(finishedProduct.price);
       setQuantity(finishedProduct.quantity);
       setComment(finishedProduct.comment);
 
       fetchProductsAPI().then((productData) => {
-        setProducts(productData);
+        setProducts(productData.rows);
         setSelectedProduct(finishedProduct.product);
 
-        fetchTypesAPI(finishedProduct.product.id).then((typeData) => {
-          setTypes(typeData);
-          setSelectedType(finishedProduct.type);
+        fetchTypesByProductIdAPI(finishedProduct.product.id).then(
+          (typeData) => {
+            setTypes(typeData);
+            setSelectedType(finishedProduct.type);
 
-          if (finishedProduct.selectedParams.length !== 0) {
-            finishedProduct.selectedParams.forEach((selectedParam) => {
-              const newParams: IParam[] = [
-                {
-                  id: selectedParam.param.id,
-                  name: selectedParam.param.name,
-                  value: selectedParam.param.value,
-                  featureId: selectedParam.param.featureId,
-                },
-              ];
+            if (finishedProduct.selectedParams.length !== 0) {
+              finishedProduct.selectedParams.forEach((selectedParam) => {
+                const newParams: IParam[] = [
+                  {
+                    id: selectedParam.param.id,
+                    name: selectedParam.param.name,
+                    value: selectedParam.param.value,
+                    featureId: selectedParam.param.featureId,
+                  },
+                ];
 
-              setSelectedFeatures((prevState) => [
-                ...prevState,
-                {
-                  id: selectedParam.param.feature!.id,
-                  name: selectedParam.param.feature!.name,
-                  params: newParams,
-                },
-              ]);
-            });
+                setSelectedFeatures((prevState) => [
+                  ...prevState,
+                  {
+                    id: selectedParam.param.feature!.id,
+                    name: selectedParam.param.feature!.name,
+                    pluralName: selectedParam.param.feature!.pluralName,
+                    params: newParams,
+                  },
+                ]);
+              });
+            }
           }
-        });
+        );
       });
-    } else if (mode === ADD_MODE) {
+    } else if (mode === Modes.ADD_MODE) {
       fetchProducts();
     }
   }, []);
@@ -141,7 +144,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     setPrice(0);
 
     setSelectedType(initialType);
-    fetchTypesAPI(product.id).then((data) => {
+    fetchTypesByProductIdAPI(product.id).then((data) => {
       setTypes(data);
       selectType(type);
     });
@@ -149,12 +152,12 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
 
   const fetchProducts = () => {
     fetchProductsAPI().then((data) => {
-      setProducts(data);
+      setProducts(data.rows);
     });
   };
 
   const fetchTypes = (productId: number) => {
-    fetchTypesAPI(productId).then((data) => {
+    fetchTypesByProductIdAPI(productId).then((data) => {
       setTypes(data);
     });
   };
@@ -204,6 +207,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
               feature: {
                 id: feature.id,
                 name: feature.name,
+                pluralName: feature.pluralName,
               },
             },
           });
@@ -226,7 +230,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
       };
     };
 
-    if (mode === ADD_MODE) {
+    if (mode === Modes.ADD_MODE) {
       const createdFinishedProduct = createFinishedProduct(uuidv4());
 
       dispatch(orderSlice.actions.addFinishedProduct(createdFinishedProduct));
@@ -263,11 +267,13 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
 
   return (
     <Modal
-      title={mode === ADD_MODE ? 'Добавление услуги' : 'Редактирование услуги'}
+      title={
+        mode === Modes.ADD_MODE ? 'Добавление услуги' : 'Редактирование услуги'
+      }
       isShowing={isShowing}
       hide={hide}
     >
-      {mode === ADD_MODE && (
+      {mode === Modes.ADD_MODE && (
         <OrderDetailServiceSearch
           searchSelect={searchSelect}
           style={{ marginBottom: '16px' }}
@@ -277,7 +283,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         <SelectButton
           items={products}
           defaultSelectedItem={selectedProduct}
-          disabled={mode === EDIT_MODE}
+          disabled={mode === Modes.EDIT_MODE}
           changeHandler={(e) => selectProduct(e)}
           style={{ width: '228px', marginRight: '12px' }}
         />
@@ -339,7 +345,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         variant={ButtonVariants.primary}
         onClick={createOrUpdateFinishedProduct}
       >
-        {mode === ADD_MODE ? 'Добавить' : 'Изменить'}
+        {mode === Modes.ADD_MODE ? 'Добавить' : 'Изменить'}
       </Button>
     </Modal>
   );

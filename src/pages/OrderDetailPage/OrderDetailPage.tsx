@@ -12,7 +12,7 @@ import { createClone, createOrderBodyForSave } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchOrderAPI, saveOrderAPI } from 'http/orderAPI';
 import { IFinishedProduct } from 'models/IFinishedProduct';
-import { ADD_MODE, DEF_FORMAT } from 'constants/app';
+import { DEF_FORMAT, Modes } from 'constants/app';
 import { IconButtonVariants } from 'components/UI/IconButton/IconButton';
 import { IOrder } from 'models/IOrder';
 import UserRegistrationModal from './Modals/UserRegistrationModal/UserRegistrationModal';
@@ -35,7 +35,9 @@ const OrderDetailPage = () => {
   const { state } = location as LocationState;
 
   const [sum, setSum] = useState<number>(0);
-  const [serviceModalMode, setServiceModalMode] = useState(ADD_MODE);
+  const [serviceModalMode, setServiceModalMode] = useState<Modes>(
+    Modes.ADD_MODE
+  );
   const [serviceModalData, setServiceModalData] =
     useState<IFinishedProduct | null>(null);
 
@@ -95,7 +97,7 @@ const OrderDetailPage = () => {
   };
 
   const openServiceModal = (
-    mode: string,
+    mode: Modes,
     finishedProduct: IFinishedProduct | null
   ) => {
     setServiceModalMode(mode);
@@ -219,7 +221,7 @@ const OrderDetailPage = () => {
           <div className={styles.add_card}>
             <div
               className={styles.open_btn}
-              onClick={() => openServiceModal(ADD_MODE, null)}
+              onClick={() => openServiceModal(Modes.ADD_MODE, null)}
             >
               Какую услугу добавить?
             </div>
