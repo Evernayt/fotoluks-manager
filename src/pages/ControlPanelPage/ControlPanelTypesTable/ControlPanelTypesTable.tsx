@@ -124,7 +124,7 @@ const ControlPanelTypesTable = () => {
 
   return (
     <div style={{ height: '100%' }}>
-      <ControlPanelTypesToolbar setLimit={setLimit} reload={reload} />
+      <ControlPanelTypesToolbar setLimit={setLimit} reload={() => reload()} />
       {isNotFound ? (
         <div className={[styles.container, styles.message].join(' ')}>
           Ничего не найдено

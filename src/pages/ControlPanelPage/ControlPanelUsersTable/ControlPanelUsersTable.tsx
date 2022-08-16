@@ -140,7 +140,7 @@ const ControlPanelUsersTable = () => {
 
   return (
     <div style={{ height: '100%' }}>
-      <ControlPanelUsersToolbar setLimit={setLimit} reload={reload} />
+      <ControlPanelUsersToolbar setLimit={setLimit} reload={() => reload()} />
       {isNotFound ? (
         <div className={[styles.container, styles.message].join(' ')}>
           Ничего не найдено
