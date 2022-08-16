@@ -33,6 +33,9 @@ const ControlPanelEditTypeModal = () => {
   const controlPanelEditTypeModal = useAppSelector(
     (state) => state.modal.controlPanelEditTypeModal
   );
+  const controlPanelEditProductModal = useAppSelector(
+    (state) => state.modal.controlPanelEditProductModal
+  );
 
   const dispatch = useAppDispatch();
 
@@ -45,6 +48,15 @@ const ControlPanelEditTypeModal = () => {
       }
     }
   }, [controlPanelEditTypeModal.isShowing]);
+
+  useEffect(() => {
+    if (
+      !controlPanelEditProductModal.isShowing &&
+      controlPanelEditTypeModal.isShowing
+    ) {
+      fetchProducts();
+    }
+  }, [controlPanelEditProductModal.isShowing]);
 
   const fetchProducts = () => {
     fetchProductsAPI().then((data) => {
@@ -73,6 +85,7 @@ const ControlPanelEditTypeModal = () => {
     dispatch(modalSlice.actions.closeControlPanelEditTypeModal());
 
     setProducts([]);
+    setSelectedProduct(products[0]);
     setType(undefined);
     setTypeName('');
     setTypeImage('');
@@ -104,12 +117,21 @@ const ControlPanelEditTypeModal = () => {
     );
   };
 
+  const openEditProductModal = () => {
+    dispatch(
+      modalSlice.actions.openControlPanelEditProductModal({
+        productId: 0,
+        mode: Modes.ADD_MODE,
+      })
+    );
+  };
+
   return (
     <Modal
       title={
         controlPanelEditTypeModal.mode === Modes.EDIT_MODE
           ? 'Редактирование'
-          : 'Новый товар'
+          : 'Новый тип'
       }
       isShowing={controlPanelEditTypeModal.isShowing}
       hide={close}
@@ -131,7 +153,7 @@ const ControlPanelEditTypeModal = () => {
               />
               <Tooltip label="Добавить продукт">
                 <div>
-                  <IconButton icon={plusIcon} />
+                  <IconButton icon={plusIcon} onClick={openEditProductModal} />
                 </div>
               </Tooltip>
             </div>

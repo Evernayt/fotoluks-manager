@@ -29,3 +29,30 @@ export const searchProductsAPI: ISearchProducts = async (
   );
   return data;
 };
+
+interface ICreateProduct {
+  (
+    name: string,
+    pluralName: string,
+    description: string,
+    image: string,
+    categoryId: number
+  ): Promise<IProduct>;
+}
+
+export const createProductAPI: ICreateProduct = async (
+  name,
+  pluralName,
+  description,
+  image,
+  categoryId
+) => {
+  const { data } = await $host.post('api/product/create', {
+    name,
+    pluralName,
+    description,
+    image,
+    categoryId,
+  });
+  return data;
+};

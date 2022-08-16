@@ -24,3 +24,9 @@ export interface IEditTypeModal {
   typeId: number;
   mode: Modes;
 }
+
+export interface IEditProductModal {
+  isShowing: boolean;
+  productId: number;
+  mode: Modes;
+}

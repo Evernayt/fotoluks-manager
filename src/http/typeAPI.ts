@@ -37,7 +37,7 @@ interface IUpdateType {
     image: string,
     price: number,
     productId: number
-  ): Promise<IType>;
+  ): Promise<number[]>;
 }
 
 export const updateTypeAPI: IUpdateType = async (
