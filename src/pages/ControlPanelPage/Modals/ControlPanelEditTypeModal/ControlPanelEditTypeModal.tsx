@@ -11,7 +11,6 @@ import { ButtonVariants } from 'components/UI/Button/Button';
 import { IDropdownButtonOption } from 'components/UI/DropdownButton/DropdownButton';
 import { Modes } from 'constants/app';
 import { noImage } from 'constants/images';
-import { createClone } from 'helpers';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchFeaturesAPI } from 'http/featureAPI';
@@ -183,6 +182,17 @@ const ControlPanelEditTypeModal = () => {
     createFeatureOptions(features);
   };
 
+  const openEditParamsModal = (feature: IFeature) => {
+    if (type) {
+      dispatch(
+        modalSlice.actions.openControlPanelEditParamsModal({
+          typeId: type.id,
+          feature: feature,
+        })
+      );
+    }
+  };
+
   return (
     <Modal
       title={
@@ -239,15 +249,19 @@ const ControlPanelEditTypeModal = () => {
           )}
         >
           {typeFeatures?.map((feature) => (
-            <div className={styles.feature_item}>
-              <Button style={{ width: 'max-content' }} key={feature.id}>
+            <div className={styles.feature_item} key={feature.id}>
+              <Button
+                style={{ width: 'max-content' }}
+                onClick={() => openEditParamsModal(feature)}
+              >
                 {feature.pluralName}
               </Button>
+
               <IconButton
                 icon={minusIcon}
                 style={{ minHeight: '32px', padding: '4px' }}
                 onClick={() => removeFeature(feature)}
-              ></IconButton>
+              />
             </div>
           ))}
 

@@ -1,3 +1,4 @@
+import { IParam } from 'models/IParam';
 import { IType, ITypeData } from 'models/IType';
 import { $host } from './index';
 
@@ -80,6 +81,32 @@ export const createTypeAPI: ICreateType = async (
     price,
     productId,
     featureIds,
+  });
+  return data;
+};
+
+interface IFetchTypeParams {
+  (typeId: number, featureId: number): Promise<IParam[]>;
+}
+
+export const fetchTypeParamsAPI: IFetchTypeParams = async (
+  typeId,
+  featureId
+) => {
+  const { data } = await $host.get(
+    `api/type/params/?typeId=${typeId}&featureId=${featureId}`
+  );
+  return data;
+};
+
+interface IUpdateTypeParams {
+  (id: number, paramIds: number[]): Promise<number[]>;
+}
+
+export const updateTypeParamsAPI: IUpdateTypeParams = async (id, paramIds) => {
+  const { data } = await $host.post('api/type/updateParams', {
+    id,
+    paramIds,
   });
   return data;
 };

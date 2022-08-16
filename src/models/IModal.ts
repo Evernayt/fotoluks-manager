@@ -1,4 +1,5 @@
 import { Modes } from 'constants/app';
+import { IFeature } from './IFeature';
 
 export interface IModal {
   isShowing: boolean;
@@ -35,4 +36,10 @@ export interface IEditCategoryModal {
   isShowing: boolean;
   categoryId: number;
   mode: Modes;
+}
+
+export interface IEditParamsModal {
+  isShowing: boolean;
+  typeId: number;
+  feature: IFeature;
 }

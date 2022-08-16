@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Modes } from 'constants/app';
 import {
   initialEditCategoryModal,
+  initialEditParamsModal,
   initialEditProductModal,
   initialEditTypeModal,
   initialModal,
@@ -9,8 +10,10 @@ import {
   initialUserModal,
   initialUserRegistrationModal,
 } from 'constants/InitialStates/initialModalState';
+import { IFeature } from 'models/IFeature';
 import {
   IEditCategoryModal,
+  IEditParamsModal,
   IEditProductModal,
   IEditTypeModal,
   IModal,
@@ -33,6 +36,7 @@ type ModalState = {
   controlPanelEditTypeModal: IEditTypeModal;
   controlPanelEditProductModal: IEditProductModal;
   controlPanelEditCategoryModal: IEditCategoryModal;
+  controlPanelEditParamsModal: IEditParamsModal;
 };
 
 const initialState: ModalState = {
@@ -49,6 +53,7 @@ const initialState: ModalState = {
   controlPanelEditTypeModal: initialEditTypeModal,
   controlPanelEditProductModal: initialEditProductModal,
   controlPanelEditCategoryModal: initialEditCategoryModal,
+  controlPanelEditParamsModal: initialEditParamsModal,
 };
 
 export const modalSlice = createSlice({
@@ -154,6 +159,20 @@ export const modalSlice = createSlice({
     closeControlPanelEditCategoryModal(state) {
       state.controlPanelEditCategoryModal.isShowing = false;
     },
+    openControlPanelEditParamsModal(
+      state,
+      action: PayloadAction<{
+        typeId: number;
+        feature: IFeature;
+      }>
+    ) {
+      state.controlPanelEditParamsModal.isShowing = true;
+      state.controlPanelEditParamsModal.typeId = action.payload.typeId;
+      state.controlPanelEditParamsModal.feature = action.payload.feature;
+    },
+    closeControlPanelEditParamsModal(state) {
+      state.controlPanelEditParamsModal.isShowing = false;
+    },
   },
 });
 
@@ -184,6 +203,8 @@ export const {
   closeControlPanelEditProductModal,
   openControlPanelEditCategoryModal,
   closeControlPanelEditCategoryModal,
+  openControlPanelEditParamsModal,
+  closeControlPanelEditParamsModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

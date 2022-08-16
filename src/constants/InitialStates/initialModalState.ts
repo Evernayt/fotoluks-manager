@@ -1,6 +1,7 @@
 import { Modes } from 'constants/app';
 import {
   IEditCategoryModal,
+  IEditParamsModal,
   IEditProductModal,
   IEditTypeModal,
   IModal,
@@ -8,6 +9,7 @@ import {
   IUserModal,
   IUserRegistrationModal,
 } from 'models/IModal';
+import { initialFeature } from './initialFeatureState';
 
 export const initialModal: IModal = {
   isShowing: false,
@@ -41,4 +43,10 @@ export const initialEditCategoryModal: IEditCategoryModal = {
   isShowing: false,
   categoryId: 0,
   mode: Modes.ADD_MODE,
+};
+
+export const initialEditParamsModal: IEditParamsModal = {
+  isShowing: false,
+  typeId: 0,
+  feature: initialFeature,
 };
