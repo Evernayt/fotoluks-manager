@@ -1,5 +1,6 @@
 import { Button, SelectButton, Tooltip } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
+import { Modes } from 'constants/app';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { FC, useMemo, useState } from 'react';
@@ -51,11 +52,23 @@ const ControlPanelTypesToolbar: FC<ControlPanelProductsToolbarProps> = ({
     dispatch(modalSlice.actions.openControlPanelTypesFilterModal());
   };
 
+  const openTypesEditModal = () => {
+    dispatch(
+      modalSlice.actions.openControlPanelEditTypeModal({
+        typeId: 0,
+        mode: Modes.ADD_MODE,
+      })
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.left_section}>
         <Button style={{ width: 'max-content' }} onClick={reload}>
           Обновить
+        </Button>
+        <Button style={{ width: 'max-content' }} onClick={openTypesEditModal}>
+          Добавить
         </Button>
       </div>
       <div className={styles.right_section}>

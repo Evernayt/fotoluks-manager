@@ -11,7 +11,7 @@ import { Modes } from 'constants/app';
 import { noImage } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchProductsAPI } from 'http/productAPI';
-import { fetchTypeAPI, updateTypeAPI } from 'http/typeAPI';
+import { createTypeAPI, fetchTypeAPI, updateTypeAPI } from 'http/typeAPI';
 import { plusIcon } from 'icons';
 import { IFeature } from 'models/IFeature';
 import { IProduct } from 'models/IProduct';
@@ -54,6 +54,8 @@ const ControlPanelEditTypeModal = () => {
   };
 
   const fetchType = () => {
+    if (controlPanelEditTypeModal.mode === Modes.ADD_MODE) return;
+
     fetchTypeAPI(controlPanelEditTypeModal.typeId).then((data) => {
       setType(data);
       setTypeName(data.name);
@@ -91,6 +93,15 @@ const ControlPanelEditTypeModal = () => {
         close();
       });
     }
+  };
+
+  const createType = () => {
+    createTypeAPI(typeName, typeImage, typePrice, selectedProduct.id).then(
+      () => {
+        dispatch(controlPanelSlice.actions.setForceUpdate(true));
+        close();
+      }
+    );
   };
 
   return (
@@ -159,9 +170,15 @@ const ControlPanelEditTypeModal = () => {
 
         <div className={styles.controls}>
           <Button onClick={close}>Отменить</Button>
-          <Button variant={ButtonVariants.primary} onClick={updateType}>
-            Изменить
-          </Button>
+          {controlPanelEditTypeModal.mode === Modes.ADD_MODE ? (
+            <Button variant={ButtonVariants.primary} onClick={createType}>
+              Создать
+            </Button>
+          ) : (
+            <Button variant={ButtonVariants.primary} onClick={updateType}>
+              Изменить
+            </Button>
+          )}
         </div>
       </div>
     </Modal>

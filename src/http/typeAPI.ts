@@ -56,3 +56,27 @@ export const updateTypeAPI: IUpdateType = async (
   });
   return data;
 };
+
+interface ICreateType {
+  (
+    name: string,
+    image: string,
+    price: number,
+    productId: number
+  ): Promise<IType>;
+}
+
+export const createTypeAPI: ICreateType = async (
+  name,
+  image,
+  price,
+  productId
+) => {
+  const { data } = await $host.post('api/type/create', {
+    name,
+    image,
+    price,
+    productId,
+  });
+  return data;
+};
