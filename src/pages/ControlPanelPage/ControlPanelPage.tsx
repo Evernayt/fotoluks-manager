@@ -6,7 +6,10 @@ import ControlPanelUsersFilterModal from './Modals/ControlPanelUsersFilterModal/
 import ControlPanelUsersSearch from './ControlPanelUsersSearch/ControlPanelUsersSearch';
 import styles from './ControlPanelPage.module.css';
 import ControlPanelEditUserModal from './Modals/ControlPanelEditUserModal/ControlPanelEditUserModal';
-import ControlPanelProductsTable from './ControlPanelProductsTable/ControlPanelProductsTable';
+import ControlPanelTypesTable from './ControlPanelTypesTable/ControlPanelTypesTable';
+import ControlPanelTypesSearch from './ControlPanelTypesSearch/ControlPanelTypesSearch';
+import ControlPanelTypesFilterModal from './Modals/ControlPanelTypesFilterModal/ControlPanelTypesFilterModal';
+import ControlPanelEditTypeModal from './Modals/ControlPanelEditTypeModal/ControlPanelEditTypeModal';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
@@ -17,7 +20,7 @@ const ControlPanelPage = () => {
     if (activeItemId === 1) {
       return <ControlPanelUsersTable />;
     } else if (activeItemId === 2) {
-      return <ControlPanelProductsTable />;
+      return <ControlPanelTypesTable />;
     } else {
       return null;
     }
@@ -26,6 +29,8 @@ const ControlPanelPage = () => {
   const renderSearch = () => {
     if (activeItemId === 1) {
       return <ControlPanelUsersSearch />;
+    } else if (activeItemId === 2) {
+      return <ControlPanelTypesSearch />;
     } else {
       return null;
     }
@@ -35,6 +40,8 @@ const ControlPanelPage = () => {
     <div className={styles.container}>
       <ControlPanelEditUserModal />
       <ControlPanelUsersFilterModal />
+      <ControlPanelEditTypeModal />
+      <ControlPanelTypesFilterModal />
       <Navmenu searchRender={() => renderSearch()} />
       <div className={styles.section}>
         <ControlPanelSidemenu />

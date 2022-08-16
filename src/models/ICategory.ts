@@ -1,4 +1,3 @@
-import { IFilter } from './IFilter';
 import { IProduct } from './IProduct';
 
 export interface ICategory {
@@ -10,8 +9,4 @@ export interface ICategory {
 export interface ICategoryData {
   rows: ICategory[];
   count: number;
-}
-
-export interface ICategoriesFilter {
-  filter: IFilter;
 }

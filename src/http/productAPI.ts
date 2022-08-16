@@ -1,8 +1,17 @@
-import { IProduct } from 'models/IProduct';
+import { IProduct, IProductData } from 'models/IProduct';
 import { $host } from './index';
 
-export const fetchProductsAPI = async (): Promise<IProduct[]> => {
-  const { data } = await $host.get('api/product/all');
+interface IFetchProducts {
+  (limit?: number, page?: number): Promise<IProductData>;
+}
+
+export const fetchProductsAPI: IFetchProducts = async (
+  limit = 100,
+  page = 1
+) => {
+  const { data } = await $host.get(
+    `api/product/all/?limit=${limit}&page=${page}`
+  );
   return data;
 };
 

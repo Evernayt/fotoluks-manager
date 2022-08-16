@@ -3,24 +3,25 @@ import { useEffect, useMemo, useState } from 'react';
 import { Row, useTable } from 'react-table';
 import ReactPaginate from 'react-paginate';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import ControlPanelProductsToolbar from './ControlPanelProductsToolbar/ControlPanelProductsToolbar';
+import ControlPanelTypesToolbar from './ControlPanelTypesToolbar/ControlPanelTypesToolbar';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import { ICategory } from 'models/ICategory';
-import styles from './ControlPanelProductsTable.module.css';
-import { fetchCategoriesAPI } from 'http/categoryAPI';
+import { IType } from 'models/IType';
+import { fetchTypesAPI } from 'http/typeAPI';
+import styles from './ControlPanelTypesTable.module.css';
+import { Modes } from 'constants/app';
 
-const ControlPanelProductsTable = () => {
-  const [categories, setCategories] = useState<ICategory[]>([]);
+const ControlPanelTypesTable = () => {
+  const [types, setTypes] = useState<IType[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
   const [limit, setLimit] = useState<number>(15);
   const [page, setPage] = useState<number>(1);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
-  const categoriesFilter = useAppSelector((state) => state.controlPanel.categoriesFilter);
+  const typesFilter = useAppSelector((state) => state.controlPanel.typesFilter);
   const forceUpdate = useAppSelector((state) => state.controlPanel.forceUpdate);
   const isLoading = useAppSelector((state) => state.controlPanel.isLoading);
-  //const foundUsers = useAppSelector((state) => state.controlPanel.foundUsers);
+  const foundTypes = useAppSelector((state) => state.controlPanel.foundTypes);
 
   const dispatch = useAppDispatch();
 
@@ -31,80 +32,64 @@ const ControlPanelProductsTable = () => {
         accessor: 'id',
       },
       {
-        Header: 'Категория',
-        accessor: 'name',
+        Header: 'Продукт',
+        accessor: 'product.name',
         style: { width: '100%' },
       },
       {
-        Header: 'Продукт',
-        accessor: 'login',
-      },
-      // {
-      //   Header: 'Пароль',
-      //   accessor: 'password',
-      // },
-      {
-        Header: 'Роль',
-        accessor: 'role',
+        Header: 'Тип',
+        accessor: 'name',
       },
       {
-        Header: 'Телефон',
-        accessor: 'phone',
+        Header: 'Категория',
+        accessor: 'product.category.name',
       },
       {
-        Header: 'Почта',
-        accessor: 'email',
-      },
-      {
-        Header: 'ВКонтакте',
-        accessor: 'vk',
-      },
-      {
-        Header: 'Telegram',
-        accessor: 'telegram',
+        Header: 'Цена',
+        accessor: 'price',
       },
     ],
     []
   );
 
-  // useEffect(() => {
-  //   setPage(1);
-  //   if (foundUsers.userData.rows.length === 0) {
-  //     if (foundUsers.searchText === '') {
-  //       dispatch(controlPanelSlice.actions.setForceUpdate(true));
-  //       setIsNotFound(false);
-  //     } else {
-  //       setPageCount(1);
-  //       setIsNotFound(true);
-  //     }
-  //   } else {
-  //     setUsers(foundUsers.userData.rows);
-  //     const count = Math.ceil(foundUsers.userData.count / limit);
-  //     setPageCount(count);
-  //     setIsNotFound(false);
-  //   }
-  // }, [foundUsers]);
+  useEffect(() => {
+    setPage(1);
+    if (foundTypes.typeData.rows.length === 0) {
+      if (foundTypes.searchText === '') {
+        dispatch(controlPanelSlice.actions.setForceUpdate(true));
+        setIsNotFound(false);
+      } else {
+        setPageCount(1);
+        setIsNotFound(true);
+      }
+    } else {
+      setTypes(foundTypes.typeData.rows);
+      const count = Math.ceil(foundTypes.typeData.count / limit);
+      setPageCount(count);
+      setIsNotFound(false);
+    }
+  }, [foundTypes]);
 
   useEffect(() => {
-    if (categoriesFilter.filter.isActive) {
+    if (typesFilter.filter.isActive) {
       //const { role } = usersFilter;
       //fetchCategories(page, role.role);
-    } else if (categoriesFilter.filter.isPendingDeactivation) {
-      dispatch(controlPanelSlice.actions.deactiveCategoriesFilter());
-      fetchCategories(page);
+    } else if (typesFilter.filter.isPendingDeactivation) {
+      dispatch(controlPanelSlice.actions.deactiveTypesFilter());
+      fetchTypes(page);
     } else if (forceUpdate) {
-      fetchCategories(page);
+      fetchTypes(page);
     }
 
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchCategories = (page: number) => {
+  const fetchTypes = (page: number) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
 
-    fetchCategoriesAPI(limit, page)
+    fetchTypesAPI(limit, page)
       .then((data) => {
-        setCategories(data.rows);
+        setTypes(data.rows);
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
@@ -113,30 +98,33 @@ const ControlPanelProductsTable = () => {
 
   const pageChangeHandler = (page: number) => {
     setPage(page);
-    reload();
+    reload(page);
   };
 
-  const reload = () => {
-    if (categoriesFilter.filter.isActive) {
+  const reload = (page: number = 1) => {
+    if (typesFilter.filter.isActive) {
       // const { role } = usersFilter;
       // fetchUsers(page, role.role);
     } else {
-      fetchCategories(page);
+      fetchTypes(page);
     }
   };
 
-  const rowClickHandler = (row: Row<ICategory>) => {
-    // dispatch(
-    //   modalSlice.actions.openControlPanelEditUserModal(row.values.phone)
-    // );
+  const rowClickHandler = (row: Row<IType>) => {
+    dispatch(
+      modalSlice.actions.openControlPanelEditTypeModal({
+        typeId: row.values.id,
+        mode: Modes.EDIT_MODE,
+      })
+    );
   };
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: categories });
+    useTable({ columns, data: types });
 
   return (
     <div style={{ height: '100%' }}>
-      <ControlPanelProductsToolbar setLimit={setLimit} reload={reload} />
+      <ControlPanelTypesToolbar setLimit={setLimit} reload={reload} />
       {isNotFound ? (
         <div className={[styles.container, styles.message].join(' ')}>
           Ничего не найдено
@@ -213,4 +201,4 @@ const ControlPanelProductsTable = () => {
   );
 };
 
-export default ControlPanelProductsTable;
+export default ControlPanelTypesTable;

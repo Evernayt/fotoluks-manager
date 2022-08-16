@@ -10,3 +10,8 @@ export interface IProduct {
   category?: ICategory;
   types?: IType[];
 }
+
+export interface IProductData {
+  rows: IProduct[];
+  count: number;
+}

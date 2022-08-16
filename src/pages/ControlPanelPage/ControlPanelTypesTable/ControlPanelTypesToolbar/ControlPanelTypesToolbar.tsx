@@ -4,34 +4,34 @@ import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { FC, useMemo, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import styles from './ControlPanelProductsToolbar.module.css';
+import styles from './ControlPanelTypesToolbar.module.css';
 
 interface ControlPanelProductsToolbarProps {
   reload: () => void;
   setLimit: (limit: number) => void;
 }
 
-const ControlPanelProductsToolbar: FC<ControlPanelProductsToolbarProps> = ({
+const ControlPanelTypesToolbar: FC<ControlPanelProductsToolbarProps> = ({
   reload,
   setLimit,
 }) => {
-  const usersFilter = useAppSelector((state) => state.controlPanel.usersFilter);
+  const typesFilter = useAppSelector((state) => state.controlPanel.typesFilter);
 
   const limits = useMemo<any>(
     () => [
       {
         id: 1,
-        name: '15 пользователей',
+        name: '15 товаров',
         value: 15,
       },
       {
         id: 2,
-        name: '25 пользователей',
+        name: '25 товаров',
         value: 25,
       },
       {
         id: 3,
-        name: '50 пользователей',
+        name: '50 товаров',
         value: 50,
       },
     ],
@@ -47,8 +47,8 @@ const ControlPanelProductsToolbar: FC<ControlPanelProductsToolbarProps> = ({
     setLimit(e.value);
   };
 
-  const openUsersFilterModal = () => {
-    dispatch(modalSlice.actions.openControlPanelUsersFilterModal());
+  const openTypesFilterModal = () => {
+    dispatch(modalSlice.actions.openControlPanelTypesFilterModal());
   };
 
   return (
@@ -61,13 +61,13 @@ const ControlPanelProductsToolbar: FC<ControlPanelProductsToolbarProps> = ({
       <div className={styles.right_section}>
         <Tooltip
           label="Фильтры включены"
-          disabled={!usersFilter.filter.isActive}
+          disabled={!typesFilter.filter.isActive}
         >
           <Button
             style={{ width: 'max-content' }}
-            onClick={openUsersFilterModal}
+            onClick={openTypesFilterModal}
             variant={
-              usersFilter.filter.isActive
+              typesFilter.filter.isActive
                 ? ButtonVariants.primaryDeemphasized
                 : ButtonVariants.default
             }
@@ -87,4 +87,4 @@ const ControlPanelProductsToolbar: FC<ControlPanelProductsToolbarProps> = ({
   );
 };
 
-export default ControlPanelProductsToolbar;
+export default ControlPanelTypesToolbar;
