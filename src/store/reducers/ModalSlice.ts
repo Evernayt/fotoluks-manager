@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Modes } from 'constants/app';
 import {
+  initialEditTypeModal,
   initialModal,
   initialOrderModal,
   initialUserModal,
   initialUserRegistrationModal,
 } from 'constants/InitialStates/initialModalState';
 import {
+  IEditTypeModal,
   IModal,
   IOrderModal,
   IUserModal,
@@ -22,6 +25,8 @@ type ModalState = {
   editUserModal: IUserModal;
   controlPanelEditUserModal: IUserModal;
   orderMembersModal: IModal;
+  controlPanelTypesFilterModal: IModal;
+  controlPanelEditTypeModal: IEditTypeModal;
 };
 
 const initialState: ModalState = {
@@ -33,7 +38,9 @@ const initialState: ModalState = {
   userRegistrationModal: initialUserRegistrationModal,
   editUserModal: initialUserModal,
   controlPanelEditUserModal: initialUserModal,
-  orderMembersModal: initialModal
+  orderMembersModal: initialModal,
+  controlPanelTypesFilterModal: initialModal,
+  controlPanelEditTypeModal: initialEditTypeModal,
 };
 
 export const modalSlice = createSlice({
@@ -99,6 +106,23 @@ export const modalSlice = createSlice({
     closeOrderMembersModal(state) {
       state.orderMembersModal.isShowing = false;
     },
+    openControlPanelTypesFilterModal(state) {
+      state.controlPanelTypesFilterModal.isShowing = true;
+    },
+    closeControlPanelTypesFilterModal(state) {
+      state.controlPanelTypesFilterModal.isShowing = false;
+    },
+    openControlPanelEditTypeModal(
+      state,
+      action: PayloadAction<{ typeId: number; mode: Modes }>
+    ) {
+      state.controlPanelEditTypeModal.isShowing = true;
+      state.controlPanelEditTypeModal.typeId = action.payload.typeId;
+      state.controlPanelEditTypeModal.mode = action.payload.mode;
+    },
+    closeControlPanelEditTypeModal(state) {
+      state.controlPanelEditTypeModal.isShowing = false;
+    },
   },
 });
 
@@ -120,7 +144,11 @@ export const {
   openControlPanelEditUserModal,
   closeControlPanelEditUserModal,
   openOrderMembersModal,
-  closeOrderMembersModal
+  closeOrderMembersModal,
+  openControlPanelTypesFilterModal,
+  closeControlPanelTypesFilterModal,
+  openControlPanelEditTypeModal,
+  closeControlPanelEditTypeModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

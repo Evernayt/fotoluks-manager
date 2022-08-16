@@ -1,3 +1,5 @@
+import { Modes } from 'constants/app';
+
 export interface IModal {
   isShowing: boolean;
 }
@@ -15,4 +17,10 @@ export interface IUserRegistrationModal {
 export interface IUserModal {
   isShowing: boolean;
   phone: string;
+}
+
+export interface IEditTypeModal {
+  isShowing: boolean;
+  typeId: number;
+  mode: Modes;
 }

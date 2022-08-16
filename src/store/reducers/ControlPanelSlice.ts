@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  initialCategoriesFilter,
+  initialTypesFilter,
   initialUserFilter,
 } from 'constants/InitialStates/initialFilterState';
+import { initialFoundTypes } from 'constants/InitialStates/initialTypeState';
 import { initialFoundUsers } from 'constants/InitialStates/initialUserState';
-import { ICategoriesFilter } from 'models/ICategory';
+import { IFoundTypes, ITypesFilter } from 'models/IType';
 import { IFoundUsers, IRole, IUsersFilter } from 'models/IUser';
 
 type ControlPanelState = {
@@ -13,8 +14,9 @@ type ControlPanelState = {
   forceUpdate: boolean;
   isLoading: boolean;
   usersFilter: IUsersFilter;
-  categoriesFilter: ICategoriesFilter;
+  typesFilter: ITypesFilter;
   foundUsers: IFoundUsers;
+  foundTypes: IFoundTypes;
 };
 
 const initialState: ControlPanelState = {
@@ -23,8 +25,9 @@ const initialState: ControlPanelState = {
   forceUpdate: false,
   isLoading: false,
   usersFilter: initialUserFilter,
-  categoriesFilter: initialCategoriesFilter,
+  typesFilter: initialTypesFilter,
   foundUsers: initialFoundUsers,
+  foundTypes: initialFoundTypes,
 };
 
 export const controlPanelSlice = createSlice({
@@ -49,7 +52,7 @@ export const controlPanelSlice = createSlice({
           isActive: true,
           isPendingDeactivation: false,
         },
-        ...action.payload,
+        userRole: action.payload.role,
       };
     },
     deactiveUsersFilter(state) {
@@ -59,7 +62,7 @@ export const controlPanelSlice = createSlice({
       state.usersFilter = initialUserFilter;
       state.usersFilter.filter.isPendingDeactivation = true;
     },
-    activeCategoriesFilter(state, action: PayloadAction<{ role: IRole }>) {
+    activeTypesFilter(state, action: PayloadAction<{ role: IRole }>) {
       // state.usersFilter = {
       //   filter: {
       //     isActive: true,
@@ -68,15 +71,18 @@ export const controlPanelSlice = createSlice({
       //   ...action.payload,
       // };
     },
-    deactiveCategoriesFilter(state) {
-      state.categoriesFilter = initialCategoriesFilter;
+    deactiveTypesFilter(state) {
+      state.typesFilter = initialTypesFilter;
     },
-    clearCategoriesFilter(state) {
-      state.categoriesFilter = initialCategoriesFilter;
-      state.categoriesFilter.filter.isPendingDeactivation = true;
+    clearTypesFilter(state) {
+      state.typesFilter = initialTypesFilter;
+      state.typesFilter.filter.isPendingDeactivation = true;
     },
     setFoundUsers(state, action: PayloadAction<IFoundUsers>) {
       state.foundUsers = action.payload;
+    },
+    setFoundTypes(state, action: PayloadAction<IFoundTypes>) {
+      state.foundTypes = action.payload;
     },
   },
 });
@@ -89,10 +95,11 @@ export const {
   activeUsersFilter,
   deactiveUsersFilter,
   clearUsersFilter,
-  activeCategoriesFilter,
-  deactiveCategoriesFilter,
-  clearCategoriesFilter,
+  activeTypesFilter,
+  deactiveTypesFilter,
+  clearTypesFilter,
   setFoundUsers,
+  setFoundTypes,
 } = controlPanelSlice.actions;
 
 export default controlPanelSlice.reducer;

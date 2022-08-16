@@ -1,4 +1,6 @@
+import { Modes } from 'constants/app';
 import {
+  IEditTypeModal,
   IModal,
   IOrderModal,
   IUserModal,
@@ -19,4 +21,10 @@ export const initialUserRegistrationModal: IUserRegistrationModal = {
 export const initialUserModal: IUserModal = {
   isShowing: false,
   phone: '',
+};
+
+export const initialEditTypeModal: IEditTypeModal = {
+  isShowing: false,
+  typeId: 0,
+  mode: Modes.ADD_MODE,
 };

@@ -1,6 +1,6 @@
-import { ICategoriesFilter } from 'models/ICategory';
 import { IFilter } from 'models/IFilter';
 import { IOrdersFilter } from 'models/IOrder';
+import { ITypesFilter } from 'models/IType';
 import { IRole, IUsersFilter } from 'models/IUser';
 
 export const initialFilter: IFilter = {
@@ -16,10 +16,10 @@ export const initialRole: IRole = {
 
 export const initialUserFilter: IUsersFilter = {
   filter: initialFilter,
-  role: initialRole,
+  userRole: initialRole,
 };
 
-export const initialCategoriesFilter: ICategoriesFilter = {
+export const initialTypesFilter: ITypesFilter = {
   filter: initialFilter,
 };
 
