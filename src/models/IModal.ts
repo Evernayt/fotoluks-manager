@@ -30,3 +30,9 @@ export interface IEditProductModal {
   productId: number;
   mode: Modes;
 }
+
+export interface IEditCategoryModal {
+  isShowing: boolean;
+  categoryId: number;
+  mode: Modes;
+}

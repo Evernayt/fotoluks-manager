@@ -1,5 +1,6 @@
 import { Modes } from 'constants/app';
 import {
+  IEditCategoryModal,
   IEditProductModal,
   IEditTypeModal,
   IModal,
@@ -33,5 +34,11 @@ export const initialEditTypeModal: IEditTypeModal = {
 export const initialEditProductModal: IEditProductModal = {
   isShowing: false,
   productId: 0,
+  mode: Modes.ADD_MODE,
+};
+
+export const initialEditCategoryModal: IEditCategoryModal = {
+  isShowing: false,
+  categoryId: 0,
   mode: Modes.ADD_MODE,
 };

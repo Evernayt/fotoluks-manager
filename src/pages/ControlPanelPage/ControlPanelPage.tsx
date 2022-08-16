@@ -11,6 +11,7 @@ import ControlPanelTypesSearch from './ControlPanelTypesSearch/ControlPanelTypes
 import ControlPanelTypesFilterModal from './Modals/ControlPanelTypesFilterModal/ControlPanelTypesFilterModal';
 import ControlPanelEditTypeModal from './Modals/ControlPanelEditTypeModal/ControlPanelEditTypeModal';
 import ControlPanelEditProductModal from './Modals/ControlPanelEditProductModal/ControlPanelEditProductModal';
+import ControlPanelEditCategoryModal from './Modals/ControlPanelEditCategoryModal/ControlPanelEditCategoryModal';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
@@ -44,6 +45,7 @@ const ControlPanelPage = () => {
       <ControlPanelEditTypeModal />
       <ControlPanelTypesFilterModal />
       <ControlPanelEditProductModal />
+      <ControlPanelEditCategoryModal />
       <Navmenu searchRender={() => renderSearch()} />
       <div className={styles.section}>
         <ControlPanelSidemenu />

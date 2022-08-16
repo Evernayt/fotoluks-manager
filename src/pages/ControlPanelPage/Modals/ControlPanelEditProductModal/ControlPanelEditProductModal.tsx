@@ -33,6 +33,9 @@ const ControlPanelEditProductModal = () => {
   const controlPanelEditProductModal = useAppSelector(
     (state) => state.modal.controlPanelEditProductModal
   );
+  const controlPanelEditCategoryModal = useAppSelector(
+    (state) => state.modal.controlPanelEditCategoryModal
+  );
 
   const dispatch = useAppDispatch();
 
@@ -45,6 +48,15 @@ const ControlPanelEditProductModal = () => {
       fetchCategories();
     }
   }, [controlPanelEditProductModal.isShowing]);
+
+  useEffect(() => {
+    if (
+      !controlPanelEditCategoryModal.isShowing &&
+      controlPanelEditProductModal.isShowing
+    ) {
+      fetchCategories();
+    }
+  }, [controlPanelEditCategoryModal.isShowing]);
 
   const fetchCategories = () => {
     fetchCategoriesAPI().then((data) => {
@@ -81,6 +93,15 @@ const ControlPanelEditProductModal = () => {
     });
   };
 
+  const openEditCategoryModal = () => {
+    dispatch(
+      modalSlice.actions.openControlPanelEditCategoryModal({
+        categoryId: 0,
+        mode: Modes.ADD_MODE,
+      })
+    );
+  };
+
   return (
     <Modal
       title={
@@ -91,7 +112,7 @@ const ControlPanelEditProductModal = () => {
       isShowing={controlPanelEditProductModal.isShowing}
       hide={close}
     >
-      <div className={styles.container}>
+      <div>
         <div className={styles.columns}>
           <img
             className={styles.image}
@@ -107,7 +128,7 @@ const ControlPanelEditProductModal = () => {
               />
               <Tooltip label="Добавить категорию">
                 <div>
-                  <IconButton icon={plusIcon} />
+                  <IconButton icon={plusIcon} onClick={openEditCategoryModal} />
                 </div>
               </Tooltip>
             </div>

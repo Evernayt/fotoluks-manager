@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Modes } from 'constants/app';
 import {
+  initialEditCategoryModal,
   initialEditProductModal,
   initialEditTypeModal,
   initialModal,
@@ -9,6 +10,7 @@ import {
   initialUserRegistrationModal,
 } from 'constants/InitialStates/initialModalState';
 import {
+  IEditCategoryModal,
   IEditProductModal,
   IEditTypeModal,
   IModal,
@@ -30,6 +32,7 @@ type ModalState = {
   controlPanelTypesFilterModal: IModal;
   controlPanelEditTypeModal: IEditTypeModal;
   controlPanelEditProductModal: IEditProductModal;
+  controlPanelEditCategoryModal: IEditCategoryModal;
 };
 
 const initialState: ModalState = {
@@ -45,6 +48,7 @@ const initialState: ModalState = {
   controlPanelTypesFilterModal: initialModal,
   controlPanelEditTypeModal: initialEditTypeModal,
   controlPanelEditProductModal: initialEditProductModal,
+  controlPanelEditCategoryModal: initialEditCategoryModal,
 };
 
 export const modalSlice = createSlice({
@@ -138,6 +142,18 @@ export const modalSlice = createSlice({
     closeControlPanelEditProductModal(state) {
       state.controlPanelEditProductModal.isShowing = false;
     },
+    openControlPanelEditCategoryModal(
+      state,
+      action: PayloadAction<{ categoryId: number; mode: Modes }>
+    ) {
+      state.controlPanelEditCategoryModal.isShowing = true;
+      state.controlPanelEditCategoryModal.categoryId =
+        action.payload.categoryId;
+      state.controlPanelEditCategoryModal.mode = action.payload.mode;
+    },
+    closeControlPanelEditCategoryModal(state) {
+      state.controlPanelEditCategoryModal.isShowing = false;
+    },
   },
 });
 
@@ -166,6 +182,8 @@ export const {
   closeControlPanelEditTypeModal,
   openControlPanelEditProductModal,
   closeControlPanelEditProductModal,
+  openControlPanelEditCategoryModal,
+  closeControlPanelEditCategoryModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
