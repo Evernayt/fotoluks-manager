@@ -4,9 +4,10 @@ import { useOnClickOutside } from 'hooks';
 import { forwardRef, HTMLAttributes, ReactNode, useRef, useState } from 'react';
 import styles from './DropdownButton.module.css';
 
-interface OptionsProps {
+export interface IDropdownButtonOption {
+  id: number;
   name: string;
-  onClick: () => void;
+  onClick: (option: IDropdownButtonOption) => void;
 }
 
 export enum DropdownButtonVariants {
@@ -15,7 +16,7 @@ export enum DropdownButtonVariants {
 }
 
 interface DropdownButtonProps extends HTMLAttributes<HTMLElement> {
-  options?: OptionsProps[];
+  options?: IDropdownButtonOption[];
   icon?: string;
   text?: string;
   placement: Placements;
@@ -44,8 +45,8 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
 
     useOnClickOutside(dropdownBtnRef, () => setIsHidden(true));
 
-    const clickHandler = (optionFunc: () => void) => {
-      optionFunc();
+    const clickHandler = (option: IDropdownButtonOption) => {
+      option.onClick(option);
       setIsHidden(true);
     };
 
@@ -69,11 +70,11 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
           }}
         >
           {itemRender === undefined
-            ? options?.map((option, index) => (
-                <li key={index}>
+            ? options?.map((option) => (
+                <li key={option.id}>
                   <div
                     className={styles.item}
-                    onClick={() => clickHandler(option.onClick)}
+                    onClick={() => clickHandler(option)}
                   >
                     {option.name}
                   </div>
