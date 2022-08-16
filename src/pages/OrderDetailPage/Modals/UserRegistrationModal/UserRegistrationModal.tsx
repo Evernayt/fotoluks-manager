@@ -29,6 +29,7 @@ const UserRegistrationModal = () => {
   const userRegistrationModal = useAppSelector(
     (state) => state.modal.userRegistrationModal
   );
+  const activeShop = useAppSelector((state) => state.app.activeShop);
 
   const additionalAccordion = useModal();
 
@@ -70,7 +71,9 @@ const UserRegistrationModal = () => {
           email: email === '' ? null : email.toLowerCase(),
           vk: vk === '' ? null : vk.toLowerCase(),
           telegram: telegram === '' ? null : telegram.toLowerCase(),
+          shopId: activeShop.id,
         };
+
         registrationAPI(user).then((data2) => {
           dispatch(orderSlice.actions.setOrderUser(data2));
           close();

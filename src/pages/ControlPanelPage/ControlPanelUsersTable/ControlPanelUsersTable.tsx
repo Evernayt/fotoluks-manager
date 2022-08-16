@@ -87,8 +87,10 @@ const ControlPanelUsersTable = () => {
 
   useEffect(() => {
     if (usersFilter.filter.isActive) {
-      const { role } = usersFilter;
-      fetchUsers(page, [role.role]);
+      const { userRole } = usersFilter;
+      if (userRole.role) {
+        fetchUsers(page, [userRole.role]);
+      }
     } else if (usersFilter.filter.isPendingDeactivation) {
       dispatch(controlPanelSlice.actions.deactiveUsersFilter());
       fetchUsers(page);
@@ -113,13 +115,15 @@ const ControlPanelUsersTable = () => {
 
   const pageChangeHandler = (page: number) => {
     setPage(page);
-    reload();
+    reload(page);
   };
 
-  const reload = () => {
+  const reload = (page: number = 1) => {
     if (usersFilter.filter.isActive) {
-      const { role } = usersFilter;
-      fetchUsers(page, [role.role]);
+      const { userRole } = usersFilter;
+      if (userRole.role) {
+        fetchUsers(page, [userRole.role]);
+      }
     } else {
       fetchUsers(page);
     }

@@ -17,6 +17,7 @@ export interface IUser {
   email: string | null;
   vk: string | null;
   telegram: string | null;
+  shopId: number;
 }
 
 export interface IRole {
@@ -32,7 +33,7 @@ export interface IUserData {
 
 export interface IUsersFilter {
   filter: IFilter;
-  role: IRole;
+  userRole: IRole;
 }
 
 export interface IFoundUsers {
