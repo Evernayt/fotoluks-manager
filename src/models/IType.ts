@@ -1,5 +1,6 @@
 import { IFeature } from './IFeature';
 import { IFilter } from './IFilter';
+import { IParam } from './IParam';
 import { IProduct } from './IProduct';
 
 export interface IType {
@@ -9,6 +10,7 @@ export interface IType {
   image: string;
   features: IFeature[] | null;
   product?: IProduct;
+  params?: IParam[];
 }
 
 export interface ITypeData {

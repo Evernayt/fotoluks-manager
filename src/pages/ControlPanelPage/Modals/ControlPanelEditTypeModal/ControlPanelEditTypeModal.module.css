@@ -1,3 +1,7 @@
+.container {
+  max-width: 409px;
+}
+
 .columns {
   display: flex;
 }
@@ -20,4 +24,14 @@
   border-radius: var(--border-radius);
   margin-right: 24px;
   object-fit: cover;
+}
+
+.features_container {
+  flex-wrap: wrap;
+}
+
+.feature_item {
+  display: flex;
+  background-color: var(--secondary-color);
+  border-radius: var(--border-radius);
 }

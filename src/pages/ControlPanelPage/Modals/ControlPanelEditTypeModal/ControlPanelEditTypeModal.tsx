@@ -1,5 +1,6 @@
 import {
   Button,
+  DropdownButton,
   IconButton,
   Modal,
   SelectButton,
@@ -7,12 +8,16 @@ import {
   Tooltip,
 } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
+import { IDropdownButtonOption } from 'components/UI/DropdownButton/DropdownButton';
 import { Modes } from 'constants/app';
 import { noImage } from 'constants/images';
+import { createClone } from 'helpers';
+import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { fetchFeaturesAPI } from 'http/featureAPI';
 import { fetchProductsAPI } from 'http/productAPI';
 import { createTypeAPI, fetchTypeAPI, updateTypeAPI } from 'http/typeAPI';
-import { plusIcon } from 'icons';
+import { minusIcon, plusIcon } from 'icons';
 import { IFeature } from 'models/IFeature';
 import { IProduct } from 'models/IProduct';
 import { IType } from 'models/IType';
@@ -27,8 +32,11 @@ const ControlPanelEditTypeModal = () => {
   const [type, setType] = useState<IType>();
   const [typeName, setTypeName] = useState<string>('');
   const [typeImage, setTypeImage] = useState<string>('');
-  const [typeFeatures, setTypeFeatures] = useState<IFeature[] | null>([]);
+  const [typeFeatures, setTypeFeatures] = useState<IFeature[]>([]);
   const [typePrice, setTypePrice] = useState<number>(0);
+  const [featureOptions, setFeatureOptions] = useState<IDropdownButtonOption[]>(
+    []
+  );
 
   const controlPanelEditTypeModal = useAppSelector(
     (state) => state.modal.controlPanelEditTypeModal
@@ -43,6 +51,7 @@ const ControlPanelEditTypeModal = () => {
     if (controlPanelEditTypeModal.isShowing) {
       if (controlPanelEditTypeModal.mode === Modes.ADD_MODE) {
         fetchProducts();
+        createFeatureOptions([]);
       } else {
         fetchType();
       }
@@ -72,12 +81,43 @@ const ControlPanelEditTypeModal = () => {
       setType(data);
       setTypeName(data.name);
       setTypeImage(data.image);
-      setTypeFeatures(data.features);
+      if (data.features) {
+        setTypeFeatures(data.features);
+        createFeatureOptions(data.features);
+      }
       setTypePrice(data.price);
 
       if (data.product) {
         setSelectedProduct(data.product);
       }
+    });
+  };
+
+  const createFeatureOptions = (features: IFeature[]) => {
+    fetchFeaturesAPI().then((data) => {
+      const options: IDropdownButtonOption[] = [];
+      for (let i = 0; i < data.length; i++) {
+        const foundFeature = features.find(
+          (feature) => feature.id === data[i].id
+        );
+
+        if (foundFeature === undefined) {
+          options.push({
+            id: data[i].id,
+            name: data[i].name,
+            onClick: () => {
+              setTypeFeatures((prevState) => {
+                return (prevState = [...prevState, data[i]]);
+              });
+
+              setFeatureOptions((prevState) =>
+                prevState.filter((state) => state.id !== data[i].id)
+              );
+            },
+          });
+        }
+      }
+      setFeatureOptions(options);
     });
   };
 
@@ -95,26 +135,36 @@ const ControlPanelEditTypeModal = () => {
 
   const updateType = () => {
     if (type) {
-      updateTypeAPI(
-        type?.id,
-        typeName,
-        typeImage,
-        typePrice,
-        selectedProduct.id
-      ).then(() => {
-        dispatch(controlPanelSlice.actions.setForceUpdate(true));
-        close();
-      });
+      const featureIds: number[] = [];
+      for (let i = 0; i < typeFeatures.length; i++) {
+        featureIds.push(typeFeatures[i].id);
+      }
+
+      updateTypeAPI(type?.id, typeName, typeImage, typePrice, featureIds).then(
+        () => {
+          dispatch(controlPanelSlice.actions.setForceUpdate(true));
+          close();
+        }
+      );
     }
   };
 
   const createType = () => {
-    createTypeAPI(typeName, typeImage, typePrice, selectedProduct.id).then(
-      () => {
-        dispatch(controlPanelSlice.actions.setForceUpdate(true));
-        close();
-      }
-    );
+    const featureIds: number[] = [];
+    for (let i = 0; i < typeFeatures.length; i++) {
+      featureIds.push(typeFeatures[i].id);
+    }
+
+    createTypeAPI(
+      typeName,
+      typeImage,
+      typePrice,
+      selectedProduct.id,
+      featureIds
+    ).then(() => {
+      dispatch(controlPanelSlice.actions.setForceUpdate(true));
+      close();
+    });
   };
 
   const openEditProductModal = () => {
@@ -124,6 +174,13 @@ const ControlPanelEditTypeModal = () => {
         mode: Modes.ADD_MODE,
       })
     );
+  };
+
+  const removeFeature = (feature: IFeature) => {
+    const features = typeFeatures.filter((state) => state.id !== feature.id);
+
+    setTypeFeatures(features);
+    createFeatureOptions(features);
   };
 
   return (
@@ -136,7 +193,7 @@ const ControlPanelEditTypeModal = () => {
       isShowing={controlPanelEditTypeModal.isShowing}
       hide={close}
     >
-      <div>
+      <div className={styles.container}>
         <div className={styles.columns}>
           <img
             className={styles.image}
@@ -176,24 +233,39 @@ const ControlPanelEditTypeModal = () => {
           onChange={(e) => setTypeImage(e.target.value)}
           containerStyle={{ margin: '12px 0' }}
         />
-        <div className={styles.main_controls}>
+        <div
+          className={[styles.main_controls, styles.features_container].join(
+            ' '
+          )}
+        >
           {typeFeatures?.map((feature) => (
-            <Button style={{ width: 'max-content' }} key={feature.id}>
-              {`${feature.pluralName}: ${feature.params?.length}`}
-            </Button>
+            <div className={styles.feature_item}>
+              <Button style={{ width: 'max-content' }} key={feature.id}>
+                {feature.pluralName}
+              </Button>
+              <IconButton
+                icon={minusIcon}
+                style={{ minHeight: '32px', padding: '4px' }}
+                onClick={() => removeFeature(feature)}
+              ></IconButton>
+            </div>
           ))}
 
-          <Tooltip label="Добавить особенности">
-            <div>
-              <IconButton icon={plusIcon} />
-            </div>
-          </Tooltip>
+          <DropdownButton
+            options={featureOptions}
+            icon={plusIcon}
+            placement={Placements.rightStart}
+          />
         </div>
 
         <div className={styles.controls}>
           <Button onClick={close}>Отменить</Button>
           {controlPanelEditTypeModal.mode === Modes.ADD_MODE ? (
-            <Button variant={ButtonVariants.primary} onClick={createType}>
+            <Button
+              variant={ButtonVariants.primary}
+              onClick={createType}
+              disabled={selectedProduct === undefined}
+            >
               Создать
             </Button>
           ) : (
