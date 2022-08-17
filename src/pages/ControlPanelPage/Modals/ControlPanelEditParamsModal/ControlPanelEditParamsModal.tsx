@@ -10,8 +10,9 @@ import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './ControlPanelEditParamsModal.module.css';
 
 const ControlPanelEditParamsModal = () => {
-  const [typeParams, setTypeParams] = useState<IParam[]>([]);
   const [params, setParams] = useState<IParam[]>([]);
+  const [typeParamsForCreate, setTypeParamsForCreate] = useState<IParam[]>([]);
+  const [typeParamsForDelete, setTypeParamsForDelete] = useState<IParam[]>([]);
 
   const controlPanelEditParamsModal = useAppSelector(
     (state) => state.modal.controlPanelEditParamsModal
@@ -30,7 +31,7 @@ const ControlPanelEditParamsModal = () => {
       controlPanelEditParamsModal.typeId,
       controlPanelEditParamsModal.feature.id
     ).then((data) => {
-      setTypeParams(data);
+      setTypeParamsForCreate(data);
       fetchParams(data);
     });
   };
@@ -55,33 +56,45 @@ const ControlPanelEditParamsModal = () => {
   const close = () => {
     dispatch(modalSlice.actions.closeControlPanelEditParamsModal());
 
-    setTypeParams([]);
+    setTypeParamsForCreate([]);
+    setTypeParamsForDelete([]);
     setParams([]);
   };
 
   const updateTypeParams = () => {
-    const paramIds: number[] = [];
-    for (let i = 0; i < typeParams.length; i++) {
-      paramIds.push(typeParams[i].id);
+    const paramIdsForCreate: number[] = [];
+    const paramIdsForDelete: number[] = [];
+    for (let i = 0; i < typeParamsForCreate.length; i++) {
+      paramIdsForCreate.push(typeParamsForCreate[i].id);
     }
-
-    updateTypeParamsAPI(controlPanelEditParamsModal.typeId, paramIds).then(
-      () => {
-        close();
-      }
-    );
+    for (let i = 0; i < typeParamsForDelete.length; i++) {
+      paramIdsForDelete.push(typeParamsForDelete[i].id);
+    }
+    updateTypeParamsAPI(
+      controlPanelEditParamsModal.typeId,
+      paramIdsForCreate,
+      paramIdsForDelete
+    ).then(() => {
+      close();
+    });
   };
 
   const removeTypeParam = (param: IParam) => {
-    setTypeParams((prevState) =>
+    setTypeParamsForCreate((prevState) =>
       prevState.filter((state) => state.id !== param.id)
     );
+
+    setTypeParamsForDelete((prevState) => [...prevState, param]);
 
     setParams((prevState) => [...prevState, param]);
   };
 
   const addTypeParam = (param: IParam) => {
-    setTypeParams((prevState) => [...prevState, param]);
+    setTypeParamsForCreate((prevState) => [...prevState, param]);
+
+    setTypeParamsForDelete((prevState) =>
+      prevState.filter((state) => state.id !== param.id)
+    );
 
     setParams((prevState) =>
       prevState.filter((state) => state.id !== param.id)
@@ -96,7 +109,7 @@ const ControlPanelEditParamsModal = () => {
     >
       <div className={styles.container}>
         <div className={styles.controls_container}>
-          {typeParams.map((typeParam) => (
+          {typeParamsForCreate.map((typeParam) => (
             <div className={styles.param_item} key={typeParam.id}>
               {typeParam.name}
               <IconButton

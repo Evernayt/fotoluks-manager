@@ -100,13 +100,22 @@ export const fetchTypeParamsAPI: IFetchTypeParams = async (
 };
 
 interface IUpdateTypeParams {
-  (id: number, paramIds: number[]): Promise<number[]>;
+  (
+    id: number,
+    paramIdsForCreate: number[],
+    paramIdsForDelete: number[]
+  ): Promise<number[]>;
 }
 
-export const updateTypeParamsAPI: IUpdateTypeParams = async (id, paramIds) => {
+export const updateTypeParamsAPI: IUpdateTypeParams = async (
+  id,
+  paramIdsForCreate,
+  paramIdsForDelete
+) => {
   const { data } = await $host.post('api/type/updateParams', {
     id,
-    paramIds,
+    paramIdsForCreate,
+    paramIdsForDelete,
   });
   return data;
 };
