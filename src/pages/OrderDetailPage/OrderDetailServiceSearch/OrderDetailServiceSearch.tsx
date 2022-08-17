@@ -1,4 +1,5 @@
 import { Search } from 'components';
+import { noImage } from 'constants/images';
 import { useDebounce } from 'hooks';
 import { searchProductsAPI } from 'http/productAPI';
 import { IProduct } from 'models/IProduct';
@@ -57,7 +58,11 @@ const OrderDetailServiceSearch: FC<OrderDetailServiceSearchProps> = ({
                 key={type.id}
                 onClick={() => selectService(foundService, type)}
               >
-                <img className={styles.type_image} src={type.image} alt="" />
+                <img
+                  className={styles.type_image}
+                  src={type.image === '' ? noImage : type.image}
+                  alt=""
+                />
                 <div className={styles.type_container}>
                   <span className={styles.product_name}>
                     {foundService.name}
