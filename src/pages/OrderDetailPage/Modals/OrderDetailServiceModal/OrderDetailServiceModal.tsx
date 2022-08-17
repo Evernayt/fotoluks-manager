@@ -1,4 +1,11 @@
-import { Button, Modal, SelectButton, Textarea, Textbox } from 'components';
+import {
+  Button,
+  Modal,
+  SelectButton,
+  Textarea,
+  Textbox,
+  Tooltip,
+} from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { Modes } from 'constants/app';
 import { groupBy } from 'helpers';
@@ -14,6 +21,7 @@ import { FC, useEffect, useState } from 'react';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { v4 as uuidv4 } from 'uuid';
 import OrderDetailServiceSearch from '../../OrderDetailServiceSearch/OrderDetailServiceSearch';
+import styles from './OrderDetailServiceModal.module.css';
 
 interface OrderDetailServiceModalProps {
   isShowing: boolean;
@@ -230,74 +238,79 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
       isShowing={isShowing}
       hide={hide}
     >
-      {mode === Modes.ADD_MODE && (
-        <OrderDetailServiceSearch
-          searchSelect={searchSelect}
-          style={{ marginBottom: '16px' }}
-        />
-      )}
-      <div>
-        <SelectButton
-          items={products}
-          defaultSelectedItem={selectedProduct}
-          disabled={mode === Modes.EDIT_MODE}
-          changeHandler={(e) => selectProduct(e)}
-          style={{ width: '228px', marginRight: '12px' }}
-        />
-        {types.length !== 0 && (
-          <SelectButton
-            items={types}
-            defaultSelectedItem={selectedType}
-            changeHandler={(e) => selectType(e)}
-            style={{ width: '228px' }}
+      <div className={styles.container}>
+        {mode === Modes.ADD_MODE && (
+          <OrderDetailServiceSearch
+            searchSelect={searchSelect}
+            style={{ marginBottom: '16px' }}
           />
         )}
-      </div>
-      <div>
-        {features.map((feature, index) => (
+        <div className={styles.main_controls}>
           <SelectButton
-            items={feature}
-            defaultSelectedItem={selectedParams[index]?.param}
-            changeHandler={(e) => selectParam(e)}
-            style={
-              index + 1 == features.length - 1
-                ? { width: '228px', marginTop: '12px', marginRight: '12px' }
-                : { width: '228px', marginTop: '12px', marginRight: '0' }
-            }
-            key={index}
+            items={products}
+            defaultSelectedItem={selectedProduct}
+            disabled={mode === Modes.EDIT_MODE}
+            changeHandler={(e) => selectProduct(e)}
+            style={{ width: '228px' }}
           />
-        ))}
-      </div>
-      <div style={{ margin: '12px 0', display: 'flex' }}>
-        <Textbox
-          label="Количество"
-          style={{ width: '228px', marginRight: '12px' }}
-          type="number"
-          min={1}
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
+          {types.length !== 0 && (
+            <SelectButton
+              items={types}
+              defaultSelectedItem={selectedType}
+              changeHandler={(e) => selectType(e)}
+              style={{ width: '228px' }}
+            />
+          )}
+        </div>
+        <div className={styles.features_container}>
+          {features.map((feature, index) => (
+            <Tooltip
+              label={feature[0].feature?.name ? feature[0].feature?.name : ''}
+              delay={600}
+              key={index}
+            >
+              <div>
+                <SelectButton
+                  items={feature}
+                  defaultSelectedItem={selectedParams[index]?.param}
+                  changeHandler={(e) => selectParam(e)}
+                  style={{ width: '228px' }}
+                />
+              </div>
+            </Tooltip>
+          ))}
+        </div>
+        <div className={styles.main_controls}>
+          <Textbox
+            label="Количество"
+            style={{ width: '100%' }}
+            type="number"
+            min={1}
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+          />
+          <Textbox
+            label="Цена"
+            style={{ width: '100%' }}
+            type="number"
+            min={0}
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+          />
+        </div>
+        <Textarea
+          label="Комментарий"
+          style={{ resize: 'vertical', marginBottom: '12px' }}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
         />
-        <Textbox
-          label="Цена"
-          style={{ width: '228px' }}
-          type="number"
-          min={0}
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
-        />
+        <Button
+          variant={ButtonVariants.primary}
+          onClick={createOrUpdateFinishedProduct}
+        >
+          {mode === Modes.ADD_MODE ? 'Добавить' : 'Изменить'}
+        </Button>
       </div>
-      <Textarea
-        label="Комментарий"
-        style={{ resize: 'vertical', marginBottom: '12px' }}
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-      />
-      <Button
-        variant={ButtonVariants.primary}
-        onClick={createOrUpdateFinishedProduct}
-      >
-        {mode === Modes.ADD_MODE ? 'Добавить' : 'Изменить'}
-      </Button>
     </Modal>
   );
 };
