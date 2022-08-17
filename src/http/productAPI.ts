@@ -56,3 +56,42 @@ export const createProductAPI: ICreateProduct = async (
   });
   return data;
 };
+
+interface IFetchProduct {
+  (productId: number): Promise<IProduct>;
+}
+
+export const fetchProductAPI: IFetchProduct = async (productId) => {
+  const { data } = await $host.get('api/product/one/' + productId);
+  return data;
+};
+
+interface IUpdateProduct {
+  (
+    id: number,
+    name: string,
+    pluralName: string,
+    description: string,
+    image: string,
+    categoryId: number
+  ): Promise<number[]>;
+}
+
+export const updateProductAPI: IUpdateProduct = async (
+  id,
+  name,
+  pluralName,
+  description,
+  image,
+  categoryId
+) => {
+  const { data } = await $host.post('api/product/update', {
+    id,
+    name,
+    pluralName,
+    description,
+    image,
+    categoryId,
+  });
+  return data;
+};

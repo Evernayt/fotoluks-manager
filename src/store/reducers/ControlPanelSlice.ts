@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  initialProductsFilter,
   initialTypesFilter,
   initialUserFilter,
 } from 'constants/InitialStates/initialFilterState';
+import { initialFoundProducts } from 'constants/InitialStates/initialProductState';
 import { initialFoundTypes } from 'constants/InitialStates/initialTypeState';
 import { initialFoundUsers } from 'constants/InitialStates/initialUserState';
+import { IFoundProducts, IProductsFilter } from 'models/IProduct';
 import { IFoundTypes, ITypesFilter } from 'models/IType';
 import { IFoundUsers, IRole, IUsersFilter } from 'models/IUser';
 
@@ -17,6 +20,8 @@ type ControlPanelState = {
   typesFilter: ITypesFilter;
   foundUsers: IFoundUsers;
   foundTypes: IFoundTypes;
+  productsFilter: IProductsFilter;
+  foundProducts: IFoundProducts;
 };
 
 const initialState: ControlPanelState = {
@@ -28,6 +33,8 @@ const initialState: ControlPanelState = {
   typesFilter: initialTypesFilter,
   foundUsers: initialFoundUsers,
   foundTypes: initialFoundTypes,
+  productsFilter: initialProductsFilter,
+  foundProducts: initialFoundProducts,
 };
 
 export const controlPanelSlice = createSlice({
@@ -84,6 +91,25 @@ export const controlPanelSlice = createSlice({
     setFoundTypes(state, action: PayloadAction<IFoundTypes>) {
       state.foundTypes = action.payload;
     },
+    activeProductsFilter(state, action: PayloadAction<{ role: IRole }>) {
+      // state.usersFilter = {
+      //   filter: {
+      //     isActive: true,
+      //     isPendingDeactivation: false,
+      //   },
+      //   ...action.payload,
+      // };
+    },
+    deactiveProductsFilter(state) {
+      state.productsFilter = initialProductsFilter;
+    },
+    clearProductsFilter(state) {
+      state.productsFilter = initialProductsFilter;
+      state.productsFilter.filter.isPendingDeactivation = true;
+    },
+    setFoundProducts(state, action: PayloadAction<IFoundProducts>) {
+      state.foundProducts = action.payload;
+    },
   },
 });
 
@@ -100,6 +126,10 @@ export const {
   clearTypesFilter,
   setFoundUsers,
   setFoundTypes,
+  activeProductsFilter,
+  deactiveProductsFilter,
+  clearProductsFilter,
+  setFoundProducts,
 } = controlPanelSlice.actions;
 
 export default controlPanelSlice.reducer;

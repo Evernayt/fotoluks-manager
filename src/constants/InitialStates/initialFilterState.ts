@@ -1,5 +1,6 @@
 import { IFilter } from 'models/IFilter';
 import { IOrdersFilter } from 'models/IOrder';
+import { IProductsFilter } from 'models/IProduct';
 import { ITypesFilter } from 'models/IType';
 import { IRole, IUsersFilter } from 'models/IUser';
 
@@ -33,4 +34,8 @@ export const initialOrdersFilter: IOrdersFilter = {
   },
   startDate: '',
   endDate: '',
+};
+
+export const initialProductsFilter: IProductsFilter = {
+  filter: initialFilter,
 };

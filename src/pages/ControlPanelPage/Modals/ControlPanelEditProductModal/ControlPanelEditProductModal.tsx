@@ -12,9 +12,14 @@ import { Modes } from 'constants/app';
 import { noImage } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchCategoriesAPI } from 'http/categoryAPI';
-import { createProductAPI } from 'http/productAPI';
+import {
+  createProductAPI,
+  fetchProductAPI,
+  updateProductAPI,
+} from 'http/productAPI';
 import { plusIcon } from 'icons';
 import { ICategory } from 'models/ICategory';
+import { IProduct } from 'models/IProduct';
 import { useEffect, useState } from 'react';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
@@ -25,6 +30,7 @@ const ControlPanelEditProductModal = () => {
   const [selectedCategory, setSelectedCategory] = useState<ICategory>(
     categories[0]
   );
+  const [productId, setProductId] = useState<number>(0);
   const [productName, setProductName] = useState<string>('');
   const [productPluralName, setProductPluralName] = useState<string>('');
   const [productDescription, setProductDescription] = useState<string>('');
@@ -41,8 +47,8 @@ const ControlPanelEditProductModal = () => {
 
   useEffect(() => {
     if (controlPanelEditProductModal.isShowing) {
-      if (controlPanelEditProductModal.mode === Modes.ADD_MODE) {
-      } else {
+      if (controlPanelEditProductModal.mode === Modes.EDIT_MODE) {
+        fetchProduct();
       }
 
       fetchCategories();
@@ -64,6 +70,17 @@ const ControlPanelEditProductModal = () => {
     });
   };
 
+  const fetchProduct = () => {
+    fetchProductAPI(controlPanelEditProductModal.productId).then((data) => {
+      if (data.category) setSelectedCategory(data.category);
+      setProductId(data.id);
+      setProductName(data.name);
+      setProductPluralName(data.pluralName);
+      setProductDescription(data.description);
+      setProductImage(data.image);
+    });
+  };
+
   const close = () => {
     dispatch(modalSlice.actions.closeControlPanelEditProductModal());
 
@@ -76,8 +93,17 @@ const ControlPanelEditProductModal = () => {
   };
 
   const updateProduct = () => {
-    dispatch(controlPanelSlice.actions.setForceUpdate(true));
-    close();
+    updateProductAPI(
+      productId,
+      productName,
+      productPluralName,
+      productDescription,
+      productImage,
+      selectedCategory.id
+    ).then(() => {
+      dispatch(controlPanelSlice.actions.setForceUpdate(true));
+      close();
+    });
   };
 
   const createProduct = () => {

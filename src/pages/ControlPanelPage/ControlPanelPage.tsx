@@ -13,6 +13,8 @@ import ControlPanelEditTypeModal from './Modals/ControlPanelEditTypeModal/Contro
 import ControlPanelEditProductModal from './Modals/ControlPanelEditProductModal/ControlPanelEditProductModal';
 import ControlPanelEditCategoryModal from './Modals/ControlPanelEditCategoryModal/ControlPanelEditCategoryModal';
 import ControlPanelEditParamsModal from './Modals/ControlPanelEditParamsModal/ControlPanelEditParamsModal';
+import ControlPanelProductsTable from './ControlPanelProductsTable/ControlPanelProductsTable';
+import ControlPanelProductsSearch from './ControlPanelProductsSearch/ControlPanelProductsSearch';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
@@ -24,6 +26,8 @@ const ControlPanelPage = () => {
       return <ControlPanelUsersTable />;
     } else if (activeItemId === 2) {
       return <ControlPanelTypesTable />;
+    } else if (activeItemId === 3) {
+      return <ControlPanelProductsTable />;
     } else {
       return null;
     }
@@ -34,6 +38,8 @@ const ControlPanelPage = () => {
       return <ControlPanelUsersSearch />;
     } else if (activeItemId === 2) {
       return <ControlPanelTypesSearch />;
+    } else if (activeItemId === 3) {
+      return <ControlPanelProductsSearch />;
     } else {
       return null;
     }

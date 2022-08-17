@@ -7,12 +7,12 @@ import { FC, useMemo, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './ControlPanelTypesToolbar.module.css';
 
-interface ControlPanelProductsToolbarProps {
+interface ControlPanelTypesToolbarProps {
   reload: () => void;
   setLimit: (limit: number) => void;
 }
 
-const ControlPanelTypesToolbar: FC<ControlPanelProductsToolbarProps> = ({
+const ControlPanelTypesToolbar: FC<ControlPanelTypesToolbarProps> = ({
   reload,
   setLimit,
 }) => {

@@ -1,4 +1,5 @@
 import { ICategory } from './ICategory';
+import { IFilter } from './IFilter';
 import { IType } from './IType';
 
 export interface IProduct {
@@ -14,4 +15,13 @@ export interface IProduct {
 export interface IProductData {
   rows: IProduct[];
   count: number;
+}
+
+export interface IProductsFilter {
+  filter: IFilter;
+}
+
+export interface IFoundProducts {
+  productData: IProductData;
+  searchText: string;
 }

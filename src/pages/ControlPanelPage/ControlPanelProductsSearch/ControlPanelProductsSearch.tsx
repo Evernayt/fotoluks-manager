@@ -3,10 +3,10 @@ import { useAppDispatch } from 'hooks/redux';
 import { useEffect, useState } from 'react';
 import { searchIcon } from 'icons';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
-import { IFoundTypes } from 'models/IType';
-import styles from './ControlPanelTypesSearch.module.css';
+import styles from './ControlPanelProductsSearch.module.css';
+import { IFoundProducts } from 'models/IProduct';
 
-const ControlPanelTypesSearch = () => {
+const ControlPanelProductsSearch = () => {
   const [searchText, setSearchText] = useState<string>('');
 
   const debouncedSearchTerm = useDebounce(searchText, 500);
@@ -17,11 +17,11 @@ const ControlPanelTypesSearch = () => {
     if (debouncedSearchTerm) {
       searchTypes();
     } else {
-      const foundTypesData: IFoundTypes = {
-        typeData: { rows: [], count: 0 },
+      const foundProductsData: IFoundProducts = {
+        productData: { rows: [], count: 0 },
         searchText,
       };
-      dispatch(controlPanelSlice.actions.setFoundTypes(foundTypesData));
+      dispatch(controlPanelSlice.actions.setFoundProducts(foundProductsData));
     }
   }, [debouncedSearchTerm]);
 
@@ -45,7 +45,7 @@ const ControlPanelTypesSearch = () => {
       <img className={styles.icon} src={searchIcon} alt="search-icon" />
       <input
         className={styles.input}
-        placeholder="Поиск товаров"
+        placeholder="Поиск продуктов"
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         disabled
@@ -54,4 +54,4 @@ const ControlPanelTypesSearch = () => {
   );
 };
 
-export default ControlPanelTypesSearch;
+export default ControlPanelProductsSearch;

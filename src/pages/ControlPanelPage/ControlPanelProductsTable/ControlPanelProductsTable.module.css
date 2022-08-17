@@ -18,12 +18,12 @@
 
 .column {
   padding: 18px;
-  /* max-width: 100px; */
   border-bottom: 1px solid #eeede8;
   color: var(--secondary-text-on-bg-color);
   font-weight: 400;
   text-align: left;
   cursor: default;
+  white-space: nowrap;
 }
 
 .row:hover {
@@ -34,7 +34,6 @@
 .cell {
   padding: 18px;
   border-bottom: 1px solid #eeede8;
-  white-space: nowrap;
 }
 
 .pagination {
