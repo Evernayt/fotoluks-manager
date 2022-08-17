@@ -10,6 +10,8 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Tooltip } from 'components';
 import styles from './ControlPanelSidemenu.module.css';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
+import { useMemo } from 'react';
+import { ISidemenu } from 'models/ISidemenu';
 
 const ControlPanelSidemenu = () => {
   const isMinimizedSidemenu = useAppSelector(
@@ -21,20 +23,29 @@ const ControlPanelSidemenu = () => {
 
   const dispatch = useAppDispatch();
 
-  const items = [
-    {
-      id: 1,
-      checkedIcon: userCheckedIcon,
-      icon: userIcon,
-      name: 'Пользователи',
-    },
-    {
-      id: 2,
-      checkedIcon: newOrdersCheckedIcon,
-      icon: newOrdersIcon,
-      name: 'Товары',
-    },
-  ];
+  const items = useMemo<ISidemenu[]>(
+    () => [
+      {
+        id: 1,
+        checkedIcon: userCheckedIcon,
+        icon: userIcon,
+        name: 'Пользователи',
+      },
+      {
+        id: 2,
+        checkedIcon: newOrdersCheckedIcon,
+        icon: newOrdersIcon,
+        name: 'Товары',
+      },
+      {
+        id: 3,
+        checkedIcon: newOrdersCheckedIcon,
+        icon: newOrdersIcon,
+        name: 'Продукты',
+      },
+    ],
+    []
+  );
 
   const toggleSidemenu = () => {
     dispatch(

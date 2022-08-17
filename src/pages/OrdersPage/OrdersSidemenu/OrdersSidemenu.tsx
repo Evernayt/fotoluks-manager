@@ -22,6 +22,8 @@ import { IStatus } from 'models/IStatus';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { Tooltip } from 'components';
 import styles from './OrdersSidemenu.module.css';
+import { useMemo } from 'react';
+import { ISidemenu } from 'models/ISidemenu';
 
 const OrdersSidemenu = () => {
   const isMinimizedSidemenu = useAppSelector(
@@ -40,44 +42,47 @@ const OrdersSidemenu = () => {
     dispatch(orderSlice.actions.setIsMinimizedSidemenu(!isMinimizedSidemenu));
   };
 
-  const statuses = [
-    {
-      id: 0,
-      checkedIcon: allOrdersCheckedIcon,
-      icon: allOrdersIcon,
-      name: 'Все заказы',
-    },
-    {
-      id: 1,
-      checkedIcon: newOrdersCheckedIcon,
-      icon: newOrdersIcon,
-      name: 'Новые',
-    },
-    {
-      id: 2,
-      checkedIcon: inWorkOrdersCheckedIcon,
-      icon: inWorkOrdersIcon,
-      name: 'В работе',
-    },
-    {
-      id: 3,
-      checkedIcon: readyOrdersCheckedIcon,
-      icon: readyOrdersIcon,
-      name: 'Готовые',
-    },
-    {
-      id: 4,
-      checkedIcon: givenOrdersCheckedIcon,
-      icon: givenOrdersIcon,
-      name: 'Отданные',
-    },
-    {
-      id: 5,
-      checkedIcon: canceledOrdersCheckedIcon,
-      icon: canceledOrdersIcon,
-      name: 'Отмененные',
-    },
-  ];
+  const statuses = useMemo<ISidemenu[]>(
+    () => [
+      {
+        id: 0,
+        checkedIcon: allOrdersCheckedIcon,
+        icon: allOrdersIcon,
+        name: 'Все заказы',
+      },
+      {
+        id: 1,
+        checkedIcon: newOrdersCheckedIcon,
+        icon: newOrdersIcon,
+        name: 'Новые',
+      },
+      {
+        id: 2,
+        checkedIcon: inWorkOrdersCheckedIcon,
+        icon: inWorkOrdersIcon,
+        name: 'В работе',
+      },
+      {
+        id: 3,
+        checkedIcon: readyOrdersCheckedIcon,
+        icon: readyOrdersIcon,
+        name: 'Готовые',
+      },
+      {
+        id: 4,
+        checkedIcon: givenOrdersCheckedIcon,
+        icon: givenOrdersIcon,
+        name: 'Отданные',
+      },
+      {
+        id: 5,
+        checkedIcon: canceledOrdersCheckedIcon,
+        icon: canceledOrdersIcon,
+        name: 'Отмененные',
+      },
+    ],
+    []
+  );
 
   return (
     <div
