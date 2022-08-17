@@ -1,10 +1,10 @@
 import { Button, Modal, SelectButton, Textarea, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { Modes } from 'constants/app';
+import { groupBy } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchProductsAPI } from 'http/productAPI';
 import { fetchTypesByProductIdAPI } from 'http/typeAPI';
-import { IFeature } from 'models/IFeature';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { IParam } from 'models/IParam';
 import { IProduct } from 'models/IProduct';
@@ -41,7 +41,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     name: 'Выберите тип',
     price: 0,
     image: '',
-    features: null,
+    features: [],
   };
 
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -49,7 +49,8 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
   const [selectedProduct, setSelectedProduct] =
     useState<IProduct>(initialProduct);
   const [selectedType, setSelectedType] = useState<IType>(initialType);
-  const [selectedFeatures, setSelectedFeatures] = useState<IFeature[]>([]);
+  const [features, setFeatures] = useState<IParam[][]>([]);
+  const [selectedParams, setSelectedParams] = useState<ISelectedParam[]>([]);
   const [price, setPrice] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
   const [comment, setComment] = useState<string>('');
@@ -75,27 +76,18 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
             setTypes(typeData);
             setSelectedType(finishedProduct.type);
 
-            if (finishedProduct.selectedParams.length !== 0) {
-              finishedProduct.selectedParams.forEach((selectedParam) => {
-                const newParams: IParam[] = [
-                  {
-                    id: selectedParam.param.id,
-                    name: selectedParam.param.name,
-                    value: selectedParam.param.value,
-                    featureId: selectedParam.param.featureId,
-                  },
-                ];
+            if (finishedProduct.type.params) {
+              setFeatures(groupBy(finishedProduct.type.params, 'featureId'));
 
-                setSelectedFeatures((prevState) => [
+              for (let i = 0; i < finishedProduct.selectedParams.length; i++) {
+                setSelectedParams((prevState) => [
                   ...prevState,
                   {
-                    id: selectedParam.param.feature!.id,
-                    name: selectedParam.param.feature!.name,
-                    pluralName: selectedParam.param.feature!.pluralName,
-                    params: newParams,
+                    id: finishedProduct.selectedParams[i].id,
+                    param: finishedProduct.selectedParams[i].param,
                   },
                 ]);
-              });
+              }
             }
           }
         );
@@ -105,36 +97,52 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     }
   }, []);
 
+  const fetchProducts = () => {
+    fetchProductsAPI().then((data) => {
+      setProducts(data.rows);
+    });
+  };
+
+  const fetchTypes = (productId: number) => {
+    fetchTypesByProductIdAPI(productId).then((data) => {
+      setTypes(data);
+    });
+  };
+
   const selectProduct = (product: IProduct) => {
     setSelectedProduct(product);
     setPrice(0);
 
     setSelectedType(initialType);
+    setFeatures([]);
+    setSelectedParams([]);
     fetchTypes(product.id);
   };
 
   const selectType = (type: IType) => {
     setSelectedType(type);
     setPrice(type.price);
-    if (type.features) {
-      setSelectedFeatures(type?.features);
-    }
 
-    // setSelectedFeatures([]);
-    // type?.features?.forEach((feature) => {
-    //   console.log(feature)
-    //   setSelectedFeatures((prevState) => [
-    //     ...prevState,
-    //     { id: feature.id, name: feature.name },
-    //   ]);
-    // });
+    if (type.params) {
+      const gropedParams: IParam[][] = groupBy(type.params, 'featureId');
+      setFeatures(gropedParams);
+      setSelectedParams([]);
+      for (let i = 0; i < gropedParams.length; i++) {
+        setSelectedParams((prevState) => [
+          ...prevState,
+          {
+            id: uuidv4(),
+            param: gropedParams[i][0],
+          },
+        ]);
+      }
+    }
   };
 
-  const selectFeatures = (feature: IFeature, param: IParam) => {
-    const newParams = feature.params?.filter((x) => x.id === param.id);
-    setSelectedFeatures((prevState) =>
+  const selectParam = (param: IParam) => {
+    setSelectedParams((prevState) =>
       prevState.map((state) =>
-        state.id === feature.id ? { ...feature, params: newParams } : state
+        state.param.featureId === param.featureId ? { ...state, param } : state
       )
     );
   };
@@ -147,18 +155,6 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     fetchTypesByProductIdAPI(product.id).then((data) => {
       setTypes(data);
       selectType(type);
-    });
-  };
-
-  const fetchProducts = () => {
-    fetchProductsAPI().then((data) => {
-      setProducts(data.rows);
-    });
-  };
-
-  const fetchTypes = (productId: number) => {
-    fetchTypesByProductIdAPI(productId).then((data) => {
-      setTypes(data);
     });
   };
 
@@ -181,41 +177,6 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
   const createOrUpdateFinishedProduct = () => {
     validation(); //доработать
 
-    const createSelectedParams = () => {
-      const selectedParams: ISelectedParam[] = [];
-
-      selectedFeatures.forEach((feature) => {
-        let selectedParamId: number | string | null = uuidv4();
-
-        if (finishedProduct && finishedProduct.selectedParams.length > 0) {
-          const foundSelectedParam = finishedProduct.selectedParams.find(
-            (x) => x.param.feature?.id === feature.id
-          );
-
-          if (foundSelectedParam) {
-            selectedParamId = foundSelectedParam.id;
-          }
-        }
-
-        if (feature.params) {
-          selectedParams.push({
-            id: selectedParamId,
-            param: {
-              id: feature.params[0].id,
-              name: feature.params[0].name,
-              value: feature.params[0].value,
-              feature: {
-                id: feature.id,
-                name: feature.name,
-                pluralName: feature.pluralName,
-              },
-            },
-          });
-        }
-      });
-      return selectedParams;
-    };
-
     const createFinishedProduct = (
       finishedProductId: number | string
     ): IFinishedProduct => {
@@ -226,13 +187,12 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         comment,
         product: selectedProduct,
         type: selectedType,
-        selectedParams: createSelectedParams(),
+        selectedParams,
       };
     };
 
     if (mode === Modes.ADD_MODE) {
       const createdFinishedProduct = createFinishedProduct(uuidv4());
-
       dispatch(orderSlice.actions.addFinishedProduct(createdFinishedProduct));
       dispatch(
         orderSlice.actions.addFinishedProductsForCreate(createdFinishedProduct)
@@ -242,11 +202,9 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         const createdFinishedProduct = createFinishedProduct(
           finishedProduct.id
         );
-
         dispatch(
           orderSlice.actions.updateFinishedProduct(createdFinishedProduct)
         );
-
         finishedProductsForCreate.find((x) => x.id === finishedProduct.id) ===
         undefined
           ? dispatch(
@@ -261,7 +219,6 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
             );
       }
     }
-
     hide();
   };
 
@@ -297,25 +254,19 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         )}
       </div>
       <div>
-        {selectedType.features?.map((feature, index) => {
-          if (feature.params) {
-            return (
-              <SelectButton
-                items={feature.params}
-                defaultSelectedItem={selectedFeatures[index].params![0]}
-                changeHandler={(e) => selectFeatures(feature, e)}
-                style={
-                  index + 1 == selectedType.features!.length - 1
-                    ? { width: '228px', marginTop: '12px', marginRight: '12px' }
-                    : { width: '228px', marginTop: '12px', marginRight: '0' }
-                }
-                key={feature.id}
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
+        {features.map((feature, index) => (
+          <SelectButton
+            items={feature}
+            defaultSelectedItem={selectedParams[index]?.param}
+            changeHandler={(e) => selectParam(e)}
+            style={
+              index + 1 == features.length - 1
+                ? { width: '228px', marginTop: '12px', marginRight: '12px' }
+                : { width: '228px', marginTop: '12px', marginRight: '0' }
+            }
+            key={index}
+          />
+        ))}
       </div>
       <div style={{ margin: '12px 0', display: 'flex' }}>
         <Textbox

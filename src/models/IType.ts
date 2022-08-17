@@ -8,7 +8,7 @@ export interface IType {
   name: string;
   price: number;
   image: string;
-  features: IFeature[] | null;
+  features?: IFeature[];
   product?: IProduct;
   params?: IParam[];
 }
