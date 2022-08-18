@@ -39,6 +39,12 @@ import plusIcon from './plus-icon.svg';
 import minusIcon from './minus-icon.svg';
 import notificationIcon from './notification-icon.svg';
 import clearAllIcon from './clear-all-icon.svg';
+import categoryIcon from './category-icon.svg';
+import categoryCheckedIcon from './category-checked-icon.svg';
+import boxIcon from './box-icon.svg';
+import boxCheckedIcon from './box-checked-icon.svg';
+import mugIcon from './mug-icon.svg';
+import mugCheckedIcon from './mug-checked-icon.svg';
 
 export {
   searchIcon,
@@ -82,4 +88,10 @@ export {
   minusIcon,
   notificationIcon,
   clearAllIcon,
+  categoryIcon,
+  categoryCheckedIcon,
+  boxIcon,
+  boxCheckedIcon,
+  mugIcon,
+  mugCheckedIcon,
 };
