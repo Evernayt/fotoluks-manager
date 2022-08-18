@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { appSlice } from 'store/reducers/AppSlice';
 import { userSlice } from 'store/reducers/UserSlice';
 import styles from './LoginPage.module.css';
+import socketio from 'socket/socketio';
 
 const LoginPage = () => {
   const [shops, setShops] = useState<IShop[]>([]);
@@ -47,20 +48,24 @@ const LoginPage = () => {
     if (login === '' && password === '') return;
     loginAPI(login, password)
       .then((data) => {
+        socketio.connect(data);
         dispatch(userSlice.actions.signin(data));
         navigate(ORDERS_ROUTE);
       })
       .catch((e) => console.log(e.response.data.message));
   };
 
-  // const socketStart = (user) => {
-  //   const socket = io(api.SERVER_API_URL);
-  //   dispatch(setSocketAction(socket));
+  // const socketStart = (user: IUser) => {
+  //   const socket = io(SERVER_API_URL);
+  //   dispatch(appSlice.actions.setSocket(socket));
 
   //   socket.emit('addUser', user);
 
-  //   socket.on('getMessage', (message) => {
-  //     dispatch(setArrivalMessageAction(message));
+  //   socket.on('getNotification', (title, text) => {
+  //     window.electron.ipcRenderer.sendMessage('show-notification', [
+  //       title,
+  //       text,
+  //     ]);
   //   });
   // };
 

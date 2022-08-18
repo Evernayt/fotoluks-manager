@@ -23,6 +23,7 @@ import OrderDetailMembersModal from './Modals/OrderDetailMembersModal/OrderDetai
 import { createNotificationAPI } from 'http/notificationAPI';
 import { IUser } from 'models/IUser';
 import moment from 'moment';
+import socketio from 'socket/socketio';
 
 type LocationState = {
   state: {
@@ -117,6 +118,8 @@ const OrderDetailPage = () => {
       const text = `${user.name} добавил вас в участники заказа № ${order.id}`;
 
       createNotificationAPI(title, text, userIds);
+
+      socketio.sendNotification(title, text);
     }
 
     if (orderMembersForDelete.length > 0) {
@@ -124,6 +127,8 @@ const OrderDetailPage = () => {
       const text = `${user.name} удалил вас из участников заказа № ${order.id}`;
 
       createNotificationAPI(title, text, orderMembersForDelete);
+
+      socketio.sendNotification(title, text);
     }
   };
 
@@ -142,6 +147,8 @@ const OrderDetailPage = () => {
       на ${moment(orderClone.deadline).format(DEF_FORMAT)}`;
 
       createNotificationAPI(title, text, orderMembersIds);
+
+      socketio.sendNotification(title, text);
     }
   };
 

@@ -16,6 +16,7 @@ import OrdersToolbar from './OrdersToolbar/OrdersToolbar';
 import styles from './OrdersTable.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { createNotificationAPI } from 'http/notificationAPI';
+import socketio from 'socket/socketio';
 
 const OrdersTable = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -205,6 +206,8 @@ const OrdersTable = () => {
      c "${oldStatusName}" на "${status.name}"`;
 
     createNotificationAPI(title, text, orderMemberIds);
+
+    socketio.sendNotification(title, text);
   };
 
   const updateStatus = (status: IStatus, orderId: number) => {
