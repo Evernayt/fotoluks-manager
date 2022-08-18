@@ -5,26 +5,26 @@ import ReactPaginate from 'react-paginate';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import styles from './ControlPanelProductsTable.module.css';
 import { Modes } from 'constants/app';
-import { IProduct } from 'models/IProduct';
-import { fetchProductsAPI } from 'http/productAPI';
-import ControlPanelProductsToolbar from './ControlPanelProductsToolbar/ControlPanelProductsToolbar';
+import { ICategory } from 'models/ICategory';
+import { fetchCategoriesAPI } from 'http/categoryAPI';
+import styles from './ControlPanelCategoriesTable.module.css';
+import ControlPanelCategoriesToolbar from './ControlPanelCategoriesToolbar/ControlPanelCategoriesToolbar';
 
-const ControlPanelProductsTable = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
+const ControlPanelCategoriesTable = () => {
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
   const [limit, setLimit] = useState<number>(15);
   const [page, setPage] = useState<number>(1);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
-  const productsFilter = useAppSelector(
-    (state) => state.controlPanel.productsFilter
+  const categoriesFilter = useAppSelector(
+    (state) => state.controlPanel.categoriesFilter
   );
   const forceUpdate = useAppSelector((state) => state.controlPanel.forceUpdate);
   const isLoading = useAppSelector((state) => state.controlPanel.isLoading);
-  const foundProducts = useAppSelector(
-    (state) => state.controlPanel.foundProducts
+  const foundCategories = useAppSelector(
+    (state) => state.controlPanel.foundCategories
   );
 
   const dispatch = useAppDispatch();
@@ -38,19 +38,7 @@ const ControlPanelProductsTable = () => {
       {
         Header: 'Наименование',
         accessor: 'name',
-      },
-      {
-        Header: 'Наименование (во мн. ч.)',
-        accessor: 'pluralName',
-      },
-      {
-        Header: 'Описание',
-        accessor: 'description',
         style: { width: '100%' },
-      },
-      {
-        Header: 'Категория',
-        accessor: 'category.name',
       },
     ],
     []
@@ -58,8 +46,8 @@ const ControlPanelProductsTable = () => {
 
   useEffect(() => {
     setPage(1);
-    if (foundProducts.productData.rows.length === 0) {
-      if (foundProducts.searchText === '') {
+    if (foundCategories.categoryData.rows.length === 0) {
+      if (foundCategories.searchText === '') {
         dispatch(controlPanelSlice.actions.setForceUpdate(true));
         setIsNotFound(false);
       } else {
@@ -67,33 +55,33 @@ const ControlPanelProductsTable = () => {
         setIsNotFound(true);
       }
     } else {
-      setProducts(foundProducts.productData.rows);
-      const count = Math.ceil(foundProducts.productData.count / limit);
+      setCategories(foundCategories.categoryData.rows);
+      const count = Math.ceil(foundCategories.categoryData.count / limit);
       setPageCount(count);
       setIsNotFound(false);
     }
-  }, [foundProducts]);
+  }, [foundCategories]);
 
   useEffect(() => {
-    if (productsFilter.filter.isActive) {
+    if (categoriesFilter.filter.isActive) {
       //const { role } = usersFilter;
       //fetchCategories(page, role.role);
-    } else if (productsFilter.filter.isPendingDeactivation) {
-      dispatch(controlPanelSlice.actions.deactiveProductsFilter());
-      fetchProducts(page);
+    } else if (categoriesFilter.filter.isPendingDeactivation) {
+      dispatch(controlPanelSlice.actions.deactiveCategoriesFilter());
+      fetchCategories(page);
     } else if (forceUpdate) {
-      fetchProducts(page);
+      fetchCategories(page);
     }
 
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchProducts = (page: number) => {
+  const fetchCategories = (page: number) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
 
-    fetchProductsAPI(limit, page)
+    fetchCategoriesAPI(limit, page)
       .then((data) => {
-        setProducts(data.rows);
+        setCategories(data.rows);
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
@@ -106,29 +94,29 @@ const ControlPanelProductsTable = () => {
   };
 
   const reload = (page: number = 1) => {
-    if (productsFilter.filter.isActive) {
+    if (categoriesFilter.filter.isActive) {
       // const { role } = usersFilter;
       // fetchUsers(page, role.role);
     } else {
-      fetchProducts(page);
+      fetchCategories(page);
     }
   };
 
-  const rowClickHandler = (row: Row<IProduct>) => {
+  const rowClickHandler = (row: Row<ICategory>) => {
     dispatch(
-      modalSlice.actions.openControlPanelEditProductModal({
-        productId: row.values.id,
+      modalSlice.actions.openControlPanelEditCategoryModal({
+        categoryId: row.values.id,
         mode: Modes.EDIT_MODE,
       })
     );
   };
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: products });
+    useTable({ columns, data: categories });
 
   return (
     <div style={{ height: '100%' }}>
-      <ControlPanelProductsToolbar
+      <ControlPanelCategoriesToolbar
         setLimit={setLimit}
         reload={() => reload()}
       />
@@ -208,4 +196,4 @@ const ControlPanelProductsTable = () => {
   );
 };
 
-export default ControlPanelProductsTable;
+export default ControlPanelCategoriesTable;

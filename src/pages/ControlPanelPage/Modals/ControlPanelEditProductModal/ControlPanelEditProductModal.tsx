@@ -19,7 +19,6 @@ import {
 } from 'http/productAPI';
 import { plusIcon } from 'icons';
 import { ICategory } from 'models/ICategory';
-import { IProduct } from 'models/IProduct';
 import { useEffect, useState } from 'react';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
@@ -66,7 +65,7 @@ const ControlPanelEditProductModal = () => {
 
   const fetchCategories = () => {
     fetchCategoriesAPI().then((data) => {
-      setCategories(data);
+      setCategories(data.rows);
     });
   };
 

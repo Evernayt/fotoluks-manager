@@ -1,3 +1,4 @@
+import { ICategoriesFilter } from 'models/ICategory';
 import { IFilter } from 'models/IFilter';
 import { IOrdersFilter } from 'models/IOrder';
 import { IProductsFilter } from 'models/IProduct';
@@ -37,5 +38,9 @@ export const initialOrdersFilter: IOrdersFilter = {
 };
 
 export const initialProductsFilter: IProductsFilter = {
+  filter: initialFilter,
+};
+
+export const initialCategoriesFilter: ICategoriesFilter = {
   filter: initialFilter,
 };

@@ -2,13 +2,19 @@ import { Button, Modal, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { Modes } from 'constants/app';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { createCategoryAPI } from 'http/categoryAPI';
-import { useState } from 'react';
+import {
+  createCategoryAPI,
+  fetchCategoryAPI,
+  updateCategoryAPI,
+} from 'http/categoryAPI';
+import { ICategory } from 'models/ICategory';
+import { useEffect, useState } from 'react';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './ControlPanelEditCategoryModal.module.css';
 
 const ControlPanelEditCategoryModal = () => {
+  const [category, setCategory] = useState<ICategory>();
   const [categoryName, setCategoryName] = useState<string>('');
 
   const controlPanelEditCategoryModal = useAppSelector(
@@ -17,15 +23,35 @@ const ControlPanelEditCategoryModal = () => {
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if (controlPanelEditCategoryModal.isShowing) {
+      if (controlPanelEditCategoryModal.mode === Modes.EDIT_MODE) {
+        fetchCategory();
+      }
+    }
+  }, [controlPanelEditCategoryModal.isShowing]);
+
+  const fetchCategory = () => {
+    fetchCategoryAPI(controlPanelEditCategoryModal.categoryId).then((data) => {
+      setCategory(data);
+      setCategoryName(data.name);
+    });
+  };
+
   const close = () => {
     dispatch(modalSlice.actions.closeControlPanelEditCategoryModal());
 
+    setCategory(undefined);
     setCategoryName('');
   };
 
   const updateCategory = () => {
-    dispatch(controlPanelSlice.actions.setForceUpdate(true));
-    close();
+    if (category) {
+      updateCategoryAPI(category?.id, categoryName).then(() => {
+        dispatch(controlPanelSlice.actions.setForceUpdate(true));
+        close();
+      });
+    }
   };
 
   const createCategory = () => {

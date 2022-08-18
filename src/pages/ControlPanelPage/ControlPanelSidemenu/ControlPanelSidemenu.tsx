@@ -43,6 +43,12 @@ const ControlPanelSidemenu = () => {
         icon: newOrdersIcon,
         name: 'Продукты',
       },
+      {
+        id: 4,
+        checkedIcon: newOrdersCheckedIcon,
+        icon: newOrdersIcon,
+        name: 'Категории',
+      },
     ],
     []
   );

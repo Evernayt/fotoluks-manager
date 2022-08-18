@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { initialFoundCategories } from 'constants/InitialStates/initialCategoryState';
 import {
+  initialCategoriesFilter,
   initialProductsFilter,
   initialTypesFilter,
   initialUserFilter,
@@ -7,6 +9,7 @@ import {
 import { initialFoundProducts } from 'constants/InitialStates/initialProductState';
 import { initialFoundTypes } from 'constants/InitialStates/initialTypeState';
 import { initialFoundUsers } from 'constants/InitialStates/initialUserState';
+import { ICategoriesFilter, IFoundCategories } from 'models/ICategory';
 import { IFoundProducts, IProductsFilter } from 'models/IProduct';
 import { IFoundTypes, ITypesFilter } from 'models/IType';
 import { IFoundUsers, IRole, IUsersFilter } from 'models/IUser';
@@ -22,6 +25,8 @@ type ControlPanelState = {
   foundTypes: IFoundTypes;
   productsFilter: IProductsFilter;
   foundProducts: IFoundProducts;
+  categoriesFilter: ICategoriesFilter;
+  foundCategories: IFoundCategories;
 };
 
 const initialState: ControlPanelState = {
@@ -35,6 +40,8 @@ const initialState: ControlPanelState = {
   foundTypes: initialFoundTypes,
   productsFilter: initialProductsFilter,
   foundProducts: initialFoundProducts,
+  categoriesFilter: initialCategoriesFilter,
+  foundCategories: initialFoundCategories,
 };
 
 export const controlPanelSlice = createSlice({
@@ -110,6 +117,25 @@ export const controlPanelSlice = createSlice({
     setFoundProducts(state, action: PayloadAction<IFoundProducts>) {
       state.foundProducts = action.payload;
     },
+    activeCategoriesFilter(state, action: PayloadAction<{ role: IRole }>) {
+      // state.usersFilter = {
+      //   filter: {
+      //     isActive: true,
+      //     isPendingDeactivation: false,
+      //   },
+      //   ...action.payload,
+      // };
+    },
+    deactiveCategoriesFilter(state) {
+      state.categoriesFilter = initialCategoriesFilter;
+    },
+    clearCategoriesFilter(state) {
+      state.categoriesFilter = initialCategoriesFilter;
+      state.categoriesFilter.filter.isPendingDeactivation = true;
+    },
+    setFoundCategories(state, action: PayloadAction<IFoundCategories>) {
+      state.foundCategories = action.payload;
+    },
   },
 });
 
@@ -130,6 +156,10 @@ export const {
   deactiveProductsFilter,
   clearProductsFilter,
   setFoundProducts,
+  activeCategoriesFilter,
+  deactiveCategoriesFilter,
+  clearCategoriesFilter,
+  setFoundCategories,
 } = controlPanelSlice.actions;
 
 export default controlPanelSlice.reducer;
