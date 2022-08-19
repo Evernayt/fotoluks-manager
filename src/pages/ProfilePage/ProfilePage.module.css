@@ -14,7 +14,43 @@
   gap: 24px;
 }
 
+.avatar_container {
+  width: 160px;
+  height: 160px;
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar_fogging {
+  background: #000;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+
+.avatar_fogging:hover {
+  opacity: 0.4;
+}
+
+.avatar_edit_icon {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+
+.avatar_container:hover .avatar_edit_icon {
+  opacity: 1;
+}
+
 .avatar {
+  position: relative;
   width: 160px;
   height: 160px;
   object-fit: cover;
