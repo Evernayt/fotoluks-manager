@@ -22,6 +22,8 @@ const LoginModal = () => {
 
   const close = () => {
     dispatch(modalSlice.actions.closeLoginModal());
+
+    setPassword('');
   };
 
   const signIn = () => {
