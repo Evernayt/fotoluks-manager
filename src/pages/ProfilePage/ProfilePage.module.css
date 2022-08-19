@@ -13,13 +13,3 @@
   display: flex;
   gap: 24px;
 }
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.error_message {
-  color: var(--danger-color);
-}
