@@ -11,13 +11,13 @@ const OrderMenuCell = ({ row }: Cell<IOrder>) => {
   const dispatch = useAppDispatch();
 
   const openOrderInfoModal = () => {
-    const orderId = row.values.id;
-    dispatch(modalSlice.actions.openOrderInfoModal(orderId));
+    const order = row.original;
+    dispatch(modalSlice.actions.openOrderInfoModal(order));
   };
 
   const openOrderShopModal = () => {
-    const orderId = row.values.id;
-    dispatch(modalSlice.actions.openOrderShopModal(orderId));
+    const order = row.original;
+    dispatch(modalSlice.actions.openOrderShopModal(order));
   };
 
   // const testCreate = () => {

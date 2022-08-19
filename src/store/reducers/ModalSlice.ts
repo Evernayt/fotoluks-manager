@@ -23,6 +23,7 @@ import {
   IUserModal,
   IUserRegistrationModal,
 } from 'models/IModal';
+import { IOrder } from 'models/IOrder';
 import { IUser } from 'models/IUser';
 
 type ModalState = {
@@ -71,9 +72,9 @@ export const modalSlice = createSlice({
     closeControlPanelUsersFilterModal(state) {
       state.controlPanelUsersFilterModal.isShowing = false;
     },
-    openOrderInfoModal(state, action: PayloadAction<number>) {
+    openOrderInfoModal(state, action: PayloadAction<IOrder>) {
       state.orderInfoModal.isShowing = true;
-      state.orderInfoModal.orderId = action.payload;
+      state.orderInfoModal.order = action.payload;
     },
     closeOrderInfoModal(state) {
       state.orderInfoModal = initialOrderModal;
@@ -90,9 +91,9 @@ export const modalSlice = createSlice({
     closeOrdersFilterModal(state) {
       state.ordersFilterModal = initialModal;
     },
-    openOrderShopModal(state, action: PayloadAction<number>) {
+    openOrderShopModal(state, action: PayloadAction<IOrder>) {
       state.orderShopModal.isShowing = true;
-      state.orderShopModal.orderId = action.payload;
+      state.orderShopModal.order = action.payload;
     },
     closeOrderShopModal(state) {
       state.orderShopModal = initialOrderModal;

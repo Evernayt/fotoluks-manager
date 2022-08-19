@@ -16,7 +16,7 @@ export const initialModal: IModal = {
   isShowing: false,
 };
 
-export const initialOrderModal: IOrderModal = { isShowing: false, orderId: 0 };
+export const initialOrderModal: IOrderModal = { isShowing: false, order: null };
 
 export const initialUserRegistrationModal: IUserRegistrationModal = {
   isShowing: false,

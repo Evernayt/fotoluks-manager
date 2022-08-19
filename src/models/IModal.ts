@@ -1,5 +1,6 @@
 import { Modes } from 'constants/app';
 import { IFeature } from './IFeature';
+import { IOrder } from './IOrder';
 import { IUser } from './IUser';
 
 export interface IModal {
@@ -8,7 +9,7 @@ export interface IModal {
 
 export interface IOrderModal {
   isShowing: boolean;
-  orderId: number;
+  order: IOrder | null;
 }
 
 export interface IUserRegistrationModal {

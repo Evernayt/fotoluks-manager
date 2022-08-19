@@ -38,8 +38,8 @@ const OrderInfoModal = () => {
   );
 
   useEffect(() => {
-    if (orderInfoModal.orderId > 0) {
-      fetchOrderInfosAPI(orderInfoModal.orderId).then((data) => {
+    if (orderInfoModal.order) {
+      fetchOrderInfosAPI(orderInfoModal.order.id).then((data) => {
         setOrderInfos(data);
       });
     }
@@ -54,7 +54,7 @@ const OrderInfoModal = () => {
 
   return (
     <Modal
-      title={'О заказе № ' + orderInfoModal.orderId}
+      title={'О заказе № ' + orderInfoModal.order?.id}
       isShowing={orderInfoModal.isShowing}
       hide={close}
     >
