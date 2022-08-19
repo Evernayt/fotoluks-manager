@@ -59,6 +59,7 @@ const LoginModal = () => {
         <Textbox
           label="Пароль"
           value={password}
+          isPassword
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button
