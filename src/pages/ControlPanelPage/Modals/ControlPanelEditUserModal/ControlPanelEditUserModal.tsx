@@ -6,6 +6,7 @@ import {
   Textbox,
 } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
+import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { updateUserAPI } from 'http/userAPI';
 import { isVerifiedAPI } from 'http/verificationAPI';
@@ -41,6 +42,7 @@ const ControlPanelEditUserModal = () => {
   const [phone, setPhone] = useState<string>('');
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [avatar, setAvatar] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [vk, setVk] = useState<string>('');
   const [telegram, setTelegram] = useState<string>('');
@@ -67,6 +69,7 @@ const ControlPanelEditUserModal = () => {
       setPhone(data.user.phone ? data.user.phone : '');
       setLogin(data.user.login);
       setPassword(data.user.password ? data.user.password : '');
+      setAvatar(data.user.avatar ? data.user.avatar : '');
 
       const role = roles.find((x) => x.role === data.user.role);
       if (role !== undefined) setSelectedRole(role);
@@ -85,6 +88,7 @@ const ControlPanelEditUserModal = () => {
     setPhone('');
     setLogin('');
     setPassword('');
+    setAvatar('');
     setSelectedRole(roles[2]);
     setEmail('');
     setVk('');
@@ -104,6 +108,7 @@ const ControlPanelEditUserModal = () => {
         email: email === '' ? null : email,
         vk: vk === '' ? null : vk,
         telegram: telegram === '' ? null : telegram,
+        avatar: avatar === '' ? null : avatar,
       };
       updateUserAPI(editedUser).then(() => {
         dispatch(controlPanelSlice.actions.setForceUpdate(true));
@@ -119,17 +124,25 @@ const ControlPanelEditUserModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        {isPhoneVerified && (
-          <div className={styles.message}>
-            {`Пользователь активировал аккаунт.\nНекоторые данные изменить нельзя.`}
-            <Button
-              variant={ButtonVariants.link}
-              onClick={() => setIsPhoneVerified(false)}
-            >
-              Разблокировать
-            </Button>
-          </div>
-        )}
+        <div className={styles.avatar_container}>
+          <img
+            className={styles.avatar}
+            src={avatar === '' ? defaultAvatar : avatar}
+          />
+          {isPhoneVerified && (
+            <div className={styles.message}>
+              {`Пользователь активировал аккаунт.\nНекоторые данные изменить нельзя.`}
+              <Button
+                variant={ButtonVariants.link}
+                style={{ width: 'max-content', padding: 0 }}
+                onClick={() => setIsPhoneVerified(false)}
+              >
+                Разблокировать
+              </Button>
+            </div>
+          )}
+        </div>
+
         <div className={styles.main_controls}>
           <Textbox
             label="Имя"
@@ -181,6 +194,11 @@ const ControlPanelEditUserModal = () => {
             label="Telegram"
             value={telegram}
             onChange={(e) => setTelegram(e.target.value)}
+          />
+          <Textbox
+            label="Аватар (URL)"
+            value={avatar}
+            onChange={(e) => setAvatar(e.target.value)}
           />
         </div>
         <div className={styles.controls}>
