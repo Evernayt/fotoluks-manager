@@ -13,6 +13,7 @@ import { appSlice } from 'store/reducers/AppSlice';
 import { userSlice } from 'store/reducers/UserSlice';
 import styles from './LoginPage.module.css';
 import socketio from 'socket/socketio';
+import { UserRoles } from 'models/IUser';
 
 const LoginPage = () => {
   const [shops, setShops] = useState<IShop[]>([]);
@@ -48,6 +49,11 @@ const LoginPage = () => {
     if (login === '' && password === '') return;
     loginAPI(login, password)
       .then((data) => {
+        if (data.role === UserRoles.USER) {
+          console.log('Нет доступа');
+          return;
+        }
+
         socketio.connect(data);
         dispatch(userSlice.actions.signin(data));
         navigate(ORDERS_ROUTE);
