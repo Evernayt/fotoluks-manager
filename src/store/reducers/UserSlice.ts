@@ -36,6 +36,9 @@ export const userSlice = createSlice({
     clearNotifications(state) {
       state.notifications = [];
     },
+    updateUser(state, action: PayloadAction<IUser>) {
+      state.user = action.payload;
+    },
   },
 });
 
@@ -45,6 +48,7 @@ export const {
   addNotifications,
   addNotification,
   clearNotifications,
+  updateUser,
 } = userSlice.actions;
 
 export default userSlice.reducer;

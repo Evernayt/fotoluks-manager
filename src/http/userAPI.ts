@@ -75,3 +75,20 @@ export const fetchUsersAPI: IFetchUsers = async (
   });
   return data;
 };
+
+interface IUpdateUserPassword {
+  (userId: number, oldPassword: string, newPassword: string): Promise<IUser>;
+}
+
+export const updateUserPasswordAPI: IUpdateUserPassword = async (
+  userId,
+  oldPassword,
+  newPassword
+) => {
+  const { data } = await $host.post('api/user/updatePassword', {
+    userId,
+    oldPassword,
+    newPassword,
+  });
+  return jwtDecode(data.token);
+};
