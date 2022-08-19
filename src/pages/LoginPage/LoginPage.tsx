@@ -63,11 +63,16 @@ const LoginPage = () => {
 
         socketio.connect(data);
         dispatch(userSlice.actions.signIn(data));
-        navigate(ORDERS_ROUTE);
+        navigateToRoute(ORDERS_ROUTE);
 
         addRecentLogin(data);
       })
       .catch((e) => console.log(e.response.data.message));
+  };
+
+  const navigateToRoute = (route: string) => {
+    dispatch(appSlice.actions.setActiveRoute(route));
+    navigate(route);
   };
 
   const addRecentLogin = (user: IUser) => {

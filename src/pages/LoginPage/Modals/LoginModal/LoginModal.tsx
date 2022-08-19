@@ -8,6 +8,7 @@ import { UserRoles } from 'models/IUser';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
+import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { userSlice } from 'store/reducers/UserSlice';
 import styles from './LoginModal.module.css';
@@ -38,11 +39,16 @@ const LoginModal = () => {
 
         socketio.connect(data);
         dispatch(userSlice.actions.signIn(data));
-        navigate(ORDERS_ROUTE);
+        navigateToRoute(ORDERS_ROUTE);
 
         close();
       })
       .catch((e) => console.log(e.response.data.message));
+  };
+
+  const navigateToRoute = (route: string) => {
+    dispatch(appSlice.actions.setActiveRoute(route));
+    navigate(route);
   };
 
   return (

@@ -15,7 +15,7 @@ import {
   TASKS_ROUTE,
 } from 'constants/paths';
 import { useNavigate } from 'react-router-dom';
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { defaultAvatar } from 'constants/images';
@@ -35,12 +35,9 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    navigate(activeRoute);
-  }, [activeRoute]);
-
-  const setActiveRoute = (route: string) => {
+  const navigateToRoute = (route: string) => {
     dispatch(appSlice.actions.setActiveRoute(route));
+    navigate(route);
   };
 
   const pages = [
@@ -92,7 +89,7 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
                     name="navmenu"
                     type="radio"
                     checked={activeRoute === page.route}
-                    onChange={() => setActiveRoute(page.route)}
+                    onChange={() => navigateToRoute(page.route)}
                   />
                   <label className={styles.center_rbtn} htmlFor={page.id}>
                     <img
@@ -117,7 +114,7 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
           name="navmenu"
           type="radio"
           checked={activeRoute === PROFILE_ROUTE}
-          onChange={() => setActiveRoute(PROFILE_ROUTE)}
+          onChange={() => navigateToRoute(PROFILE_ROUTE)}
         />
         <label className={styles.profile_rbtn} htmlFor="profile_navmenu">
           <img
