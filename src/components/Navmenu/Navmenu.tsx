@@ -22,6 +22,7 @@ import { defaultAvatar } from 'constants/images';
 import { UserRoles } from 'models/IUser';
 import { appSlice } from 'store/reducers/AppSlice';
 import NotificationButton from './NotificationButton/NotificationButton';
+import MenuButton from './MenuButton/MenuButton';
 
 interface INavmenu {
   searchRender?: () => ReactNode;
@@ -127,6 +128,7 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
           <span>{user?.name}</span>
         </label>
         <NotificationButton />
+        <MenuButton />
       </div>
     </div>
   );

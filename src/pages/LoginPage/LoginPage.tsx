@@ -55,7 +55,7 @@ const LoginPage = () => {
         }
 
         socketio.connect(data);
-        dispatch(userSlice.actions.signin(data));
+        dispatch(userSlice.actions.signIn(data));
         navigate(ORDERS_ROUTE);
       })
       .catch((e) => console.log(e.response.data.message));

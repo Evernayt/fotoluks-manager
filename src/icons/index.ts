@@ -45,6 +45,7 @@ import boxIcon from './box-icon.svg';
 import boxCheckedIcon from './box-checked-icon.svg';
 import mugIcon from './mug-icon.svg';
 import mugCheckedIcon from './mug-checked-icon.svg';
+import dropIcon from './drop-icon.svg';
 
 export {
   searchIcon,
@@ -94,4 +95,5 @@ export {
   boxCheckedIcon,
   mugIcon,
   mugCheckedIcon,
+  dropIcon,
 };

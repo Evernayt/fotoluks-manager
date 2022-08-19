@@ -18,11 +18,11 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    signin(state, action: PayloadAction<IUser>) {
+    signIn(state, action: PayloadAction<IUser>) {
       state.isAuth = true;
       state.user = action.payload;
     },
-    signout(state) {
+    signOut(state) {
       state.isAuth = false;
       state.user = null;
     },
@@ -40,8 +40,8 @@ export const userSlice = createSlice({
 });
 
 export const {
-  signin,
-  signout,
+  signIn,
+  signOut,
   addNotifications,
   addNotification,
   clearNotifications,

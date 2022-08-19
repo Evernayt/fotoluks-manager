@@ -17,6 +17,10 @@ const connect = (user: IUser) => {
   subscribeToOrderUpdates();
 };
 
+const disconnect = () => {
+  socket.disconnect();
+};
+
 const subscribeToNotifications = () => {
   socket.on('getNotification', (notification: INotification) => {
     window.electron.ipcRenderer.sendMessage('show-notification', [
@@ -42,4 +46,4 @@ const updateOrder = (order: IOrder) => {
   socket.emit('updateOrder', order);
 };
 
-export default { connect, sendNotification, updateOrder };
+export default { connect, disconnect, sendNotification, updateOrder };
