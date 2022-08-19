@@ -134,6 +134,7 @@ const OrderDetailPage = () => {
 
   const notifyMembers = (orderClone: IOrder, beforeOrderClone: IOrder) => {
     if (orderClone.id === 0) return;
+    if (orderClone.orderMembers.length === 0) return;
 
     const orderMembersIds = [];
     for (let i = 0; i < orderClone.orderMembers.length; i++) {

@@ -193,6 +193,7 @@ const OrdersTable = () => {
   const notifyStatusChange = (orderId: number, status: IStatus) => {
     const order = orders.find((order) => order.id === orderId);
     if (!order) return;
+    if (order.orderMembers.length === 0) return;
 
     const orderMemberIds = [];
     for (let i = 0; i < order.orderMembers.length; i++) {
