@@ -18,7 +18,6 @@
   max-width: 24px;
   border-radius: 50%;
   object-fit: cover;
-  pointer-events: none;
 }
 
 .default {

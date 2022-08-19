@@ -10,10 +10,6 @@
   cursor: pointer;
 }
 
-.container img {
-  pointer-events: none;
-}
-
 .container:hover {
   background-color: var(--hover-secondary-color);
 }

@@ -54,9 +54,9 @@ a {
   outline: 0;
 }
 
-h1 {
-  font-size: 28px;
-  font-weight: 400;
+img {
+  pointer-events: none;
+  user-select: none;
 }
 
 .separator {
