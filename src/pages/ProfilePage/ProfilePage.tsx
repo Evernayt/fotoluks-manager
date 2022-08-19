@@ -1,14 +1,11 @@
 import { Button, Navmenu, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { updateUserAPI, updateUserPasswordAPI } from 'http/userAPI';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { userSlice } from 'store/reducers/UserSlice';
-import { editWhiteIcon } from 'icons';
+import ProfileAvatar from './ProfileAvatar/ProfileAvatar';
 import styles from './ProfilePage.module.css';
-import { uploadAvatarAPI } from 'http/uploadFileAPI';
-import { IUser } from 'models/IUser';
 
 const ProfilePage = () => {
   const [name, setName] = useState<string>('');
@@ -19,8 +16,6 @@ const ProfilePage = () => {
   const [passwordMessage, setPasswordMessage] = useState<string>('');
 
   const user = useAppSelector((state) => state.user.user);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();
 
@@ -55,53 +50,12 @@ const ProfilePage = () => {
       .catch((e) => setPasswordMessage(e.response.data.message));
   };
 
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const editAvatar = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const image = event.target.files[0];
-
-      const formData = new FormData();
-      formData.append('avatar', image);
-
-      uploadAvatarAPI(formData)
-        .then((res) => res.text())
-        .then((data) => {
-          if (!user) return;
-
-          const updatedUser: IUser = { ...user, avatar: data };
-          updateUserAPI(updatedUser).then((data) => {
-            dispatch(userSlice.actions.updateUser(data));
-          });
-        })
-        .catch((e) => {
-          console.log(e.response.data.message);
-        });
-    }
-  };
-
   return (
     <div className={styles.container}>
       <Navmenu />
       <div className={styles.panel}>
         <div>
-          <div className={styles.avatar_container} onClick={handleImageClick}>
-            <div className={styles.avatar_fogging} />
-            <img className={styles.avatar_edit_icon} src={editWhiteIcon} />
-          </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            onChange={editAvatar}
-            accept="image/png, image/jpeg"
-          />
-          <img
-            className={styles.avatar}
-            src={user?.avatar ? user.avatar : defaultAvatar}
-          />
+          <ProfileAvatar />
         </div>
 
         <div className={styles.controls}>
