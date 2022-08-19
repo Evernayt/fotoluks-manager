@@ -5,6 +5,7 @@ import {
   initialEditParamsModal,
   initialEditProductModal,
   initialEditTypeModal,
+  initialLoginModal,
   initialModal,
   initialOrderModal,
   initialUserModal,
@@ -16,11 +17,13 @@ import {
   IEditParamsModal,
   IEditProductModal,
   IEditTypeModal,
+  ILoginModal,
   IModal,
   IOrderModal,
   IUserModal,
   IUserRegistrationModal,
 } from 'models/IModal';
+import { IUser } from 'models/IUser';
 
 type ModalState = {
   controlPanelUsersFilterModal: IModal;
@@ -37,6 +40,7 @@ type ModalState = {
   controlPanelEditProductModal: IEditProductModal;
   controlPanelEditCategoryModal: IEditCategoryModal;
   controlPanelEditParamsModal: IEditParamsModal;
+  loginModal: ILoginModal;
 };
 
 const initialState: ModalState = {
@@ -54,6 +58,7 @@ const initialState: ModalState = {
   controlPanelEditProductModal: initialEditProductModal,
   controlPanelEditCategoryModal: initialEditCategoryModal,
   controlPanelEditParamsModal: initialEditParamsModal,
+  loginModal: initialLoginModal,
 };
 
 export const modalSlice = createSlice({
@@ -173,6 +178,13 @@ export const modalSlice = createSlice({
     closeControlPanelEditParamsModal(state) {
       state.controlPanelEditParamsModal.isShowing = false;
     },
+    openLoginModal(state, action: PayloadAction<IUser>) {
+      state.loginModal.isShowing = true;
+      state.loginModal.user = action.payload;
+    },
+    closeLoginModal(state) {
+      state.loginModal.isShowing = false;
+    },
   },
 });
 
@@ -205,6 +217,8 @@ export const {
   closeControlPanelEditCategoryModal,
   openControlPanelEditParamsModal,
   closeControlPanelEditParamsModal,
+  openLoginModal,
+  closeLoginModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

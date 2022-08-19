@@ -4,6 +4,7 @@ import {
   IEditParamsModal,
   IEditProductModal,
   IEditTypeModal,
+  ILoginModal,
   IModal,
   IOrderModal,
   IUserModal,
@@ -49,4 +50,9 @@ export const initialEditParamsModal: IEditParamsModal = {
   isShowing: false,
   typeId: 0,
   feature: initialFeature,
+};
+
+export const initialLoginModal: ILoginModal = {
+  isShowing: false,
+  user: null,
 };

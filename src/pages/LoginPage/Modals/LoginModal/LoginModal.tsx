@@ -1,0 +1,81 @@
+import { Button, Modal, Textbox } from 'components';
+import { ButtonVariants } from 'components/UI/Button/Button';
+import { defaultAvatar } from 'constants/images';
+import { ORDERS_ROUTE } from 'constants/paths';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { loginAPI } from 'http/userAPI';
+import { UserRoles } from 'models/IUser';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import socketio from 'socket/socketio';
+import { modalSlice } from 'store/reducers/ModalSlice';
+import { userSlice } from 'store/reducers/UserSlice';
+import styles from './LoginModal.module.css';
+
+const LoginModal = () => {
+  const [password, setPassword] = useState<string>('');
+
+  const loginModal = useAppSelector((state) => state.modal.loginModal);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const close = () => {
+    dispatch(modalSlice.actions.closeLoginModal());
+  };
+
+  const signIn = () => {
+    if (!loginModal.user) return;
+
+    loginAPI(loginModal.user.login, password)
+      .then((data) => {
+        if (data.role === UserRoles.USER) {
+          console.log('Нет доступа');
+          return;
+        }
+
+        socketio.connect(data);
+        dispatch(userSlice.actions.signIn(data));
+        navigate(ORDERS_ROUTE);
+
+        close();
+      })
+      .catch((e) => console.log(e.response.data.message));
+  };
+
+  return (
+    <Modal
+      title=""
+      isShowing={loginModal.isShowing}
+      hide={close}
+      separator={false}
+    >
+      <div className={styles.container}>
+        <img
+          className={styles.avatar}
+          src={loginModal.user?.avatar ? loginModal.user.avatar : defaultAvatar}
+        />
+        <div className={styles.user_name}>{loginModal.user?.name}</div>
+        <Textbox
+          label="Пароль"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          variant={ButtonVariants.primary}
+          style={{
+            marginTop: '12px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            height: '42px',
+          }}
+          onClick={signIn}
+        >
+          Войти
+        </Button>
+      </div>
+    </Modal>
+  );
+};
+
+export default LoginModal;

@@ -1,6 +1,6 @@
 import { Button, SelectButton, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { SHOP_KEY } from 'constants/localStorage';
+import { RECENT_LOGINS_KEY, SHOP_KEY } from 'constants/localStorage';
 import { ORDERS_ROUTE } from 'constants/paths';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
@@ -13,10 +13,14 @@ import { appSlice } from 'store/reducers/AppSlice';
 import { userSlice } from 'store/reducers/UserSlice';
 import styles from './LoginPage.module.css';
 import socketio from 'socket/socketio';
-import { UserRoles } from 'models/IUser';
+import { IUser, UserRoles } from 'models/IUser';
+import { logo } from 'constants/images';
+import RecentLogin from './RecentLogin/RecentLogin';
+import LoginModal from './Modals/LoginModal/LoginModal';
 
 const LoginPage = () => {
   const [shops, setShops] = useState<IShop[]>([]);
+  const [recentLogins, setRecentLogins] = useState<IUser[]>([]);
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -31,6 +35,10 @@ const LoginPage = () => {
       dispatch(appSlice.actions.setActiveShop(shop));
     }
 
+    const localRecentLogins: IUser[] = JSON.parse(
+      localStorage.getItem(RECENT_LOGINS_KEY) || '[]'
+    );
+    setRecentLogins(localRecentLogins);
     fetchShops();
   }, []);
 
@@ -46,7 +54,6 @@ const LoginPage = () => {
   };
 
   const signIn = () => {
-    if (login === '' && password === '') return;
     loginAPI(login, password)
       .then((data) => {
         if (data.role === UserRoles.USER) {
@@ -57,30 +64,67 @@ const LoginPage = () => {
         socketio.connect(data);
         dispatch(userSlice.actions.signIn(data));
         navigate(ORDERS_ROUTE);
+
+        addRecentLogin(data);
       })
       .catch((e) => console.log(e.response.data.message));
   };
 
-  // const socketStart = (user: IUser) => {
-  //   const socket = io(SERVER_API_URL);
-  //   dispatch(appSlice.actions.setSocket(socket));
+  const addRecentLogin = (user: IUser) => {
+    const localRecentLogins: IUser[] = JSON.parse(
+      localStorage.getItem(RECENT_LOGINS_KEY) || '[]'
+    );
 
-  //   socket.emit('addUser', user);
+    for (let i = 0; i < localRecentLogins.length; i++) {
+      if (localRecentLogins[i].id === user.id) {
+        return;
+      }
+    }
 
-  //   socket.on('getNotification', (title, text) => {
-  //     window.electron.ipcRenderer.sendMessage('show-notification', [
-  //       title,
-  //       text,
-  //     ]);
-  //   });
-  // };
+    if (localRecentLogins.length === 2) {
+      localRecentLogins.shift();
+    }
+
+    localRecentLogins.push(user);
+    localStorage.setItem(RECENT_LOGINS_KEY, JSON.stringify(localRecentLogins));
+  };
+
+  const removeRecentLogin = (userId: number) => {
+    const changedRecentLogins = recentLogins.filter(
+      (state) => state.id !== userId
+    );
+    setRecentLogins(changedRecentLogins);
+    localStorage.setItem(
+      RECENT_LOGINS_KEY,
+      JSON.stringify(changedRecentLogins)
+    );
+  };
 
   return (
     <div className={styles.container}>
+      <LoginModal />
       <div className={styles.main_section}>
-        <div className={styles.left_section}>
-          {/* <img className={styles.logo} src={logo} alt="logo" /> */}
-          <h1>Добро пожаловать!</h1>
+        <div>
+          <img className={styles.logo} src={logo} alt="logo" />
+          {recentLogins.length > 0 ? (
+            <>
+              <div className={styles.title}>Недавние входы</div>
+              <div className={styles.text}>
+                Нажмите на изображение чтобы войти.
+              </div>
+              <div className={styles.recent_logins}>
+                {recentLogins.map((recentLogin) => (
+                  <RecentLogin
+                    user={recentLogin}
+                    removeRecentLogin={removeRecentLogin}
+                    key={recentLogin.id}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className={styles.title}>Добро пожаловать!</div>
+          )}
         </div>
         <div>
           <div className={styles.form_container}>

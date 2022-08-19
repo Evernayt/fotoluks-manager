@@ -1,5 +1,6 @@
 import { Modes } from 'constants/app';
 import { IFeature } from './IFeature';
+import { IUser } from './IUser';
 
 export interface IModal {
   isShowing: boolean;
@@ -42,4 +43,9 @@ export interface IEditParamsModal {
   isShowing: boolean;
   typeId: number;
   feature: IFeature;
+}
+
+export interface ILoginModal {
+  isShowing: boolean;
+  user: IUser | null;
 }

@@ -15,7 +15,6 @@
   border-radius: var(--border-radius);
   margin-right: 12px;
   margin-bottom: 4px;
-  pointer-events: none;
 }
 
 .info {

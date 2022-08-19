@@ -1,3 +1,4 @@
-const SHOP_KEY = 'shop';
+const SHOP_KEY = 'SHOP_KEY';
+const RECENT_LOGINS_KEY = 'RECENT_LOGINS_KEY';
 
-export { SHOP_KEY };
+export { SHOP_KEY, RECENT_LOGINS_KEY };

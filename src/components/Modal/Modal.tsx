@@ -7,6 +7,7 @@ interface ModalProps {
   title: string;
   isShowing: boolean;
   hide: () => void;
+  separator?: boolean;
   children: ReactNode;
 }
 
@@ -14,6 +15,7 @@ const Modal: FC<ModalProps> = ({
   title,
   isShowing,
   hide,
+  separator = true,
   children,
   ...props
 }) => {
@@ -33,7 +35,7 @@ const Modal: FC<ModalProps> = ({
             onClick={hide}
           />
         </div>
-        <div className="separator" style={{ margin: 0 }} />
+        {separator && <div className="separator" style={{ margin: 0 }} />}
         <div className={styles.form}>{children}</div>
       </div>
     </div>
