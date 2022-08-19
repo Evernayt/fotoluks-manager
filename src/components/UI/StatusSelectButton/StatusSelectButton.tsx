@@ -1,20 +1,21 @@
 import { useOnClickOutside } from 'hooks';
+import { IOrder } from 'models/IOrder';
 import { IStatus } from 'models/IStatus';
 import { FC, useRef, useState } from 'react';
 import styles from './StatusSelectButton.module.css';
 
 interface StatusSelectButtonProps {
   statuses: IStatus[];
-  changeHandler: (status: IStatus, orderId: number) => void;
+  changeHandler: (status: IStatus, order: IOrder) => void;
   defaultSelectedStatus: IStatus;
-  orderId: number;
+  order: IOrder;
 }
 
 const StatusSelectButton: FC<StatusSelectButtonProps> = ({
   statuses,
   changeHandler,
   defaultSelectedStatus,
-  orderId,
+  order,
 }) => {
   const [isHidden, setIsHidden] = useState<boolean>(true);
   const [selectedStatus, setSelectedStatus] = useState<IStatus>(
@@ -28,7 +29,7 @@ const StatusSelectButton: FC<StatusSelectButtonProps> = ({
   const selectStatus = (status: IStatus) => {
     setIsHidden(true);
     setSelectedStatus(status);
-    changeHandler(status, orderId);
+    changeHandler(status, order);
   };
 
   return (
@@ -54,7 +55,7 @@ const StatusSelectButton: FC<StatusSelectButtonProps> = ({
             <li key={status.id}>
               <input
                 className={styles.input}
-                id={status.name + status.id + orderId}
+                id={status.name + status.id + order.id}
                 name="status_select_btn"
                 type="radio"
                 checked={selectedStatus.id === status.id}
@@ -62,7 +63,7 @@ const StatusSelectButton: FC<StatusSelectButtonProps> = ({
               />
               <label
                 className={styles.item}
-                htmlFor={status.name + status.id + orderId}
+                htmlFor={status.name + status.id + order.id}
               >
                 {status.name}
               </label>

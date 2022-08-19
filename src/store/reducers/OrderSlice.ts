@@ -12,6 +12,7 @@ import { IStatus } from 'models/IStatus';
 import { IUser } from 'models/IUser';
 
 type OrderState = {
+  orders: IOrder[];
   order: IOrder;
   isMinimizedSidemenu: boolean;
   activeStatus: IStatus | null;
@@ -29,6 +30,7 @@ type OrderState = {
 };
 
 const initialState: OrderState = {
+  orders: [],
   order: initialOrder,
   isMinimizedSidemenu: true,
   activeStatus: { id: 0, name: '' },
@@ -49,6 +51,9 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
+    setOrders(state, action: PayloadAction<IOrder[]>) {
+      state.orders = action.payload;
+    },
     setActiveStatus(state, action: PayloadAction<IStatus>) {
       state.activeStatus = action.payload;
     },
@@ -177,10 +182,17 @@ export const orderSlice = createSlice({
     addOrderMembersForDeleteByUserId(state, action: PayloadAction<number>) {
       state.orderMembersForDelete.push(action.payload);
     },
+    updateOrder(state, action: PayloadAction<IOrder>) {
+      const orders = state.orders.map((order) =>
+        order.id === action.payload.id ? action.payload : order
+      );
+      state.orders = orders;
+    },
   },
 });
 
 export const {
+  setOrders,
   setActiveStatus,
   setIsMinimizedSidemenu,
   setBeforeOrder,
@@ -209,6 +221,7 @@ export const {
   addOrderMembersForCreate,
   deleteOrderMemberByUserId,
   addOrderMembersForDeleteByUserId,
+  updateOrder,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

@@ -117,18 +117,18 @@ const OrderDetailPage = () => {
       const title = 'Добавлен в участники';
       const text = `${user.name} добавил вас в участники заказа № ${order.id}`;
 
-      createNotificationAPI(title, text, userIds);
-
-      socketio.sendNotification(title, text);
+      createNotificationAPI(title, text, userIds).then((data) => {
+        socketio.sendNotification(data);
+      });
     }
 
     if (orderMembersForDelete.length > 0) {
       const title = 'Удален из участников';
       const text = `${user.name} удалил вас из участников заказа № ${order.id}`;
 
-      createNotificationAPI(title, text, orderMembersForDelete);
-
-      socketio.sendNotification(title, text);
+      createNotificationAPI(title, text, orderMembersForDelete).then((data) => {
+        socketio.sendNotification(data);
+      });
     }
   };
 
@@ -142,13 +142,15 @@ const OrderDetailPage = () => {
 
     if (orderClone.deadline !== beforeOrderClone.deadline) {
       const title = 'Изменен срок заказа';
-      const text = `${user?.name} изменил срок заказа № ${orderClone.id}
-      с ${moment(beforeOrderClone.deadline).format(DEF_FORMAT)} 
-      на ${moment(orderClone.deadline).format(DEF_FORMAT)}`;
+      const text = `${user?.name} изменил срок заказа № ${
+        orderClone.id
+      } с ${moment(beforeOrderClone.deadline).format(DEF_FORMAT)} на ${moment(
+        orderClone.deadline
+      ).format(DEF_FORMAT)}`;
 
-      createNotificationAPI(title, text, orderMembersIds);
-
-      socketio.sendNotification(title, text);
+      createNotificationAPI(title, text, orderMembersIds).then((data) => {
+        socketio.sendNotification(data);
+      });
     }
   };
 
@@ -188,6 +190,8 @@ const OrderDetailPage = () => {
 
       notifyMembersEdit(user, data.order);
       notifyMembers(orderClone, beforeOrderClone);
+
+      socketio.updateOrder(data.order);
     });
   };
 

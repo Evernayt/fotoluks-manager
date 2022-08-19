@@ -19,13 +19,13 @@ import { createNotificationAPI } from 'http/notificationAPI';
 import socketio from 'socket/socketio';
 
 const OrdersTable = () => {
-  const [orders, setOrders] = useState<IOrder[]>([]);
   const [statuses, setStatuses] = useState<IStatus[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
   const [limit, setLimit] = useState<number>(15);
   const [page, setPage] = useState<number>(1);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
+  const orders = useAppSelector((state) => state.order.orders);
   const activeStatus = useAppSelector((state) => state.order.activeStatus);
   const activeShop = useAppSelector((state) => state.app.activeShop);
   const user = useAppSelector((state) => state.user.user);
@@ -116,7 +116,7 @@ const OrdersTable = () => {
         setIsNotFound(true);
       }
     } else {
-      setOrders(foundOrders.orderData.rows);
+      dispatch(orderSlice.actions.setOrders(foundOrders.orderData.rows));
       const count = Math.ceil(foundOrders.orderData.count / limit);
       setPageCount(count);
       setIsNotFound(false);
@@ -158,7 +158,7 @@ const OrdersTable = () => {
 
     fetchOrdersAPI(limit, page, activeStatus.id, shopId, startDate, endDate)
       .then((data) => {
-        setOrders(data.rows);
+        dispatch(orderSlice.actions.setOrders(data.rows));
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
@@ -201,21 +201,26 @@ const OrdersTable = () => {
 
     const oldStatusName = order.status?.name;
 
+    const updatedOrder = { ...order, status };
+    dispatch(orderSlice.actions.updateOrder(updatedOrder));
+
     const title = 'Изменен статус';
-    const text = `${user?.name} изменил статус заказа № ${orderId}
-     c "${oldStatusName}" на "${status.name}"`;
+    const text = `${user?.name} изменил статус заказа № ${orderId} c "${oldStatusName}" на "${status.name}"`;
 
-    createNotificationAPI(title, text, orderMemberIds);
-
-    socketio.sendNotification(title, text);
+    createNotificationAPI(title, text, orderMemberIds).then((data) => {
+      socketio.sendNotification(data);
+    });
   };
 
-  const updateStatus = (status: IStatus, orderId: number) => {
+  const updateStatus = (status: IStatus, order: IOrder) => {
     if (user) {
       const userId = user.id;
-      updateStatusAPI(status.id, orderId, userId);
+      updateStatusAPI(status.id, order.id, userId);
 
-      notifyStatusChange(orderId, status);
+      notifyStatusChange(order.id, status);
+
+      const updatedOrder = { ...order, status };
+      socketio.updateOrder(updatedOrder);
     }
   };
 
@@ -286,10 +291,10 @@ const OrdersTable = () => {
                                 statuses={statuses}
                                 changeHandler={(
                                   status: IStatus,
-                                  orderId: number
-                                ) => updateStatus(status, orderId)}
+                                  order: IOrder
+                                ) => updateStatus(status, order)}
                                 defaultSelectedStatus={cell.value}
-                                orderId={cell.row.values.id}
+                                order={cell.row.values}
                                 key={cell.row.values.id}
                               />
                             </td>

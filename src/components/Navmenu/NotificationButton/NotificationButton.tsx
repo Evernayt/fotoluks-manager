@@ -7,31 +7,34 @@ import IconButton, {
 import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { Placements } from 'helpers/calcPlacement';
 import { useElementOnScreen } from 'hooks';
-import { useAppSelector } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import {
   deleteAllNotificationsAPI,
   fetchNotificationsAPI,
 } from 'http/notificationAPI';
 import { clearAllIcon, notificationIcon } from 'icons';
-import { INotification } from 'models/INotification';
 import { useEffect, useRef, useState } from 'react';
+import { userSlice } from 'store/reducers/UserSlice';
 import styles from './NotificationButton.module.css';
 
 const limit = 25;
 
 const NotificationButton = () => {
-  const [notifications, setNotifications] = useState<INotification[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const notifications = useAppSelector((state) => state.user.notifications);
   const user = useAppSelector((state) => state.user.user);
 
   const targetRef = useRef<HTMLDivElement>(null);
 
   const isVisible = useElementOnScreen({}, targetRef);
 
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
+    dispatch(userSlice.actions.clearNotifications());
     fetchUserNotifications(page);
   }, []);
 
@@ -47,10 +50,7 @@ const NotificationButton = () => {
     if (user) {
       fetchNotificationsAPI(limit, page, user.id)
         .then((data) => {
-          setNotifications((prevState) => {
-            return (prevState = [...prevState, ...data.rows]);
-          });
-
+          dispatch(userSlice.actions.addNotifications(data.rows));
           const count = Math.ceil(data.count / limit);
           setPageCount(count);
         })
@@ -63,7 +63,7 @@ const NotificationButton = () => {
       deleteAllNotificationsAPI(user.id)
         .then((data) => {
           if (data.message === 'DELETED') {
-            setNotifications([]);
+            dispatch(userSlice.actions.clearNotifications());
             setPage(1);
             setPageCount(1);
           }
