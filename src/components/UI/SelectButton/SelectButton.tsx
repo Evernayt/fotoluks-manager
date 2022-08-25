@@ -12,7 +12,7 @@ interface IItem {
 
 interface SelectButtonProps extends HTMLAttributes<HTMLDivElement> {
   items: IItem[];
-  changeHandler: (item: any) => void;
+  changeHandler: (item: any, index: number) => void;
   defaultSelectedItem: IItem;
   placement?: Placements;
   disabled?: boolean;
@@ -48,10 +48,10 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
       }
     }, [defaultSelectedItem]);
 
-    const selectItem = (item: IItem) => {
+    const selectItem = (item: IItem, index: number) => {
       setIsHidden(true);
       setSelectedItem(item);
-      changeHandler(item);
+      changeHandler(item, index);
     };
 
     return (
@@ -72,7 +72,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
             ...calcPlacement(placement),
           }}
         >
-          {items.map((item) => {
+          {items.map((item, index) => {
             const id = uuidv4();
             return (
               <li key={item.id}>
@@ -82,7 +82,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
                   name="select_btn"
                   type="radio"
                   checked={selectedItem.id === item.id}
-                  onChange={() => selectItem(item)}
+                  onChange={() => selectItem(item, index)}
                 />
                 <label className={styles.item} htmlFor={id}>
                   {item.name}
