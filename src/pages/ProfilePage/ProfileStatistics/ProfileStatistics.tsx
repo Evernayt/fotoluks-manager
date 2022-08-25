@@ -1,4 +1,4 @@
-import { CircleDiagram, SelectButton } from 'components';
+import { CircleDiagram, Loader, SelectButton } from 'components';
 import { ICircleDiagramData } from 'components/UI/CircleDiagram/CircleDiagram';
 import { INPUT_FORMAT } from 'constants/app';
 import { toPercentages } from 'helpers';
@@ -10,17 +10,6 @@ import { useEffect, useMemo, useState } from 'react';
 import styles from './ProfileStatistics.module.css';
 
 const ProfileStatistics = () => {
-  const [diagramData, setDiagramData] = useState<ICircleDiagramData[]>([]);
-  const [statusOrders, setStatusOrders] = useState<IStatus[]>([]);
-
-  const user = useAppSelector((state) => state.user.user);
-
-  useEffect(() => {
-    const start = moment().startOf('month').format(INPUT_FORMAT);
-    const end = moment().endOf('month').format(INPUT_FORMAT);
-    fetchStatusOrders(start, end);
-  }, []);
-
   const periods = useMemo(
     () => [
       {
@@ -99,52 +88,81 @@ const ProfileStatistics = () => {
     []
   );
 
+  const [diagramData, setDiagramData] = useState<ICircleDiagramData[]>([]);
+  const [statusOrders, setStatusOrders] = useState<IStatus[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [selectedPeriod, setSelectedPeriod] = useState(periods[4]);
+
+  const user = useAppSelector((state) => state.user.user);
+
+  useEffect(() => {
+    const start = moment().startOf('month').format(INPUT_FORMAT);
+    const end = moment().endOf('month').format(INPUT_FORMAT);
+    fetchStatusOrders(start, end);
+  }, []);
+
   const fetchStatusOrders = (startDate: string, endDate: string) => {
     if (user) {
-      fetchStatusOrdersAPI(user.id, startDate, endDate).then((data) => {
-        const tempDiagramData: ICircleDiagramData[] = [];
-        const values: number[] = [];
-        for (let i = 0; i < data.length; i++) {
-          values.push(data[i].ordersCount!);
-        }
+      setIsLoading(true);
+      fetchStatusOrdersAPI(user.id, startDate, endDate)
+        .then((data) => {
+          const tempDiagramData: ICircleDiagramData[] = [];
+          const values: number[] = [];
+          for (let i = 0; i < data.length; i++) {
+            values.push(data[i].ordersCount!);
+          }
 
-        const percentageValues = toPercentages(values);
+          const percentageValues = toPercentages(values);
 
-        for (let j = 0; j < percentageValues.length; j++) {
-          tempDiagramData.push({
-            id: data[j].id,
-            color: data[j].color,
-            value: percentageValues[j],
-          });
-        }
+          for (let j = 0; j < percentageValues.length; j++) {
+            tempDiagramData.push({
+              id: data[j].id,
+              color: data[j].color,
+              value: percentageValues[j],
+            });
+          }
 
-        setDiagramData(tempDiagramData);
-        setStatusOrders(data);
-      });
+          setDiagramData(tempDiagramData);
+          setStatusOrders(data);
+        })
+        .finally(() => setIsLoading(false));
     }
+  };
+
+  const selectPeriod = (changeHandler: () => void, index: number) => {
+    changeHandler();
+    setSelectedPeriod(periods[index]);
   };
 
   return (
     <div>
       <div className={styles.diagram_container}>
-        <CircleDiagram data={diagramData} width={250} height={250} />
-        <div className={styles.status_items}>
-          <div>Колличество измененных статусов за:</div>
-          <SelectButton
-            items={periods}
-            defaultSelectedItem={periods[4]}
-            changeHandler={(item) => item.onClick()}
-          />
-          {statusOrders.map((statusOrder) => (
-            <div className={styles.status_item} key={statusOrder.id}>
-              <div
-                className={styles.status_item_color}
-                style={{ backgroundColor: statusOrder.color }}
+        {isLoading ? (
+          <Loader width="250px" height="250px" />
+        ) : (
+          <>
+            <CircleDiagram data={diagramData} width={250} height={250} />
+            <div className={styles.status_items}>
+              <div>Колличество измененных статусов за:</div>
+              <SelectButton
+                items={periods}
+                defaultSelectedItem={selectedPeriod}
+                changeHandler={(item, index) =>
+                  selectPeriod(item.onClick, index)
+                }
               />
-              {`${statusOrder.name}: ${statusOrder.ordersCount}`}
+              {statusOrders.map((statusOrder) => (
+                <div className={styles.status_item} key={statusOrder.id}>
+                  <div
+                    className={styles.status_item_color}
+                    style={{ backgroundColor: statusOrder.color }}
+                  />
+                  {`${statusOrder.name}: ${statusOrder.ordersCount}`}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
