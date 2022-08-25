@@ -41,7 +41,7 @@ const StatusSelectButton: FC<StatusSelectButtonProps> = ({
         <div
           className={styles.indicator}
           style={{
-            backgroundColor: `#${selectedStatus.color}`,
+            backgroundColor: selectedStatus.color,
           }}
         />
         {selectedStatus.name}
