@@ -79,6 +79,7 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
             </span>
             <div>
               {finishedProduct.selectedParams.map((selectedParam) => {
+                if (!selectedParam.param) return;
                 if (selectedParam.param.feature?.name === 'Цвет') {
                   return (
                     <div
