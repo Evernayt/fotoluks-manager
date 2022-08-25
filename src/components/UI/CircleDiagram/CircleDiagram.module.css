@@ -1,0 +1,19 @@
+.diagram_item {
+  fill: none;
+  stroke-width: 12;
+  
+  animation-name: showValue;
+  animation-duration: 1.5s;
+  transition-property: all; 
+  transition-duration: 1.5s;
+}
+
+@keyframes showValue {
+  from {
+    stroke-dashoffset: 0;
+  }
+}
+
+.text {
+  font-size: 4px;
+}

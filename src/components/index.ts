@@ -16,6 +16,7 @@ import Accordion from './UI/Accordion/Accordion';
 import UserCard from './UserCard/UserCard';
 import Loader from './Loader/Loader';
 import Notification from './Notification/Notification';
+import CircleDiagram from './UI/CircleDiagram/CircleDiagram';
 
 export {
   Navmenu,
@@ -36,4 +37,5 @@ export {
   UserCard,
   Loader,
   Notification,
+  CircleDiagram
 };
