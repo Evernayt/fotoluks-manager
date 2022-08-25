@@ -4,6 +4,7 @@ import createClone from './createClone';
 import firstLetterToUpperCase from './firstLetterToUpperCase';
 import getDateDiff from './getDateDiff';
 import groupBy from './groupBy';
+import toPercentages from './toPercentages';
 
 export {
   calcPlacement,
@@ -11,5 +12,6 @@ export {
   createClone,
   firstLetterToUpperCase,
   getDateDiff,
-  groupBy
+  groupBy,
+  toPercentages,
 };

@@ -17,6 +17,7 @@ export interface IOrder {
   sum: number;
   comment: string;
   orderMembers: IOrderMember[];
+  ordersCount?: number;
 }
 
 export interface IOrderData {

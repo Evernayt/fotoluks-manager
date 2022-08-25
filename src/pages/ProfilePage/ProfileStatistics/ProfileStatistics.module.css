@@ -1,0 +1,23 @@
+.diagram_container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.status_items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status_item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status_item_color {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--border-radius);
+}
