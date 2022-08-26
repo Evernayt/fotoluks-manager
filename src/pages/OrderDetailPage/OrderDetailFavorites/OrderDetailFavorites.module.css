@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  max-width: calc(100vw - 398px);
+}
+
+.favorite_container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--secondary-deemphasized-color);
+  padding: 4px 4px 4px 8px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  font-weight: 500;
+}
+
+.favorite_container:hover .delete_button {
+  opacity: 1;
+}
+
+.favorite_button:active {
+  transform: scale(0.99);
+}
+
+.delete_button {
+  min-height: 32px;
+  padding: 4px;
+  opacity: 0;
+  transition: opacity 200ms;
+}

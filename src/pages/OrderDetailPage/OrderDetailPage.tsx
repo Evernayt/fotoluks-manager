@@ -1,4 +1,3 @@
-import { IconButton } from 'components';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import OrderDetailServiceModal from './Modals/OrderDetailServiceModal/OrderDetailServiceModal';
@@ -13,7 +12,6 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchOrderAPI, saveOrderAPI } from 'http/orderAPI';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { DEF_FORMAT, Modes } from 'constants/app';
-import { IconButtonVariants } from 'components/UI/IconButton/IconButton';
 import { IOrder } from 'models/IOrder';
 import UserRegistrationModal from './Modals/UserRegistrationModal/UserRegistrationModal';
 import EditUserModal from 'components/UserCard/EditUserModal/EditUserModal';
@@ -24,6 +22,9 @@ import { createNotificationAPI } from 'http/notificationAPI';
 import { IUser } from 'models/IUser';
 import moment from 'moment';
 import socketio from 'socket/socketio';
+import OrderDetailFavorites from './OrderDetailFavorites/OrderDetailFavorites';
+import OrderDetailAddFavoriteModal from './Modals/OrderDetailAddFavoriteModal/OrderDetailAddFavoriteModal';
+import { Loader } from 'components';
 
 type LocationState = {
   state: {
@@ -41,6 +42,7 @@ const OrderDetailPage = () => {
   );
   const [serviceModalData, setServiceModalData] =
     useState<IFinishedProduct | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const serviceModal = useModal();
   const cancelOrderModal = useModal();
@@ -91,10 +93,13 @@ const OrderDetailPage = () => {
   }, [finishedProducts]);
 
   const fetchOrder = (orderId: number) => {
-    fetchOrderAPI(orderId).then((data) => {
-      dispatch(orderSlice.actions.setBeforeOrder(data));
-      dispatch(orderSlice.actions.setOrder(data));
-    });
+    setIsLoading(true);
+    fetchOrderAPI(orderId)
+      .then((data) => {
+        dispatch(orderSlice.actions.setBeforeOrder(data));
+        dispatch(orderSlice.actions.setOrder(data));
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const openServiceModal = (
@@ -162,6 +167,8 @@ const OrderDetailPage = () => {
 
     if (!user) return;
 
+    setIsLoading(true);
+
     const body = createOrderBodyForSave(
       finishedProductsForCreate,
       finishedProductsForUpdate,
@@ -174,26 +181,31 @@ const OrderDetailPage = () => {
       orderMembersForDelete
     );
 
-    saveOrderAPI(body).then((data) => {
-      let orderClone: IOrder = createClone(order);
-      const beforeOrderClone: IOrder = createClone(beforeOrder);
+    saveOrderAPI(body)
+      .then((data) => {
+        let orderClone: IOrder = createClone(order);
+        const beforeOrderClone: IOrder = createClone(beforeOrder);
 
-      if (data.finishedProducts.length > 0) {
-        orderClone = { ...orderClone, finishedProducts: data.finishedProducts };
-      }
-      if (data.order) {
-        orderClone = { ...orderClone, id: data.order.id };
-      }
+        if (data.finishedProducts.length > 0) {
+          orderClone = {
+            ...orderClone,
+            finishedProducts: data.finishedProducts,
+          };
+        }
+        if (data.order) {
+          orderClone = { ...orderClone, id: data.order.id };
+        }
 
-      dispatch(orderSlice.actions.setOrder(orderClone));
-      dispatch(orderSlice.actions.saveOrder(orderClone));
-      dispatch(orderSlice.actions.setHaveUnsavedData(false));
+        dispatch(orderSlice.actions.setOrder(orderClone));
+        dispatch(orderSlice.actions.saveOrder(orderClone));
+        dispatch(orderSlice.actions.setHaveUnsavedData(false));
 
-      notifyMembersEdit(user, data.order);
-      notifyMembers(orderClone, beforeOrderClone);
+        notifyMembersEdit(user, data.order);
+        notifyMembers(orderClone, beforeOrderClone);
 
-      socketio.updateOrder(data.order);
-    });
+        socketio.updateOrder(data.order);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -222,7 +234,13 @@ const OrderDetailPage = () => {
       <UserRegistrationModal />
       <EditUserModal />
       <OrderDetailMembersModal />
+      <OrderDetailAddFavoriteModal />
       <OrderDetailNavmenu unsavedDataModal={unsavedDataModal} />
+      {isLoading && (
+        <div className={styles.loader}>
+          <Loader />
+        </div>
+      )}
       <div className={styles.section}>
         <OrderDetailSidemenu
           sum={sum}
@@ -238,36 +256,7 @@ const OrderDetailPage = () => {
               Какую услугу добавить?
             </div>
             <div className="separator" />
-            <div className={styles.favorites}>
-              <IconButton
-                variant={IconButtonVariants.link}
-                icon="https://www.pichshop.ru/product_img/632221/b1.jpg"
-                style={{ marginRight: '12px' }}
-              >
-                Кружка цветная внутри красная
-              </IconButton>
-              <IconButton
-                variant={IconButtonVariants.link}
-                icon="https://www.pichshop.ru/product_img/632221/b1.jpg"
-                style={{ marginRight: '12px' }}
-              >
-                Кружка цветная внутри красная
-              </IconButton>
-              <IconButton
-                variant={IconButtonVariants.link}
-                icon="https://www.pichshop.ru/product_img/632221/b1.jpg"
-                style={{ marginRight: '12px' }}
-              >
-                Кружка цветная внутри красная
-              </IconButton>
-              <IconButton
-                variant={IconButtonVariants.link}
-                icon="https://www.pichshop.ru/product_img/632221/b1.jpg"
-                style={{ marginRight: '12px' }}
-              >
-                Кружка цветная внутри красная
-              </IconButton>
-            </div>
+            <OrderDetailFavorites />
           </div>
           <div className={styles.services_section}>
             <div className={styles.services_cards}>

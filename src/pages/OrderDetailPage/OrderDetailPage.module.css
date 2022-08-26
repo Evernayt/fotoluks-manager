@@ -1,7 +1,17 @@
 .container {
   background-color: var(--background-color);
   height: 100vh;
-  
+}
+
+.loader {
+  position: absolute;
+  z-index: 999;
+  height: calc(100% - 56px);
+  width: 100%;
+  background-color: var(--overlay-alpha-80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .section {
@@ -36,12 +46,6 @@
 
 .open_btn:hover {
   background-color: var(--hover-background-color);
-}
-
-.favorites {
-  display: flex;
-  overflow: auto;
-  max-width: calc(100vw - 398px);
 }
 
 .services_section {

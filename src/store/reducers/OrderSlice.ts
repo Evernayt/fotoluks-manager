@@ -4,6 +4,7 @@ import {
   initialFoundOrders,
   initialOrder,
 } from 'constants/InitialStates/initialOrderState';
+import { IFavorite } from 'models/IFavorite';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { IFoundOrders, IOrder, IOrdersFilter } from 'models/IOrder';
 import { IOrderMember } from 'models/IOrderMember';
@@ -27,6 +28,7 @@ type OrderState = {
   isLoading: boolean;
   orderMembersForCreate: IOrderMember[];
   orderMembersForDelete: number[];
+  favorites: IFavorite[];
 };
 
 const initialState: OrderState = {
@@ -45,6 +47,7 @@ const initialState: OrderState = {
   isLoading: false,
   orderMembersForCreate: [],
   orderMembersForDelete: [],
+  favorites: [],
 };
 
 export const orderSlice = createSlice({
@@ -114,7 +117,19 @@ export const orderSlice = createSlice({
       state,
       action: PayloadAction<IFinishedProduct>
     ) {
-      state.finishedProductsForCreate.push(action.payload);
+      const finishedProductForCreate = state.finishedProductsForCreate.find(
+        (x) => x.id === action.payload.id
+      );
+
+      if (finishedProductForCreate === undefined) {
+        state.finishedProductsForCreate.push(action.payload);
+      } else {
+        const finishedProductsForCreate = state.finishedProductsForCreate.map(
+          (x) => (x.id === action.payload.id ? action.payload : x)
+        );
+
+        state.finishedProductsForCreate = finishedProductsForCreate;
+      }
     },
     updateFinishedProduct(state, action: PayloadAction<IFinishedProduct>) {
       const finishedProducts = state.order.finishedProducts.map(
@@ -129,7 +144,19 @@ export const orderSlice = createSlice({
       state,
       action: PayloadAction<IFinishedProduct>
     ) {
-      state.finishedProductsForUpdate.push(action.payload);
+      const finishedProductForUpdate = state.finishedProductsForUpdate.find(
+        (x) => x.id === action.payload.id
+      );
+
+      if (finishedProductForUpdate === undefined) {
+        state.finishedProductsForUpdate.push(action.payload);
+      } else {
+        const finishedProductsForUpdate = state.finishedProductsForUpdate.map(
+          (x) => (x.id === action.payload.id ? action.payload : x)
+        );
+
+        state.finishedProductsForUpdate = finishedProductsForUpdate;
+      }
     },
     saveOrder(state, action: PayloadAction<IOrder>) {
       state.beforeOrder = action.payload;
@@ -208,6 +235,18 @@ export const orderSlice = createSlice({
       );
       state.orders = orders;
     },
+    setFavorites(state, action: PayloadAction<IFavorite[]>) {
+      state.favorites = action.payload;
+    },
+    addFavorite(state, action: PayloadAction<IFavorite>) {
+      state.favorites.push(action.payload);
+    },
+    deleteFavoriteById(state, action: PayloadAction<number>) {
+      const favorites = state.favorites.filter(
+        (favorite) => favorite.id !== action.payload
+      );
+      state.favorites = favorites;
+    },
   },
 });
 
@@ -246,6 +285,9 @@ export const {
   addOrderMemberForDeleteByUserId,
   addOrderMembersForDeleteByUserId,
   updateOrder,
+  setFavorites,
+  addFavorite,
+  deleteFavoriteById,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
