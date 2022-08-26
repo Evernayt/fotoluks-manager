@@ -24,10 +24,10 @@ const OrderDetailMemberItem: FC<OrderDetailMemberItemProps> = ({
       />
       {user.name}
       <IconButton
+        className={styles.button}
         icon={isAdded ? minusIcon : plusIcon}
-        style={{ minHeight: '32px', padding: '4px' }}
         onClick={clickHandler}
-      ></IconButton>
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Modal } from 'components';
+import { IconButton, Modal } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchUsersAPI } from 'http/userAPI';
 import { IUser, UserRoles } from 'models/IUser';
@@ -9,8 +9,12 @@ import OrderDetailMemberItem from './OrderDetailMemberItem/OrderDetailMemberItem
 import { v4 as uuidv4 } from 'uuid';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './OrderDetailMembersModal.module.css';
+import { fetchShopsAPI } from 'http/shopAPI';
+import { IShop } from 'models/IShop';
+import { minusIcon, plusIcon } from 'icons';
 
 const OrderDetailMembersModal = () => {
+  const [shops, setShops] = useState<IShop[]>([]);
   const [users, setUsers] = useState<IUser[]>([]);
 
   const orderMembersModal = useAppSelector(
@@ -23,9 +27,16 @@ const OrderDetailMembersModal = () => {
 
   useEffect(() => {
     if (orderMembersModal.isShowing) {
+      fetchShops();
       fetchUsers();
     }
   }, [orderMembersModal.isShowing]);
+
+  const fetchShops = () => {
+    fetchShopsAPI(true).then((data) => {
+      setShops(data);
+    });
+  };
 
   const fetchUsers = () => {
     fetchUsersAPI(100, 1, [UserRoles.EMPLOYEE, UserRoles.ADMIN]).then(
@@ -54,7 +65,7 @@ const OrderDetailMembersModal = () => {
     dispatch(orderSlice.actions.addOrderMember(createdOrderMember));
     setUsers((prevState) => prevState.filter((state) => state.id !== user.id));
 
-    dispatch(orderSlice.actions.addOrderMembersForCreate(createdOrderMember));
+    dispatch(orderSlice.actions.addOrderMemberForCreate(createdOrderMember));
   };
 
   const deleteOrderMember = (orderMember: IOrderMember) => {
@@ -62,8 +73,45 @@ const OrderDetailMembersModal = () => {
     setUsers((prevState) => [...prevState, orderMember.user]);
 
     dispatch(
-      orderSlice.actions.addOrderMembersForDeleteByUserId(orderMember.user.id)
+      orderSlice.actions.addOrderMemberForDeleteByUserId(orderMember.user.id)
     );
+  };
+
+  const addAllOrderMembers = (shopId: number) => {
+    const foundUsers = users.filter((user) => user.shopId === shopId);
+
+    const createdOrderMembers: IOrderMember[] = [];
+    for (let i = 0; i < foundUsers.length; i++) {
+      createdOrderMembers.push({
+        id: uuidv4(),
+        user: foundUsers[i],
+      });
+    }
+
+    dispatch(orderSlice.actions.addOrderMembers(createdOrderMembers));
+    setUsers((prevState) =>
+      prevState.filter((state) => state.shopId !== shopId)
+    );
+
+    dispatch(orderSlice.actions.addOrderMembersForCreate(createdOrderMembers));
+  };
+
+  const deleteAllOrderMembers = (shopId: number) => {
+    const foundOrderMembers = order.orderMembers.filter(
+      (orderMember) => orderMember.user.shopId === shopId
+    );
+
+    const foundUsers: IUser[] = [];
+    const userIds: number[] = [];
+    for (let i = 0; i < foundOrderMembers.length; i++) {
+      foundUsers.push(foundOrderMembers[i].user);
+      userIds.push(foundOrderMembers[i].user.id);
+    }
+
+    dispatch(orderSlice.actions.deleteOrderMembersByShopId(shopId));
+    setUsers((prevState) => [...prevState, ...foundUsers]);
+
+    dispatch(orderSlice.actions.addOrderMembersForDeleteByUserId(userIds));
   };
 
   const close = () => {
@@ -77,30 +125,72 @@ const OrderDetailMembersModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        <div className={styles.items_container}>
-          {order.orderMembers.map((orderMember) => (
-            <OrderDetailMemberItem
-              user={orderMember.user}
-              isAdded={true}
-              clickHandler={() => deleteOrderMember(orderMember)}
-              key={orderMember.id}
-            />
-          ))}
+        <div className={styles.section}>
+          <div className={styles.title}>Участвуют в заказе:</div>
+          <div className={styles.shops_container}>
+            {shops.map((shop) => (
+              <div key={shop.id}>
+                <div className={styles.shop_item}>
+                  {shop.name}
+                  <IconButton
+                    className={styles.shop_button}
+                    icon={minusIcon}
+                    onClick={() => deleteAllOrderMembers(shop.id)}
+                  />
+                </div>
+                <div className={styles.items_container}>
+                  {order.orderMembers.map((orderMember) => {
+                    if (orderMember.user.shopId === shop.id) {
+                      return (
+                        <OrderDetailMemberItem
+                          user={orderMember.user}
+                          isAdded={true}
+                          clickHandler={() => deleteOrderMember(orderMember)}
+                          key={orderMember.user.id}
+                        />
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <div
-          className={[styles.items_container, styles.items_container_gap].join(
-            ' '
-          )}
-        >
-          {users.map((user) => (
-            <OrderDetailMemberItem
-              user={user}
-              isAdded={false}
-              clickHandler={() => addOrderMember(user)}
-              key={user.id}
-            />
-          ))}
+        <div className={styles.separator} />
+        <div className={styles.section}>
+          <div className={styles.title}>Не участвуют в заказе:</div>
+          <div className={styles.shops_container}>
+            {shops.map((shop) => (
+              <div key={shop.id}>
+                <div className={styles.shop_item}>
+                  {shop.name}
+                  <IconButton
+                    className={styles.shop_button}
+                    icon={plusIcon}
+                    onClick={() => addAllOrderMembers(shop.id)}
+                  />
+                </div>
+                <div className={styles.items_container}>
+                  {users.map((user) => {
+                    if (user.shopId === shop.id) {
+                      return (
+                        <OrderDetailMemberItem
+                          user={user}
+                          isAdded={false}
+                          clickHandler={() => addOrderMember(user)}
+                          key={user.id}
+                        />
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Modal>

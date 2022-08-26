@@ -33,7 +33,7 @@ const initialState: OrderState = {
   orders: [],
   order: initialOrder,
   isMinimizedSidemenu: true,
-  activeStatus: { id: 0, name: '' },
+  activeStatus: { id: 0, name: '', color: '#fff' },
   beforeOrder: initialOrder,
   finishedProductsForCreate: [],
   finishedProductsForUpdate: [],
@@ -170,8 +170,14 @@ export const orderSlice = createSlice({
     addOrderMember(state, action: PayloadAction<IOrderMember>) {
       state.order.orderMembers.push(action.payload);
     },
-    addOrderMembersForCreate(state, action: PayloadAction<IOrderMember>) {
+    addOrderMembers(state, action: PayloadAction<IOrderMember[]>) {
+      state.order.orderMembers.push(...action.payload);
+    },
+    addOrderMemberForCreate(state, action: PayloadAction<IOrderMember>) {
       state.orderMembersForCreate.push(action.payload);
+    },
+    addOrderMembersForCreate(state, action: PayloadAction<IOrderMember[]>) {
+      state.orderMembersForCreate.push(...action.payload);
     },
     deleteOrderMemberByUserId(state, action: PayloadAction<number>) {
       const orderMembers = state.order.orderMembers.filter(
@@ -179,8 +185,17 @@ export const orderSlice = createSlice({
       );
       state.order.orderMembers = orderMembers;
     },
-    addOrderMembersForDeleteByUserId(state, action: PayloadAction<number>) {
+    deleteOrderMembersByShopId(state, action: PayloadAction<number>) {
+      const orderMembers = state.order.orderMembers.filter(
+        (orderMember) => orderMember.user.shopId !== action.payload
+      );
+      state.order.orderMembers = orderMembers;
+    },
+    addOrderMemberForDeleteByUserId(state, action: PayloadAction<number>) {
       state.orderMembersForDelete.push(action.payload);
+    },
+    addOrderMembersForDeleteByUserId(state, action: PayloadAction<number[]>) {
+      state.orderMembersForDelete.push(...action.payload);
     },
     updateOrder(state, action: PayloadAction<IOrder>) {
       const orders = state.orders.map((order) =>
@@ -218,8 +233,12 @@ export const {
   setFoundOrders,
   setIsLoading,
   addOrderMember,
+  addOrderMembers,
+  addOrderMemberForCreate,
   addOrderMembersForCreate,
   deleteOrderMemberByUserId,
+  deleteOrderMembersByShopId,
+  addOrderMemberForDeleteByUserId,
   addOrderMembersForDeleteByUserId,
   updateOrder,
 } = orderSlice.actions;
