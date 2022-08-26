@@ -10,16 +10,18 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: IconButtonVariants;
   icon: string;
   children?: ReactNode;
+  className?: string;
 }
 
 const IconButton: FC<IconButtonProps> = ({
   variant = IconButtonVariants.default,
   icon,
   children,
+  className,
   ...props
 }) => {
   return (
-    <button className={styles[variant]} {...props}>
+    <button className={[styles[variant], className].join(' ')} {...props}>
       <img
         className={styles.icon}
         style={
