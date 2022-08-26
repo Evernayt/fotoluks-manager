@@ -1,5 +1,5 @@
 import { eyeIcon, eyeOffIcon } from 'icons';
-import { CSSProperties, FC, InputHTMLAttributes, useState } from 'react';
+import { CSSProperties, FC, InputHTMLAttributes, memo, useState } from 'react';
 import styles from './Textbox.module.css';
 
 interface TextboxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -8,37 +8,36 @@ interface TextboxProps extends InputHTMLAttributes<HTMLInputElement> {
   containerStyle?: CSSProperties;
 }
 
-const Textbox: FC<TextboxProps> = ({
-  label,
-  isPassword,
-  containerStyle,
-  ...props
-}) => {
-  const [isPasswordShowing, setIsPasswordShowing] = useState<boolean>(false);
+const Textbox: FC<TextboxProps> = memo(
+  ({ label, isPassword, containerStyle, ...props }) => {
+    const [isPasswordShowing, setIsPasswordShowing] = useState<boolean>(false);
 
-  const passwordShowingToggle = () => {
-    setIsPasswordShowing((prevState) => !prevState);
-  };
+    const passwordShowingToggle = () => {
+      setIsPasswordShowing((prevState) => !prevState);
+    };
 
-  return (
-    <div className={styles.container} style={containerStyle}>
-      {isPassword && (
-        <img
-          className={styles.icon}
-          src={isPasswordShowing ? eyeOffIcon : eyeIcon}
-          onClick={passwordShowingToggle}
+    return (
+      <div className={styles.container} style={containerStyle}>
+        {isPassword && (
+          <img
+            className={styles.icon}
+            src={isPasswordShowing ? eyeOffIcon : eyeIcon}
+            onClick={passwordShowingToggle}
+          />
+        )}
+        <input
+          className={styles.textbox}
+          type={isPassword && !isPasswordShowing ? 'password' : 'text'}
+          style={
+            isPassword ? { paddingRight: '40px' } : { paddingRight: '12px' }
+          }
+          {...props}
+          placeholder=" "
         />
-      )}
-      <input
-        className={styles.textbox}
-        type={isPassword && !isPasswordShowing ? 'password' : 'text'}
-        style={isPassword ? { paddingRight: '40px' } : { paddingRight: '12px' }}
-        {...props}
-        placeholder=" "
-      />
-      <div className={styles.label}>{label}</div>
-    </div>
-  );
-};
+        <div className={styles.label}>{label}</div>
+      </div>
+    );
+  }
+);
 
 export default Textbox;

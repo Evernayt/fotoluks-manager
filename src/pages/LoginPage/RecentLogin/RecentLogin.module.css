@@ -11,6 +11,15 @@
   box-shadow: 0 2px 12px var(--shadow-2);
 }
 
+.close_button {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  margin-top: 4px;
+  margin-left: 4px;
+  opacity: 0.8;
+}
+
 .avatar {
   width: 160px;
   height: 160px;

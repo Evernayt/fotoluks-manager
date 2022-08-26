@@ -71,13 +71,8 @@ const LoginModal = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button
+          className={styles.login_button}
           variant={ButtonVariants.primary}
-          style={{
-            marginTop: '12px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            height: '42px',
-          }}
           onClick={signIn}
         >
           Войти
