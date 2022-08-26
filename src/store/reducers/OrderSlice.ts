@@ -141,7 +141,12 @@ export const orderSlice = createSlice({
     },
     activeOrdersFilter(
       state,
-      action: PayloadAction<{ shop: IShop; startDate: string; endDate: string }>
+      action: PayloadAction<{
+        shop: IShop;
+        startDate: string;
+        endDate: string;
+        userId: number;
+      }>
     ) {
       state.ordersFilter = {
         filter: {

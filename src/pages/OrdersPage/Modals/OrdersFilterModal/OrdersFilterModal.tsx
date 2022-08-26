@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   DropdownButton,
   Modal,
   SelectButton,
@@ -31,10 +32,12 @@ const OrdersFilterModal = () => {
   const [endDate, setEndDate] = useState<string>('');
   const [shops, setShops] = useState<IShop[]>([]);
   const [selectedShop, setSelectedShop] = useState<IShop>(activeShop);
+  const [iOrderMember, setIOrderMember] = useState<boolean>(false);
 
   const ordersFilterModal = useAppSelector(
     (state) => state.modal.ordersFilterModal
   );
+  const user = useAppSelector((state) => state.user.user);
 
   const dispatch = useAppDispatch();
 
@@ -166,12 +169,15 @@ const OrdersFilterModal = () => {
   };
 
   const filter = () => {
+    if (!user) return;
+
     dispatch(orderSlice.actions.setForceUpdate(true));
     dispatch(
       orderSlice.actions.activeOrdersFilter({
         shop: selectedShop,
         startDate,
         endDate,
+        userId: iOrderMember ? user.id : 0,
       })
     );
     close();
@@ -188,6 +194,8 @@ const OrdersFilterModal = () => {
 
     const end = moment().format(INPUT_FORMAT);
     setEndDate(end);
+
+    setIOrderMember(false);
   };
 
   return (
@@ -221,7 +229,13 @@ const OrdersFilterModal = () => {
           label="До"
           type="datetime-local"
           value={endDate}
+          containerStyle={{ marginBottom: '12px' }}
           onChange={(e) => setEndDate(e.target.value)}
+        />
+        <Checkbox
+          text="Я участвую в заказе"
+          checked={iOrderMember}
+          onChange={() => setIOrderMember((prevState) => !prevState)}
         />
       </div>
       <div className={styles.controls}>

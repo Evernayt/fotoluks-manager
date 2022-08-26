@@ -126,8 +126,8 @@ const OrdersTable = () => {
   useEffect(() => {
     setPage(1);
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate } = ordersFilter;
-      fetchOrders(1, shop.id, startDate, endDate);
+      const { shop, startDate, endDate, userId } = ordersFilter;
+      fetchOrders(1, shop.id, startDate, endDate, userId);
     } else {
       fetchOrders(1, activeShop.id);
     }
@@ -135,8 +135,8 @@ const OrdersTable = () => {
 
   useEffect(() => {
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate } = ordersFilter;
-      fetchOrders(page, shop.id, startDate, endDate);
+      const { shop, startDate, endDate, userId } = ordersFilter;
+      fetchOrders(page, shop.id, startDate, endDate, userId);
     } else if (ordersFilter.filter.isPendingDeactivation) {
       dispatch(orderSlice.actions.deactiveOrdersFilter());
       fetchOrders(page, activeShop.id);
@@ -151,12 +151,21 @@ const OrdersTable = () => {
     page: number,
     shopId: number,
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    userId?: number
   ) => {
     if (!activeStatus) return;
     dispatch(orderSlice.actions.setIsLoading(true));
 
-    fetchOrdersAPI(limit, page, activeStatus.id, shopId, startDate, endDate)
+    fetchOrdersAPI(
+      limit,
+      page,
+      activeStatus.id,
+      shopId,
+      startDate,
+      endDate,
+      userId
+    )
       .then((data) => {
         dispatch(orderSlice.actions.setOrders(data.rows));
         const count = Math.ceil(data.count / limit);
@@ -174,8 +183,8 @@ const OrdersTable = () => {
   const pageChangeHandler = (page: number) => {
     setPage(page);
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate } = ordersFilter;
-      fetchOrders(page, shop.id, startDate, endDate);
+      const { shop, startDate, endDate, userId } = ordersFilter;
+      fetchOrders(page, shop.id, startDate, endDate, userId);
     } else {
       fetchOrders(page, activeShop.id);
     }
@@ -183,8 +192,8 @@ const OrdersTable = () => {
 
   const reload = () => {
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate } = ordersFilter;
-      fetchOrders(page, shop.id, startDate, endDate);
+      const { shop, startDate, endDate, userId } = ordersFilter;
+      fetchOrders(page, shop.id, startDate, endDate, userId);
     } else {
       fetchOrders(page, activeShop.id);
     }

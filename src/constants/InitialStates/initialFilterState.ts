@@ -35,6 +35,7 @@ export const initialOrdersFilter: IOrdersFilter = {
   },
   startDate: '',
   endDate: '',
+  userId: 0,
 };
 
 export const initialProductsFilter: IProductsFilter = {

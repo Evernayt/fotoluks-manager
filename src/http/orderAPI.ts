@@ -10,7 +10,8 @@ interface IFetchOrders {
     statusId: number,
     shopId: number,
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    userId?: number
   ): Promise<IOrderData>;
 }
 
@@ -20,7 +21,8 @@ export const fetchOrdersAPI: IFetchOrders = async (
   statusId = 0,
   shopId,
   startDate = '',
-  endDate = ''
+  endDate = '',
+  userId = 0
 ) => {
   const { data } = await $host.post('api/order/all/', {
     limit,
@@ -29,6 +31,7 @@ export const fetchOrdersAPI: IFetchOrders = async (
     shopId,
     startDate,
     endDate,
+    userId,
   });
   return data;
 };

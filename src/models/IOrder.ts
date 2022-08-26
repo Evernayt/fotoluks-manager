@@ -35,4 +35,5 @@ export interface IOrdersFilter {
   shop: IShop;
   startDate: string;
   endDate: string;
+  userId: number;
 }
