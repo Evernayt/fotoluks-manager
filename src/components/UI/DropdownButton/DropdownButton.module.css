@@ -1,6 +1,7 @@
 .container {
   position: relative;
   font-weight: 500;
+  user-select: none;
 }
 
 .dropdown_btn {

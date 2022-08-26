@@ -3,6 +3,7 @@
   position: relative;
   font-weight: 500;
   white-space: nowrap;
+  user-select: none;
 }
 
 .select_btn {
