@@ -49,36 +49,42 @@ const OrdersSidemenu = () => {
         checkedIcon: allOrdersCheckedIcon,
         icon: allOrdersIcon,
         name: 'Все заказы',
+        color: '',
       },
       {
         id: 1,
         checkedIcon: newOrdersCheckedIcon,
         icon: newOrdersIcon,
         name: 'Новые',
+        color: '',
       },
       {
         id: 2,
         checkedIcon: inWorkOrdersCheckedIcon,
         icon: inWorkOrdersIcon,
         name: 'В работе',
+        color: '',
       },
       {
         id: 3,
         checkedIcon: readyOrdersCheckedIcon,
         icon: readyOrdersIcon,
         name: 'Готовые',
+        color: '',
       },
       {
         id: 4,
         checkedIcon: givenOrdersCheckedIcon,
         icon: givenOrdersIcon,
         name: 'Отданные',
+        color: '',
       },
       {
         id: 5,
         checkedIcon: canceledOrdersCheckedIcon,
         icon: canceledOrdersIcon,
         name: 'Отмененные',
+        color: '',
       },
     ],
     []
@@ -145,7 +151,7 @@ const OrdersSidemenu = () => {
                     alt={status.name}
                   />
                 </div>
-                <span
+                <div
                   className={styles.text}
                   style={
                     isMinimizedSidemenu
@@ -154,7 +160,7 @@ const OrdersSidemenu = () => {
                   }
                 >
                   {status.name}
-                </span>
+                </div>
               </label>
             </div>
           </Tooltip>

@@ -3,4 +3,5 @@ export interface ISidemenu {
   checkedIcon: string;
   icon: string;
   name: string;
+  color: string
 }
