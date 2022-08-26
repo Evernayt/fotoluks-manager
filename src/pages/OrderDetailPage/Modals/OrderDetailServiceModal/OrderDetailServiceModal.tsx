@@ -82,10 +82,17 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         fetchTypesByProductIdAPI(finishedProduct.product.id).then(
           (typeData) => {
             setTypes(typeData);
-            setSelectedType(finishedProduct.type);
 
-            if (finishedProduct.type.params) {
-              setFeatures(groupBy(finishedProduct.type.params, 'featureId'));
+            const selectedFinishedProductType = typeData.find(
+              (type) => type.id === finishedProduct.type.id
+            );
+            if (!selectedFinishedProductType) return;
+            setSelectedType(selectedFinishedProductType);
+
+            if (selectedFinishedProductType.params) {
+              setFeatures(
+                groupBy(selectedFinishedProductType.params, 'featureId')
+              );
 
               for (let i = 0; i < finishedProduct.selectedParams.length; i++) {
                 setSelectedParams((prevState) => [
@@ -150,7 +157,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
   const selectParam = (param: IParam) => {
     setSelectedParams((prevState) =>
       prevState.map((state) =>
-        state.param.featureId === param.featureId ? { ...state, param } : state
+        state.param?.featureId === param.featureId ? { ...state, param } : state
       )
     );
   };
@@ -213,18 +220,24 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         dispatch(
           orderSlice.actions.updateFinishedProduct(createdFinishedProduct)
         );
-        finishedProductsForCreate.find((x) => x.id === finishedProduct.id) ===
-        undefined
-          ? dispatch(
-              orderSlice.actions.addFinishedProductsForUpdate(
-                createdFinishedProduct
-              )
+
+        const isNotFoundForCreate =
+          finishedProductsForCreate.find((x) => x.id === finishedProduct.id) ===
+          undefined;
+
+        if (isNotFoundForCreate) {
+          dispatch(
+            orderSlice.actions.addFinishedProductsForUpdate(
+              createdFinishedProduct
             )
-          : dispatch(
-              orderSlice.actions.addFinishedProductsForCreate(
-                createdFinishedProduct
-              )
-            );
+          );
+        } else {
+          dispatch(
+            orderSlice.actions.addFinishedProductsForCreate(
+              createdFinishedProduct
+            )
+          );
+        }
       }
     }
     hide();
@@ -272,7 +285,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
               <div>
                 <SelectButton
                   items={feature}
-                  defaultSelectedItem={selectedParams[index]?.param}
+                  defaultSelectedItem={selectedParams[index]?.param!}
                   changeHandler={(e) => selectParam(e)}
                   style={{ width: '228px' }}
                 />
