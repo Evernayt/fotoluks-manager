@@ -17,6 +17,7 @@ import UserCard from './UserCard/UserCard';
 import Loader from './Loader/Loader';
 import Notification from './Notification/Notification';
 import CircleDiagram from './UI/CircleDiagram/CircleDiagram';
+import GlobalMessage from './GlobalMessage/GlobalMessage';
 
 export {
   Navmenu,
@@ -37,5 +38,6 @@ export {
   UserCard,
   Loader,
   Notification,
-  CircleDiagram
+  CircleDiagram,
+  GlobalMessage
 };

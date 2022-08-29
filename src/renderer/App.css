@@ -5,7 +5,7 @@
   --primary-color: #ffd60a;
   --primary-deemphasized-color: #ffea83;
   --secondary-color: #ebeae4;
-  --secondary-deemphasized-color: #F5F4ED;
+  --secondary-deemphasized-color: #f5f4ed;
   --primary-text-color: #050505;
   --secondary-text-color: #6b6a65;
   --secondary-text-on-bg-color: #706d60;
@@ -16,6 +16,8 @@
   --tooltip-text-color: #ffffff;
   --card-background: #ffffff;
   --danger-color: #eb5c5c;
+  --success-color: #14a44d;
+  --warning-color: #e4a11b;
 
   /* COLORS: HOVER */
   --hover-primary-color: #f5cd0a;

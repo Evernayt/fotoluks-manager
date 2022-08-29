@@ -13,11 +13,13 @@ import {
   OrdersPage,
   ProfilePage,
 } from 'pages';
+import { GlobalMessage } from 'components';
 import './App.css';
 
 export default function App() {
   return (
     <Router>
+      <GlobalMessage />
       <Routes>
         <Route path={LOGIN_ROUTE} element={<LoginPage />} />
         <Route path={ORDERS_ROUTE} element={<OrdersPage />} />
