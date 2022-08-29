@@ -17,6 +17,7 @@ import { IUser, UserRoles } from 'models/IUser';
 import { logo } from 'constants/images';
 import RecentLogin from './RecentLogin/RecentLogin';
 import LoginModal from './Modals/LoginModal/LoginModal';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 
 const LoginPage = () => {
   const [shops, setShops] = useState<IShop[]>([]);
@@ -57,7 +58,13 @@ const LoginPage = () => {
     loginAPI(login, password)
       .then((data) => {
         if (data.role === UserRoles.USER) {
-          console.log('Нет доступа');
+          dispatch(
+            appSlice.actions.showGlobalMessage({
+              message: 'Нет доступа!',
+              variant: GlobalMessageVariants.danger,
+              isShowing: true,
+            })
+          );
           return;
         }
 
@@ -67,7 +74,15 @@ const LoginPage = () => {
 
         addRecentLogin(data);
       })
-      .catch((e) => console.log(e.response.data.message));
+      .catch((e) =>
+        dispatch(
+          appSlice.actions.showGlobalMessage({
+            message: e.response.data.message,
+            variant: GlobalMessageVariants.danger,
+            isShowing: true,
+          })
+        )
+      );
   };
 
   const navigateToRoute = (route: string) => {

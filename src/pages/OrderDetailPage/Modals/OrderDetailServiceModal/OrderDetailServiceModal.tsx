@@ -13,11 +13,13 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchProductsAPI } from 'http/productAPI';
 import { fetchTypesByProductIdAPI } from 'http/typeAPI';
 import { IFinishedProduct } from 'models/IFinishedProduct';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { IParam } from 'models/IParam';
 import { IProduct } from 'models/IProduct';
 import { ISelectedParam } from 'models/ISelectedParam';
 import { IType } from 'models/IType';
 import { FC, useEffect, useState } from 'react';
+import { appSlice } from 'store/reducers/AppSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { v4 as uuidv4 } from 'uuid';
 import OrderDetailServiceSearch from '../../OrderDetailServiceSearch/OrderDetailServiceSearch';
@@ -173,24 +175,32 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     });
   };
 
-  const validation = () => {
-    // if (selectedProduct.id === 0) {
-    //   alert('Выбери продукт');
-    //   return;
-    // } else if (types.length !== 0 && selectedType.id === 0) {
-    //   alert('Выбери тип');
-    //   return;
-    // }
-    // for (let index = 0; index < selectedFeatures.length; index++) {
-    //   if (selectedFeatures[index]?.param === undefined) {
-    //     alert('Выбери ' + selectedFeatures[index].name);
-    //     return;
-    //   }
-    // }
+  const isValidationSuccess = () => {
+    if (selectedProduct.id === 0) {
+      dispatch(
+        appSlice.actions.showGlobalMessage({
+          message: 'Выберите продукт',
+          variant: GlobalMessageVariants.warning,
+          isShowing: true,
+        })
+      );
+      return false;
+    } else if (types.length !== 0 && selectedType.id === 0) {
+      dispatch(
+        appSlice.actions.showGlobalMessage({
+          message: 'Выберите тип',
+          variant: GlobalMessageVariants.warning,
+          isShowing: true,
+        })
+      );
+      return false;
+    } else {
+      return true;
+    }
   };
 
   const createOrUpdateFinishedProduct = () => {
-    validation(); //доработать
+    if (!isValidationSuccess()) return;
 
     const createFinishedProduct = (
       finishedProductId: number | string
