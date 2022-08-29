@@ -92,7 +92,7 @@ export const orderSlice = createSlice({
       state.orderMembersForCreate = [];
       state.orderMembersForDelete = [];
     },
-    deleteFinishedProduct(state, action: PayloadAction<number>) {
+    deleteFinishedProduct(state, action: PayloadAction<number | string>) {
       const finishedProducts = state.order.finishedProducts.filter(
         (finishedProduct) => finishedProduct.id !== action.payload
       );

@@ -25,9 +25,7 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
   const dispatch = useAppDispatch();
 
   const deleteFinishedProduct = () => {
-    dispatch(
-      orderSlice.actions.deleteFinishedProduct(Number(finishedProduct.id))
-    );
+    dispatch(orderSlice.actions.deleteFinishedProduct(finishedProduct.id));
     const finishedProductForCreate = finishedProductsForCreate.find(
       (x) => x.id === finishedProduct.id
     );
