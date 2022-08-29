@@ -6,10 +6,12 @@ import { createFavoriteAPI } from 'http/favoriteAPI';
 import { fetchProductsAPI } from 'http/productAPI';
 import { fetchTypesByProductIdAPI } from 'http/typeAPI';
 import { IFavoriteParam } from 'models/IFavoriteParam';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { IParam } from 'models/IParam';
 import { IProduct } from 'models/IProduct';
 import { IType } from 'models/IType';
 import { useEffect, useState } from 'react';
+import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { v4 as uuidv4 } from 'uuid';
@@ -110,8 +112,33 @@ const OrderDetailAddFavoriteModal = () => {
     });
   };
 
+  const isValidationSuccess = () => {
+    if (selectedProduct.id === 0) {
+      dispatch(
+        appSlice.actions.showGlobalMessage({
+          message: 'Выберите продукт',
+          variant: GlobalMessageVariants.warning,
+          isShowing: true,
+        })
+      );
+      return false;
+    } else if (types.length !== 0 && selectedType.id === 0) {
+      dispatch(
+        appSlice.actions.showGlobalMessage({
+          message: 'Выберите тип',
+          variant: GlobalMessageVariants.warning,
+          isShowing: true,
+        })
+      );
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const createFavorite = () => {
     if (!user) return;
+    if (!isValidationSuccess()) return;
     createFavoriteAPI(selectedType.id, selectedParams, user.id).then((data) => {
       dispatch(orderSlice.actions.addFavorite(data));
       close();
