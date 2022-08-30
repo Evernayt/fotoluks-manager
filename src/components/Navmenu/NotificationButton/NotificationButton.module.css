@@ -1,3 +1,18 @@
+.container {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  z-index: 999;
+  height: var(--border-radius);
+  width: var(--border-radius);
+  border-radius: 50%;
+  background-color: var(--danger-color);
+  right: 2px;
+  top: 2px;
+}
+
 .notifications_header {
   display: flex;
   justify-content: space-between;

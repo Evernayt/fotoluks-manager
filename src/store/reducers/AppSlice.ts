@@ -8,6 +8,7 @@ type AppState = {
   activeRoute: string;
   activeShop: IShop;
   globalMessage: IGlobalMessage;
+  notificationsBadge: boolean;
 };
 
 const initialState: AppState = {
@@ -18,6 +19,7 @@ const initialState: AppState = {
     variant: GlobalMessageVariants.success,
     isShowing: false,
   },
+  notificationsBadge: false,
 };
 
 export const appSlice = createSlice({
@@ -33,9 +35,17 @@ export const appSlice = createSlice({
     showGlobalMessage(state, action: PayloadAction<IGlobalMessage>) {
       state.globalMessage = action.payload;
     },
+    setNoificationsBadge(state, action: PayloadAction<boolean>) {
+      state.notificationsBadge = action.payload;
+    },
   },
 });
 
-export const { setActiveRoute, setActiveShop, showGlobalMessage } = appSlice.actions;
+export const {
+  setActiveRoute,
+  setActiveShop,
+  showGlobalMessage,
+  setNoificationsBadge,
+} = appSlice.actions;
 
 export default appSlice.reducer;

@@ -14,6 +14,7 @@ import {
 } from 'http/notificationAPI';
 import { clearAllIcon, notificationIcon } from 'icons';
 import { useEffect, useRef, useState } from 'react';
+import { appSlice } from 'store/reducers/AppSlice';
 import { userSlice } from 'store/reducers/UserSlice';
 import styles from './NotificationButton.module.css';
 
@@ -26,6 +27,9 @@ const NotificationButton = () => {
 
   const notifications = useAppSelector((state) => state.user.notifications);
   const user = useAppSelector((state) => state.user.user);
+  const notificationsBadge = useAppSelector(
+    (state) => state.app.notificationsBadge
+  );
 
   const targetRef = useRef<HTMLDivElement>(null);
 
@@ -73,48 +77,54 @@ const NotificationButton = () => {
   };
 
   return (
-    <DropdownButton
-      placement={Placements.bottomEnd}
-      icon={notificationIcon}
-      circle
-      itemRender={() => (
-        <div>
-          <div className={styles.notifications_header}>
-            <div className={styles.notifications_title}>Уведомления</div>
-            <Tooltip label="Очистить всё" placement="bottom">
-              <div>
-                <IconButton
-                  icon={clearAllIcon}
-                  variant={IconButtonVariants.link}
-                  onClick={deleteAllNotifications}
-                ></IconButton>
-              </div>
-            </Tooltip>
-          </div>
+    <div className={styles.container}>
+      {notificationsBadge && <div className={styles.badge} />}
+      <DropdownButton
+        placement={Placements.bottomEnd}
+        icon={notificationIcon}
+        circle
+        menuToggleCb={() =>
+          dispatch(appSlice.actions.setNoificationsBadge(false))
+        }
+        itemRender={() => (
+          <div>
+            <div className={styles.notifications_header}>
+              <div className={styles.notifications_title}>Уведомления</div>
+              <Tooltip label="Очистить всё" placement="bottom">
+                <div>
+                  <IconButton
+                    icon={clearAllIcon}
+                    variant={IconButtonVariants.link}
+                    onClick={deleteAllNotifications}
+                  ></IconButton>
+                </div>
+              </Tooltip>
+            </div>
 
-          <div className={styles.notifications}>
-            {notifications.length === 0 && (
-              <div className={styles.no_notifications}>Нет уведомлений</div>
-            )}
-            {notifications.map((notification) => (
-              <Notification
-                title={notification.title}
-                text={notification.text}
-                createdAt={notification.createdAt}
-                key={notification.id}
-              />
-            ))}
-            {loading && (
-              <div className={styles.loader_container}>
-                <Loader height="50px" width="50px" />
-              </div>
-            )}
+            <div className={styles.notifications}>
+              {notifications.length === 0 && (
+                <div className={styles.no_notifications}>Нет уведомлений</div>
+              )}
+              {notifications.map((notification) => (
+                <Notification
+                  title={notification.title}
+                  text={notification.text}
+                  createdAt={notification.createdAt}
+                  key={notification.id}
+                />
+              ))}
+              {loading && (
+                <div className={styles.loader_container}>
+                  <Loader height="50px" width="50px" />
+                </div>
+              )}
 
-            {page !== pageCount && <div ref={targetRef} />}
+              {page !== pageCount && <div ref={targetRef} />}
+            </div>
           </div>
-        </div>
-      )}
-    />
+        )}
+      />
+    </div>
   );
 };
 

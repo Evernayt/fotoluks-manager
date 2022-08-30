@@ -4,6 +4,7 @@ import { IOrder } from 'models/IOrder';
 import { IUser } from 'models/IUser';
 import { io, Socket } from 'socket.io-client';
 import store from 'store';
+import { appSlice } from 'store/reducers/AppSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { userSlice } from 'store/reducers/UserSlice';
 
@@ -29,6 +30,7 @@ const subscribeToNotifications = () => {
     ]);
 
     store.dispatch(userSlice.actions.addNotification(notification));
+    store.dispatch(appSlice.actions.setNoificationsBadge(true));
   });
 };
 
