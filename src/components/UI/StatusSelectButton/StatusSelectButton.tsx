@@ -1,7 +1,7 @@
 import { useOnClickOutside } from 'hooks';
 import { IOrder } from 'models/IOrder';
 import { IStatus } from 'models/IStatus';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import styles from './StatusSelectButton.module.css';
 
 interface StatusSelectButtonProps {
@@ -25,6 +25,10 @@ const StatusSelectButton: FC<StatusSelectButtonProps> = ({
   const selectBtnRef = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(selectBtnRef, () => setIsHidden(true));
+
+  useEffect(() => {
+    setSelectedStatus(defaultSelectedStatus);
+  }, [defaultSelectedStatus]);
 
   const selectStatus = (status: IStatus) => {
     setIsHidden(true);
