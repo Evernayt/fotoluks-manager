@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import styles from './OrderDetailNavmenu.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
+import { ButtonVariants } from 'components/UI/Button/Button';
 
 interface OrderDetailNavmenuProps {
   unsavedDataModal: IModal;
@@ -20,6 +21,7 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
   const haveUnsavedData = useAppSelector(
     (state) => state.order.haveUnsavedData
   );
+  const watchers = useAppSelector((state) => state.order.watchers);
 
   const title = order?.id === 0 ? 'Новый заказ' : `Заказ № ${order?.id}`;
 
@@ -57,6 +59,15 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
         <span style={{ fontSize: '18px', fontWeight: '500' }}>{title}</span>
       </div>
       <div className={styles.right_section}>
+        <Button
+          variant={
+            watchers.length > 0
+              ? ButtonVariants.primaryDeemphasized
+              : ButtonVariants.default
+          }
+        >
+          Смотрят: {watchers.length}
+        </Button>
         <Button onClick={openMembersModal}>
           Участники: {order.orderMembers.length}
         </Button>

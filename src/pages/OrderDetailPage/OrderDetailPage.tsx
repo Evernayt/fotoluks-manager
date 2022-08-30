@@ -79,6 +79,10 @@ const OrderDetailPage = () => {
   useEffect(() => {
     if (state?.orderId !== undefined) {
       fetchOrder(state.orderId);
+
+      if (user) {
+        socketio.addWatcher({ user, orderId: state.orderId });
+      }
     }
   }, []);
 

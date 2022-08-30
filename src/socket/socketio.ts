@@ -2,6 +2,7 @@ import { SERVER_API_URL } from 'constants/api';
 import { INotification } from 'models/INotification';
 import { IOrder } from 'models/IOrder';
 import { IUser } from 'models/IUser';
+import { IWatcher } from 'models/IWatcher';
 import { io, Socket } from 'socket.io-client';
 import store from 'store';
 import { appSlice } from 'store/reducers/AppSlice';
@@ -16,6 +17,7 @@ const connect = (user: IUser) => {
 
   subscribeToNotifications();
   subscribeToOrderUpdates();
+  subscribeToWatchers();
 };
 
 const disconnect = () => {
@@ -49,6 +51,15 @@ const subscribeToOrderUpdates = () => {
   });
 };
 
+const subscribeToWatchers = () => {
+  socket.on('getAddedWatcher', (watcher: IWatcher) => {
+    store.dispatch(orderSlice.actions.addWatcher(watcher));
+  });
+  socket.on('getDeletedWatcherUserId', (userId: number) => {
+    store.dispatch(orderSlice.actions.deleteWatcherByUserId(userId));
+  });
+};
+
 const sendNotification = (notification: INotification) => {
   if (!isConnected()) return;
   socket.emit('sendNotification', notification);
@@ -59,4 +70,15 @@ const updateOrder = (order: IOrder) => {
   socket.emit('updateOrder', order);
 };
 
-export default { connect, disconnect, sendNotification, updateOrder };
+const addWatcher = (watcher: IWatcher) => {
+  if (!isConnected()) return;
+  socket.emit('addWatcher', watcher);
+};
+
+export default {
+  connect,
+  disconnect,
+  sendNotification,
+  updateOrder,
+  addWatcher,
+};

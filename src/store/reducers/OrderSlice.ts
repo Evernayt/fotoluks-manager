@@ -11,6 +11,7 @@ import { IOrderMember } from 'models/IOrderMember';
 import { IShop } from 'models/IShop';
 import { IStatus } from 'models/IStatus';
 import { IUser } from 'models/IUser';
+import { IWatcher } from 'models/IWatcher';
 
 type OrderState = {
   orders: IOrder[];
@@ -29,6 +30,7 @@ type OrderState = {
   orderMembersForCreate: IOrderMember[];
   orderMembersForDelete: number[];
   favorites: IFavorite[];
+  watchers: IWatcher[];
 };
 
 const initialState: OrderState = {
@@ -48,6 +50,7 @@ const initialState: OrderState = {
   orderMembersForCreate: [],
   orderMembersForDelete: [],
   favorites: [],
+  watchers: [],
 };
 
 export const orderSlice = createSlice({
@@ -247,6 +250,20 @@ export const orderSlice = createSlice({
       );
       state.favorites = favorites;
     },
+    addWatcher(state, action: PayloadAction<IWatcher>) {
+      const foundWatcher = state.watchers.find(
+        (watcher) => watcher.user.id === action.payload.user.id
+      );
+      if (foundWatcher === undefined) {
+        state.watchers.push(action.payload);
+      }
+    },
+    deleteWatcherByUserId(state, action: PayloadAction<number>) {
+      const watchers = state.watchers.filter(
+        (watcher) => watcher.user.id !== action.payload
+      );
+      state.watchers = watchers;
+    },
   },
 });
 
@@ -288,6 +305,8 @@ export const {
   setFavorites,
   addFavorite,
   deleteFavoriteById,
+  addWatcher,
+  deleteWatcherByUserId,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
