@@ -22,6 +22,7 @@ interface DropdownButtonProps extends HTMLAttributes<HTMLElement> {
   placement: Placements;
   variant?: DropdownButtonVariants;
   circle?: boolean;
+  menuToggleCb?: () => void;
   itemRender?: () => ReactNode;
 }
 
@@ -34,6 +35,7 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
       placement,
       variant = DropdownButtonVariants.default,
       circle,
+      menuToggleCb,
       itemRender,
       ...props
     },
@@ -50,11 +52,16 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
       setIsHidden(true);
     };
 
+    const toggle = () => {
+      setIsHidden((prevState) => !prevState);
+      if (menuToggleCb) menuToggleCb();
+    };
+
     return (
       <div className={styles.container} ref={dropdownBtnRef} {...props}>
         <div
           className={[styles.dropdown_btn, styles[variant]].join(' ')}
-          onClick={() => setIsHidden((prevState) => !prevState)}
+          onClick={toggle}
           ref={ref}
           style={
             circle ? { borderRadius: '50%', height: '40px', width: '16px' } : {}
