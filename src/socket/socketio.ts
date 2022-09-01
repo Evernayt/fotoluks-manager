@@ -21,7 +21,7 @@ const connect = (user: IUser) => {
 };
 
 const disconnect = () => {
-  socket.disconnect();
+  socket?.disconnect();
 };
 
 const isConnected = () => {
@@ -47,7 +47,6 @@ const subscribeToNotifications = () => {
 
 const subscribeToOrderUpdates = () => {
   socket.on('getOrder', (order: IOrder) => {
-    console.log(order)
     store.dispatch(orderSlice.actions.updateOrder(order));
   });
 };
