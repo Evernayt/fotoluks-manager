@@ -53,7 +53,7 @@ const OrdersTable = () => {
         Header: 'Услуги',
         style: { width: '100%' },
         accessor: (d: IOrder) => {
-          const finishedProducts = d.finishedProducts.filter(
+          const finishedProducts = d.finishedProducts?.filter(
             (elem, index, self) =>
               self.findIndex((t) => {
                 return t.type.id === elem.type.id;
@@ -304,8 +304,8 @@ const OrdersTable = () => {
                                   order: IOrder
                                 ) => updateStatus(status, order)}
                                 defaultSelectedStatus={cell.value}
-                                order={cell.row.values}
-                                key={cell.row.values.id}
+                                order={cell.row.original}
+                                key={cell.row.original.id}
                               />
                             </td>
                           );

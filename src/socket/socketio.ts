@@ -47,6 +47,7 @@ const subscribeToNotifications = () => {
 
 const subscribeToOrderUpdates = () => {
   socket.on('getOrder', (order: IOrder) => {
+    console.log(order)
     store.dispatch(orderSlice.actions.updateOrder(order));
   });
 };
