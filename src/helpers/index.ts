@@ -5,6 +5,7 @@ import firstLetterToUpperCase from './firstLetterToUpperCase';
 import getDateDiff from './getDateDiff';
 import groupBy from './groupBy';
 import toPercentages from './toPercentages';
+import enterPressHandler from './enterPressHandler';
 
 export {
   calcPlacement,
@@ -14,4 +15,5 @@ export {
   getDateDiff,
   groupBy,
   toPercentages,
+  enterPressHandler,
 };

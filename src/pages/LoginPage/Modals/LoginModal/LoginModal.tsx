@@ -2,10 +2,12 @@ import { Button, Modal, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { defaultAvatar } from 'constants/images';
 import { ORDERS_ROUTE } from 'constants/paths';
+import { enterPressHandler } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { loginAPI } from 'http/userAPI';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { UserRoles } from 'models/IUser';
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
 import { appSlice } from 'store/reducers/AppSlice';
@@ -33,7 +35,13 @@ const LoginModal = () => {
     loginAPI(loginModal.user.login, password)
       .then((data) => {
         if (data.role === UserRoles.USER) {
-          console.log('Нет доступа');
+          dispatch(
+            appSlice.actions.showGlobalMessage({
+              message: 'Нет доступа!',
+              variant: GlobalMessageVariants.danger,
+              isShowing: true,
+            })
+          );
           return;
         }
 
@@ -43,12 +51,26 @@ const LoginModal = () => {
 
         close();
       })
-      .catch((e) => console.log(e.response.data.message));
+      .catch((e) =>
+        dispatch(
+          appSlice.actions.showGlobalMessage({
+            message: e.response.data.message,
+            variant: GlobalMessageVariants.danger,
+            isShowing: true,
+          })
+        )
+      );
   };
 
   const navigateToRoute = (route: string) => {
     dispatch(appSlice.actions.setActiveRoute(route));
     navigate(route);
+  };
+
+  const onEnterPress = (event: KeyboardEvent) => {
+    if (password !== '') {
+      enterPressHandler(event, signIn);
+    }
   };
 
   return (
@@ -69,11 +91,13 @@ const LoginModal = () => {
           value={password}
           isPassword
           onChange={(e) => setPassword(e.target.value)}
+          onKeyUp={onEnterPress}
         />
         <Button
           className={styles.login_button}
           variant={ButtonVariants.primary}
           onClick={signIn}
+          disabled={password === ''}
         >
           Войти
         </Button>

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchShopsAPI } from 'http/shopAPI';
 import { loginAPI } from 'http/userAPI';
 import { IShop } from 'models/IShop';
-import { useEffect, useState } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { appSlice } from 'store/reducers/AppSlice';
 import { userSlice } from 'store/reducers/UserSlice';
@@ -18,6 +18,7 @@ import { logo } from 'constants/images';
 import RecentLogin from './RecentLogin/RecentLogin';
 import LoginModal from './Modals/LoginModal/LoginModal';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
+import { enterPressHandler } from 'helpers';
 
 const LoginPage = () => {
   const [shops, setShops] = useState<IShop[]>([]);
@@ -120,6 +121,12 @@ const LoginPage = () => {
     );
   };
 
+  const onEnterPress = (event: KeyboardEvent) => {
+    if (login !== '' && password !== '' && activeShop.id !== 0) {
+      enterPressHandler(event, signIn);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <LoginModal />
@@ -158,6 +165,7 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               isPassword
+              onKeyUp={onEnterPress}
             />
             <Button
               variant={ButtonVariants.primary}
