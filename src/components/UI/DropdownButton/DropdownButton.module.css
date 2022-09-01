@@ -12,6 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .default {
@@ -28,6 +29,14 @@
 
 .link:hover {
   background-color: var(--hover-card-color);
+}
+
+.primary_deemphasized {
+  background-color: var(--primary-deemphasized-color);
+}
+
+.primary_deemphasized:hover {
+  background-color: var(--hover-primary-deemphasized-color);
 }
 
 .menu {

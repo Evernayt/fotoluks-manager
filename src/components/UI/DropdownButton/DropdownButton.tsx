@@ -13,6 +13,7 @@ export interface IDropdownButtonOption {
 export enum DropdownButtonVariants {
   default = 'default',
   link = 'link',
+  primaryDeemphasized = 'primary_deemphasized',
 }
 
 interface DropdownButtonProps extends HTMLAttributes<HTMLElement> {
