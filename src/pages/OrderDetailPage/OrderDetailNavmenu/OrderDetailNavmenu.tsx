@@ -1,15 +1,18 @@
 import logoBird from '../../../../assets/logo-bird.png';
-import { Button, CircleButton } from 'components';
+import { Button, CircleButton, DropdownButton } from 'components';
 import { closeIcon } from 'icons';
 import { useNavigate } from 'react-router-dom';
 import { IModal } from 'hooks/useModal';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import styles from './OrderDetailNavmenu.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import { ButtonVariants } from 'components/UI/Button/Button';
 import socketio from 'socket/socketio';
+import { IWatcher } from 'models/IWatcher';
+import { DropdownButtonVariants } from 'components/UI/DropdownButton/DropdownButton';
+import { Placements } from 'helpers/calcPlacement';
+import OrderDetailWatchers from './OrderDetailWatchers/OrderDetailWatchers';
 
 interface OrderDetailNavmenuProps {
   unsavedDataModal: IModal;
@@ -18,6 +21,8 @@ interface OrderDetailNavmenuProps {
 const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
   unsavedDataModal,
 }) => {
+  const [orderWatchers, setOrderWatchers] = useState<IWatcher[]>([]);
+
   const order = useAppSelector((state) => state.order.order);
   const haveUnsavedData = useAppSelector(
     (state) => state.order.haveUnsavedData
@@ -29,6 +34,15 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (order.id !== 0) {
+      const filteredWatchers = watchers.filter(
+        (x) => x.orderId === order.id && x.user.id !== user?.id
+      );
+      setOrderWatchers(filteredWatchers);
+    }
+  }, [watchers, order.id]);
 
   const closeOrderDetail = () => {
     if (haveUnsavedData) {
@@ -65,10 +79,13 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
         <span style={{ fontSize: '18px', fontWeight: '500' }}>{title}</span>
       </div>
       <div className={styles.right_section}>
-        {watchers.length > 0 && (
-          <Button variant={ButtonVariants.primaryDeemphasized}>
-            Смотрят: {watchers.length}
-          </Button>
+        {orderWatchers.length > 0 && (
+          <DropdownButton
+            placement={Placements.bottomEnd}
+            text={`Смотрят: ${orderWatchers.length}`}
+            variant={DropdownButtonVariants.primaryDeemphasized}
+            itemRender={() => <OrderDetailWatchers watchers={orderWatchers} />}
+          />
         )}
         <Button onClick={openMembersModal}>
           Участники: {order.orderMembers.length}

@@ -173,6 +173,8 @@ const OrderDetailPage = () => {
 
     setIsLoading(true);
 
+    const isOrderCreate = order.id === 0;
+
     const body = createOrderBodyForSave(
       finishedProductsForCreate,
       finishedProductsForUpdate,
@@ -208,6 +210,10 @@ const OrderDetailPage = () => {
         notifyMembers(orderClone, beforeOrderClone);
 
         socketio.updateOrder(data.order);
+
+        if (isOrderCreate) {
+          socketio.addWatcher({ user, orderId: data.order.id });
+        }
       })
       .finally(() => setIsLoading(false));
   };

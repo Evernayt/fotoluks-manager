@@ -75,6 +75,7 @@ const addWatcher = (watcher: IWatcher) => {
 const removeWatcher = (userId: number) => {
   if (!isConnected()) return;
   socket.emit('removeWatcher', userId);
+  store.dispatch(orderSlice.actions.setWatchers([]));
 };
 
 export default {
