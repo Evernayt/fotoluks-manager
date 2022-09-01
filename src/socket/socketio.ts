@@ -52,11 +52,8 @@ const subscribeToOrderUpdates = () => {
 };
 
 const subscribeToWatchers = () => {
-  socket.on('getAddedWatcher', (watcher: IWatcher) => {
-    store.dispatch(orderSlice.actions.addWatcher(watcher));
-  });
-  socket.on('getDeletedWatcherUserId', (userId: number) => {
-    store.dispatch(orderSlice.actions.deleteWatcherByUserId(userId));
+  socket.on('getWatchers', (watchers: IWatcher[]) => {
+    store.dispatch(orderSlice.actions.setWatchers(watchers));
   });
 };
 
@@ -75,10 +72,16 @@ const addWatcher = (watcher: IWatcher) => {
   socket.emit('addWatcher', watcher);
 };
 
+const removeWatcher = (userId: number) => {
+  if (!isConnected()) return;
+  socket.emit('removeWatcher', userId);
+};
+
 export default {
   connect,
   disconnect,
   sendNotification,
   updateOrder,
   addWatcher,
+  removeWatcher,
 };

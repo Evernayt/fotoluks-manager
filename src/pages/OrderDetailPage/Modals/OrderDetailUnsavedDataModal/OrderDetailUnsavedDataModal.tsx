@@ -1,8 +1,9 @@
 import { Button, Modal } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import socketio from 'socket/socketio';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './OrderDetailUnsavedDataModal.module.css';
 
@@ -17,6 +18,8 @@ const OrderDetailUnsavedDataModal: FC<OrderDetailUnsavedDataModalProps> = ({
   hide,
   saveOrder,
 }) => {
+  const user = useAppSelector((state) => state.user.user);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -24,6 +27,10 @@ const OrderDetailUnsavedDataModal: FC<OrderDetailUnsavedDataModalProps> = ({
     hide();
     dispatch(orderSlice.actions.clearOrder());
     navigate(-1);
+
+    if (user) {
+      socketio.removeWatcher(user.id);
+    }
   };
 
   const saveOrderAndClose = () => {

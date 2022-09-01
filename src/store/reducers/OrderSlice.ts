@@ -250,19 +250,8 @@ export const orderSlice = createSlice({
       );
       state.favorites = favorites;
     },
-    addWatcher(state, action: PayloadAction<IWatcher>) {
-      const foundWatcher = state.watchers.find(
-        (watcher) => watcher.user.id === action.payload.user.id
-      );
-      if (foundWatcher === undefined) {
-        state.watchers.push(action.payload);
-      }
-    },
-    deleteWatcherByUserId(state, action: PayloadAction<number>) {
-      const watchers = state.watchers.filter(
-        (watcher) => watcher.user.id !== action.payload
-      );
-      state.watchers = watchers;
+    setWatchers(state, action: PayloadAction<IWatcher[]>) {
+      state.watchers = action.payload;
     },
   },
 });
@@ -305,8 +294,7 @@ export const {
   setFavorites,
   addFavorite,
   deleteFavoriteById,
-  addWatcher,
-  deleteWatcherByUserId,
+  setWatchers,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
