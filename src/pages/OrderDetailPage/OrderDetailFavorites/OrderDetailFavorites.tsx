@@ -56,6 +56,7 @@ const OrderDetailFavorites = () => {
       product: favorite.type.product!,
       type: favorite.type,
       selectedParams,
+      folder: '',
     };
 
     dispatch(orderSlice.actions.addFinishedProduct(createdFinishedProduct));

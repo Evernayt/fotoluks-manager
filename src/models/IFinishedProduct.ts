@@ -10,4 +10,5 @@ export interface IFinishedProduct {
   price: number;
   quantity: number;
   comment: string;
+  folder: string;
 }

@@ -47,6 +47,7 @@ import mugIcon from './mug-icon.svg';
 import mugCheckedIcon from './mug-checked-icon.svg';
 import dropIcon from './drop-icon.svg';
 import editWhiteIcon from './edit-white-icon.svg';
+import folderIcon from './folder-icon.svg';
 
 export {
   searchIcon,
@@ -98,4 +99,5 @@ export {
   mugCheckedIcon,
   dropIcon,
   editWhiteIcon,
+  folderIcon,
 };

@@ -207,9 +207,25 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     ): IFinishedProduct => {
       return {
         id: finishedProductId,
-        quantity,
         price,
+        quantity,
         comment,
+        folder: '',
+        product: selectedProduct,
+        type: selectedType,
+        selectedParams,
+      };
+    };
+
+    const updateFinishedProduct = (
+      finishedProduct: IFinishedProduct
+    ): IFinishedProduct => {
+      return {
+        id: finishedProduct.id,
+        price,
+        quantity,
+        comment,
+        folder: finishedProduct.folder,
         product: selectedProduct,
         type: selectedType,
         selectedParams,
@@ -224,11 +240,9 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
       );
     } else {
       if (finishedProduct) {
-        const createdFinishedProduct = createFinishedProduct(
-          finishedProduct.id
-        );
+        const updatedFinishedProduct = updateFinishedProduct(finishedProduct);
         dispatch(
-          orderSlice.actions.updateFinishedProduct(createdFinishedProduct)
+          orderSlice.actions.updateFinishedProduct(updatedFinishedProduct)
         );
 
         const isNotFoundForCreate =
@@ -238,13 +252,13 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         if (isNotFoundForCreate) {
           dispatch(
             orderSlice.actions.addFinishedProductsForUpdate(
-              createdFinishedProduct
+              updatedFinishedProduct
             )
           );
         } else {
           dispatch(
             orderSlice.actions.addFinishedProductsForCreate(
-              createdFinishedProduct
+              updatedFinishedProduct
             )
           );
         }

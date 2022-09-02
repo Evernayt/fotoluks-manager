@@ -3,7 +3,7 @@ import { Modes } from 'constants/app';
 import { noImage } from 'constants/images';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { dotsMenuIcon, editIcon } from 'icons';
+import { dotsMenuIcon, editIcon, folderIcon } from 'icons';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { FC } from 'react';
 import { orderSlice } from 'store/reducers/OrderSlice';
@@ -21,6 +21,7 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
   const finishedProductsForCreate = useAppSelector(
     (state) => state.order.finishedProductsForCreate
   );
+  const mainFolder = useAppSelector((state) => state.app.mainFolder);
 
   const dispatch = useAppDispatch();
 
@@ -39,19 +40,42 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
     }
   };
 
+  const selectFolder = () => {
+    window.electron.ipcRenderer.sendMessage('select-directory', [mainFolder]);
+
+    window.electron.ipcRenderer.once('select-directory', (arg: any) => {
+      const fullPath: string = arg[0][0];
+      if (fullPath === undefined) return;
+
+      const folder = fullPath.replace(mainFolder, '');
+      dispatch(
+        orderSlice.actions.updateFinishedProduct({ ...finishedProduct, folder })
+      );
+    });
+  };
+
+  const deleteFolder = () => {
+    dispatch(
+      orderSlice.actions.updateFinishedProduct({
+        ...finishedProduct,
+        folder: '',
+      })
+    );
+  };
+
+  const openFolder = () => {
+    const folderPath = mainFolder + finishedProduct.folder;
+    window.electron.ipcRenderer.sendMessage('open-folder', [folderPath]);
+  };
+
   const serviceMenu = [
     {
       id: 1,
-      name: 'Создать папку',
-      onClick: () => console.log(finishedProduct),
+      name: finishedProduct.folder ? 'Открепить папку' : 'Закрепить папку',
+      onClick: finishedProduct.folder ? deleteFolder : selectFolder,
     },
     {
       id: 2,
-      name: 'Файлы',
-      onClick: () => console.log('fa'),
-    },
-    {
-      id: 3,
       name: 'Удалить',
       onClick: deleteFinishedProduct,
     },
@@ -59,19 +83,17 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
 
   return (
     <div className={styles.card}>
-      <div style={{ marginRight: '12px' }}>
-        <div style={{ display: 'flex' }}>
+      <div className={styles.info_container}>
+        <div className={styles.main_info}>
           <img
             className={styles.img}
             src={
-              finishedProduct.type.image === ''
-                ? noImage
-                : finishedProduct.type.image
+              finishedProduct.type.image ? finishedProduct.type.image : noImage
             }
             alt=""
           />
           <div className={styles.info}>
-            <span className={styles.text} style={{ fontSize: '16px' }}>
+            <span className={styles.product_name}>
               {finishedProduct.product.name},{' '}
               {finishedProduct.type.name.toLowerCase()}
             </span>
@@ -81,31 +103,24 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
                 if (selectedParam.param.feature?.name === 'Цвет') {
                   return (
                     <div
-                      className={styles.text}
-                      style={{
-                        marginRight: '8px',
-                      }}
+                      className={styles.product_param}
                       key={selectedParam.id}
                     >
                       {selectedParam.param.feature.name}:{' '}
                       <span
+                        className={styles.product_param_color}
                         style={{
                           backgroundColor: `#${selectedParam.param.value}`,
-                          padding: '2px 4px',
-                          borderRadius: '8px',
                         }}
                       >
-                        <span style={{ color: 'white' }}>
-                          {selectedParam.param.name}
-                        </span>
+                        <span>{selectedParam.param.name}</span>
                       </span>
                     </div>
                   );
                 } else {
                   return (
                     <span
-                      className={styles.text}
-                      style={{ marginRight: '8px' }}
+                      className={styles.product_param}
                       key={selectedParam.id}
                     >
                       {selectedParam.param.feature?.name}:{' '}
@@ -116,17 +131,19 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
               })}
             </div>
             <div>
-              <span className={styles.text} style={{ marginRight: '8px' }}>
+              <span className={styles.product_price}>
                 Цена: {finishedProduct.price} р.
               </span>
-              <span className={styles.text}>
+              <span className={styles.product_quantity}>
                 Кол-во: {finishedProduct.quantity} шт.
               </span>
             </div>
           </div>
         </div>
-        {finishedProduct.comment !== null && (
-          <div style={{ marginTop: '8px' }}>{finishedProduct.comment}</div>
+        {finishedProduct.comment && (
+          <div className={styles.product_comment}>
+            {finishedProduct.comment}
+          </div>
         )}
       </div>
 
@@ -141,6 +158,13 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
           icon={dotsMenuIcon}
           placement={Placements.leftStart}
         />
+        {finishedProduct.folder && (
+          <IconButton
+            icon={folderIcon}
+            style={{ marginTop: '8px' }}
+            onClick={openFolder}
+          />
+        )}
       </div>
     </div>
   );
