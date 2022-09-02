@@ -47,7 +47,7 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
                 : 'Не указано'}
             </span>
             <div className={styles.user_social}>
-              {user.email !== null && (
+              {user.email && (
                 <Tooltip label="Скопировано" disabled={!isCopied} delay={0}>
                   <img
                     className={styles.social_img}
@@ -56,7 +56,7 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
                   />
                 </Tooltip>
               )}
-              {user.vk !== null && (
+              {user.vk && (
                 <Tooltip label="Скопировано" disabled={!isCopied} delay={0}>
                   <img
                     className={styles.social_img}
@@ -65,7 +65,7 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
                   />
                 </Tooltip>
               )}
-              {user.telegram !== null && (
+              {user.telegram && (
                 <Tooltip label="Скопировано" disabled={!isCopied} delay={0}>
                   <img
                     className={styles.social_img}

@@ -66,17 +66,17 @@ const ControlPanelEditUserModal = () => {
     isVerifiedAPI(controlPanelEditUserModal.phone).then((data) => {
       setIsPhoneVerified(data.phoneVerified);
       setName(data.user.name);
-      setPhone(data.user.phone ? data.user.phone : '');
+      setPhone(data.user.phone);
       setLogin(data.user.login);
       setPassword(data.user.password ? data.user.password : '');
-      setAvatar(data.user.avatar ? data.user.avatar : '');
+      setAvatar(data.user.avatar);
 
       const role = roles.find((x) => x.role === data.user.role);
       if (role !== undefined) setSelectedRole(role);
 
-      setEmail(data.user.email ? data.user.email : '');
-      setVk(data.user.vk ? data.user.vk : '');
-      setTelegram(data.user.telegram ? data.user.telegram : '');
+      setEmail(data.user.email);
+      setVk(data.user.vk);
+      setTelegram(data.user.telegram);
       setUser(data.user);
     });
   };
@@ -105,10 +105,10 @@ const ControlPanelEditUserModal = () => {
         name,
         phone,
         role: selectedRole.role!,
-        email: email === '' ? null : email,
-        vk: vk === '' ? null : vk,
-        telegram: telegram === '' ? null : telegram,
-        avatar: avatar === '' ? null : avatar,
+        email,
+        vk,
+        telegram,
+        avatar,
       };
       updateUserAPI(editedUser).then(() => {
         dispatch(controlPanelSlice.actions.setForceUpdate(true));

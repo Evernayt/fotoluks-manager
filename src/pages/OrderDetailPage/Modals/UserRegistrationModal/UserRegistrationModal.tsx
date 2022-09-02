@@ -65,12 +65,12 @@ const UserRegistrationModal = () => {
           name: firstLetterToUpperCase(name),
           login: phone,
           password: uuidv4(),
-          avatar: null,
+          avatar: '',
           role: UserRoles.USER,
           phone,
-          email: email === '' ? null : email.toLowerCase(),
-          vk: vk === '' ? null : vk.toLowerCase(),
-          telegram: telegram === '' ? null : telegram.toLowerCase(),
+          email: email.toLowerCase(),
+          vk: vk.toLowerCase(),
+          telegram: telegram.toLowerCase(),
           shopId: activeShop.id,
         };
 

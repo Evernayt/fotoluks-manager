@@ -10,13 +10,13 @@ export interface IUser {
   id: number;
   name: string;
   login: string;
-  password: string | null;
-  avatar: string | null;
+  password?: string;
+  avatar: string;
   role: UserRoles;
-  phone: string | null;
-  email: string | null;
-  vk: string | null;
-  telegram: string | null;
+  phone: string;
+  email: string;
+  vk: string;
+  telegram: string;
   shopId: number;
 }
 

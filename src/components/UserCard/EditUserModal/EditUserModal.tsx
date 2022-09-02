@@ -32,10 +32,10 @@ const EditUserModal = () => {
     isVerifiedAPI(editUserModal.phone).then((data) => {
       setIsPhoneVerified(data.phoneVerified);
       setName(data.user.name);
-      setPhone(data.user.phone ? data.user.phone : '');
-      setEmail(data.user.email ? data.user.email : '');
-      setVk(data.user.vk ? data.user.vk : '');
-      setTelegram(data.user.telegram ? data.user.telegram : '');
+      setPhone(data.user.phone);
+      setEmail(data.user.email);
+      setVk(data.user.vk);
+      setTelegram(data.user.telegram);
       setUser(data.user);
     });
   };
@@ -58,9 +58,9 @@ const EditUserModal = () => {
         login: phone,
         name,
         phone,
-        email: email === '' ? null : email,
-        vk: vk === '' ? null : vk,
-        telegram: telegram === '' ? null : telegram,
+        email,
+        vk,
+        telegram,
       };
       updateUserAPI(editedUser).then((data) => {
         dispatch(orderSlice.actions.setOrderUser(data));
