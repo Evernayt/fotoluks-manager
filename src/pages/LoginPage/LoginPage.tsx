@@ -1,7 +1,11 @@
 import { Button, SelectButton, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { RECENT_LOGINS_KEY, SHOP_KEY } from 'constants/localStorage';
-import { ORDERS_ROUTE } from 'constants/paths';
+import {
+  INITIAL_SETTINGS_COMPLETED_KEY,
+  RECENT_LOGINS_KEY,
+  SHOP_KEY,
+} from 'constants/localStorage';
+import { INITIAL_SETTINGS_ROUTE, ORDERS_ROUTE } from 'constants/paths';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchShopsAPI } from 'http/shopAPI';
@@ -32,6 +36,15 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const initialSettingsCopmleted: boolean = Boolean(
+      localStorage.getItem(INITIAL_SETTINGS_COMPLETED_KEY)
+    );
+
+    if (!initialSettingsCopmleted) {
+      navigate(INITIAL_SETTINGS_ROUTE);
+      return;
+    }
+
     const shop = JSON.parse(localStorage.getItem(SHOP_KEY) || '{}');
     if (Object.keys(shop).length !== 0) {
       dispatch(appSlice.actions.setActiveShop(shop));

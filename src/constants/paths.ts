@@ -5,6 +5,7 @@ const MESSENGER_ROUTE = '/messenger';
 const CONTROL_PANEL_ROUTE = '/control_panel';
 const PROFILE_ROUTE = '/profile';
 const ORDER_DETAIL_ROUTE = '/order_detail';
+const INITIAL_SETTINGS_ROUTE = '/initial_settings';
 
 export {
   LOGIN_ROUTE,
@@ -14,4 +15,5 @@ export {
   CONTROL_PANEL_ROUTE,
   PROFILE_ROUTE,
   ORDER_DETAIL_ROUTE,
+  INITIAL_SETTINGS_ROUTE
 };

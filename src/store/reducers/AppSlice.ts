@@ -9,6 +9,7 @@ type AppState = {
   activeShop: IShop;
   globalMessage: IGlobalMessage;
   notificationsBadge: boolean;
+  mainFolder: string;
 };
 
 const initialState: AppState = {
@@ -20,6 +21,7 @@ const initialState: AppState = {
     isShowing: false,
   },
   notificationsBadge: false,
+  mainFolder: '',
 };
 
 export const appSlice = createSlice({
@@ -38,6 +40,9 @@ export const appSlice = createSlice({
     setNoificationsBadge(state, action: PayloadAction<boolean>) {
       state.notificationsBadge = action.payload;
     },
+    setMainFolder(state, action: PayloadAction<string>) {
+      state.mainFolder = action.payload;
+    },
   },
 });
 
@@ -46,6 +51,7 @@ export const {
   setActiveShop,
   showGlobalMessage,
   setNoificationsBadge,
+  setMainFolder,
 } = appSlice.actions;
 
 export default appSlice.reducer;

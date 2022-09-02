@@ -9,7 +9,14 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, Notification } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  Notification,
+  dialog,
+} from 'electron';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import * as fs from 'fs';
@@ -113,6 +120,25 @@ ipcMain.on('show-notification', async (_event, args) => {
   const text = args[1];
 
   showNotification(title, text);
+});
+
+ipcMain.on('select-directory', async (event, args) => {
+  if (!mainWindow) return;
+  const defaultPath = args[0];
+  dialog
+    .showOpenDialog(mainWindow, {
+      properties: ['openDirectory'],
+      defaultPath,
+    })
+    .then((data) => {
+      event.reply('select-directory', [data.filePaths]);
+    });
+});
+
+ipcMain.on('open-folder', async (_event, args) => {
+  const folderPath = args[0];
+
+  shell.openPath(folderPath);
 });
 
 /**

@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
-export type Channels = 'show-notification';
+export type Channels = 'show-notification' | 'select-directory' | 'open-folder';
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
