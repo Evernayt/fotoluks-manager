@@ -1,9 +1,11 @@
 import { CircleButton } from 'components';
 import { defaultAvatar } from 'constants/images';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { close2Icon } from 'icons';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { IUser } from 'models/IUser';
 import { FC, memo } from 'react';
+import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './RecentLogin.module.css';
 
@@ -14,9 +16,21 @@ interface RecentLoginProps {
 
 const RecentLogin: FC<RecentLoginProps> = memo(
   ({ user, removeRecentLogin }) => {
+    const activeShop = useAppSelector((state) => state.app.activeShop);
+
     const dispatch = useAppDispatch();
 
     const openLoginModal = () => {
+      if (activeShop.id === 0) {
+        dispatch(
+          appSlice.actions.showGlobalMessage({
+            message: 'Филиал не выбран',
+            variant: GlobalMessageVariants.warning,
+            isShowing: true,
+          })
+        );
+        return;
+      }
       dispatch(modalSlice.actions.openLoginModal(user));
     };
 
