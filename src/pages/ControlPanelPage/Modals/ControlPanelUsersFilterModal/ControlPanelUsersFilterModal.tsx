@@ -1,9 +1,11 @@
-import { Button, Modal, SelectButton } from 'components';
+import { Button, Checkbox, Modal, SelectButton } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { initialRole } from 'constants/InitialStates/initialFilterState';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { fetchShopsAPI } from 'http/shopAPI';
+import { IShop } from 'models/IShop';
 import { IRole, UserRoles } from 'models/IUser';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './ControlPanelUsersFilterModal.module.css';
@@ -31,13 +33,35 @@ const ControlPanelUsersFilterModal = () => {
     []
   );
 
+  const allShops: IShop = {
+    id: -1,
+    name: 'Все филиалы',
+    address: '',
+    description: '',
+  };
+
   const [selectedRole, setSelectedRole] = useState<IRole>(roles[0]);
+  const [shops, setShops] = useState<IShop[]>([allShops]);
+  const [selectedShop, setSelectedShop] = useState<IShop>(allShops);
+  const [inArchive, setInArchive] = useState<boolean>(false);
 
   const controlPanelUsersFilterModal = useAppSelector(
     (state) => state.modal.controlPanelUsersFilterModal
   );
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (controlPanelUsersFilterModal.isShowing) {
+      fetchShops();
+    }
+  }, [controlPanelUsersFilterModal.isShowing]);
+
+  const fetchShops = () => {
+    fetchShopsAPI(true).then((data) => {
+      setShops([allShops, ...data]);
+    });
+  };
 
   const close = () => {
     dispatch(modalSlice.actions.closeControlPanelUsersFilterModal());
@@ -56,6 +80,8 @@ const ControlPanelUsersFilterModal = () => {
     dispatch(
       controlPanelSlice.actions.activeUsersFilter({
         role: selectedRole,
+        shopId: selectedShop.id,
+        archive: inArchive ? 1 : 0,
       })
     );
     close();
@@ -63,6 +89,8 @@ const ControlPanelUsersFilterModal = () => {
 
   const reset = () => {
     setSelectedRole(roles[0]);
+    setSelectedShop(allShops);
+    setInArchive(false);
   };
 
   return (
@@ -76,7 +104,18 @@ const ControlPanelUsersFilterModal = () => {
           items={roles}
           defaultSelectedItem={selectedRole}
           changeHandler={(e) => setSelectedRole(e)}
-          style={{ width: '100%' }}
+          style={{ width: '100%', marginBottom: '12px' }}
+        />
+        <SelectButton
+          items={shops}
+          defaultSelectedItem={selectedShop}
+          changeHandler={(e) => setSelectedShop(e)}
+          style={{ width: '100%', marginBottom: '12px' }}
+        />
+        <Checkbox
+          text="В архиве"
+          checked={inArchive}
+          onChange={() => setInArchive((prevState) => !prevState)}
         />
       </div>
       <div className={styles.controls}>

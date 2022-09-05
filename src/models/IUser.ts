@@ -1,4 +1,5 @@
 import { IFilter } from './IFilter';
+import { IShop } from './IShop';
 
 export enum UserRoles {
   USER = 'USER',
@@ -18,6 +19,8 @@ export interface IUser {
   vk: string;
   telegram: string;
   shopId: number;
+  archive?: number;
+  shop?: IShop;
 }
 
 export interface IRole {
@@ -34,6 +37,8 @@ export interface IUserData {
 export interface IUsersFilter {
   filter: IFilter;
   userRole: IRole;
+  shopId: number;
+  archive: number;
 }
 
 export interface IFoundUsers {

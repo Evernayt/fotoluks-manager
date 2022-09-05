@@ -19,6 +19,8 @@ export const initialRole: IRole = {
 export const initialUserFilter: IUsersFilter = {
   filter: initialFilter,
   userRole: initialRole,
+  shopId: -1,
+  archive: 0,
 };
 
 export const initialTypesFilter: ITypesFilter = {

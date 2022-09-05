@@ -57,7 +57,8 @@ interface IFetchUsers {
     limit: number,
     page: number,
     roles?: UserRoles[],
-    shopId?: number
+    shopId?: number,
+    archive?: number
   ): Promise<IUserData>;
 }
 
@@ -65,13 +66,15 @@ export const fetchUsersAPI: IFetchUsers = async (
   limit = 15,
   page = 1,
   roles,
-  shopId
+  shopId,
+  archive
 ) => {
   const { data } = await $host.post('api/user/all/', {
     limit,
     page,
     roles,
     shopId,
+    archive,
   });
   return data;
 };

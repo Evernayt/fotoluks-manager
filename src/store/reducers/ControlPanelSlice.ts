@@ -60,13 +60,18 @@ export const controlPanelSlice = createSlice({
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
-    activeUsersFilter(state, action: PayloadAction<{ role: IRole }>) {
+    activeUsersFilter(
+      state,
+      action: PayloadAction<{ role: IRole; shopId: number; archive: number }>
+    ) {
       state.usersFilter = {
         filter: {
           isActive: true,
           isPendingDeactivation: false,
         },
         userRole: action.payload.role,
+        shopId: action.payload.shopId,
+        archive: action.payload.archive,
       };
     },
     deactiveUsersFilter(state) {
