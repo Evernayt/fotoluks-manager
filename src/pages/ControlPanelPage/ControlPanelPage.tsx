@@ -1,22 +1,22 @@
 import { Navmenu } from 'components';
 import ControlPanelSidemenu from './ControlPanelSidemenu/ControlPanelSidemenu';
-import ControlPanelUsersTable from './ControlPanelUsersTable/ControlPanelUsersTable';
+import ControlPanelUsersTable from './ControlPanelUsers/ControlPanelUsersTable/ControlPanelUsersTable';
 import { useAppSelector } from 'hooks/redux';
 import ControlPanelUsersFilterModal from './Modals/ControlPanelUsersFilterModal/ControlPanelUsersFilterModal';
-import ControlPanelUsersSearch from './ControlPanelUsersSearch/ControlPanelUsersSearch';
+import ControlPanelUsersSearch from './ControlPanelUsers/ControlPanelUsersSearch/ControlPanelUsersSearch';
 import styles from './ControlPanelPage.module.css';
 import ControlPanelEditUserModal from './Modals/ControlPanelEditUserModal/ControlPanelEditUserModal';
-import ControlPanelTypesTable from './ControlPanelTypesTable/ControlPanelTypesTable';
-import ControlPanelTypesSearch from './ControlPanelTypesSearch/ControlPanelTypesSearch';
+import ControlPanelTypesTable from './ControlPanelTypes/ControlPanelTypesTable/ControlPanelTypesTable';
+import ControlPanelTypesSearch from './ControlPanelTypes/ControlPanelTypesSearch/ControlPanelTypesSearch';
 import ControlPanelTypesFilterModal from './Modals/ControlPanelTypesFilterModal/ControlPanelTypesFilterModal';
 import ControlPanelEditTypeModal from './Modals/ControlPanelEditTypeModal/ControlPanelEditTypeModal';
 import ControlPanelEditProductModal from './Modals/ControlPanelEditProductModal/ControlPanelEditProductModal';
 import ControlPanelEditCategoryModal from './Modals/ControlPanelEditCategoryModal/ControlPanelEditCategoryModal';
 import ControlPanelEditParamsModal from './Modals/ControlPanelEditParamsModal/ControlPanelEditParamsModal';
-import ControlPanelProductsTable from './ControlPanelProductsTable/ControlPanelProductsTable';
-import ControlPanelProductsSearch from './ControlPanelProductsSearch/ControlPanelProductsSearch';
-import ControlPanelCategoriesTable from './ControlPanelCategoriesTable/ControlPanelCategoriesTable';
-import ControlPanelCategoriesSearch from './ControlPanelCategoriesSearch/ControlPanelCategoriesSearch';
+import ControlPanelProductsTable from './ControlPanelProducts/ControlPanelProductsTable/ControlPanelProductsTable';
+import ControlPanelProductsSearch from './ControlPanelProducts/ControlPanelProductsSearch/ControlPanelProductsSearch';
+import ControlPanelCategoriesTable from './ControlPanelCategories/ControlPanelCategoriesTable/ControlPanelCategoriesTable';
+import ControlPanelCategoriesSearch from './ControlPanelCategories/ControlPanelCategoriesSearch/ControlPanelCategoriesSearch';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
