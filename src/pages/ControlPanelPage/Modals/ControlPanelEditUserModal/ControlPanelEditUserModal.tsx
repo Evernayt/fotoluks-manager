@@ -4,12 +4,15 @@ import {
   Modal,
   SelectButton,
   Textbox,
+  Tooltip,
 } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { fetchShopsAPI } from 'http/shopAPI';
 import { updateUserAPI } from 'http/userAPI';
 import { isVerifiedAPI } from 'http/verificationAPI';
+import { IShop } from 'models/IShop';
 import { IRole, IUser, UserRoles } from 'models/IUser';
 import { useEffect, useMemo, useState } from 'react';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
@@ -49,6 +52,8 @@ const ControlPanelEditUserModal = () => {
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
   const [user, setUser] = useState<IUser | null>(null);
   const [selectedRole, setSelectedRole] = useState<IRole>(roles[2]);
+  const [shops, setShops] = useState<IShop[]>([]);
+  const [selectedShop, setSelectedShop] = useState<IShop>(shops[0]);
 
   const controlPanelEditUserModal = useAppSelector(
     (state) => state.modal.controlPanelEditUserModal
@@ -58,6 +63,7 @@ const ControlPanelEditUserModal = () => {
 
   useEffect(() => {
     if (controlPanelEditUserModal.isShowing) {
+      fetchShops();
       isVerified();
     }
   }, [controlPanelEditUserModal.isShowing]);
@@ -77,7 +83,14 @@ const ControlPanelEditUserModal = () => {
       setEmail(data.user.email);
       setVk(data.user.vk);
       setTelegram(data.user.telegram);
+      setSelectedShop(data.user.shop ? data.user.shop : shops[0]);
       setUser(data.user);
+    });
+  };
+
+  const fetchShops = () => {
+    fetchShopsAPI(true).then((data) => {
+      setShops(data);
     });
   };
 
@@ -109,6 +122,7 @@ const ControlPanelEditUserModal = () => {
         vk,
         telegram,
         avatar,
+        shopId: selectedShop.id,
       };
       updateUserAPI(editedUser).then(() => {
         dispatch(controlPanelSlice.actions.setForceUpdate(true));
@@ -143,7 +157,7 @@ const ControlPanelEditUserModal = () => {
           )}
         </div>
 
-        <div className={styles.main_controls}>
+        <div className={styles.controls}>
           <Textbox
             label="Имя"
             value={name}
@@ -158,7 +172,7 @@ const ControlPanelEditUserModal = () => {
             disabled={isPhoneVerified}
           />
         </div>
-        <div className={styles.main_controls}>
+        <div className={styles.controls}>
           <Textbox
             label="Логин"
             value={login}
@@ -173,18 +187,35 @@ const ControlPanelEditUserModal = () => {
             isPassword
           />
         </div>
-        <div className={styles.social}>
-          <SelectButton
-            items={roles}
-            defaultSelectedItem={selectedRole}
-            changeHandler={(e) => setSelectedRole(e)}
-            style={{ width: '100%' }}
-          />
-          <Textbox
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <div className={styles.controls}>
+          <Tooltip label="Роль">
+            <div style={{ width: '100%' }}>
+              <SelectButton
+                items={roles}
+                defaultSelectedItem={selectedRole}
+                changeHandler={(e) => setSelectedRole(e)}
+                style={{ width: '100%' }}
+              />
+            </div>
+          </Tooltip>
+          <Tooltip label="Филиал">
+            <div style={{ width: '100%' }}>
+              <SelectButton
+                items={shops}
+                defaultSelectedItem={selectedShop}
+                changeHandler={(e) => setSelectedShop(e)}
+                style={{ width: '100%' }}
+              />
+            </div>
+          </Tooltip>
+        </div>
+
+        <Textbox
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <div className={styles.controls}>
           <Textbox
             label="ВКонтакте"
             value={vk}
@@ -195,12 +226,12 @@ const ControlPanelEditUserModal = () => {
             value={telegram}
             onChange={(e) => setTelegram(e.target.value)}
           />
-          <Textbox
-            label="Аватар (URL)"
-            value={avatar}
-            onChange={(e) => setAvatar(e.target.value)}
-          />
         </div>
+        <Textbox
+          label="Аватар (URL)"
+          value={avatar}
+          onChange={(e) => setAvatar(e.target.value)}
+        />
         <div className={styles.controls}>
           <Button onClick={close}>Отменить</Button>
           <Button

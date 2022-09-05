@@ -1,5 +1,8 @@
 .container {
   width: 382px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .avatar_container {
@@ -22,21 +25,7 @@
   white-space: pre-line;
 }
 
-.main_controls {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.social {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .controls {
   display: flex;
   gap: 12px;
-  margin-top: 24px;
 }
