@@ -9,6 +9,7 @@ import { IUser, UserRoles } from 'models/IUser';
 import styles from './ControlPanelUsersTable.module.css';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
+import UserMenuCell from './UserMenuCell';
 
 const ControlPanelUsersTable = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -39,10 +40,6 @@ const ControlPanelUsersTable = () => {
         Header: 'Логин',
         accessor: 'login',
       },
-      // {
-      //   Header: 'Пароль',
-      //   accessor: 'password',
-      // },
       {
         Header: 'Роль',
         accessor: 'role',
@@ -62,6 +59,15 @@ const ControlPanelUsersTable = () => {
       {
         Header: 'Telegram',
         accessor: 'telegram',
+      },
+      {
+        Header: 'Филиал',
+        accessor: 'shop.name',
+      },
+      {
+        Header: '',
+        accessor: 'menu',
+        Cell: UserMenuCell,
       },
     ],
     []
@@ -87,10 +93,7 @@ const ControlPanelUsersTable = () => {
 
   useEffect(() => {
     if (usersFilter.filter.isActive) {
-      const { userRole } = usersFilter;
-      if (userRole.role) {
-        fetchUsers(page, [userRole.role]);
-      }
+      fetchWithFilters();
     } else if (usersFilter.filter.isPendingDeactivation) {
       dispatch(controlPanelSlice.actions.deactiveUsersFilter());
       fetchUsers(page);
@@ -101,16 +104,30 @@ const ControlPanelUsersTable = () => {
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchUsers = (page: number, roles?: UserRoles[]) => {
+  const fetchUsers = (
+    page: number,
+    roles?: UserRoles[],
+    shopId?: number,
+    archive?: number
+  ) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
-
-    fetchUsersAPI(limit, page, roles)
+    fetchUsersAPI(limit, page, roles, shopId, archive)
       .then((data) => {
         setUsers(data.rows);
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
       .finally(() => dispatch(controlPanelSlice.actions.setIsLoading(false)));
+  };
+
+  const fetchWithFilters = () => {
+    const { userRole, shopId, archive } = usersFilter;
+
+    if (userRole.role) {
+      fetchUsers(page, [userRole.role], shopId, archive);
+    } else {
+      fetchUsers(page, [], shopId, archive);
+    }
   };
 
   const pageChangeHandler = (page: number) => {
@@ -120,10 +137,7 @@ const ControlPanelUsersTable = () => {
 
   const reload = (page: number = 1) => {
     if (usersFilter.filter.isActive) {
-      const { userRole } = usersFilter;
-      if (userRole.role) {
-        fetchUsers(page, [userRole.role]);
-      }
+      fetchWithFilters();
     } else {
       fetchUsers(page);
     }
