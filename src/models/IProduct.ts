@@ -8,8 +8,10 @@ export interface IProduct {
   pluralName: string;
   description: string;
   image: string;
+  categoryId?: number;
   category?: ICategory;
   types?: IType[];
+  archive?: boolean;
 }
 
 export interface IProductData {
@@ -19,6 +21,7 @@ export interface IProductData {
 
 export interface IProductsFilter {
   filter: IFilter;
+  archive: boolean;
 }
 
 export interface IFoundProducts {

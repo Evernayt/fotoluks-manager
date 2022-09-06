@@ -100,14 +100,14 @@ export const controlPanelSlice = createSlice({
     setFoundTypes(state, action: PayloadAction<IFoundTypes>) {
       state.foundTypes = action.payload;
     },
-    activeProductsFilter(state, action: PayloadAction<{ role: IRole }>) {
-      // state.usersFilter = {
-      //   filter: {
-      //     isActive: true,
-      //     isPendingDeactivation: false,
-      //   },
-      //   ...action.payload,
-      // };
+    activeProductsFilter(state, action: PayloadAction<IProductsFilter>) {
+      state.productsFilter = {
+        filter: {
+          isActive: true,
+          isPendingDeactivation: false,
+        },
+        archive: action.payload.archive,
+      };
     },
     deactiveProductsFilter(state) {
       state.productsFilter = initialProductsFilter;

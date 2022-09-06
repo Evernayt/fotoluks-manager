@@ -10,6 +10,7 @@ import { Modes } from 'constants/app';
 import { IProduct } from 'models/IProduct';
 import { fetchProductsAPI } from 'http/productAPI';
 import ControlPanelProductsToolbar from './ControlPanelProductsToolbar/ControlPanelProductsToolbar';
+import ProductMenuCell from './ProductMenuCell';
 
 const ControlPanelProductsTable = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -52,6 +53,11 @@ const ControlPanelProductsTable = () => {
         Header: 'Категория',
         accessor: 'category.name',
       },
+      {
+        Header: '',
+        accessor: 'menu',
+        Cell: ProductMenuCell,
+      },
     ],
     []
   );
@@ -76,8 +82,7 @@ const ControlPanelProductsTable = () => {
 
   useEffect(() => {
     if (productsFilter.filter.isActive) {
-      //const { role } = usersFilter;
-      //fetchCategories(page, role.role);
+      fetchWithFilters();
     } else if (productsFilter.filter.isPendingDeactivation) {
       dispatch(controlPanelSlice.actions.deactiveProductsFilter());
       fetchProducts(page);
@@ -88,16 +93,22 @@ const ControlPanelProductsTable = () => {
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchProducts = (page: number) => {
+  const fetchProducts = (page: number, archive?: boolean) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
 
-    fetchProductsAPI(limit, page)
+    fetchProductsAPI(limit, page, archive)
       .then((data) => {
         setProducts(data.rows);
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
       .finally(() => dispatch(controlPanelSlice.actions.setIsLoading(false)));
+  };
+
+  const fetchWithFilters = () => {
+    const { archive } = productsFilter;
+
+    fetchProducts(page, archive);
   };
 
   const pageChangeHandler = (page: number) => {
@@ -107,8 +118,7 @@ const ControlPanelProductsTable = () => {
 
   const reload = (page: number = 1) => {
     if (productsFilter.filter.isActive) {
-      // const { role } = usersFilter;
-      // fetchUsers(page, role.role);
+      fetchWithFilters();
     } else {
       fetchProducts(page);
     }

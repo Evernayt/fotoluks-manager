@@ -2,16 +2,19 @@ import { IProduct, IProductData } from 'models/IProduct';
 import { $host } from './index';
 
 interface IFetchProducts {
-  (limit?: number, page?: number): Promise<IProductData>;
+  (limit?: number, page?: number, archive?: boolean): Promise<IProductData>;
 }
 
 export const fetchProductsAPI: IFetchProducts = async (
   limit = 100,
-  page = 1
+  page = 1,
+  archive
 ) => {
-  const { data } = await $host.get(
-    `api/product/all/?limit=${limit}&page=${page}`
-  );
+  const { data } = await $host.post('api/product/all', {
+    limit,
+    page,
+    archive,
+  });
   return data;
 };
 
@@ -66,32 +69,9 @@ export const fetchProductAPI: IFetchProduct = async (productId) => {
   return data;
 };
 
-interface IUpdateProduct {
-  (
-    id: number,
-    name: string,
-    pluralName: string,
-    description: string,
-    image: string,
-    categoryId: number
-  ): Promise<number[]>;
-}
-
-export const updateProductAPI: IUpdateProduct = async (
-  id,
-  name,
-  pluralName,
-  description,
-  image,
-  categoryId
-) => {
-  const { data } = await $host.post('api/product/update', {
-    id,
-    name,
-    pluralName,
-    description,
-    image,
-    categoryId,
-  });
+export const updateProductAPI = async (
+  product: IProduct
+): Promise<IProduct> => {
+  const { data } = await $host.post('api/product/update', product);
   return data;
 };

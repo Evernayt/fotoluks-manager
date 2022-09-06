@@ -44,6 +44,7 @@ type ModalState = {
   loginModal: ILoginModal;
   orderDetailAddFavoriteModal: IModal;
   controlPanelCategoriesFilterModal: IModal;
+  controlPanelProductsFilterModal: IModal;
 };
 
 const initialState: ModalState = {
@@ -64,6 +65,7 @@ const initialState: ModalState = {
   loginModal: initialLoginModal,
   orderDetailAddFavoriteModal: initialModal,
   controlPanelCategoriesFilterModal: initialModal,
+  controlPanelProductsFilterModal: initialModal,
 };
 
 export const modalSlice = createSlice({
@@ -202,6 +204,12 @@ export const modalSlice = createSlice({
     closeControlPanelCategoriesFilterModal(state) {
       state.controlPanelCategoriesFilterModal.isShowing = false;
     },
+    openControlPanelProductsFilterModal(state) {
+      state.controlPanelProductsFilterModal.isShowing = true;
+    },
+    closeControlPanelProductsFilterModal(state) {
+      state.controlPanelProductsFilterModal.isShowing = false;
+    },
   },
 });
 
@@ -239,7 +247,9 @@ export const {
   openOrderDetailAddFavoriteModal,
   closeOrderDetailAddFavoriteModal,
   openControlPanelCategoriesFilterModal,
-  closeControlPanelCategoriesFilterModal
+  closeControlPanelCategoriesFilterModal,
+  openControlPanelProductsFilterModal,
+  closeControlPanelProductsFilterModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

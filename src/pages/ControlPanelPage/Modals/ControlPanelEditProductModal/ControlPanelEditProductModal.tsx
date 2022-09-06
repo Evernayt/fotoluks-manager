@@ -19,6 +19,7 @@ import {
 } from 'http/productAPI';
 import { plusIcon } from 'icons';
 import { ICategory } from 'models/ICategory';
+import { IProduct } from 'models/IProduct';
 import { useEffect, useState } from 'react';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
@@ -92,14 +93,15 @@ const ControlPanelEditProductModal = () => {
   };
 
   const updateProduct = () => {
-    updateProductAPI(
-      productId,
-      productName,
-      productPluralName,
-      productDescription,
-      productImage,
-      selectedCategory.id
-    ).then(() => {
+    const updatedProduct: IProduct = {
+      id: productId,
+      name: productName,
+      pluralName: productPluralName,
+      description: productDescription,
+      image: productImage,
+      categoryId: selectedCategory.id,
+    };
+    updateProductAPI(updatedProduct).then(() => {
       dispatch(controlPanelSlice.actions.setForceUpdate(true));
       close();
     });

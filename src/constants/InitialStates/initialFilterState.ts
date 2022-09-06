@@ -42,6 +42,7 @@ export const initialOrdersFilter: IOrdersFilter = {
 
 export const initialProductsFilter: IProductsFilter = {
   filter: initialFilter,
+  archive: false,
 };
 
 export const initialCategoriesFilter: ICategoriesFilter = {
