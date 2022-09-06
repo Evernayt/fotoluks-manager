@@ -19,7 +19,7 @@ export interface IUser {
   vk: string;
   telegram: string;
   shopId: number;
-  archive?: number;
+  archive?: boolean;
   shop?: IShop;
 }
 
@@ -38,7 +38,7 @@ export interface IUsersFilter {
   filter: IFilter;
   userRole: IRole;
   shopId: number;
-  archive: number;
+  archive: boolean;
 }
 
 export interface IFoundUsers {

@@ -13,7 +13,7 @@ const UserMenuCell = ({ row }: Cell<IUser>) => {
 
   const addToArchive = () => {
     const user = row.original;
-    const updatedUser: IUser = { ...user, archive: 1 };
+    const updatedUser: IUser = { ...user, archive: true };
     updateUserAPI(updatedUser).then(() => {
       dispatch(controlPanelSlice.actions.setForceUpdate(true));
     });
@@ -21,7 +21,7 @@ const UserMenuCell = ({ row }: Cell<IUser>) => {
 
   const deleteFromArchive = () => {
     const user = row.original;
-    const updatedUser: IUser = { ...user, archive: 0 };
+    const updatedUser: IUser = { ...user, archive: false };
     updateUserAPI(updatedUser).then(() => {
       dispatch(controlPanelSlice.actions.setForceUpdate(true));
     });
@@ -30,9 +30,8 @@ const UserMenuCell = ({ row }: Cell<IUser>) => {
   const userMenu = [
     {
       id: 1,
-      name:
-        row.original.archive === 0 ? 'Добавить в архив' : 'Удалить из архива',
-      onClick: row.original.archive === 0 ? addToArchive : deleteFromArchive,
+      name: row.original.archive ? 'Удалить из архива' : 'Добавить в архив',
+      onClick: row.original.archive ? deleteFromArchive : addToArchive,
     },
   ];
 

@@ -20,7 +20,7 @@ export const initialUserFilter: IUsersFilter = {
   filter: initialFilter,
   userRole: initialRole,
   shopId: -1,
-  archive: 0,
+  archive: false,
 };
 
 export const initialTypesFilter: ITypesFilter = {
@@ -46,4 +46,5 @@ export const initialProductsFilter: IProductsFilter = {
 
 export const initialCategoriesFilter: ICategoriesFilter = {
   filter: initialFilter,
+  archive: false,
 };

@@ -58,7 +58,7 @@ interface IFetchUsers {
     page: number,
     roles?: UserRoles[],
     shopId?: number,
-    archive?: number
+    archive?: boolean
   ): Promise<IUserData>;
 }
 
