@@ -1,6 +1,9 @@
 import { Button, Checkbox, Modal, SelectButton } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { initialRole } from 'constants/InitialStates/initialFilterState';
+import {
+  initialFilter,
+  initialRole,
+} from 'constants/InitialStates/initialFilterState';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchShopsAPI } from 'http/shopAPI';
 import { IShop } from 'models/IShop';
@@ -79,9 +82,10 @@ const ControlPanelUsersFilterModal = () => {
     dispatch(controlPanelSlice.actions.setForceUpdate(true));
     dispatch(
       controlPanelSlice.actions.activeUsersFilter({
-        role: selectedRole,
+        filter: initialFilter,
+        userRole: selectedRole,
         shopId: selectedShop.id,
-        archive: inArchive ? 1 : 0,
+        archive: inArchive,
       })
     );
     close();

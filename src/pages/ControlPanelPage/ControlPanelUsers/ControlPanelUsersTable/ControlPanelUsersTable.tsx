@@ -108,7 +108,7 @@ const ControlPanelUsersTable = () => {
     page: number,
     roles?: UserRoles[],
     shopId?: number,
-    archive?: number
+    archive?: boolean
   ) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
     fetchUsersAPI(limit, page, roles, shopId, archive)

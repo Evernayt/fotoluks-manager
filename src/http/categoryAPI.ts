@@ -2,16 +2,19 @@ import { ICategory, ICategoryData } from 'models/ICategory';
 import { $host } from './index';
 
 interface IFetchCategories {
-  (limit?: number, page?: number): Promise<ICategoryData>;
+  (limit?: number, page?: number, archive?: boolean): Promise<ICategoryData>;
 }
 
 export const fetchCategoriesAPI: IFetchCategories = async (
   limit = 100,
-  page = 1
+  page = 1,
+  archive
 ) => {
-  const { data } = await $host.get(
-    `api/category/all/?limit=${limit}&page=${page}`
-  );
+  const { data } = await $host.post('api/category/all', {
+    limit,
+    page,
+    archive,
+  });
   return data;
 };
 
@@ -29,14 +32,9 @@ export const fetchCategoryAPI: IFetchCategory = async (categoryId) => {
   return data;
 };
 
-interface IUpdateCategory {
-  (id: number, name: string): Promise<number[]>;
-}
-
-export const updateCategoryAPI: IUpdateCategory = async (id, name) => {
-  const { data } = await $host.post('api/category/update', {
-    id,
-    name,
-  });
+export const updateCategoryAPI = async (
+  category: ICategory
+): Promise<ICategory> => {
+  const { data } = await $host.post('api/category/update', category);
   return data;
 };

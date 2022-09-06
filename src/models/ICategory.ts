@@ -5,6 +5,7 @@ export interface ICategory {
   id: number;
   name: string;
   products?: IProduct[];
+  archive?: boolean;
 }
 
 export interface ICategoryData {
@@ -14,6 +15,7 @@ export interface ICategoryData {
 
 export interface ICategoriesFilter {
   filter: IFilter;
+  archive: boolean;
 }
 
 export interface IFoundCategories {

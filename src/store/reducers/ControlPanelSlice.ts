@@ -60,16 +60,13 @@ export const controlPanelSlice = createSlice({
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
-    activeUsersFilter(
-      state,
-      action: PayloadAction<{ role: IRole; shopId: number; archive: number }>
-    ) {
+    activeUsersFilter(state, action: PayloadAction<IUsersFilter>) {
       state.usersFilter = {
         filter: {
           isActive: true,
           isPendingDeactivation: false,
         },
-        userRole: action.payload.role,
+        userRole: action.payload.userRole,
         shopId: action.payload.shopId,
         archive: action.payload.archive,
       };
@@ -122,14 +119,14 @@ export const controlPanelSlice = createSlice({
     setFoundProducts(state, action: PayloadAction<IFoundProducts>) {
       state.foundProducts = action.payload;
     },
-    activeCategoriesFilter(state, action: PayloadAction<{ role: IRole }>) {
-      // state.usersFilter = {
-      //   filter: {
-      //     isActive: true,
-      //     isPendingDeactivation: false,
-      //   },
-      //   ...action.payload,
-      // };
+    activeCategoriesFilter(state, action: PayloadAction<ICategoriesFilter>) {
+      state.categoriesFilter = {
+        filter: {
+          isActive: true,
+          isPendingDeactivation: false,
+        },
+        archive: action.payload.archive,
+      };
     },
     deactiveCategoriesFilter(state) {
       state.categoriesFilter = initialCategoriesFilter;

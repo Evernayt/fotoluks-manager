@@ -1,7 +1,8 @@
-import { Button, SelectButton } from 'components';
+import { Button, SelectButton, Tooltip } from 'components';
+import { ButtonVariants } from 'components/UI/Button/Button';
 import { Modes } from 'constants/app';
 import { Placements } from 'helpers/calcPlacement';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { FC, useMemo, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './ControlPanelCategoriesToolbar.module.css';
@@ -15,6 +16,10 @@ const ControlPanelCategoriesToolbar: FC<ControlPanelProductsToolbarProps> = ({
   reload,
   setLimit,
 }) => {
+  const categoriesFilter = useAppSelector(
+    (state) => state.controlPanel.categoriesFilter
+  );
+
   const limits = useMemo<any>(
     () => [
       {
@@ -54,6 +59,10 @@ const ControlPanelCategoriesToolbar: FC<ControlPanelProductsToolbarProps> = ({
     );
   };
 
+  const openCategoriesFilterModal = () => {
+    dispatch(modalSlice.actions.openControlPanelCategoriesFilterModal());
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.left_section}>
@@ -65,6 +74,22 @@ const ControlPanelCategoriesToolbar: FC<ControlPanelProductsToolbarProps> = ({
         </Button>
       </div>
       <div className={styles.right_section}>
+        <Tooltip
+          label="Фильтры включены"
+          disabled={!categoriesFilter.filter.isActive}
+        >
+          <Button
+            style={{ width: 'max-content' }}
+            onClick={openCategoriesFilterModal}
+            variant={
+              categoriesFilter.filter.isActive
+                ? ButtonVariants.primaryDeemphasized
+                : ButtonVariants.default
+            }
+          >
+            Фильтры
+          </Button>
+        </Tooltip>
         <SelectButton
           items={limits}
           defaultSelectedItem={selectedLimit}

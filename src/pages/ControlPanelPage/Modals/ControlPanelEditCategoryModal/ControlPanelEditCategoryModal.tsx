@@ -47,7 +47,8 @@ const ControlPanelEditCategoryModal = () => {
 
   const updateCategory = () => {
     if (category) {
-      updateCategoryAPI(category?.id, categoryName).then(() => {
+      const updatedCategory: ICategory = { ...category, name: categoryName };
+      updateCategoryAPI(updatedCategory).then(() => {
         dispatch(controlPanelSlice.actions.setForceUpdate(true));
         close();
       });

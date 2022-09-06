@@ -17,6 +17,7 @@ import ControlPanelProductsTable from './ControlPanelProducts/ControlPanelProduc
 import ControlPanelProductsSearch from './ControlPanelProducts/ControlPanelProductsSearch/ControlPanelProductsSearch';
 import ControlPanelCategoriesTable from './ControlPanelCategories/ControlPanelCategoriesTable/ControlPanelCategoriesTable';
 import ControlPanelCategoriesSearch from './ControlPanelCategories/ControlPanelCategoriesSearch/ControlPanelCategoriesSearch';
+import ControlPanelCategoriesFilterModal from './Modals/ControlPanelCategoriesFilterModal/ControlPanelCategoriesFilterModal';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
@@ -53,10 +54,11 @@ const ControlPanelPage = () => {
 
   return (
     <div className={styles.container}>
-      <ControlPanelEditUserModal />
       <ControlPanelUsersFilterModal />
-      <ControlPanelEditTypeModal />
       <ControlPanelTypesFilterModal />
+      <ControlPanelCategoriesFilterModal />
+      <ControlPanelEditUserModal />
+      <ControlPanelEditTypeModal />
       <ControlPanelEditProductModal />
       <ControlPanelEditCategoryModal />
       <ControlPanelEditParamsModal />

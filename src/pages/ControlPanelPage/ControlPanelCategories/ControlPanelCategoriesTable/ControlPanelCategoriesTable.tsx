@@ -10,6 +10,7 @@ import { ICategory } from 'models/ICategory';
 import { fetchCategoriesAPI } from 'http/categoryAPI';
 import styles from './ControlPanelCategoriesTable.module.css';
 import ControlPanelCategoriesToolbar from './ControlPanelCategoriesToolbar/ControlPanelCategoriesToolbar';
+import CategoryMenuCell from './CategoryMenuCell';
 
 const ControlPanelCategoriesTable = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -40,6 +41,11 @@ const ControlPanelCategoriesTable = () => {
         accessor: 'name',
         style: { width: '100%' },
       },
+      {
+        Header: '',
+        accessor: 'menu',
+        Cell: CategoryMenuCell,
+      },
     ],
     []
   );
@@ -64,8 +70,7 @@ const ControlPanelCategoriesTable = () => {
 
   useEffect(() => {
     if (categoriesFilter.filter.isActive) {
-      //const { role } = usersFilter;
-      //fetchCategories(page, role.role);
+      fetchWithFilters();
     } else if (categoriesFilter.filter.isPendingDeactivation) {
       dispatch(controlPanelSlice.actions.deactiveCategoriesFilter());
       fetchCategories(page);
@@ -76,16 +81,22 @@ const ControlPanelCategoriesTable = () => {
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchCategories = (page: number) => {
+  const fetchCategories = (page: number, archive?: boolean) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
 
-    fetchCategoriesAPI(limit, page)
+    fetchCategoriesAPI(limit, page, archive)
       .then((data) => {
         setCategories(data.rows);
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
       .finally(() => dispatch(controlPanelSlice.actions.setIsLoading(false)));
+  };
+
+  const fetchWithFilters = () => {
+    const { archive } = categoriesFilter;
+
+    fetchCategories(page, archive);
   };
 
   const pageChangeHandler = (page: number) => {
@@ -95,8 +106,7 @@ const ControlPanelCategoriesTable = () => {
 
   const reload = (page: number = 1) => {
     if (categoriesFilter.filter.isActive) {
-      // const { role } = usersFilter;
-      // fetchUsers(page, role.role);
+      fetchWithFilters();
     } else {
       fetchCategories(page);
     }
