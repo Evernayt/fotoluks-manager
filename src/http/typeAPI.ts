@@ -108,3 +108,18 @@ export const updateTypeParamsAPI: IUpdateTypeParams = async (
   });
   return data;
 };
+
+interface ISearchTypes {
+  (limit: number, page: number, searchText: string): Promise<ITypeData>;
+}
+
+export const searchTypesAPI: ISearchTypes = async (
+  limit = 15,
+  page = 1,
+  searchText
+) => {
+  const { data } = await $host.get(
+    `api/type/search/?limit=${limit}&page=${page}&searchText=${searchText}`
+  );
+  return data;
+};

@@ -38,3 +38,18 @@ export const updateCategoryAPI = async (
   const { data } = await $host.post('api/category/update', category);
   return data;
 };
+
+interface ISearchCategories {
+  (limit: number, page: number, searchText: string): Promise<ICategoryData>;
+}
+
+export const searchCategoriesAPI: ISearchCategories = async (
+  limit = 15,
+  page = 1,
+  searchText
+) => {
+  const { data } = await $host.get(
+    `api/category/search/?limit=${limit}&page=${page}&searchText=${searchText}`
+  );
+  return data;
+};

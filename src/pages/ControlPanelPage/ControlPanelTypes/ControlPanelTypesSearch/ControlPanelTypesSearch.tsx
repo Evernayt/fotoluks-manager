@@ -5,6 +5,7 @@ import { searchIcon } from 'icons';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { IFoundTypes } from 'models/IType';
 import styles from './ControlPanelTypesSearch.module.css';
+import { searchTypesAPI } from 'http/typeAPI';
 
 const ControlPanelTypesSearch = () => {
   const [searchText, setSearchText] = useState<string>('');
@@ -29,14 +30,14 @@ const ControlPanelTypesSearch = () => {
     if (searchText.trim() !== '') {
       dispatch(controlPanelSlice.actions.setIsLoading(true));
 
-      // searchUsersAPI(15, 1, searchText).then((data) => {
-      //   const foundUsersData: IFoundUsers = {
-      //     userData: { rows: data.rows, count: data.count },
-      //     searchText,
-      //   };
-      //   dispatch(controlPanelSlice.actions.setFoundUsers(foundUsersData));
-      //   dispatch(controlPanelSlice.actions.setIsLoading(false));
-      // });
+      searchTypesAPI(15, 1, searchText).then((data) => {
+        const foundTypesData: IFoundTypes = {
+          typeData: { rows: data.rows, count: data.count },
+          searchText,
+        };
+        dispatch(controlPanelSlice.actions.setFoundTypes(foundTypesData));
+        dispatch(controlPanelSlice.actions.setIsLoading(false));
+      });
     }
   };
 
@@ -48,7 +49,6 @@ const ControlPanelTypesSearch = () => {
         placeholder="Поиск товаров"
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
-        disabled
       />
     </div>
   );

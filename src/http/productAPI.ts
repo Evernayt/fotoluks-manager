@@ -19,7 +19,7 @@ export const fetchProductsAPI: IFetchProducts = async (
 };
 
 interface ISearchProducts {
-  (limit: number, page: number, searchText: string): Promise<IProduct[]>;
+  (limit: number, page: number, searchText: string): Promise<IProductData>;
 }
 
 export const searchProductsAPI: ISearchProducts = async (

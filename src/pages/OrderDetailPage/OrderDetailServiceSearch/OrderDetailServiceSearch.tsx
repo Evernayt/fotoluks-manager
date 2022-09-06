@@ -31,7 +31,7 @@ const OrderDetailServiceSearch: FC<OrderDetailServiceSearchProps> = ({
   const searchService = () => {
     if (searchText.trim() !== '') {
       searchProductsAPI(15, 1, searchText).then((data) => {
-        setFoundServices(data);
+        setFoundServices(data.rows);
       });
     }
   };
