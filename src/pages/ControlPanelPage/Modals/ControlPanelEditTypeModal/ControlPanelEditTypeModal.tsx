@@ -134,17 +134,22 @@ const ControlPanelEditTypeModal = () => {
 
   const updateType = () => {
     if (type) {
+      const updatedType: IType = {
+        id: type.id,
+        name: typeName,
+        image: typeImage,
+        price: typePrice,
+      };
+
       const featureIds: number[] = [];
       for (let i = 0; i < typeFeatures.length; i++) {
         featureIds.push(typeFeatures[i].id);
       }
 
-      updateTypeAPI(type?.id, typeName, typeImage, typePrice, featureIds).then(
-        () => {
-          dispatch(controlPanelSlice.actions.setForceUpdate(true));
-          close();
-        }
-      );
+      updateTypeAPI(updatedType, featureIds).then(() => {
+        dispatch(controlPanelSlice.actions.setForceUpdate(true));
+        close();
+      });
     }
   };
 

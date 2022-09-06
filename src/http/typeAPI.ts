@@ -14,11 +14,15 @@ export const fetchTypesByProductIdAPI: IFetchTypesByProductId = async (
 };
 
 interface IFetchTypes {
-  (limit?: number, page?: number): Promise<ITypeData>;
+  (limit?: number, page?: number, archive?: boolean): Promise<ITypeData>;
 }
 
-export const fetchTypesAPI: IFetchTypes = async (limit = 100, page = 1) => {
-  const { data } = await $host.get(`api/type/all/?limit=${limit}&page=${page}`);
+export const fetchTypesAPI: IFetchTypes = async (
+  limit = 100,
+  page = 1,
+  archive
+) => {
+  const { data } = await $host.post('api/type/all', { limit, page, archive });
   return data;
 };
 
@@ -32,27 +36,12 @@ export const fetchTypeAPI: IFetchType = async (typeId) => {
 };
 
 interface IUpdateType {
-  (
-    id: number,
-    name: string,
-    image: string,
-    price: number,
-    featureIds: number[]
-  ): Promise<number[]>;
+  (type: IType, featureIds: number[]): Promise<number[]>;
 }
 
-export const updateTypeAPI: IUpdateType = async (
-  id,
-  name,
-  image,
-  price,
-  featureIds
-) => {
+export const updateTypeAPI: IUpdateType = async (type, featureIds) => {
   const { data } = await $host.post('api/type/update', {
-    id,
-    name,
-    image,
-    price,
+    type,
     featureIds,
   });
   return data;

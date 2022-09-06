@@ -10,6 +10,7 @@ import { IType } from 'models/IType';
 import { fetchTypesAPI } from 'http/typeAPI';
 import styles from './ControlPanelTypesTable.module.css';
 import { Modes } from 'constants/app';
+import TypeMenuCell from './TypeMenuCell';
 
 const ControlPanelTypesTable = () => {
   const [types, setTypes] = useState<IType[]>([]);
@@ -48,6 +49,11 @@ const ControlPanelTypesTable = () => {
         Header: 'Цена',
         accessor: 'price',
       },
+      {
+        Header: '',
+        accessor: 'menu',
+        Cell: TypeMenuCell,
+      },
     ],
     []
   );
@@ -72,8 +78,7 @@ const ControlPanelTypesTable = () => {
 
   useEffect(() => {
     if (typesFilter.filter.isActive) {
-      //const { role } = usersFilter;
-      //fetchCategories(page, role.role);
+      fetchWithFilters();
     } else if (typesFilter.filter.isPendingDeactivation) {
       dispatch(controlPanelSlice.actions.deactiveTypesFilter());
       fetchTypes(page);
@@ -84,16 +89,22 @@ const ControlPanelTypesTable = () => {
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchTypes = (page: number) => {
+  const fetchTypes = (page: number, archive?: boolean) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
 
-    fetchTypesAPI(limit, page)
+    fetchTypesAPI(limit, page, archive)
       .then((data) => {
         setTypes(data.rows);
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
       .finally(() => dispatch(controlPanelSlice.actions.setIsLoading(false)));
+  };
+
+  const fetchWithFilters = () => {
+    const { archive } = typesFilter;
+
+    fetchTypes(page, archive);
   };
 
   const pageChangeHandler = (page: number) => {
@@ -103,8 +114,7 @@ const ControlPanelTypesTable = () => {
 
   const reload = (page: number = 1) => {
     if (typesFilter.filter.isActive) {
-      // const { role } = usersFilter;
-      // fetchUsers(page, role.role);
+      fetchWithFilters();
     } else {
       fetchTypes(page);
     }

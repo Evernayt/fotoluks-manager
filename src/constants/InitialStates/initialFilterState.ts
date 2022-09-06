@@ -25,6 +25,7 @@ export const initialUserFilter: IUsersFilter = {
 
 export const initialTypesFilter: ITypesFilter = {
   filter: initialFilter,
+  archive: false,
 };
 
 export const initialOrdersFilter: IOrdersFilter = {

@@ -12,7 +12,7 @@ import { initialFoundUsers } from 'constants/InitialStates/initialUserState';
 import { ICategoriesFilter, IFoundCategories } from 'models/ICategory';
 import { IFoundProducts, IProductsFilter } from 'models/IProduct';
 import { IFoundTypes, ITypesFilter } from 'models/IType';
-import { IFoundUsers, IRole, IUsersFilter } from 'models/IUser';
+import { IFoundUsers, IUsersFilter } from 'models/IUser';
 
 type ControlPanelState = {
   isMinimizedSidemenu: boolean;
@@ -78,14 +78,14 @@ export const controlPanelSlice = createSlice({
       state.usersFilter = initialUserFilter;
       state.usersFilter.filter.isPendingDeactivation = true;
     },
-    activeTypesFilter(state, action: PayloadAction<{ role: IRole }>) {
-      // state.usersFilter = {
-      //   filter: {
-      //     isActive: true,
-      //     isPendingDeactivation: false,
-      //   },
-      //   ...action.payload,
-      // };
+    activeTypesFilter(state, action: PayloadAction<ITypesFilter>) {
+      state.typesFilter = {
+        filter: {
+          isActive: true,
+          isPendingDeactivation: false,
+        },
+        archive: action.payload.archive,
+      };
     },
     deactiveTypesFilter(state) {
       state.typesFilter = initialTypesFilter;

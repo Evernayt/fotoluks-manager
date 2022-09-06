@@ -11,6 +11,7 @@ export interface IType {
   features?: IFeature[];
   product?: IProduct;
   params?: IParam[];
+  archive?: boolean;
 }
 
 export interface ITypeData {
@@ -20,6 +21,7 @@ export interface ITypeData {
 
 export interface ITypesFilter {
   filter: IFilter;
+  archive: boolean;
 }
 
 export interface IFoundTypes {
