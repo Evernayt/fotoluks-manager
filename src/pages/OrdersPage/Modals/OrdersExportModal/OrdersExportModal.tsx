@@ -12,7 +12,7 @@ import XLSX from 'xlsx-js-style';
 import styles from './OrdersExportModal.module.css';
 import { useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
-import { INPUT_FORMAT } from 'constants/app';
+import { DEF_FORMAT, INPUT_FORMAT } from 'constants/app';
 import { Placements } from 'helpers/calcPlacement';
 import { IShop } from 'models/IShop';
 import { fetchShopsAPI } from 'http/shopAPI';
@@ -155,7 +155,7 @@ const OrdersExportModal = () => {
 
           excelData.push({
             '№': order.id,
-            'Дата заказа': moment(order.createdAt).format('DD.MM.YYY HH:mm'),
+            'Дата заказа': moment(order.createdAt).format(DEF_FORMAT),
             Услуги: finishedProducts,
             Сумма: order.sum,
             'Кто создал': user,
