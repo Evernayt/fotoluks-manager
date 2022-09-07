@@ -25,6 +25,8 @@ import socketio from 'socket/socketio';
 import OrderDetailFavorites from './OrderDetailFavorites/OrderDetailFavorites';
 import OrderDetailAddFavoriteModal from './Modals/OrderDetailAddFavoriteModal/OrderDetailAddFavoriteModal';
 import { Loader } from 'components';
+import { appSlice } from 'store/reducers/AppSlice';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 
 type LocationState = {
   state: {
@@ -215,6 +217,15 @@ const OrderDetailPage = () => {
           socketio.addWatcher({ user, orderId: data.order.id });
         }
       })
+      .catch((e) =>
+        dispatch(
+          appSlice.actions.showGlobalMessage({
+            message: e.response.data ? e.response.data.message : e.message,
+            variant: GlobalMessageVariants.danger,
+            isShowing: true,
+          })
+        )
+      )
       .finally(() => setIsLoading(false));
   };
 

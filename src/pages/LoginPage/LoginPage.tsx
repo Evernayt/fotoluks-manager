@@ -63,9 +63,19 @@ const LoginPage = () => {
   }, []);
 
   const fetchShops = () => {
-    fetchShopsAPI().then((data) => {
-      setShops(data.rows);
-    });
+    fetchShopsAPI()
+      .then((data) => {
+        setShops(data.rows);
+      })
+      .catch((e) =>
+        dispatch(
+          appSlice.actions.showGlobalMessage({
+            message: e.message,
+            variant: GlobalMessageVariants.danger,
+            isShowing: true,
+          })
+        )
+      );
   };
 
   const selectShop = (e: IShop) => {
@@ -96,7 +106,7 @@ const LoginPage = () => {
       .catch((e) =>
         dispatch(
           appSlice.actions.showGlobalMessage({
-            message: e.response.data.message,
+            message: e.response.data ? e.response.data.message : e.message,
             variant: GlobalMessageVariants.danger,
             isShowing: true,
           })

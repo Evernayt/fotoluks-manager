@@ -17,6 +17,8 @@ import styles from './OrdersTable.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { createNotificationAPI } from 'http/notificationAPI';
 import socketio from 'socket/socketio';
+import { appSlice } from 'store/reducers/AppSlice';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 
 const OrdersTable = () => {
   const [statuses, setStatuses] = useState<IStatus[]>([]);
@@ -169,6 +171,15 @@ const OrdersTable = () => {
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
+      .catch((e) =>
+        dispatch(
+          appSlice.actions.showGlobalMessage({
+            message: e.response.data ? e.response.data.message : e.message,
+            variant: GlobalMessageVariants.danger,
+            isShowing: true,
+          })
+        )
+      )
       .finally(() => dispatch(orderSlice.actions.setIsLoading(false)));
   };
 
