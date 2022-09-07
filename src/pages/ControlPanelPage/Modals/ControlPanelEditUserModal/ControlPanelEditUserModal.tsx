@@ -89,8 +89,8 @@ const ControlPanelEditUserModal = () => {
   };
 
   const fetchShops = () => {
-    fetchShopsAPI(true).then((data) => {
-      setShops(data);
+    fetchShopsAPI(100, 1, true).then((data) => {
+      setShops(data.rows);
     });
   };
 

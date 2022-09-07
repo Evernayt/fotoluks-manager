@@ -64,7 +64,7 @@ const LoginPage = () => {
 
   const fetchShops = () => {
     fetchShopsAPI().then((data) => {
-      setShops(data);
+      setShops(data.rows);
     });
   };
 

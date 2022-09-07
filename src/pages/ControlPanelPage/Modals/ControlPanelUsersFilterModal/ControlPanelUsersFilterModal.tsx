@@ -61,8 +61,8 @@ const ControlPanelUsersFilterModal = () => {
   }, [controlPanelUsersFilterModal.isShowing]);
 
   const fetchShops = () => {
-    fetchShopsAPI(true).then((data) => {
-      setShops([allShops, ...data]);
+    fetchShopsAPI(100, 1, true).then((data) => {
+      setShops([allShops, ...data.rows]);
     });
   };
 

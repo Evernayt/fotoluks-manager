@@ -94,7 +94,7 @@ const OrdersExportModal = () => {
 
   const fetchShops = () => {
     fetchShopsAPI().then((data) => {
-      setShops(data);
+      setShops(data.rows);
     });
   };
 

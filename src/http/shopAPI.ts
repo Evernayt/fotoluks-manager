@@ -1,13 +1,26 @@
-import { IShop } from 'models/IShop';
+import { IShopData } from 'models/IShop';
 import { $host } from './index';
 
 interface IFetchShops {
-  (inclusiveGeneral?: boolean): Promise<IShop[]>;
+  (
+    limit?: number,
+    page?: number,
+    inclusiveGeneral?: boolean,
+    archive?: boolean
+  ): Promise<IShopData>;
 }
 
-export const fetchShopsAPI: IFetchShops = async (inclusiveGeneral = false) => {
-  const { data } = await $host.get(
-    `api/shop/all/?inclusiveGeneral=${inclusiveGeneral}`
-  );
+export const fetchShopsAPI: IFetchShops = async (
+  limit = 100,
+  page = 1,
+  inclusiveGeneral = false,
+  archive
+) => {
+  const { data } = await $host.post('api/shop/all/', {
+    limit,
+    page,
+    inclusiveGeneral,
+    archive,
+  });
   return data;
 };

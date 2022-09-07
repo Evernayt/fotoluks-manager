@@ -34,7 +34,7 @@ const SettingsPage = () => {
 
   const fetchShops = () => {
     fetchShopsAPI().then((data) => {
-      setShops(data);
+      setShops(data.rows);
 
       const shop = JSON.parse(localStorage.getItem(SHOP_KEY) || '{}');
       if (Object.keys(shop).length !== 0) {
