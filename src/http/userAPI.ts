@@ -42,8 +42,8 @@ export const searchUsersAPI: ISearchUsers = async (
   return data;
 };
 
-export const fetchUserAPI = async (phone: string): Promise<IUser> => {
-  const { data } = await $host.get('api/user/one/' + phone);
+export const fetchUserByPhoneAPI = async (phone: string): Promise<IUser> => {
+  const { data } = await $host.get('api/user/oneByPhone/' + phone);
   return data;
 };
 
@@ -94,4 +94,9 @@ export const updateUserPasswordAPI: IUpdateUserPassword = async (
     newPassword,
   });
   return jwtDecode(data.token);
+};
+
+export const fetchUserAPI = async (id: number): Promise<IUser> => {
+  const { data } = await $host.get('api/user/one/' + id);
+  return data;
 };

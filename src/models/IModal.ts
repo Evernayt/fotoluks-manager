@@ -68,3 +68,9 @@ export interface IEditShopModal {
   shopId: number;
   mode: Modes;
 }
+
+export interface IEditUserModal {
+  isShowing: boolean;
+  userId: number;
+  mode: Modes;
+}

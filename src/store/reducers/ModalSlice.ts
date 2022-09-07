@@ -13,6 +13,7 @@ import {
   initialUserRegistrationModal,
   initialEditParamModal,
   initialEditShopModal,
+  initialEditUserModal,
 } from 'constants/InitialStates/initialModalState';
 import { IFeature } from 'models/IFeature';
 import {
@@ -28,6 +29,7 @@ import {
   IUserRegistrationModal,
   IEditParamModal,
   IEditShopModal,
+  IEditUserModal,
 } from 'models/IModal';
 import { IOrder } from 'models/IOrder';
 import { IUser } from 'models/IUser';
@@ -40,7 +42,7 @@ type ModalState = {
   orderShopModal: IOrderModal;
   userRegistrationModal: IUserRegistrationModal;
   editUserModal: IUserModal;
-  controlPanelEditUserModal: IUserModal;
+  controlPanelEditUserModal: IEditUserModal;
   orderMembersModal: IModal;
   controlPanelTypesFilterModal: IModal;
   controlPanelEditTypeModal: IEditTypeModal;
@@ -67,7 +69,7 @@ const initialState: ModalState = {
   orderShopModal: initialOrderModal,
   userRegistrationModal: initialUserRegistrationModal,
   editUserModal: initialUserModal,
-  controlPanelEditUserModal: initialUserModal,
+  controlPanelEditUserModal: initialEditUserModal,
   orderMembersModal: initialModal,
   controlPanelTypesFilterModal: initialModal,
   controlPanelEditTypeModal: initialEditTypeModal,
@@ -136,12 +138,16 @@ export const modalSlice = createSlice({
     closeEditUserModal(state) {
       state.editUserModal = initialUserModal;
     },
-    openControlPanelEditUserModal(state, action: PayloadAction<string>) {
+    openControlPanelEditUserModal(
+      state,
+      action: PayloadAction<IEditUserModal>
+    ) {
       state.controlPanelEditUserModal.isShowing = true;
-      state.controlPanelEditUserModal.phone = action.payload;
+      state.controlPanelEditUserModal.userId = action.payload.userId;
+      state.controlPanelEditUserModal.mode = action.payload.mode;
     },
     closeControlPanelEditUserModal(state) {
-      state.controlPanelEditUserModal = initialUserModal;
+      state.controlPanelEditUserModal = initialEditUserModal;
     },
     openOrderMembersModal(state) {
       state.orderMembersModal.isShowing = true;

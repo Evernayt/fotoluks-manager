@@ -10,6 +10,7 @@ import styles from './ControlPanelUsersTable.module.css';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import UserMenuCell from './UserMenuCell';
+import { Modes } from 'constants/app';
 
 const ControlPanelUsersTable = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -145,7 +146,11 @@ const ControlPanelUsersTable = () => {
 
   const rowClickHandler = (row: Row<IUser>) => {
     dispatch(
-      modalSlice.actions.openControlPanelEditUserModal(row.values.phone)
+      modalSlice.actions.openControlPanelEditUserModal({
+        isShowing: true,
+        userId: row.values.id,
+        mode: Modes.EDIT_MODE,
+      })
     );
   };
 

@@ -7,14 +7,17 @@ import {
   Tooltip,
 } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
+import { Modes } from 'constants/app';
 import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchShopsAPI } from 'http/shopAPI';
-import { updateUserAPI } from 'http/userAPI';
+import { fetchUserAPI, registrationAPI, updateUserAPI } from 'http/userAPI';
 import { isVerifiedAPI } from 'http/verificationAPI';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { IShop } from 'models/IShop';
 import { IRole, IUser, UserRoles } from 'models/IUser';
 import { useEffect, useMemo, useState } from 'react';
+import { appSlice } from 'store/reducers/AppSlice';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './ControlPanelEditUserModal.module.css';
@@ -63,28 +66,34 @@ const ControlPanelEditUserModal = () => {
 
   useEffect(() => {
     if (controlPanelEditUserModal.isShowing) {
+      if (controlPanelEditUserModal.mode === Modes.EDIT_MODE) {
+        fetchUser();
+      }
+
       fetchShops();
-      isVerified();
     }
   }, [controlPanelEditUserModal.isShowing]);
 
-  const isVerified = () => {
-    isVerifiedAPI(controlPanelEditUserModal.phone).then((data) => {
-      setIsPhoneVerified(data.phoneVerified);
-      setName(data.user.name);
-      setPhone(data.user.phone);
-      setLogin(data.user.login);
-      setPassword(data.user.password ? data.user.password : '');
-      setAvatar(data.user.avatar);
+  const fetchUser = () => {
+    fetchUserAPI(controlPanelEditUserModal.userId).then((data) => {
+      setName(data.name);
+      setPhone(data.phone);
+      setLogin(data.login);
+      setPassword(data.password ? data.password : '');
+      setAvatar(data.avatar);
 
-      const role = roles.find((x) => x.role === data.user.role);
+      const role = roles.find((x) => x.role === data.role);
       if (role !== undefined) setSelectedRole(role);
 
-      setEmail(data.user.email);
-      setVk(data.user.vk);
-      setTelegram(data.user.telegram);
-      setSelectedShop(data.user.shop ? data.user.shop : shops[0]);
-      setUser(data.user);
+      setEmail(data.email);
+      setVk(data.vk);
+      setTelegram(data.telegram);
+      setSelectedShop(data.shop ? data.shop : shops[0]);
+      setUser(data);
+
+      isVerifiedAPI(data.phone).then((data2) => {
+        setIsPhoneVerified(data2.phoneVerified);
+      });
     });
   };
 
@@ -103,6 +112,7 @@ const ControlPanelEditUserModal = () => {
     setPassword('');
     setAvatar('');
     setSelectedRole(roles[2]);
+    setSelectedShop(shops[0]);
     setEmail('');
     setVk('');
     setTelegram('');
@@ -110,8 +120,19 @@ const ControlPanelEditUserModal = () => {
   };
 
   const updateUser = () => {
-    if (user !== null) {
-      const editedUser: IUser = {
+    if (!selectedShop) {
+      dispatch(
+        appSlice.actions.showGlobalMessage({
+          message: 'Выберите филиал',
+          variant: GlobalMessageVariants.warning,
+          isShowing: true,
+        })
+      );
+      return;
+    }
+
+    if (user) {
+      const updatedUser: IUser = {
         ...user,
         login,
         password,
@@ -124,16 +145,71 @@ const ControlPanelEditUserModal = () => {
         avatar,
         shopId: selectedShop.id,
       };
-      updateUserAPI(editedUser).then(() => {
+      updateUserAPI(updatedUser)
+        .then(() => {
+          dispatch(controlPanelSlice.actions.setForceUpdate(true));
+          close();
+        })
+        .catch((e) =>
+          dispatch(
+            appSlice.actions.showGlobalMessage({
+              message: e.response.data.message,
+              variant: GlobalMessageVariants.danger,
+              isShowing: true,
+            })
+          )
+        );
+    }
+  };
+
+  const createUser = () => {
+    if (!selectedShop) {
+      dispatch(
+        appSlice.actions.showGlobalMessage({
+          message: 'Выберите филиал',
+          variant: GlobalMessageVariants.warning,
+          isShowing: true,
+        })
+      );
+      return;
+    }
+
+    const createdUser: IUser = {
+      id: 0,
+      name,
+      login,
+      password,
+      phone,
+      role: selectedRole.role!,
+      email,
+      vk,
+      telegram,
+      avatar,
+      shopId: selectedShop.id,
+    };
+    registrationAPI(createdUser)
+      .then(() => {
         dispatch(controlPanelSlice.actions.setForceUpdate(true));
         close();
-      });
-    }
+      })
+      .catch((e) =>
+        dispatch(
+          appSlice.actions.showGlobalMessage({
+            message: e.response.data.message,
+            variant: GlobalMessageVariants.danger,
+            isShowing: true,
+          })
+        )
+      );
   };
 
   return (
     <Modal
-      title="Редактирование"
+      title={
+        controlPanelEditUserModal.mode === Modes.EDIT_MODE
+          ? 'Редактирование'
+          : 'Новый пользователь'
+      }
       isShowing={controlPanelEditUserModal.isShowing}
       hide={close}
     >
@@ -234,13 +310,33 @@ const ControlPanelEditUserModal = () => {
         />
         <div className={styles.controls}>
           <Button onClick={close}>Отменить</Button>
-          <Button
-            variant={ButtonVariants.primary}
-            disabled={name === '' || phone.length < 11}
-            onClick={updateUser}
-          >
-            Изменить
-          </Button>
+          {controlPanelEditUserModal.mode === Modes.ADD_MODE ? (
+            <Button
+              variant={ButtonVariants.primary}
+              disabled={
+                name === '' ||
+                phone.length < 11 ||
+                login === '' ||
+                password === ''
+              }
+              onClick={createUser}
+            >
+              Создать
+            </Button>
+          ) : (
+            <Button
+              variant={ButtonVariants.primary}
+              disabled={
+                name === '' ||
+                phone.length < 11 ||
+                login === '' ||
+                password === ''
+              }
+              onClick={updateUser}
+            >
+              Изменить
+            </Button>
+          )}
         </div>
       </div>
     </Modal>
