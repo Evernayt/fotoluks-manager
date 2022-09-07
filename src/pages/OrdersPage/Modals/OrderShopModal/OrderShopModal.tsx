@@ -2,7 +2,7 @@ import { Button, Modal, SelectButton, Tooltip } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { createNotificationAPI } from 'http/notificationAPI';
-import { updateShopAPI } from 'http/orderAPI';
+import { updateOrderShopAPI } from 'http/orderAPI';
 import { fetchShopsAPI } from 'http/shopAPI';
 import { IShop } from 'models/IShop';
 import { useEffect, useState } from 'react';
@@ -32,15 +32,15 @@ const OrderShopModal = () => {
   }, []);
 
   const fetchShops = () => {
-    fetchShopsAPI(true).then((data) => {
-      setShops(data);
+    fetchShopsAPI(100, 1, true).then((data) => {
+      setShops(data.rows);
     });
   };
 
   const updateShop = () => {
     if (!orderShopModal.order) return;
 
-    updateShopAPI(orderShopModal.order.id, selectedShop.id).then(() => {
+    updateOrderShopAPI(orderShopModal.order.id, selectedShop.id).then(() => {
       dispatch(orderSlice.actions.setForceUpdate(true));
       close();
 

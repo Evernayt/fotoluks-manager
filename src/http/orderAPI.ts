@@ -90,11 +90,11 @@ export const fetchOrdersForExportAPI: IFetchOrdersForExport = async (
   return data;
 };
 
-interface IUpdateShop {
+interface IUpdateOrderShop {
   (orderId: number, shopId: number): Promise<[]>;
 }
 
-export const updateShopAPI: IUpdateShop = async (orderId, shopId) => {
+export const updateOrderShopAPI: IUpdateOrderShop = async (orderId, shopId) => {
   const { data } = await $host.put(
     `api/order/updateShop/?orderId=${orderId}&shopId=${shopId}`
   );
