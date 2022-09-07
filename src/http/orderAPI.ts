@@ -8,7 +8,7 @@ interface IFetchOrders {
     limit: number,
     page: number,
     statusId: number,
-    shopId: number,
+    shopIds: number[],
     startDate?: string,
     endDate?: string,
     userId?: number
@@ -19,7 +19,7 @@ export const fetchOrdersAPI: IFetchOrders = async (
   limit = 15,
   page = 1,
   statusId = 0,
-  shopId,
+  shopIds,
   startDate = '',
   endDate = '',
   userId = 0
@@ -28,7 +28,7 @@ export const fetchOrdersAPI: IFetchOrders = async (
     limit,
     page,
     statusId,
-    shopId,
+    shopIds,
     startDate,
     endDate,
     userId,

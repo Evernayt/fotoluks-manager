@@ -126,22 +126,20 @@ const OrdersTable = () => {
   useEffect(() => {
     setPage(1);
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate, userId } = ordersFilter;
-      fetchOrders(1, shop.id, startDate, endDate, userId);
+      fetchWithFilters();
     } else {
-      fetchOrders(1, activeShop.id);
+      fetchOrders(1, [1, activeShop.id]);
     }
   }, [activeStatus]);
 
   useEffect(() => {
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate, userId } = ordersFilter;
-      fetchOrders(page, shop.id, startDate, endDate, userId);
+      fetchWithFilters();
     } else if (ordersFilter.filter.isPendingDeactivation) {
       dispatch(orderSlice.actions.deactiveOrdersFilter());
-      fetchOrders(page, activeShop.id);
+      fetchOrders(page, [1, activeShop.id]);
     } else if (forceUpdate) {
-      fetchOrders(page, activeShop.id);
+      fetchOrders(page, [1, activeShop.id]);
     }
 
     dispatch(orderSlice.actions.setForceUpdate(false));
@@ -149,7 +147,7 @@ const OrdersTable = () => {
 
   const fetchOrders = (
     page: number,
-    shopId: number,
+    shopIds: number[],
     startDate?: string,
     endDate?: string,
     userId?: number
@@ -161,7 +159,7 @@ const OrdersTable = () => {
       limit,
       page,
       activeStatus.id,
-      shopId,
+      shopIds,
       startDate,
       endDate,
       userId
@@ -180,22 +178,25 @@ const OrdersTable = () => {
     });
   };
 
+  const fetchWithFilters = () => {
+    const { shop, startDate, endDate, userId } = ordersFilter;
+    fetchOrders(page, [shop.id], startDate, endDate, userId);
+  };
+
   const pageChangeHandler = (page: number) => {
     setPage(page);
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate, userId } = ordersFilter;
-      fetchOrders(page, shop.id, startDate, endDate, userId);
+      fetchWithFilters();
     } else {
-      fetchOrders(page, activeShop.id);
+      fetchOrders(page, [1, activeShop.id]);
     }
   };
 
   const reload = () => {
     if (ordersFilter.filter.isActive) {
-      const { shop, startDate, endDate, userId } = ordersFilter;
-      fetchOrders(page, shop.id, startDate, endDate, userId);
+      fetchWithFilters();
     } else {
-      fetchOrders(page, activeShop.id);
+      fetchOrders(page, [1, activeShop.id]);
     }
   };
 
