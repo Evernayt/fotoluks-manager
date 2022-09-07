@@ -20,8 +20,6 @@ import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './OrdersFilterModal.module.css';
 
 const OrdersFilterModal = () => {
-  const activeShop = useAppSelector((state) => state.app.activeShop);
-
   const allShops: IShop = {
     id: -1,
     name: 'Все филиалы',
@@ -32,7 +30,7 @@ const OrdersFilterModal = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [shops, setShops] = useState<IShop[]>([]);
-  const [selectedShop, setSelectedShop] = useState<IShop>(activeShop);
+  const [selectedShop, setSelectedShop] = useState<IShop>(allShops);
   const [iOrderMember, setIOrderMember] = useState<boolean>(false);
 
   const ordersFilterModal = useAppSelector(
@@ -185,7 +183,7 @@ const OrdersFilterModal = () => {
   };
 
   const reset = () => {
-    setSelectedShop(activeShop);
+    setSelectedShop(allShops);
 
     const start = moment()
       .subtract(1, 'month')
