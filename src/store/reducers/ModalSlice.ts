@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Modes } from 'constants/app';
+import { initialEditFeatureModal } from 'constants/InitialStates/initialFeatureState';
 import {
   initialEditCategoryModal,
   initialEditParamsModal,
@@ -14,6 +15,7 @@ import {
 import { IFeature } from 'models/IFeature';
 import {
   IEditCategoryModal,
+  IEditFeatureModal,
   IEditParamsModal,
   IEditProductModal,
   IEditTypeModal,
@@ -45,6 +47,8 @@ type ModalState = {
   orderDetailAddFavoriteModal: IModal;
   controlPanelCategoriesFilterModal: IModal;
   controlPanelProductsFilterModal: IModal;
+  controlPanelFeaturesFilterModal: IModal;
+  controlPanelEditFeatureModal: IEditFeatureModal;
 };
 
 const initialState: ModalState = {
@@ -66,6 +70,8 @@ const initialState: ModalState = {
   orderDetailAddFavoriteModal: initialModal,
   controlPanelCategoriesFilterModal: initialModal,
   controlPanelProductsFilterModal: initialModal,
+  controlPanelFeaturesFilterModal: initialModal,
+  controlPanelEditFeatureModal: initialEditFeatureModal,
 };
 
 export const modalSlice = createSlice({
@@ -210,6 +216,23 @@ export const modalSlice = createSlice({
     closeControlPanelProductsFilterModal(state) {
       state.controlPanelProductsFilterModal.isShowing = false;
     },
+    openControlPanelFeaturesFilterModal(state) {
+      state.controlPanelFeaturesFilterModal.isShowing = true;
+    },
+    closeControlPanelFeaturesFilterModal(state) {
+      state.controlPanelFeaturesFilterModal.isShowing = false;
+    },
+    openControlPanelEditFeatureModal(
+      state,
+      action: PayloadAction<IEditFeatureModal>
+    ) {
+      state.controlPanelEditFeatureModal.isShowing = true;
+      state.controlPanelEditFeatureModal.featureId = action.payload.featureId;
+      state.controlPanelEditFeatureModal.mode = action.payload.mode;
+    },
+    closeControlPanelEditFeatureModal(state) {
+      state.controlPanelEditFeatureModal = initialEditFeatureModal;
+    },
   },
 });
 
@@ -249,7 +272,11 @@ export const {
   openControlPanelCategoriesFilterModal,
   closeControlPanelCategoriesFilterModal,
   openControlPanelProductsFilterModal,
-  closeControlPanelProductsFilterModal
+  closeControlPanelProductsFilterModal,
+  openControlPanelFeaturesFilterModal,
+  closeControlPanelFeaturesFilterModal,
+  openControlPanelEditFeatureModal,
+  closeControlPanelEditFeatureModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

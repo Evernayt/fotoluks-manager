@@ -19,6 +19,10 @@ import ControlPanelCategoriesTable from './ControlPanelCategories/ControlPanelCa
 import ControlPanelCategoriesSearch from './ControlPanelCategories/ControlPanelCategoriesSearch/ControlPanelCategoriesSearch';
 import ControlPanelCategoriesFilterModal from './Modals/ControlPanelCategoriesFilterModal/ControlPanelCategoriesFilterModal';
 import ControlPanelProductsFilterModal from './Modals/ControlPanelProductsFilterModal/ControlPanelProductsFilterModal';
+import ControlPanelFeaturesSearch from './ControlPanelFeatures/ControlPanelFeaturesSearch/ControlPanelFeaturesSearch';
+import ControlPanelFeaturesTable from './ControlPanelFeatures/ControlPanelFeaturesTable/ControlPanelFeaturesTable';
+import ControlPanelFeaturesFilterModal from './Modals/ControlPanelFeaturesFilterModal/ControlPanelFeaturesFilterModal';
+import ControlPanelEditFeatureModal from './Modals/ControlPanelEditFeatureModal/ControlPanelEditFeatureModal';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
@@ -34,6 +38,8 @@ const ControlPanelPage = () => {
       return <ControlPanelProductsTable />;
     } else if (activeItemId === 4) {
       return <ControlPanelCategoriesTable />;
+    } else if (activeItemId === 5) {
+      return <ControlPanelFeaturesTable />;
     } else {
       return null;
     }
@@ -48,6 +54,8 @@ const ControlPanelPage = () => {
       return <ControlPanelProductsSearch />;
     } else if (activeItemId === 4) {
       return <ControlPanelCategoriesSearch />;
+    } else if (activeItemId === 5) {
+      return <ControlPanelFeaturesSearch />;
     } else {
       return null;
     }
@@ -64,6 +72,8 @@ const ControlPanelPage = () => {
       <ControlPanelEditProductModal />
       <ControlPanelEditCategoryModal />
       <ControlPanelEditParamsModal />
+      <ControlPanelFeaturesFilterModal />
+      <ControlPanelEditFeatureModal />
       <Navmenu searchRender={() => renderSearch()} />
       <div className={styles.section}>
         <ControlPanelSidemenu />

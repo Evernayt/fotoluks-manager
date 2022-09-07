@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialFoundCategories } from 'constants/InitialStates/initialCategoryState';
+import { initialFoundFeatures } from 'constants/InitialStates/initialFeatureState';
 import {
   initialCategoriesFilter,
+  initialFeaturesFilter,
   initialProductsFilter,
   initialTypesFilter,
   initialUserFilter,
@@ -10,6 +12,7 @@ import { initialFoundProducts } from 'constants/InitialStates/initialProductStat
 import { initialFoundTypes } from 'constants/InitialStates/initialTypeState';
 import { initialFoundUsers } from 'constants/InitialStates/initialUserState';
 import { ICategoriesFilter, IFoundCategories } from 'models/ICategory';
+import { IFeaturesFilter, IFoundFeatures } from 'models/IFeature';
 import { IFoundProducts, IProductsFilter } from 'models/IProduct';
 import { IFoundTypes, ITypesFilter } from 'models/IType';
 import { IFoundUsers, IUsersFilter } from 'models/IUser';
@@ -27,6 +30,8 @@ type ControlPanelState = {
   foundProducts: IFoundProducts;
   categoriesFilter: ICategoriesFilter;
   foundCategories: IFoundCategories;
+  featuresFilter: IFeaturesFilter;
+  foundFeatures: IFoundFeatures;
 };
 
 const initialState: ControlPanelState = {
@@ -42,6 +47,8 @@ const initialState: ControlPanelState = {
   foundProducts: initialFoundProducts,
   categoriesFilter: initialCategoriesFilter,
   foundCategories: initialFoundCategories,
+  featuresFilter: initialFeaturesFilter,
+  foundFeatures: initialFoundFeatures,
 };
 
 export const controlPanelSlice = createSlice({
@@ -138,6 +145,25 @@ export const controlPanelSlice = createSlice({
     setFoundCategories(state, action: PayloadAction<IFoundCategories>) {
       state.foundCategories = action.payload;
     },
+    activeFeaturesFilter(state, action: PayloadAction<IFeaturesFilter>) {
+      state.featuresFilter = {
+        filter: {
+          isActive: true,
+          isPendingDeactivation: false,
+        },
+        archive: action.payload.archive,
+      };
+    },
+    deactiveFeaturesFilter(state) {
+      state.featuresFilter = initialFeaturesFilter;
+    },
+    clearFeaturesFilter(state) {
+      state.featuresFilter = initialFeaturesFilter;
+      state.featuresFilter.filter.isPendingDeactivation = true;
+    },
+    setFoundFeatures(state, action: PayloadAction<IFoundFeatures>) {
+      state.foundFeatures = action.payload;
+    },
   },
 });
 
@@ -162,6 +188,10 @@ export const {
   deactiveCategoriesFilter,
   clearCategoriesFilter,
   setFoundCategories,
+  activeFeaturesFilter,
+  deactiveFeaturesFilter,
+  clearFeaturesFilter,
+  setFoundFeatures,
 } = controlPanelSlice.actions;
 
 export default controlPanelSlice.reducer;

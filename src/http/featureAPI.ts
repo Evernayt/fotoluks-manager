@@ -1,7 +1,62 @@
-import { IFeature } from 'models/IFeature';
+import { IFeature, IFeatureData } from 'models/IFeature';
 import { $host } from './index';
 
-export const fetchFeaturesAPI = async (): Promise<IFeature[]> => {
-  const { data } = await $host.get('api/feature/all');
+interface IFetchFeatures {
+  (limit?: number, page?: number, archive?: boolean): Promise<IFeatureData>;
+}
+
+export const fetchFeaturesAPI: IFetchFeatures = async (
+  limit = 100,
+  page = 1,
+  archive
+) => {
+  const { data } = await $host.post('api/feature/all', {
+    limit,
+    page,
+    archive,
+  });
+  return data;
+};
+
+interface ISearchFeatures {
+  (limit: number, page: number, searchText: string): Promise<IFeatureData>;
+}
+
+export const searchFeaturesAPI: ISearchFeatures = async (
+  limit = 15,
+  page = 1,
+  searchText
+) => {
+  const { data } = await $host.get(
+    `api/feature/search/?limit=${limit}&page=${page}&searchText=${searchText}`
+  );
+  return data;
+};
+
+export const updateFeatureAPI = async (
+  feature: IFeature
+): Promise<IFeature> => {
+  const { data } = await $host.post('api/feature/update', feature);
+  return data;
+};
+
+interface IFetchFeature {
+  (featureId: number): Promise<IFeature>;
+}
+
+export const fetchFeatureAPI: IFetchFeature = async (featureId) => {
+  const { data } = await $host.get('api/feature/one/' + featureId);
+  return data;
+};
+
+interface ICreateFeature {
+  (name: string, pluralName: string): Promise<IFeature>;
+}
+
+export const createFeatureAPI: ICreateFeature = async (name, pluralName) => {
+  const { data } = await $host.post('api/feature/create', {
+    name,
+    pluralName,
+  });
   return data;
 };

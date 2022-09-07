@@ -95,22 +95,22 @@ const ControlPanelEditTypeModal = () => {
   const createFeatureOptions = (features: IFeature[]) => {
     fetchFeaturesAPI().then((data) => {
       const options: IDropdownButtonOption[] = [];
-      for (let i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.rows.length; i++) {
         const foundFeature = features.find(
-          (feature) => feature.id === data[i].id
+          (feature) => feature.id === data.rows[i].id
         );
 
         if (foundFeature === undefined) {
           options.push({
-            id: data[i].id,
-            name: data[i].name,
+            id: data.rows[i].id,
+            name: data.rows[i].name,
             onClick: () => {
               setTypeFeatures((prevState) => {
-                return (prevState = [...prevState, data[i]]);
+                return (prevState = [...prevState, data.rows[i]]);
               });
 
               setFeatureOptions((prevState) =>
-                prevState.filter((state) => state.id !== data[i].id)
+                prevState.filter((state) => state.id !== data.rows[i].id)
               );
             },
           });

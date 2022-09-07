@@ -50,3 +50,9 @@ export interface ILoginModal {
   isShowing: boolean;
   user: IUser | null;
 }
+
+export interface IEditFeatureModal {
+  isShowing: boolean;
+  featureId: number;
+  mode: Modes;
+}

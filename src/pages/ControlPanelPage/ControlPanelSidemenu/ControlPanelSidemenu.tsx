@@ -57,6 +57,13 @@ const ControlPanelSidemenu = () => {
         name: 'Категории',
         color: '',
       },
+      {
+        id: 5,
+        checkedIcon: categoryCheckedIcon,
+        icon: categoryIcon,
+        name: 'Характеристика',
+        color: '',
+      },
     ],
     []
   );
