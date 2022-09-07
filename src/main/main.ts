@@ -57,10 +57,6 @@ const createWindow = async () => {
     await installExtensions();
   }
 
-  // const RESOURCES_PATH = app.isPackaged
-  //   ? path.join(process.resourcesPath, 'assets')
-  //   : path.join(__dirname, '../../assets');
-
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
   };
@@ -139,6 +135,10 @@ ipcMain.on('open-folder', async (_event, args) => {
   const folderPath = args[0];
 
   shell.openPath(folderPath);
+});
+
+ipcMain.on('maximize', async (_event, _args) => {
+  mainWindow?.maximize();
 });
 
 /**

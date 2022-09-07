@@ -4,6 +4,7 @@ import OrderDetailPage from './OrderDetailPage/OrderDetailPage';
 import ControlPanelPage from './ControlPanelPage/ControlPanelPage';
 import ProfilePage from './ProfilePage/ProfilePage';
 import InitialSettingsPage from './InitialSettingsPage/InitialSettingsPage';
+import SettingsPage from './SettingsPage/SettingsPage';
 // import TasksPage from './TasksPage/TasksPage';
 // import MessengerPage from './MessengerPage/MessengerPage';
 
@@ -14,6 +15,7 @@ export {
   ControlPanelPage,
   ProfilePage,
   InitialSettingsPage,
+  SettingsPage,
   // TasksPage,
   // MessengerPage,
 };

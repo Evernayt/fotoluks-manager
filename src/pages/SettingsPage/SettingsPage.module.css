@@ -1,0 +1,46 @@
+.container {
+  background-color: var(--background-color);
+  height: 100vh;
+}
+
+.panels {
+  display: flex;
+  margin: 24px 16px 16px 24px;
+  gap: 24px;
+}
+
+.panel {
+  background-color: var(--card-background);
+  height: calc(100vh - 128px);
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 2px var(--shadow-2);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 16px 16px 24px;
+  align-items: flex-start;
+}
+
+.label {
+  color: var(--secondary-text-color);
+  margin-bottom: 8px;
+}
+
+.folder_select {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.folder {
+  border: 1px solid var(--border-color);
+  padding: 9px 12px;
+  border-radius: var(--border-radius);
+}

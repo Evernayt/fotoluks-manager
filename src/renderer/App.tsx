@@ -6,6 +6,7 @@ import {
   ORDERS_ROUTE,
   ORDER_DETAIL_ROUTE,
   PROFILE_ROUTE,
+  SETTINGS_ROUTE,
 } from 'constants/paths';
 import {
   ControlPanelPage,
@@ -14,6 +15,7 @@ import {
   OrderDetailPage,
   OrdersPage,
   ProfilePage,
+  SettingsPage,
 } from 'pages';
 import { GlobalMessage } from 'components';
 import './App.css';
@@ -32,6 +34,7 @@ export default function App() {
           path={INITIAL_SETTINGS_ROUTE}
           element={<InitialSettingsPage />}
         />
+        <Route path={SETTINGS_ROUTE} element={<SettingsPage />} />
       </Routes>
     </Router>
   );
