@@ -190,7 +190,7 @@ const ControlPanelEditTypeModal = () => {
   const openEditParamsModal = (feature: IFeature) => {
     if (type) {
       dispatch(
-        modalSlice.actions.openControlPanelEditParamsModal({
+        modalSlice.actions.openControlPanelEditTypeParamsModal({
           typeId: type.id,
           feature: feature,
         })

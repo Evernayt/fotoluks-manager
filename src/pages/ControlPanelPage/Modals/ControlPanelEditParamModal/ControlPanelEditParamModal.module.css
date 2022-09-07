@@ -1,0 +1,11 @@
+.main_controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}

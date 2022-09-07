@@ -40,7 +40,7 @@ export interface IEditCategoryModal {
   mode: Modes;
 }
 
-export interface IEditParamsModal {
+export interface IEditTypeParamsModal {
   isShowing: boolean;
   typeId: number;
   feature: IFeature;
@@ -54,5 +54,11 @@ export interface ILoginModal {
 export interface IEditFeatureModal {
   isShowing: boolean;
   featureId: number;
+  mode: Modes;
+}
+
+export interface IEditParamModal {
+  isShowing: boolean;
+  paramId: number;
   mode: Modes;
 }

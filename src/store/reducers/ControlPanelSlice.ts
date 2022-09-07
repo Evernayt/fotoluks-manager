@@ -4,15 +4,18 @@ import { initialFoundFeatures } from 'constants/InitialStates/initialFeatureStat
 import {
   initialCategoriesFilter,
   initialFeaturesFilter,
+  initialParamsFilter,
   initialProductsFilter,
   initialTypesFilter,
   initialUserFilter,
 } from 'constants/InitialStates/initialFilterState';
+import { initialFoundParams } from 'constants/InitialStates/initialParamState';
 import { initialFoundProducts } from 'constants/InitialStates/initialProductState';
 import { initialFoundTypes } from 'constants/InitialStates/initialTypeState';
 import { initialFoundUsers } from 'constants/InitialStates/initialUserState';
 import { ICategoriesFilter, IFoundCategories } from 'models/ICategory';
 import { IFeaturesFilter, IFoundFeatures } from 'models/IFeature';
+import { IFoundParams, IParamsFilter } from 'models/IParam';
 import { IFoundProducts, IProductsFilter } from 'models/IProduct';
 import { IFoundTypes, ITypesFilter } from 'models/IType';
 import { IFoundUsers, IUsersFilter } from 'models/IUser';
@@ -32,6 +35,8 @@ type ControlPanelState = {
   foundCategories: IFoundCategories;
   featuresFilter: IFeaturesFilter;
   foundFeatures: IFoundFeatures;
+  paramsFilter: IParamsFilter;
+  foundParams: IFoundParams;
 };
 
 const initialState: ControlPanelState = {
@@ -49,6 +54,8 @@ const initialState: ControlPanelState = {
   foundCategories: initialFoundCategories,
   featuresFilter: initialFeaturesFilter,
   foundFeatures: initialFoundFeatures,
+  paramsFilter: initialParamsFilter,
+  foundParams: initialFoundParams,
 };
 
 export const controlPanelSlice = createSlice({
@@ -164,6 +171,25 @@ export const controlPanelSlice = createSlice({
     setFoundFeatures(state, action: PayloadAction<IFoundFeatures>) {
       state.foundFeatures = action.payload;
     },
+    activeParamsFilter(state, action: PayloadAction<IParamsFilter>) {
+      state.paramsFilter = {
+        filter: {
+          isActive: true,
+          isPendingDeactivation: false,
+        },
+        archive: action.payload.archive,
+      };
+    },
+    deactiveParamsFilter(state) {
+      state.paramsFilter = initialParamsFilter;
+    },
+    clearParamsFilter(state) {
+      state.paramsFilter = initialParamsFilter;
+      state.paramsFilter.filter.isPendingDeactivation = true;
+    },
+    setFoundParams(state, action: PayloadAction<IFoundParams>) {
+      state.foundParams = action.payload;
+    },
   },
 });
 
@@ -192,6 +218,10 @@ export const {
   deactiveFeaturesFilter,
   clearFeaturesFilter,
   setFoundFeatures,
+  activeParamsFilter,
+  deactiveParamsFilter,
+  clearParamsFilter,
+  setFoundParams,
 } = controlPanelSlice.actions;
 
 export default controlPanelSlice.reducer;

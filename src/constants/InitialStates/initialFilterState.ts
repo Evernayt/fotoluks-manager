@@ -2,6 +2,7 @@ import { ICategoriesFilter } from 'models/ICategory';
 import { IFeaturesFilter } from 'models/IFeature';
 import { IFilter } from 'models/IFilter';
 import { IOrdersFilter } from 'models/IOrder';
+import { IParamsFilter } from 'models/IParam';
 import { IProductsFilter } from 'models/IProduct';
 import { ITypesFilter } from 'models/IType';
 import { IRole, IUsersFilter } from 'models/IUser';
@@ -53,6 +54,11 @@ export const initialCategoriesFilter: ICategoriesFilter = {
 };
 
 export const initialFeaturesFilter: IFeaturesFilter = {
+  filter: initialFilter,
+  archive: false,
+};
+
+export const initialParamsFilter: IParamsFilter = {
   filter: initialFilter,
   archive: false,
 };

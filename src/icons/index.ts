@@ -50,6 +50,8 @@ import editWhiteIcon from './edit-white-icon.svg';
 import folderIcon from './folder-icon.svg';
 import featureIcon from './feature-icon.svg';
 import featureCheckedIcon from './feature-checked-icon.svg';
+import paramIcon from './param-icon.svg';
+import paramCheckedIcon from './param-checked-icon.svg';
 
 export {
   searchIcon,
@@ -103,5 +105,7 @@ export {
   editWhiteIcon,
   folderIcon,
   featureIcon,
-  featureCheckedIcon
+  featureCheckedIcon,
+  paramIcon,
+  paramCheckedIcon
 };

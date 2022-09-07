@@ -12,7 +12,7 @@ import ControlPanelTypesFilterModal from './Modals/ControlPanelTypesFilterModal/
 import ControlPanelEditTypeModal from './Modals/ControlPanelEditTypeModal/ControlPanelEditTypeModal';
 import ControlPanelEditProductModal from './Modals/ControlPanelEditProductModal/ControlPanelEditProductModal';
 import ControlPanelEditCategoryModal from './Modals/ControlPanelEditCategoryModal/ControlPanelEditCategoryModal';
-import ControlPanelEditParamsModal from './Modals/ControlPanelEditParamsModal/ControlPanelEditParamsModal';
+import ControlPanelEditTypeParamsModal from './Modals/ControlPanelEditTypeParamsModal/ControlPanelEditTypeParamsModal';
 import ControlPanelProductsTable from './ControlPanelProducts/ControlPanelProductsTable/ControlPanelProductsTable';
 import ControlPanelProductsSearch from './ControlPanelProducts/ControlPanelProductsSearch/ControlPanelProductsSearch';
 import ControlPanelCategoriesTable from './ControlPanelCategories/ControlPanelCategoriesTable/ControlPanelCategoriesTable';
@@ -23,6 +23,10 @@ import ControlPanelFeaturesSearch from './ControlPanelFeatures/ControlPanelFeatu
 import ControlPanelFeaturesTable from './ControlPanelFeatures/ControlPanelFeaturesTable/ControlPanelFeaturesTable';
 import ControlPanelFeaturesFilterModal from './Modals/ControlPanelFeaturesFilterModal/ControlPanelFeaturesFilterModal';
 import ControlPanelEditFeatureModal from './Modals/ControlPanelEditFeatureModal/ControlPanelEditFeatureModal';
+import ControlPanelParamsTable from './ControlPanelParams/ControlPanelParamsTable/ControlPanelParamsTable';
+import ControlPanelParamsSearch from './ControlPanelParams/ControlPanelParamsSearch/ControlPanelParamsSearch';
+import ControlPanelParamsFilterModal from './Modals/ControlPanelParamsFilterModal/ControlPanelParamsFilterModal';
+import ControlPanelEditParamModal from './Modals/ControlPanelEditParamModal/ControlPanelEditParamModal';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
@@ -40,6 +44,8 @@ const ControlPanelPage = () => {
       return <ControlPanelCategoriesTable />;
     } else if (activeItemId === 5) {
       return <ControlPanelFeaturesTable />;
+    } else if (activeItemId === 6) {
+      return <ControlPanelParamsTable />;
     } else {
       return null;
     }
@@ -56,6 +62,8 @@ const ControlPanelPage = () => {
       return <ControlPanelCategoriesSearch />;
     } else if (activeItemId === 5) {
       return <ControlPanelFeaturesSearch />;
+    } else if (activeItemId === 6) {
+      return <ControlPanelParamsSearch />;
     } else {
       return null;
     }
@@ -71,7 +79,9 @@ const ControlPanelPage = () => {
       <ControlPanelEditTypeModal />
       <ControlPanelEditProductModal />
       <ControlPanelEditCategoryModal />
-      <ControlPanelEditParamsModal />
+      <ControlPanelEditTypeParamsModal />
+      <ControlPanelParamsFilterModal />
+      <ControlPanelEditParamModal />
       <ControlPanelFeaturesFilterModal />
       <ControlPanelEditFeatureModal />
       <Navmenu searchRender={() => renderSearch()} />

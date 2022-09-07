@@ -1,35 +1,35 @@
 import { Button, IconButton, Modal } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchParamsAPI } from 'http/paramAPI';
+import { fetchParamsByFeatureIdAPI } from 'http/paramAPI';
 import { fetchTypeParamsAPI, updateTypeParamsAPI } from 'http/typeAPI';
 import { minusIcon, plusIcon } from 'icons';
 import { IParam } from 'models/IParam';
 import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import styles from './ControlPanelEditParamsModal.module.css';
+import styles from './ControlPanelEditTypeParamsModal.module.css';
 
-const ControlPanelEditParamsModal = () => {
+const ControlPanelEditTypeParamsModal = () => {
   const [params, setParams] = useState<IParam[]>([]);
   const [typeParamsForCreate, setTypeParamsForCreate] = useState<IParam[]>([]);
   const [typeParamsForDelete, setTypeParamsForDelete] = useState<IParam[]>([]);
 
-  const controlPanelEditParamsModal = useAppSelector(
-    (state) => state.modal.controlPanelEditParamsModal
+  const controlPanelEditTypeParamsModal = useAppSelector(
+    (state) => state.modal.controlPanelEditTypeParamsModal
   );
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (controlPanelEditParamsModal.isShowing) {
+    if (controlPanelEditTypeParamsModal.isShowing) {
       fetchTypeParams();
     }
-  }, [controlPanelEditParamsModal.isShowing]);
+  }, [controlPanelEditTypeParamsModal.isShowing]);
 
   const fetchTypeParams = () => {
     fetchTypeParamsAPI(
-      controlPanelEditParamsModal.typeId,
-      controlPanelEditParamsModal.feature.id
+      controlPanelEditTypeParamsModal.typeId,
+      controlPanelEditTypeParamsModal.feature.id
     ).then((data) => {
       setTypeParamsForCreate(data);
       fetchParams(data);
@@ -37,9 +37,11 @@ const ControlPanelEditParamsModal = () => {
   };
 
   const fetchParams = (typeParams: IParam[]) => {
-    fetchParamsAPI(controlPanelEditParamsModal.feature.id).then((data) => {
-      setParams(paramsMinusTypeParams(data, typeParams));
-    });
+    fetchParamsByFeatureIdAPI(controlPanelEditTypeParamsModal.feature.id).then(
+      (data) => {
+        setParams(paramsMinusTypeParams(data, typeParams));
+      }
+    );
   };
 
   const paramsMinusTypeParams = (
@@ -54,7 +56,7 @@ const ControlPanelEditParamsModal = () => {
   };
 
   const close = () => {
-    dispatch(modalSlice.actions.closeControlPanelEditParamsModal());
+    dispatch(modalSlice.actions.closeControlPanelEditTypeParamsModal());
 
     setTypeParamsForCreate([]);
     setTypeParamsForDelete([]);
@@ -71,7 +73,7 @@ const ControlPanelEditParamsModal = () => {
       paramIdsForDelete.push(typeParamsForDelete[i].id);
     }
     updateTypeParamsAPI(
-      controlPanelEditParamsModal.typeId,
+      controlPanelEditTypeParamsModal.typeId,
       paramIdsForCreate,
       paramIdsForDelete
     ).then(() => {
@@ -103,8 +105,8 @@ const ControlPanelEditParamsModal = () => {
 
   return (
     <Modal
-      title={controlPanelEditParamsModal.feature.pluralName}
-      isShowing={controlPanelEditParamsModal.isShowing}
+      title={controlPanelEditTypeParamsModal.feature.pluralName}
+      isShowing={controlPanelEditTypeParamsModal.isShowing}
       hide={close}
     >
       <div className={styles.container}>
@@ -143,4 +145,4 @@ const ControlPanelEditParamsModal = () => {
   );
 };
 
-export default ControlPanelEditParamsModal;
+export default ControlPanelEditTypeParamsModal;
