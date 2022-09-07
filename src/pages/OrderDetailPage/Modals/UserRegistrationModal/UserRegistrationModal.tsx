@@ -10,9 +10,11 @@ import { ButtonVariants } from 'components/UI/Button/Button';
 import { firstLetterToUpperCase } from 'helpers';
 import { useModal } from 'hooks';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchUserAPI, registrationAPI } from 'http/userAPI';
+import { fetchUserByPhoneAPI, registrationAPI } from 'http/userAPI';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { IUser, UserRoles } from 'models/IUser';
 import { useEffect, useState } from 'react';
+import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { v4 as uuidv4 } from 'uuid';
@@ -55,7 +57,7 @@ const UserRegistrationModal = () => {
   }, [userRegistrationModal.isShowing]);
 
   const registration = () => {
-    fetchUserAPI(phone).then((data) => {
+    fetchUserByPhoneAPI(phone).then((data) => {
       if (data) {
         setUser(data);
       } else {
@@ -74,10 +76,20 @@ const UserRegistrationModal = () => {
           shopId: activeShop.id,
         };
 
-        registrationAPI(user).then((data2) => {
-          dispatch(orderSlice.actions.setOrderUser(data2));
-          close();
-        });
+        registrationAPI(user)
+          .then((data2) => {
+            dispatch(orderSlice.actions.setOrderUser(data2));
+            close();
+          })
+          .catch((e) =>
+            dispatch(
+              appSlice.actions.showGlobalMessage({
+                message: e.response.data.message,
+                variant: GlobalMessageVariants.danger,
+                isShowing: true,
+              })
+            )
+          );
       }
     });
   };
