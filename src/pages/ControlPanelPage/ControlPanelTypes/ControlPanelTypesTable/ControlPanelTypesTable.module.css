@@ -13,12 +13,10 @@
 
 .section {
   border-spacing: 0;
-  /* width: 100%; */
 }
 
 .column {
-  padding: 18px;
-  /* max-width: 100px; */
+  padding: var(--table-column-padding);
   border-bottom: 1px solid #eeede8;
   color: var(--secondary-text-on-bg-color);
   font-weight: 400;
@@ -26,13 +24,12 @@
   cursor: default;
 }
 
-.row:hover {
-  /* background-color: var(--hover-card-color); */
+.row {
   cursor: pointer;
 }
 
 .cell {
-  padding: 18px;
+  padding: var(--table-cell-padding);
   border-bottom: 1px solid #eeede8;
   white-space: nowrap;
 }

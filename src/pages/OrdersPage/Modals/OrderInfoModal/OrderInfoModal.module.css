@@ -9,7 +9,7 @@
 }
 
 .column {
-  padding: 18px;
+  padding: var(--table-column-padding);
   max-width: 100px;
   border-bottom: 1px solid #eeede8;
   color: var(--secondary-text-on-bg-color);
@@ -19,6 +19,6 @@
 }
 
 .cell {
-  padding: 18px;
+  padding: var(--table-cell-padding);
   border-bottom: 1px solid #eeede8;
 }

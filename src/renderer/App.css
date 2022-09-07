@@ -32,6 +32,8 @@
 
   /* SIZES */
   --border-radius: 8px;
+  --table-column-padding: 16px;
+  --table-cell-padding: 16px;
 
   /* SHADOWS */
   --shadow-1: rgba(0, 0, 0, 0.1);
