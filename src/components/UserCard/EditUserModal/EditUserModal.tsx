@@ -3,8 +3,10 @@ import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { updateUserAPI } from 'http/userAPI';
 import { isVerifiedAPI } from 'http/verificationAPI';
+import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { IUser } from 'models/IUser';
 import { useEffect, useState } from 'react';
+import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './EditUserModal.module.css';
@@ -62,10 +64,20 @@ const EditUserModal = () => {
         vk,
         telegram,
       };
-      updateUserAPI(editedUser).then((data) => {
-        dispatch(orderSlice.actions.setOrderUser(data));
-        close();
-      });
+      updateUserAPI(editedUser)
+        .then((data) => {
+          dispatch(orderSlice.actions.setOrderUser(data));
+          close();
+        })
+        .catch((e) =>
+          dispatch(
+            appSlice.actions.showGlobalMessage({
+              message: e.response.data.message,
+              variant: GlobalMessageVariants.danger,
+              isShowing: true,
+            })
+          )
+        );
     }
   };
 
