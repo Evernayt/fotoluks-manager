@@ -16,7 +16,7 @@ const ControlPanelCategoriesSearch = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      searchTypes();
+      searchCategories();
     } else {
       const foundCategoriesData: IFoundCategories = {
         categoryData: { rows: [], count: 0 },
@@ -28,7 +28,7 @@ const ControlPanelCategoriesSearch = () => {
     }
   }, [debouncedSearchTerm]);
 
-  const searchTypes = () => {
+  const searchCategories = () => {
     if (searchText.trim() !== '') {
       dispatch(controlPanelSlice.actions.setIsLoading(true));
 

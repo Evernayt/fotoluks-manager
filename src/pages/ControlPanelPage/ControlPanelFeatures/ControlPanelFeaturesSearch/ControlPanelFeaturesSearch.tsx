@@ -16,7 +16,7 @@ const ControlPanelFeaturesSearch = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      searchTypes();
+      searchFeatures();
     } else {
       const foundFeaturesData: IFoundFeatures = {
         featureData: { rows: [], count: 0 },
@@ -26,7 +26,7 @@ const ControlPanelFeaturesSearch = () => {
     }
   }, [debouncedSearchTerm]);
 
-  const searchTypes = () => {
+  const searchFeatures = () => {
     if (searchText.trim() !== '') {
       dispatch(controlPanelSlice.actions.setIsLoading(true));
 
