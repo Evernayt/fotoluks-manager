@@ -2,6 +2,7 @@ import { Button, SelectButton, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import {
   INITIAL_SETTINGS_COMPLETED_KEY,
+  MAXIMIZE_SCREEN_KEY,
   RECENT_LOGINS_KEY,
   SHOP_KEY,
 } from 'constants/localStorage';
@@ -36,13 +37,17 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const initialSettingsCopmleted: boolean = Boolean(
-      localStorage.getItem(INITIAL_SETTINGS_COMPLETED_KEY)
-    );
-
+    const initialSettingsCopmleted: boolean =
+      localStorage.getItem(INITIAL_SETTINGS_COMPLETED_KEY) === 'true';
     if (!initialSettingsCopmleted) {
       navigate(INITIAL_SETTINGS_ROUTE);
       return;
+    }
+
+    const maximizeScreen: boolean =
+      localStorage.getItem(MAXIMIZE_SCREEN_KEY) === 'true';
+    if (maximizeScreen) {
+      window.electron.ipcRenderer.sendMessage('maximize', []);
     }
 
     const shop = JSON.parse(localStorage.getItem(SHOP_KEY) || '{}');
