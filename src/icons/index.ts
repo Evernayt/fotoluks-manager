@@ -20,6 +20,7 @@ import canceledOrdersCheckedIcon from './canceled-orders-checked-icon.svg';
 import canceledOrdersIcon from './canceled-orders-icon.svg';
 import sidemenuCheckedIcon from './sidemenu-checked-icon.svg';
 import sidemenuIcon from './sidemenu-icon.svg';
+import shopCheckedIcon from './shop-checked-icon.svg';
 import shopIcon from './shop-icon.svg';
 import sendIcon from './send-icon.svg';
 import clipIcon from './clip-icon.svg';
@@ -76,6 +77,7 @@ export {
   canceledOrdersIcon,
   sidemenuCheckedIcon,
   sidemenuIcon,
+  shopCheckedIcon,
   shopIcon,
   sendIcon,
   clipIcon,

@@ -27,6 +27,10 @@ import ControlPanelParamsTable from './ControlPanelParams/ControlPanelParamsTabl
 import ControlPanelParamsSearch from './ControlPanelParams/ControlPanelParamsSearch/ControlPanelParamsSearch';
 import ControlPanelParamsFilterModal from './Modals/ControlPanelParamsFilterModal/ControlPanelParamsFilterModal';
 import ControlPanelEditParamModal from './Modals/ControlPanelEditParamModal/ControlPanelEditParamModal';
+import ControlPanelShopsTable from './ControlPanelShops/ControlPanelShopsTable/ControlPanelShopsTable';
+import ControlPanelShopsSearch from './ControlPanelShops/ControlPanelShopsSearch/ControlPanelShopsSearch';
+import ControlPanelShopsFilterModal from './Modals/ControlPanelShopsFilterModal/ControlPanelShopsFilterModal';
+import ControlPanelEditShopModal from './Modals/ControlPanelEditShopModal/ControlPanelEditShopModal';
 
 const ControlPanelPage = () => {
   const activeItemId = useAppSelector(
@@ -46,6 +50,8 @@ const ControlPanelPage = () => {
       return <ControlPanelFeaturesTable />;
     } else if (activeItemId === 6) {
       return <ControlPanelParamsTable />;
+    } else if (activeItemId === 7) {
+      return <ControlPanelShopsTable />;
     } else {
       return null;
     }
@@ -64,6 +70,8 @@ const ControlPanelPage = () => {
       return <ControlPanelFeaturesSearch />;
     } else if (activeItemId === 6) {
       return <ControlPanelParamsSearch />;
+    } else if (activeItemId === 7) {
+      return <ControlPanelShopsSearch />;
     } else {
       return null;
     }
@@ -84,6 +92,8 @@ const ControlPanelPage = () => {
       <ControlPanelEditParamModal />
       <ControlPanelFeaturesFilterModal />
       <ControlPanelEditFeatureModal />
+      <ControlPanelShopsFilterModal />
+      <ControlPanelEditShopModal />
       <Navmenu searchRender={() => renderSearch()} />
       <div className={styles.section}>
         <ControlPanelSidemenu />

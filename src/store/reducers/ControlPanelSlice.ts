@@ -6,17 +6,20 @@ import {
   initialFeaturesFilter,
   initialParamsFilter,
   initialProductsFilter,
+  initialShopsFilter,
   initialTypesFilter,
   initialUserFilter,
 } from 'constants/InitialStates/initialFilterState';
 import { initialFoundParams } from 'constants/InitialStates/initialParamState';
 import { initialFoundProducts } from 'constants/InitialStates/initialProductState';
+import { initialFoundShops } from 'constants/InitialStates/initialShopState';
 import { initialFoundTypes } from 'constants/InitialStates/initialTypeState';
 import { initialFoundUsers } from 'constants/InitialStates/initialUserState';
 import { ICategoriesFilter, IFoundCategories } from 'models/ICategory';
 import { IFeaturesFilter, IFoundFeatures } from 'models/IFeature';
 import { IFoundParams, IParamsFilter } from 'models/IParam';
 import { IFoundProducts, IProductsFilter } from 'models/IProduct';
+import { IFoundShops, IShopsFilter } from 'models/IShop';
 import { IFoundTypes, ITypesFilter } from 'models/IType';
 import { IFoundUsers, IUsersFilter } from 'models/IUser';
 
@@ -37,6 +40,8 @@ type ControlPanelState = {
   foundFeatures: IFoundFeatures;
   paramsFilter: IParamsFilter;
   foundParams: IFoundParams;
+  shopsFilter: IShopsFilter;
+  foundShops: IFoundShops;
 };
 
 const initialState: ControlPanelState = {
@@ -56,6 +61,8 @@ const initialState: ControlPanelState = {
   foundFeatures: initialFoundFeatures,
   paramsFilter: initialParamsFilter,
   foundParams: initialFoundParams,
+  shopsFilter: initialShopsFilter,
+  foundShops: initialFoundShops,
 };
 
 export const controlPanelSlice = createSlice({
@@ -190,6 +197,25 @@ export const controlPanelSlice = createSlice({
     setFoundParams(state, action: PayloadAction<IFoundParams>) {
       state.foundParams = action.payload;
     },
+    activeShopsFilter(state, action: PayloadAction<IShopsFilter>) {
+      state.shopsFilter = {
+        filter: {
+          isActive: true,
+          isPendingDeactivation: false,
+        },
+        archive: action.payload.archive,
+      };
+    },
+    deactiveShopsFilter(state) {
+      state.shopsFilter = initialShopsFilter;
+    },
+    clearShopsFilter(state) {
+      state.shopsFilter = initialShopsFilter;
+      state.shopsFilter.filter.isPendingDeactivation = true;
+    },
+    setFoundShops(state, action: PayloadAction<IFoundShops>) {
+      state.foundShops = action.payload;
+    },
   },
 });
 
@@ -222,6 +248,10 @@ export const {
   deactiveParamsFilter,
   clearParamsFilter,
   setFoundParams,
+  activeShopsFilter,
+  deactiveShopsFilter,
+  clearShopsFilter,
+  setFoundShops,
 } = controlPanelSlice.actions;
 
 export default controlPanelSlice.reducer;

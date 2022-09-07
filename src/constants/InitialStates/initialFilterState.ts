@@ -4,6 +4,7 @@ import { IFilter } from 'models/IFilter';
 import { IOrdersFilter } from 'models/IOrder';
 import { IParamsFilter } from 'models/IParam';
 import { IProductsFilter } from 'models/IProduct';
+import { IShopsFilter } from 'models/IShop';
 import { ITypesFilter } from 'models/IType';
 import { IRole, IUsersFilter } from 'models/IUser';
 
@@ -59,6 +60,11 @@ export const initialFeaturesFilter: IFeaturesFilter = {
 };
 
 export const initialParamsFilter: IParamsFilter = {
+  filter: initialFilter,
+  archive: false,
+};
+
+export const initialShopsFilter: IShopsFilter = {
   filter: initialFilter,
   archive: false,
 };

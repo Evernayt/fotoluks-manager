@@ -12,6 +12,7 @@ import {
   initialUserModal,
   initialUserRegistrationModal,
   initialEditParamModal,
+  initialEditShopModal,
 } from 'constants/InitialStates/initialModalState';
 import { IFeature } from 'models/IFeature';
 import {
@@ -26,6 +27,7 @@ import {
   IUserModal,
   IUserRegistrationModal,
   IEditParamModal,
+  IEditShopModal,
 } from 'models/IModal';
 import { IOrder } from 'models/IOrder';
 import { IUser } from 'models/IUser';
@@ -53,6 +55,8 @@ type ModalState = {
   controlPanelEditFeatureModal: IEditFeatureModal;
   controlPanelParamsFilterModal: IModal;
   controlPanelEditParamModal: IEditParamModal;
+  controlPanelShopsFilterModal: IModal;
+  controlPanelEditShopModal: IEditShopModal;
 };
 
 const initialState: ModalState = {
@@ -78,6 +82,8 @@ const initialState: ModalState = {
   controlPanelEditFeatureModal: initialEditFeatureModal,
   controlPanelParamsFilterModal: initialModal,
   controlPanelEditParamModal: initialEditParamModal,
+  controlPanelShopsFilterModal: initialModal,
+  controlPanelEditShopModal: initialEditShopModal,
 };
 
 export const modalSlice = createSlice({
@@ -256,6 +262,23 @@ export const modalSlice = createSlice({
     closeControlPanelEditParamModal(state) {
       state.controlPanelEditParamModal = initialEditParamModal;
     },
+    openControlPanelShopsFilterModal(state) {
+      state.controlPanelShopsFilterModal.isShowing = true;
+    },
+    closeControlPanelShopsFilterModal(state) {
+      state.controlPanelShopsFilterModal.isShowing = false;
+    },
+    openControlPanelEditShopModal(
+      state,
+      action: PayloadAction<IEditShopModal>
+    ) {
+      state.controlPanelEditShopModal.isShowing = true;
+      state.controlPanelEditShopModal.shopId = action.payload.shopId;
+      state.controlPanelEditShopModal.mode = action.payload.mode;
+    },
+    closeControlPanelEditShopModal(state) {
+      state.controlPanelEditShopModal = initialEditShopModal;
+    },
   },
 });
 
@@ -304,6 +327,10 @@ export const {
   closeControlPanelParamsFilterModal,
   openControlPanelEditParamModal,
   closeControlPanelEditParamModal,
+  openControlPanelShopsFilterModal,
+  closeControlPanelShopsFilterModal,
+  openControlPanelEditShopModal,
+  closeControlPanelEditShopModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

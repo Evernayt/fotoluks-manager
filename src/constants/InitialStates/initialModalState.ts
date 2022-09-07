@@ -11,6 +11,7 @@ import {
   IUserModal,
   IUserRegistrationModal,
   IEditParamModal,
+  IEditShopModal,
 } from 'models/IModal';
 import { initialFeature } from './initialFeatureState';
 
@@ -68,5 +69,11 @@ export const initialEditFeatureModal: IEditFeatureModal = {
 export const initialEditParamModal: IEditParamModal = {
   isShowing: false,
   paramId: 0,
+  mode: Modes.ADD_MODE,
+};
+
+export const initialEditShopModal: IEditShopModal = {
+  isShowing: false,
+  shopId: 0,
   mode: Modes.ADD_MODE,
 };

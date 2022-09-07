@@ -1,3 +1,5 @@
+import { IFilter } from './IFilter';
+
 export interface IShop {
   id: number;
   name: string;
@@ -9,4 +11,14 @@ export interface IShop {
 export interface IShopData {
   rows: IShop[];
   count: number;
+}
+
+export interface IShopsFilter {
+  filter: IFilter;
+  archive: boolean;
+}
+
+export interface IFoundShops {
+  shopData: IShopData;
+  searchText: string;
 }

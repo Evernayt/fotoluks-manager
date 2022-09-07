@@ -62,3 +62,9 @@ export interface IEditParamModal {
   paramId: number;
   mode: Modes;
 }
+
+export interface IEditShopModal {
+  isShowing: boolean;
+  shopId: number;
+  mode: Modes;
+}
