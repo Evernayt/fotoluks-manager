@@ -50,7 +50,7 @@ const ControlPanelCategoriesToolbar: FC<ControlPanelProductsToolbarProps> = ({
     setLimit(e.value);
   };
 
-  const openProductEditModal = () => {
+  const openCategoryEditModal = () => {
     dispatch(
       modalSlice.actions.openControlPanelEditCategoryModal({
         categoryId: 0,
@@ -69,7 +69,10 @@ const ControlPanelCategoriesToolbar: FC<ControlPanelProductsToolbarProps> = ({
         <Button style={{ width: 'max-content' }} onClick={reload}>
           Обновить
         </Button>
-        <Button style={{ width: 'max-content' }} onClick={openProductEditModal}>
+        <Button
+          style={{ width: 'max-content' }}
+          onClick={openCategoryEditModal}
+        >
           Добавить
         </Button>
       </div>
