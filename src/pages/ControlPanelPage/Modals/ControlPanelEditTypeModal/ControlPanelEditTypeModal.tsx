@@ -216,13 +216,20 @@ const ControlPanelEditTypeModal = () => {
           />
           <div>
             <div className={styles.main_controls}>
-              <SelectButton
-                items={products}
-                defaultSelectedItem={selectedProduct}
-                changeHandler={(e) => setSelectedProduct(e)}
-                style={{ width: '185px' }}
-                disabled={controlPanelEditTypeModal.mode === Modes.EDIT_MODE}
-              />
+              <Tooltip label="Продукт">
+                <div>
+                  <SelectButton
+                    items={products}
+                    defaultSelectedItem={selectedProduct}
+                    changeHandler={(e) => setSelectedProduct(e)}
+                    style={{ width: '185px' }}
+                    disabled={
+                      controlPanelEditTypeModal.mode === Modes.EDIT_MODE
+                    }
+                  />
+                </div>
+              </Tooltip>
+
               <Tooltip label="Добавить продукт">
                 <div>
                   <IconButton icon={plusIcon} onClick={openEditProductModal} />

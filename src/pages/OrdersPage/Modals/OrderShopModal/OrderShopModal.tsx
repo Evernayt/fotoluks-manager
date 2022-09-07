@@ -1,4 +1,4 @@
-import { Button, Modal, SelectButton } from 'components';
+import { Button, Modal, SelectButton, Tooltip } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { createNotificationAPI } from 'http/notificationAPI';
@@ -77,12 +77,16 @@ const OrderShopModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        <SelectButton
-          items={shops}
-          defaultSelectedItem={selectedShop}
-          changeHandler={setSelectedShop}
-          style={{ width: '100%' }}
-        />
+        <Tooltip label="Филиал">
+          <div>
+            <SelectButton
+              items={shops}
+              defaultSelectedItem={selectedShop}
+              changeHandler={setSelectedShop}
+              style={{ width: '100%' }}
+            />
+          </div>
+        </Tooltip>
       </div>
       <div className={styles.controls}>
         <Button

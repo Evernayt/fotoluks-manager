@@ -5,6 +5,7 @@ import {
   Modal,
   SelectButton,
   Textbox,
+  Tooltip,
 } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { INPUT_FORMAT } from 'constants/app';
@@ -205,12 +206,16 @@ const OrdersFilterModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        <SelectButton
-          items={shops}
-          defaultSelectedItem={selectedShop}
-          changeHandler={(e) => setSelectedShop(e)}
-          style={{ width: '100%', marginBottom: '12px' }}
-        />
+        <Tooltip label="Филиал">
+          <div>
+            <SelectButton
+              items={shops}
+              defaultSelectedItem={selectedShop}
+              changeHandler={(e) => setSelectedShop(e)}
+              style={{ width: '100%', marginBottom: '12px' }}
+            />
+          </div>
+        </Tooltip>
 
         <DropdownButton
           text="Период"
