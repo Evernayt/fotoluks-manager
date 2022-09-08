@@ -1,8 +1,8 @@
 import { IStatus } from 'models/IStatus';
-import { $host } from './index';
+import { $authHost } from './index';
 
 export const fetchStatusesAPI = async (): Promise<IStatus[]> => {
-  const { data } = await $host.get('api/status/all');
+  const { data } = await $authHost.get('api/status/all');
   return data;
 };
 
@@ -15,7 +15,7 @@ export const fetchStatusOrdersAPI: IFetchStatusOrders = async (
   startDate,
   endDate
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/status/orders/?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
   );
   return data;

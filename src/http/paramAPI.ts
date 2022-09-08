@@ -1,10 +1,10 @@
 import { IParam, IParamData } from 'models/IParam';
-import { $host } from './index';
+import { $authHost } from './index';
 
 export const fetchParamsByFeatureIdAPI = async (
   featureId: number
 ): Promise<IParam[]> => {
-  const { data } = await $host.get('api/param/all/' + featureId);
+  const { data } = await $authHost.get('api/param/all/' + featureId);
   return data;
 };
 
@@ -17,7 +17,7 @@ export const fetchParamsAPI: IFetchParams = async (
   page = 1,
   archive
 ) => {
-  const { data } = await $host.post('api/param/all', {
+  const { data } = await $authHost.post('api/param/all', {
     limit,
     page,
     archive,
@@ -34,14 +34,14 @@ export const searchParamsAPI: ISearchParams = async (
   page = 1,
   searchText
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/param/search/?limit=${limit}&page=${page}&searchText=${searchText}`
   );
   return data;
 };
 
 export const updateParamAPI = async (param: IParam): Promise<IParam> => {
-  const { data } = await $host.post('api/param/update', param);
+  const { data } = await $authHost.post('api/param/update', param);
   return data;
 };
 
@@ -50,7 +50,7 @@ interface IFetchParam {
 }
 
 export const fetchParamAPI: IFetchParam = async (paramId) => {
-  const { data } = await $host.get('api/param/one/' + paramId);
+  const { data } = await $authHost.get('api/param/one/' + paramId);
   return data;
 };
 
@@ -59,7 +59,7 @@ interface ICreateParam {
 }
 
 export const createParamAPI: ICreateParam = async (name, value, featureId) => {
-  const { data } = await $host.post('api/param/create', {
+  const { data } = await $authHost.post('api/param/create', {
     name,
     value,
     featureId,

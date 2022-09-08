@@ -1,6 +1,6 @@
 import { IParam } from 'models/IParam';
 import { IType, ITypeData } from 'models/IType';
-import { $host } from './index';
+import { $host, $authHost } from './index';
 
 interface IFetchTypesByProductId {
   (productId: number): Promise<IType[]>;
@@ -22,7 +22,11 @@ export const fetchTypesAPI: IFetchTypes = async (
   page = 1,
   archive
 ) => {
-  const { data } = await $host.post('api/type/all', { limit, page, archive });
+  const { data } = await $authHost.post('api/type/all', {
+    limit,
+    page,
+    archive,
+  });
   return data;
 };
 
@@ -31,7 +35,7 @@ interface IFetchType {
 }
 
 export const fetchTypeAPI: IFetchType = async (typeId) => {
-  const { data } = await $host.get('api/type/one/' + typeId);
+  const { data } = await $authHost.get('api/type/one/' + typeId);
   return data;
 };
 
@@ -40,7 +44,7 @@ interface IUpdateType {
 }
 
 export const updateTypeAPI: IUpdateType = async (type, featureIds) => {
-  const { data } = await $host.post('api/type/update', {
+  const { data } = await $authHost.post('api/type/update', {
     type,
     featureIds,
   });
@@ -64,7 +68,7 @@ export const createTypeAPI: ICreateType = async (
   productId,
   featureIds
 ) => {
-  const { data } = await $host.post('api/type/create', {
+  const { data } = await $authHost.post('api/type/create', {
     name,
     image,
     price,
@@ -82,7 +86,7 @@ export const fetchTypeParamsAPI: IFetchTypeParams = async (
   typeId,
   featureId
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/type/params/?typeId=${typeId}&featureId=${featureId}`
   );
   return data;
@@ -101,7 +105,7 @@ export const updateTypeParamsAPI: IUpdateTypeParams = async (
   paramIdsForCreate,
   paramIdsForDelete
 ) => {
-  const { data } = await $host.post('api/type/updateParams', {
+  const { data } = await $authHost.post('api/type/updateParams', {
     id,
     paramIdsForCreate,
     paramIdsForDelete,
@@ -118,7 +122,7 @@ export const searchTypesAPI: ISearchTypes = async (
   page = 1,
   searchText
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/type/search/?limit=${limit}&page=${page}&searchText=${searchText}`
   );
   return data;

@@ -1,5 +1,5 @@
 import { ICategory, ICategoryData } from 'models/ICategory';
-import { $host } from './index';
+import { $authHost } from './index';
 
 interface IFetchCategories {
   (limit?: number, page?: number, archive?: boolean): Promise<ICategoryData>;
@@ -10,7 +10,7 @@ export const fetchCategoriesAPI: IFetchCategories = async (
   page = 1,
   archive
 ) => {
-  const { data } = await $host.post('api/category/all', {
+  const { data } = await $authHost.post('api/category/all', {
     limit,
     page,
     archive,
@@ -19,7 +19,7 @@ export const fetchCategoriesAPI: IFetchCategories = async (
 };
 
 export const createCategoryAPI = async (name: string): Promise<ICategory> => {
-  const { data } = await $host.post('api/category/create', { name });
+  const { data } = await $authHost.post('api/category/create', { name });
   return data;
 };
 
@@ -28,14 +28,14 @@ interface IFetchCategory {
 }
 
 export const fetchCategoryAPI: IFetchCategory = async (categoryId) => {
-  const { data } = await $host.get('api/category/one/' + categoryId);
+  const { data } = await $authHost.get('api/category/one/' + categoryId);
   return data;
 };
 
 export const updateCategoryAPI = async (
   category: ICategory
 ): Promise<ICategory> => {
-  const { data } = await $host.post('api/category/update', category);
+  const { data } = await $authHost.post('api/category/update', category);
   return data;
 };
 
@@ -48,7 +48,7 @@ export const searchCategoriesAPI: ISearchCategories = async (
   page = 1,
   searchText
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/category/search/?limit=${limit}&page=${page}&searchText=${searchText}`
   );
   return data;

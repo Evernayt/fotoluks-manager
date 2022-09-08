@@ -1,7 +1,7 @@
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { IOrder, IOrderData } from 'models/IOrder';
 import { IOrderInfo } from 'models/IOrderInfo';
-import { $authHost, $host } from './index';
+import { $authHost } from './index';
 
 interface IFetchOrders {
   (
@@ -24,7 +24,7 @@ export const fetchOrdersAPI: IFetchOrders = async (
   endDate = '',
   userId = 0
 ) => {
-  const { data } = await $host.post('api/order/all/', {
+  const { data } = await $authHost.post('api/order/all/', {
     limit,
     page,
     statusId,
@@ -45,14 +45,14 @@ export const updateStatusAPI: IUpdateStatus = async (
   orderId,
   userId
 ) => {
-  const { data } = await $host.put(
+  const { data } = await $authHost.put(
     `api/order/updateStatus/?statusId=${statusId}&orderId=${orderId}&userId=${userId}`
   );
   return data;
 };
 
 export const fetchOrderAPI = async (orderId: number): Promise<IOrder> => {
-  const { data } = await $host.get('api/order/one/' + orderId);
+  const { data } = await $authHost.get('api/order/one/' + orderId);
   return data;
 };
 
@@ -84,7 +84,7 @@ export const fetchOrdersForExportAPI: IFetchOrdersForExport = async (
   endDate,
   shopId
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/order/allForExport/?startDate=${startDate}&endDate=${endDate}&shopId=${shopId}`
   );
   return data;
@@ -95,7 +95,7 @@ interface IUpdateOrderShop {
 }
 
 export const updateOrderShopAPI: IUpdateOrderShop = async (orderId, shopId) => {
-  const { data } = await $host.put(
+  const { data } = await $authHost.put(
     `api/order/updateShop/?orderId=${orderId}&shopId=${shopId}`
   );
   return data;
@@ -110,7 +110,7 @@ export const searchOrdersAPI: ISearchOrders = async (
   page = 1,
   searchText
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/order/search/?limit=${limit}&page=${page}&searchText=${searchText}`
   );
   return data;

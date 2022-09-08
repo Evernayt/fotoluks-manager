@@ -1,5 +1,5 @@
 import { IProduct, IProductData } from 'models/IProduct';
-import { $host } from './index';
+import { $authHost } from './index';
 
 interface IFetchProducts {
   (limit?: number, page?: number, archive?: boolean): Promise<IProductData>;
@@ -10,7 +10,7 @@ export const fetchProductsAPI: IFetchProducts = async (
   page = 1,
   archive
 ) => {
-  const { data } = await $host.post('api/product/all', {
+  const { data } = await $authHost.post('api/product/all', {
     limit,
     page,
     archive,
@@ -27,7 +27,7 @@ export const searchProductsAPI: ISearchProducts = async (
   page = 1,
   searchText
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/product/search/?limit=${limit}&page=${page}&searchText=${searchText}`
   );
   return data;
@@ -50,7 +50,7 @@ export const createProductAPI: ICreateProduct = async (
   image,
   categoryId
 ) => {
-  const { data } = await $host.post('api/product/create', {
+  const { data } = await $authHost.post('api/product/create', {
     name,
     pluralName,
     description,
@@ -65,13 +65,13 @@ interface IFetchProduct {
 }
 
 export const fetchProductAPI: IFetchProduct = async (productId) => {
-  const { data } = await $host.get('api/product/one/' + productId);
+  const { data } = await $authHost.get('api/product/one/' + productId);
   return data;
 };
 
 export const updateProductAPI = async (
   product: IProduct
 ): Promise<IProduct> => {
-  const { data } = await $host.post('api/product/update', product);
+  const { data } = await $authHost.post('api/product/update', product);
   return data;
 };

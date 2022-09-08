@@ -1,5 +1,5 @@
 import { IShop, IShopData } from 'models/IShop';
-import { $host } from './index';
+import { $host, $authHost } from './index';
 
 interface IFetchShops {
   (
@@ -34,14 +34,14 @@ export const searchShopsAPI: ISearchShops = async (
   page = 1,
   searchText
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/shop/search/?limit=${limit}&page=${page}&searchText=${searchText}`
   );
   return data;
 };
 
 export const updateShopAPI = async (shop: IShop): Promise<IShop> => {
-  const { data } = await $host.post('api/shop/update', shop);
+  const { data } = await $authHost.post('api/shop/update', shop);
   return data;
 };
 
@@ -50,7 +50,7 @@ interface IFetchShop {
 }
 
 export const fetchShopAPI: IFetchShop = async (shopId) => {
-  const { data } = await $host.get('api/shop/one/' + shopId);
+  const { data } = await $authHost.get('api/shop/one/' + shopId);
   return data;
 };
 
@@ -63,7 +63,7 @@ export const createShopAPI: ICreateShop = async (
   description,
   address
 ) => {
-  const { data } = await $host.post('api/shop/create', {
+  const { data } = await $authHost.post('api/shop/create', {
     name,
     description,
     address,

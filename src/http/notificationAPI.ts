@@ -1,5 +1,5 @@
 import { INotification, INotificationData } from 'models/INotification';
-import { $host } from './index';
+import { $authHost } from './index';
 
 interface IFetchNotifications {
   (limit: number, page: number, userId: number): Promise<INotificationData>;
@@ -10,7 +10,7 @@ export const fetchNotificationsAPI: IFetchNotifications = async (
   page = 1,
   userId
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/notification/all/?limit=${limit}&page=${page}&userId=${userId}`
   );
   return data;
@@ -19,7 +19,9 @@ export const fetchNotificationsAPI: IFetchNotifications = async (
 export const deleteAllNotificationsAPI = async (
   userId: number
 ): Promise<{ message: string }> => {
-  const { data } = await $host.delete('api/notification/deleteAll/' + userId);
+  const { data } = await $authHost.delete(
+    'api/notification/deleteAll/' + userId
+  );
   return data;
 };
 
@@ -32,7 +34,7 @@ export const createNotificationAPI: ICreateNotification = async (
   text,
   userIds
 ) => {
-  const { data } = await $host.post('api/notification/create', {
+  const { data } = await $authHost.post('api/notification/create', {
     title,
     text,
     userIds,

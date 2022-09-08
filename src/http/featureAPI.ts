@@ -1,5 +1,5 @@
 import { IFeature, IFeatureData } from 'models/IFeature';
-import { $host } from './index';
+import { $authHost } from './index';
 
 interface IFetchFeatures {
   (limit?: number, page?: number, archive?: boolean): Promise<IFeatureData>;
@@ -10,7 +10,7 @@ export const fetchFeaturesAPI: IFetchFeatures = async (
   page = 1,
   archive
 ) => {
-  const { data } = await $host.post('api/feature/all', {
+  const { data } = await $authHost.post('api/feature/all', {
     limit,
     page,
     archive,
@@ -27,7 +27,7 @@ export const searchFeaturesAPI: ISearchFeatures = async (
   page = 1,
   searchText
 ) => {
-  const { data } = await $host.get(
+  const { data } = await $authHost.get(
     `api/feature/search/?limit=${limit}&page=${page}&searchText=${searchText}`
   );
   return data;
@@ -36,7 +36,7 @@ export const searchFeaturesAPI: ISearchFeatures = async (
 export const updateFeatureAPI = async (
   feature: IFeature
 ): Promise<IFeature> => {
-  const { data } = await $host.post('api/feature/update', feature);
+  const { data } = await $authHost.post('api/feature/update', feature);
   return data;
 };
 
@@ -45,7 +45,7 @@ interface IFetchFeature {
 }
 
 export const fetchFeatureAPI: IFetchFeature = async (featureId) => {
-  const { data } = await $host.get('api/feature/one/' + featureId);
+  const { data } = await $authHost.get('api/feature/one/' + featureId);
   return data;
 };
 
@@ -54,7 +54,7 @@ interface ICreateFeature {
 }
 
 export const createFeatureAPI: ICreateFeature = async (name, pluralName) => {
-  const { data } = await $host.post('api/feature/create', {
+  const { data } = await $authHost.post('api/feature/create', {
     name,
     pluralName,
   });

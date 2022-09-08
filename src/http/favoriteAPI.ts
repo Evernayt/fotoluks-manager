@@ -1,11 +1,11 @@
 import { IFavorite } from 'models/IFavorite';
 import { IFavoriteParam } from 'models/IFavoriteParam';
-import { $host } from './index';
+import { $authHost } from './index';
 
 export const fetchFavoritesAPI = async (
   userId: number
 ): Promise<IFavorite[]> => {
-  const { data } = await $host.get('api/favorite/all/' + userId);
+  const { data } = await $authHost.get('api/favorite/all/' + userId);
   return data;
 };
 
@@ -22,7 +22,7 @@ export const createFavoriteAPI: ICreateFavorite = async (
   selectedParams,
   userId
 ) => {
-  const { data } = await $host.post('api/favorite/create', {
+  const { data } = await $authHost.post('api/favorite/create', {
     typeId,
     selectedParams,
     userId,
@@ -31,6 +31,6 @@ export const createFavoriteAPI: ICreateFavorite = async (
 };
 
 export const deleteFavoriteAPI = async (id: number): Promise<number[]> => {
-  const { data } = await $host.delete('api/favorite/delete/' + id);
+  const { data } = await $authHost.delete('api/favorite/delete/' + id);
   return data;
 };
