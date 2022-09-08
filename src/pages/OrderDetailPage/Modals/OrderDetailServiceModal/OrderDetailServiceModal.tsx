@@ -1,5 +1,6 @@
 import {
   Button,
+  Loader,
   Modal,
   SelectButton,
   Textarea,
@@ -64,6 +65,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
   const [price, setPrice] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
   const [comment, setComment] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(mode === Modes.EDIT_MODE);
 
   const finishedProductsForCreate = useAppSelector(
     (state) => state.order.finishedProductsForCreate
@@ -81,8 +83,8 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         setProducts(productData.rows);
         setSelectedProduct(finishedProduct.product);
 
-        fetchTypesByProductIdAPI(finishedProduct.product.id).then(
-          (typeData) => {
+        fetchTypesByProductIdAPI(finishedProduct.product.id)
+          .then((typeData) => {
             setTypes(typeData);
 
             const selectedFinishedProductType = typeData.find(
@@ -106,8 +108,8 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
                 ]);
               }
             }
-          }
-        );
+          })
+          .finally(() => setIsLoading(false));
       });
     } else if (mode === Modes.ADD_MODE) {
       fetchProducts();
@@ -276,6 +278,11 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
       hide={hide}
     >
       <div className={styles.container}>
+        {isLoading && (
+          <div className={styles.loader}>
+            <Loader />
+          </div>
+        )}
         {mode === Modes.ADD_MODE && (
           <OrderDetailServiceSearch
             searchSelect={searchSelect}

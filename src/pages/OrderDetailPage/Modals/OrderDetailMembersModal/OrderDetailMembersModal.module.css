@@ -1,8 +1,22 @@
 .container {
+  min-height: 300px;
+  min-width: 300px;
   max-width: 1360px;
   max-height: 400px;
   display: flex;
   gap: 8px;
+  position: relative;
+}
+
+.loader {
+  position: absolute;
+  z-index: 999;
+  height: 100%;
+  width: 100%;
+  background-color: var(--card-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .section {

@@ -1,4 +1,4 @@
-import { IconButton, Modal } from 'components';
+import { IconButton, Loader, Modal } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchUsersAPI } from 'http/userAPI';
 import { IUser, UserRoles } from 'models/IUser';
@@ -16,6 +16,7 @@ import { minusIcon, plusIcon } from 'icons';
 const OrderDetailMembersModal = () => {
   const [shops, setShops] = useState<IShop[]>([]);
   const [users, setUsers] = useState<IUser[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const orderMembersModal = useAppSelector(
     (state) => state.modal.orderMembersModal
@@ -39,11 +40,11 @@ const OrderDetailMembersModal = () => {
   };
 
   const fetchUsers = () => {
-    fetchUsersAPI(100, 1, [UserRoles.EMPLOYEE, UserRoles.ADMIN]).then(
-      (data) => {
+    fetchUsersAPI(100, 1, [UserRoles.EMPLOYEE, UserRoles.ADMIN])
+      .then((data) => {
         setUsers(usersMinusMembers(data.rows, order.orderMembers));
-      }
-    );
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const usersMinusMembers = (
@@ -125,6 +126,11 @@ const OrderDetailMembersModal = () => {
       hide={close}
     >
       <div className={styles.container}>
+        {isLoading && (
+          <div className={styles.loader}>
+            <Loader />
+          </div>
+        )}
         <div className={styles.section}>
           <div className={styles.title}>Участвуют в заказе:</div>
           <div className={styles.shops_container}>
