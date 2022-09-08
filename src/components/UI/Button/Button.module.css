@@ -2,7 +2,7 @@
 .primary,
 .primary_deemphasized,
 .link {
-  height: 36px;
+  min-height: 36px;
   width: 100%;
   color: var(--primary-text-color);
   padding: 0 12px;
