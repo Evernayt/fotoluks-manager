@@ -40,10 +40,16 @@ const UserRegistrationModal = () => {
   useEffect(() => {
     if (userRegistrationModal.isShowing) {
       if (userRegistrationModal.text !== '') {
-        const numbers = userRegistrationModal.text
+        let numbers = userRegistrationModal.text
           .split(/([0-9]+)/)
           .filter((token) => token.match(/[0-9]/))
           .join('');
+
+        if (numbers.startsWith('8')) {
+          numbers = numbers.substring(0, 11);
+        } else {
+          numbers = '8' + numbers.substring(0, 10);
+        }
 
         const words = userRegistrationModal.text
           .split(/([а-яА-Я]+)/)
