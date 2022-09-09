@@ -19,7 +19,7 @@ import {
 } from 'electron';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import * as fs from 'fs';
+//import * as fs from 'fs';
 
 let mainWindow: BrowserWindow | null = null;
 
