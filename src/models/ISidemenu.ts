@@ -1,7 +1,7 @@
+import { ElementType } from 'react';
+
 export interface ISidemenu {
   id: number;
-  checkedIcon: string;
-  icon: string;
+  Icon: ElementType;
   name: string;
-  color: string
 }
