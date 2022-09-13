@@ -1,113 +1,61 @@
-import searchIcon from './search-icon.svg';
-import ordersCheckedIcon from './orders-checked-icon.svg';
-import ordersIcon from './orders-icon.svg';
-import tasksIcon from './tasks-icon.svg';
-import tasksCheckedIcon from './tasks-checked-icon.svg';
-import messengerIcon from './messenger-icon.svg';
-import messengerCheckedIcon from './messenger-checked-icon.svg';
-import newOrderIcon from './new-order-icon.svg';
-import allOrdersCheckedIcon from './all-orders-checked-icon.svg';
-import allOrdersIcon from './all-orders-icon.svg';
-import newOrdersCheckedIcon from './new-orders-checked-icon.svg';
-import newOrdersIcon from './new-orders-icon.svg';
-import inWorkOrdersCheckedIcon from './in-work-orders-checked-icon.svg';
-import inWorkOrdersIcon from './in-work-orders-icon.svg';
-import readyOrdersCheckedIcon from './ready-orders-checked-icon.svg';
-import readyOrdersIcon from './ready-orders-icon.svg';
-import givenOrdersCheckedIcon from './given-orders-checked-icon.svg';
-import givenOrdersIcon from './given-orders-icon.svg';
-import canceledOrdersCheckedIcon from './canceled-orders-checked-icon.svg';
-import canceledOrdersIcon from './canceled-orders-icon.svg';
-import sidemenuCheckedIcon from './sidemenu-checked-icon.svg';
-import sidemenuIcon from './sidemenu-icon.svg';
-import shopCheckedIcon from './shop-checked-icon.svg';
-import shopIcon from './shop-icon.svg';
-import sendIcon from './send-icon.svg';
-import clipIcon from './clip-icon.svg';
-import closeIcon from './close-icon.svg';
-import editIcon from './edit-icon.svg';
-import dotsMenuIcon from './dots-menu-icon.svg';
-import close2Icon from './close-2-icon.svg';
-import createIcon from './create-icon.svg';
-import settingsIcon from './settings-icon.svg';
-import controlPanelIcon from './control-panel-icon.svg';
-import controlPanelCheckedIcon from './control-panel-checked-icon.svg';
-import userIcon from './user-icon.svg';
-import userCheckedIcon from './user-checked-icon.svg';
-import eyeIcon from './eye-icon.svg';
-import eyeOffIcon from './eye-off-icon.svg';
-import plusIcon from './plus-icon.svg';
-import minusIcon from './minus-icon.svg';
-import notificationIcon from './notification-icon.svg';
-import clearAllIcon from './clear-all-icon.svg';
-import categoryIcon from './category-icon.svg';
-import categoryCheckedIcon from './category-checked-icon.svg';
-import boxIcon from './box-icon.svg';
-import boxCheckedIcon from './box-checked-icon.svg';
-import mugIcon from './mug-icon.svg';
-import mugCheckedIcon from './mug-checked-icon.svg';
-import dropIcon from './drop-icon.svg';
-import editWhiteIcon from './edit-white-icon.svg';
-import folderIcon from './folder-icon.svg';
-import featureIcon from './feature-icon.svg';
-import featureCheckedIcon from './feature-checked-icon.svg';
-import paramIcon from './param-icon.svg';
-import paramCheckedIcon from './param-checked-icon.svg';
+import IconPlus from './IconPlus';
+import IconMinus from './IconMinus';
+import IconEdit from './IconEdit';
+import IconDotsMenu from './IconDotsMenu';
+import IconFolder from './IconFolder';
+import IconClose from './IconClose';
+import IconDrop from './IconDrop';
+import IconNotification from './IconNotification';
+import IconClearAll from './IconClearAll';
+import IconAllOrders from './IconAllOrders';
+import IconCanceledOrders from './IconCanceledOrders';
+import IconGivenOrders from './IconGivenOrders';
+import IconInWorkOrders from './IconInWorkOrders';
+import IconNewOrders from './IconNewOrders';
+import IconReadyOrders from './IconReadyOrders';
+import IconSidemenuChecked from './IconSidemenuChecked';
+import IconSidemenu from './IconSidemenu';
+import IconOrders from './IconOrders';
+import IconControlPanel from './IconControlPanel';
+import IconSearch from './IconSearch';
+import IconUser from './IconUser';
+import IconMug from './IconMug';
+import IconBox from './IconBox';
+import IconCategory from './IconCategory';
+import IconFeature from './IconFeature';
+import IconParam from './IconParam';
+import IconShop from './IconShop';
+import IconEye from './IconEye';
+import IconEyeOff from './IconEyeOff';
 
 export {
-  searchIcon,
-  ordersCheckedIcon,
-  ordersIcon,
-  tasksIcon,
-  tasksCheckedIcon,
-  messengerIcon,
-  messengerCheckedIcon,
-  newOrderIcon,
-  allOrdersCheckedIcon,
-  allOrdersIcon,
-  newOrdersCheckedIcon,
-  newOrdersIcon,
-  inWorkOrdersCheckedIcon,
-  inWorkOrdersIcon,
-  readyOrdersCheckedIcon,
-  readyOrdersIcon,
-  givenOrdersCheckedIcon,
-  givenOrdersIcon,
-  canceledOrdersCheckedIcon,
-  canceledOrdersIcon,
-  sidemenuCheckedIcon,
-  sidemenuIcon,
-  shopCheckedIcon,
-  shopIcon,
-  sendIcon,
-  clipIcon,
-  closeIcon,
-  editIcon,
-  dotsMenuIcon,
-  close2Icon,
-  createIcon,
-  settingsIcon,
-  controlPanelIcon,
-  controlPanelCheckedIcon,
-  userIcon,
-  userCheckedIcon,
-  eyeIcon,
-  eyeOffIcon,
-  plusIcon,
-  minusIcon,
-  notificationIcon,
-  clearAllIcon,
-  categoryIcon,
-  categoryCheckedIcon,
-  boxIcon,
-  boxCheckedIcon,
-  mugIcon,
-  mugCheckedIcon,
-  dropIcon,
-  editWhiteIcon,
-  folderIcon,
-  featureIcon,
-  featureCheckedIcon,
-  paramIcon,
-  paramCheckedIcon
+  IconPlus,
+  IconMinus,
+  IconEdit,
+  IconDotsMenu,
+  IconFolder,
+  IconClose,
+  IconDrop,
+  IconNotification,
+  IconClearAll,
+  IconAllOrders,
+  IconCanceledOrders,
+  IconGivenOrders,
+  IconInWorkOrders,
+  IconNewOrders,
+  IconReadyOrders,
+  IconSidemenuChecked,
+  IconSidemenu,
+  IconOrders,
+  IconControlPanel,
+  IconSearch,
+  IconUser,
+  IconMug,
+  IconBox,
+  IconCategory,
+  IconFeature,
+  IconParam,
+  IconShop,
+  IconEye,
+  IconEyeOff,
 };

@@ -1,20 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-:root {
+html[data-theme='LIGHT'] {
   /* COLORS */
   --primary-color: #ffd60a;
   --primary-deemphasized-color: #ffea83;
   --secondary-color: #ebeae4;
   --secondary-deemphasized-color: #f5f4ed;
+  --secondary-dark-color: #999999;
   --primary-text-color: #050505;
+  --text-color: #050505;
   --secondary-text-color: #6b6a65;
   --secondary-text-on-bg-color: #706d60;
   --background-color: #f5f4f0;
   --separator-color: #d4d3ce;
   --border-color: #e2e1dd;
+  --talbe-border-color: #eeede8;
   --tooltip-color: #3c3c3c;
   --tooltip-text-color: #ffffff;
   --card-background: #ffffff;
+  --primary-icon-color: #050505;
+  --secondary-icon-color: #050505;
+  --secondary-checked-icon-color: #ffffff;
+  --secondary-dark-icon-color: #ffffff;
+  --link-icon-color: #6b6a65;
+  --link-checked-icon-color: #514a26;
   --danger-color: #eb5c5c;
   --success-color: #14a44d;
   --warning-color: #ff8c00;
@@ -23,6 +32,7 @@
   --hover-primary-color: #f5cd0a;
   --hover-primary-deemphasized-color: #f2dc7c;
   --hover-secondary-color: #dfded8;
+  --hover-secondary-dark-color: #919191;
   --hover-background-color: #e9e8e4;
   --hover-card-color: #f2f2f2;
 
@@ -30,6 +40,65 @@
   --disabled-background: #ebeae4;
   --disabled-text: #c4c3bc;
 
+  /* OVERLAY */
+  --overlay-alpha-80: rgba(244, 244, 244, 0.8);
+
+  /* ICONS */
+  --check-icon: url(/src/icons/checkbox-light-icon.svg);
+
+  color-scheme: light;
+}
+
+html[data-theme='DARK'] {
+  /* COLORS */
+  --primary-color: #ffd60a;
+  --primary-deemphasized-color: #514a26;
+  --secondary-color: #3c3c3a;
+  --secondary-deemphasized-color: #474745;
+  --secondary-dark-color: #161617;
+  --primary-text-color: #050505;
+  --text-color: #e4e6eb;
+  --secondary-text-color: #b3b3b3;
+  --secondary-text-on-bg-color: #b8b7b0;
+  --background-color: #1a1a18;
+  --separator-color: #31312f;
+  --border-color: #42413e;
+  --talbe-border-color: #4d4b47;
+  --tooltip-color: #cbcbca;
+  --tooltip-text-color: #050505;
+  --card-background: #262624;
+  --primary-icon-color: #050505;
+  --secondary-icon-color: #e4e6eb;
+  --secondary-checked-icon-color: #050505;
+  --secondary-dark-icon-color: #e4e6eb;
+  --link-icon-color: #b8b7b0;
+  --link-checked-icon-color: #ffd60a;
+  --danger-color: #eb5c5c;
+  --success-color: #14a44d;
+  --warning-color: #ff8c00;
+
+  /* COLORS: HOVER */
+  --hover-primary-color: #f5cd0a;
+  --hover-primary-deemphasized-color: #635d3c;
+  --hover-secondary-color: #50504e;
+  --hover-secondary-dark-color: #2d2e2e;
+  --hover-background-color: #50504e;
+  --hover-card-color: #313130;
+
+  /* COLORS: DISABLED */
+  --disabled-background: #515150;
+  --disabled-text: #848483;
+
+  /* OVERLAY */
+  --overlay-alpha-80: rgba(11, 11, 11, 0.8);
+
+  /* ICONS */
+  --check-icon: url(/src/icons/checkbox-dark-icon.svg);
+
+  color-scheme: dark;
+}
+
+:root {
   /* SIZES */
   --border-radius: 8px;
   --table-column-padding: 16px;
@@ -40,9 +109,7 @@
   --shadow-2: rgba(0, 0, 0, 0.2);
   --shadow-5: rgba(0, 0, 0, 0.5);
   --shadow-8: rgba(0, 0, 0, 0.8);
-
-  /* OVERLAY */
-  --overlay-alpha-80: rgba(244, 244, 244, 0.8);
+  --shadow-inset: rgba(255, 255, 255, 0.05);
 }
 
 * {
@@ -50,6 +117,7 @@
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
+  color: var(--text-color);
 }
 
 input,
@@ -112,4 +180,28 @@ img {
 .pagination-break {
   padding: 8px;
   cursor: pointer;
+}
+
+.primary-icon {
+  stroke: var(--primary-icon-color);
+}
+
+.secondary-icon {
+  stroke: var(--secondary-icon-color);
+}
+
+.secondary-checked-icon {
+  stroke: var(--secondary-checked-icon-color);
+}
+
+.secondary-dark-icon {
+  stroke: var(--secondary-dark-icon-color);
+}
+
+.link-icon {
+  stroke: var(--link-icon-color);
+}
+
+.link-checked-icon {
+  stroke: var(--link-checked-icon-color);
 }
