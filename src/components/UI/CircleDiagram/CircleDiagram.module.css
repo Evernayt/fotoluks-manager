@@ -1,11 +1,15 @@
 .diagram_item {
   fill: none;
   stroke-width: 12;
-  
+
   animation-name: showValue;
   animation-duration: 1.5s;
-  transition-property: all; 
+  transition-property: all;
   transition-duration: 1.5s;
+}
+
+.diagram_item_placeholder {
+  stroke: var(--secondary-color);
 }
 
 @keyframes showValue {
@@ -16,4 +20,5 @@
 
 .text {
   font-size: 4px;
+  fill: var(--text-color);
 }

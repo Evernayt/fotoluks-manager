@@ -44,11 +44,13 @@ const CircleDiagram: FC<CircleDiagramProps> = ({ data, width, height }) => {
       ) : (
         <>
           <circle
-            className={styles.diagram_item}
+            className={[
+              styles.diagram_item,
+              styles.diagram_item_placeholder,
+            ].join(' ')}
             r="15.9"
             cx="50%"
             cy="50%"
-            stroke="#eee"
             strokeDasharray="100, 100"
           />
           <text
