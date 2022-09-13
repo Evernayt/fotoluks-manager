@@ -19,11 +19,12 @@ html[data-theme='LIGHT'] {
   --tooltip-text-color: #ffffff;
   --card-background: #ffffff;
   --primary-icon-color: #050505;
+  --primary-checked-icon-color: #514a26;
   --secondary-icon-color: #050505;
   --secondary-checked-icon-color: #ffffff;
   --secondary-dark-icon-color: #ffffff;
   --link-icon-color: #6b6a65;
-  --link-checked-icon-color: #514a26;
+  --link-checked-icon-color: #ffd60a;
   --danger-color: #eb5c5c;
   --success-color: #14a44d;
   --warning-color: #ff8c00;
@@ -68,6 +69,7 @@ html[data-theme='DARK'] {
   --tooltip-text-color: #050505;
   --card-background: #262624;
   --primary-icon-color: #050505;
+  --primary-checked-icon-color: #ffd60a;
   --secondary-icon-color: #e4e6eb;
   --secondary-checked-icon-color: #050505;
   --secondary-dark-icon-color: #e4e6eb;
@@ -184,6 +186,10 @@ img {
 
 .primary-icon {
   stroke: var(--primary-icon-color);
+}
+
+.primary-checked-icon {
+  stroke: var(--primary-checked-icon-color);
 }
 
 .secondary-icon {

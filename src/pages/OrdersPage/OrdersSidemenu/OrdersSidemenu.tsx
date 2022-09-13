@@ -94,7 +94,7 @@ const OrdersSidemenu = () => {
             onClick={() => navigate(ORDER_DETAIL_ROUTE)}
           >
             <div className={styles.btn_icon}>
-              <IconPlus className="link-checked-icon" size={20} />
+              <IconPlus className="primary-checked-icon" size={20} />
             </div>
             <span
               className={styles.text}
