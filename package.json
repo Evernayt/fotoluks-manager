@@ -177,7 +177,7 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "FotoluksManager",
+    "productName": "Fotoluks Manager",
     "appId": "org.erb.FotoluksManager",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
