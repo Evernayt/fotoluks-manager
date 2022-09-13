@@ -45,7 +45,9 @@ const UserRegistrationModal = () => {
           .filter((token) => token.match(/[0-9]/))
           .join('');
 
-        if (numbers.startsWith('8')) {
+        if (!numbers) {
+          numbers = '';
+        } else if (numbers.startsWith('8')) {
           numbers = numbers.substring(0, 11);
         } else {
           numbers = '8' + numbers.substring(0, 10);
