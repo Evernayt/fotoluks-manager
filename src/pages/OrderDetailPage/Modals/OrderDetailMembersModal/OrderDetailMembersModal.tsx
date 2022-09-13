@@ -11,7 +11,7 @@ import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './OrderDetailMembersModal.module.css';
 import { fetchShopsAPI } from 'http/shopAPI';
 import { IShop } from 'models/IShop';
-import { minusIcon, plusIcon } from 'icons';
+import { IconMinus, IconPlus } from 'icons';
 
 const OrderDetailMembersModal = () => {
   const [shops, setShops] = useState<IShop[]>([]);
@@ -139,8 +139,11 @@ const OrderDetailMembersModal = () => {
                 <div className={styles.shop_item}>
                   {shop.name}
                   <IconButton
-                    className={styles.shop_button}
-                    icon={minusIcon}
+                    style={{
+                      minHeight: '32px',
+                      padding: '4px',
+                    }}
+                    icon={<IconMinus className="secondary-icon" />}
                     onClick={() => deleteAllOrderMembers(shop.id)}
                   />
                 </div>
@@ -173,8 +176,11 @@ const OrderDetailMembersModal = () => {
                 <div className={styles.shop_item}>
                   {shop.name}
                   <IconButton
-                    className={styles.shop_button}
-                    icon={plusIcon}
+                    style={{
+                      minHeight: '32px',
+                      padding: '4px',
+                    }}
+                    icon={<IconPlus className="secondary-icon" />}
                     onClick={() => addAllOrderMembers(shop.id)}
                   />
                 </div>

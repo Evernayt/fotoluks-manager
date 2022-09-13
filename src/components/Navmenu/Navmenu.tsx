@@ -1,21 +1,13 @@
 import styles from './Navmenu.module.css';
-import {
-  ordersIcon,
-  ordersCheckedIcon,
-  tasksIcon,
-  tasksCheckedIcon,
-  controlPanelCheckedIcon,
-  controlPanelIcon,
-} from 'icons';
+import { IconControlPanel, IconOrders } from 'icons';
 import logoBird from '../../../assets/logo-bird.png';
 import {
   CONTROL_PANEL_ROUTE,
   ORDERS_ROUTE,
   PROFILE_ROUTE,
-  TASKS_ROUTE,
 } from 'constants/paths';
 import { useNavigate } from 'react-router-dom';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { defaultAvatar } from 'constants/images';
@@ -40,32 +32,25 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
     navigate(route);
   };
 
-  const pages = [
-    {
-      id: 'orders_navmenu',
-      route: ORDERS_ROUTE,
-      checkedIcon: ordersCheckedIcon,
-      icon: ordersIcon,
-      name: 'Заказы',
-      access: UserRoles.EMPLOYEE,
-    },
-    // {
-    //   id: 'tasks_navmenu',
-    //   route: TASKS_ROUTE,
-    //   checkedIcon: tasksCheckedIcon,
-    //   icon: tasksIcon,
-    //   name: 'Задачи',
-    //   access: UserRoles.EMPLOYEE,
-    // },
-    {
-      id: 'control_panel_navmenu',
-      route: CONTROL_PANEL_ROUTE,
-      checkedIcon: controlPanelCheckedIcon,
-      icon: controlPanelIcon,
-      name: 'Панель управления',
-      access: UserRoles.ADMIN,
-    },
-  ];
+  const pages = useMemo(
+    () => [
+      {
+        id: 'orders_navmenu',
+        route: ORDERS_ROUTE,
+        Icon: IconOrders,
+        name: 'Заказы',
+        access: UserRoles.EMPLOYEE,
+      },
+      {
+        id: 'control_panel_navmenu',
+        route: CONTROL_PANEL_ROUTE,
+        Icon: IconControlPanel,
+        name: 'Панель управления',
+        access: UserRoles.ADMIN,
+      },
+    ],
+    []
+  );
 
   return (
     <div className={styles.container}>
@@ -81,6 +66,7 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
           ) {
             return null;
           } else {
+            const { Icon } = page;
             return (
               <Tooltip label={page.name} placement="bottom" key={page.id}>
                 <div>
@@ -92,13 +78,12 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
                     onChange={() => navigateToRoute(page.route)}
                   />
                   <label className={styles.center_rbtn} htmlFor={page.id}>
-                    <img
-                      src={
+                    <Icon
+                      className={
                         activeRoute === page.route
-                          ? page.checkedIcon
-                          : page.icon
+                          ? 'link-checked-icon'
+                          : 'link-icon'
                       }
-                      alt={page.id}
                     />
                     <div className={styles.center_rbtn_line} />
                   </label>

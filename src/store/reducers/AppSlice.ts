@@ -1,8 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Themes } from 'constants/app';
 import { initialShop } from 'constants/InitialStates/initialShopState';
+import { THEME_KEY } from 'constants/localStorage';
 import { ORDERS_ROUTE } from 'constants/paths';
 import { GlobalMessageVariants, IGlobalMessage } from 'models/IGlobalMessage';
 import { IShop } from 'models/IShop';
+import { ITheme } from 'models/ITheme';
 
 type AppState = {
   activeRoute: string;
@@ -10,6 +13,7 @@ type AppState = {
   globalMessage: IGlobalMessage;
   notificationsBadge: boolean;
   mainFolder: string;
+  theme: ITheme;
 };
 
 const initialState: AppState = {
@@ -22,6 +26,9 @@ const initialState: AppState = {
   },
   notificationsBadge: false,
   mainFolder: '',
+  theme: localStorage.getItem(THEME_KEY)
+    ? JSON.parse(localStorage.getItem(THEME_KEY) || '{}')
+    : Themes[0],
 };
 
 export const appSlice = createSlice({
@@ -43,6 +50,9 @@ export const appSlice = createSlice({
     setMainFolder(state, action: PayloadAction<string>) {
       state.mainFolder = action.payload;
     },
+    setTheme(state, action: PayloadAction<ITheme>) {
+      state.theme = action.payload;
+    },
   },
 });
 
@@ -52,6 +62,7 @@ export const {
   showGlobalMessage,
   setNoificationsBadge,
   setMainFolder,
+  setTheme,
 } = appSlice.actions;
 
 export default appSlice.reducer;

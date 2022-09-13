@@ -7,29 +7,22 @@ export enum IconButtonVariants {
 }
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: ReactNode;
   variant?: IconButtonVariants;
-  icon: string;
-  children?: ReactNode;
   className?: string;
+  children?: ReactNode;
 }
 
 const IconButton: FC<IconButtonProps> = ({
-  variant = IconButtonVariants.default,
   icon,
-  children,
+  variant = IconButtonVariants.default,
   className,
+  children,
   ...props
 }) => {
   return (
     <button className={[styles[variant], className].join(' ')} {...props}>
-      <img
-        className={styles.icon}
-        style={
-          children === undefined ? { marginRight: 0 } : { marginRight: '8px' }
-        }
-        src={icon}
-        alt=""
-      />
+      {icon}
       {children}
     </button>
   );

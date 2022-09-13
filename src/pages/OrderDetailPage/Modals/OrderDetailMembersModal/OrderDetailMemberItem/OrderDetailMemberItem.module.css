@@ -19,8 +19,6 @@
 }
 
 .button {
-  min-height: 32px;
-  padding: 4px;
   opacity: 0;
   transition: opacity 200ms;
 }

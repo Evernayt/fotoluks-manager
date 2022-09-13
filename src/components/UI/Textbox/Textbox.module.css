@@ -28,6 +28,7 @@
   box-sizing: border-box;
   width: 100%;
   outline: 0;
+  background-color: var(--card-background);
 }
 
 .label {

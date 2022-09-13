@@ -19,7 +19,7 @@ import { userSlice } from 'store/reducers/UserSlice';
 import styles from './LoginPage.module.css';
 import socketio from 'socket/socketio';
 import { IUser, UserRoles } from 'models/IUser';
-import { logo } from 'constants/images';
+import { logo, logoDark } from 'constants/images';
 import RecentLogin from './RecentLogin/RecentLogin';
 import LoginModal from './Modals/LoginModal/LoginModal';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
@@ -32,6 +32,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState<string>('');
 
   const activeShop = useAppSelector((state) => state.app.activeShop);
+  const theme = useAppSelector((state) => state.app.theme);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -160,7 +161,11 @@ const LoginPage = () => {
       <LoginModal />
       <div className={styles.main_section}>
         <div>
-          <img className={styles.logo} src={logo} alt="logo" />
+          <img
+            className={styles.logo}
+            src={theme.value === 'DARK' ? logoDark : logo}
+            alt="logo"
+          />
           {recentLogins.length > 0 ? (
             <>
               <div className={styles.title}>Недавние входы</div>

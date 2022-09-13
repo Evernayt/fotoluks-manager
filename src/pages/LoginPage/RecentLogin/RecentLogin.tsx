@@ -1,7 +1,7 @@
 import { CircleButton } from 'components';
 import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { close2Icon } from 'icons';
+import { IconClose } from 'icons';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { IUser } from 'models/IUser';
 import { FC, memo } from 'react';
@@ -38,8 +38,7 @@ const RecentLogin: FC<RecentLoginProps> = memo(
       <div className={styles.container}>
         <CircleButton
           className={styles.close_button}
-          icon={close2Icon}
-          iconStyle={{ width: '24px', height: '24px' }}
+          icon={<IconClose className="secondary-icon" size={14} />}
           onClick={() => removeRecentLogin(user.id)}
         />
         <div onClick={openLoginModal}>

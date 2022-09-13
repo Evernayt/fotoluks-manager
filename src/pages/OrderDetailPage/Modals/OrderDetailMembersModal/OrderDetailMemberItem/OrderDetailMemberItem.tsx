@@ -1,6 +1,6 @@
 import { IconButton } from 'components';
 import { defaultAvatar } from 'constants/images';
-import { minusIcon, plusIcon } from 'icons';
+import { IconMinus, IconPlus } from 'icons';
 import { IUser } from 'models/IUser';
 import { FC } from 'react';
 import styles from './OrderDetailMemberItem.module.css';
@@ -25,7 +25,17 @@ const OrderDetailMemberItem: FC<OrderDetailMemberItemProps> = ({
       {user.name}
       <IconButton
         className={styles.button}
-        icon={isAdded ? minusIcon : plusIcon}
+        style={{
+          minHeight: '32px',
+          padding: '4px',
+        }}
+        icon={
+          isAdded ? (
+            <IconMinus className="secondary-icon" />
+          ) : (
+            <IconPlus className="secondary-icon" />
+          )
+        }
         onClick={clickHandler}
       />
     </div>

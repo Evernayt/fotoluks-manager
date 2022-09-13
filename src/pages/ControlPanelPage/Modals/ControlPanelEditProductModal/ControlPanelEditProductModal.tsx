@@ -17,7 +17,7 @@ import {
   fetchProductAPI,
   updateProductAPI,
 } from 'http/productAPI';
-import { plusIcon } from 'icons';
+import { IconPlus } from 'icons';
 import { ICategory } from 'models/ICategory';
 import { IProduct } from 'models/IProduct';
 import { useEffect, useState } from 'react';
@@ -148,7 +148,7 @@ const ControlPanelEditProductModal = () => {
           <div>
             <div className={styles.main_controls}>
               <Tooltip label="Категория">
-                <div style={{width: '100%'}}>
+                <div style={{ width: '100%' }}>
                   <SelectButton
                     items={categories}
                     defaultSelectedItem={selectedCategory}
@@ -160,7 +160,10 @@ const ControlPanelEditProductModal = () => {
 
               <Tooltip label="Добавить категорию">
                 <div>
-                  <IconButton icon={plusIcon} onClick={openEditCategoryModal} />
+                  <IconButton
+                    icon={<IconPlus className="secondary-icon" />}
+                    onClick={openEditCategoryModal}
+                  />
                 </div>
               </Tooltip>
             </div>

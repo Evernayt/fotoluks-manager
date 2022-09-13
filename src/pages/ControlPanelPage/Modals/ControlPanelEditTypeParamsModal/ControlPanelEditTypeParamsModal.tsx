@@ -3,7 +3,7 @@ import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchParamsByFeatureIdAPI } from 'http/paramAPI';
 import { fetchTypeParamsAPI, updateTypeParamsAPI } from 'http/typeAPI';
-import { minusIcon, plusIcon } from 'icons';
+import { IconMinus, IconPlus } from 'icons';
 import { IParam } from 'models/IParam';
 import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
@@ -115,7 +115,7 @@ const ControlPanelEditTypeParamsModal = () => {
             <div className={styles.param_item} key={typeParam.id}>
               {typeParam.name}
               <IconButton
-                icon={minusIcon}
+                icon={<IconMinus className="secondary-icon" />}
                 style={{ minHeight: '32px', padding: '4px' }}
                 onClick={() => removeTypeParam(typeParam)}
               />
@@ -127,7 +127,7 @@ const ControlPanelEditTypeParamsModal = () => {
             <div className={styles.param_item} key={param.id}>
               {param.name}
               <IconButton
-                icon={plusIcon}
+                icon={<IconPlus className="secondary-icon" />}
                 style={{ minHeight: '32px', padding: '4px' }}
                 onClick={() => addTypeParam(param)}
               />

@@ -1,6 +1,6 @@
 import logoBird from '../../../../assets/logo-bird.png';
 import { Button, CircleButton, DropdownButton } from 'components';
-import { closeIcon } from 'icons';
+import { IconClose } from 'icons';
 import { useNavigate } from 'react-router-dom';
 import { IModal } from 'hooks/useModal';
 import { FC, useEffect, useState } from 'react';
@@ -69,8 +69,8 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
     <div className={styles.container}>
       <div className={styles.left_section}>
         <CircleButton
-          icon={closeIcon}
-          style={{ marginRight: '8px', backgroundColor: '#999999' }}
+          className={styles.close_btn}
+          icon={<IconClose className="secondary-dark-icon" />}
           onClick={closeOrderDetail}
         />
         <img className={styles.logo} src={logoBird} alt="logo" />

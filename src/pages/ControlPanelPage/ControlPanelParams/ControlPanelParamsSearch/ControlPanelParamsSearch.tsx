@@ -1,11 +1,10 @@
 import { useDebounce } from 'hooks';
 import { useAppDispatch } from 'hooks/redux';
 import { useEffect, useState } from 'react';
-import { searchIcon } from 'icons';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
-import styles from './ControlPanelParamsSearch.module.css';
 import { IFoundParams } from 'models/IParam';
 import { searchParamsAPI } from 'http/paramAPI';
+import { NavmenuSearch } from 'components';
 
 const ControlPanelParamsSearch = () => {
   const [searchText, setSearchText] = useState<string>('');
@@ -42,15 +41,11 @@ const ControlPanelParamsSearch = () => {
   };
 
   return (
-    <div className={styles.input_container}>
-      <img className={styles.icon} src={searchIcon} alt="search-icon" />
-      <input
-        className={styles.input}
-        placeholder="Поиск параметров"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-      />
-    </div>
+    <NavmenuSearch
+      placeholder="Поиск параметров"
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+    />
   );
 };
 

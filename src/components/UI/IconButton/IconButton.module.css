@@ -11,17 +11,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.icon {
-  max-height: 24px;
-  max-width: 24px;
-  border-radius: 50%;
-  object-fit: cover;
+  gap: 8px;
 }
 
 .default {
   background-color: var(--secondary-color);
+  color: var(--text-color);
 }
 
 .default:hover {

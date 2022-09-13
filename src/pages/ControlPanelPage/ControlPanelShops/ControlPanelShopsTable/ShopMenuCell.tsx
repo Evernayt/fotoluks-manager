@@ -3,7 +3,7 @@ import { DropdownButtonVariants } from 'components/UI/DropdownButton/DropdownBut
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch } from 'hooks/redux';
 import { updateShopAPI } from 'http/shopAPI';
-import { dotsMenuIcon } from 'icons';
+import { IconDotsMenu } from 'icons';
 import { IShop } from 'models/IShop';
 import { Cell } from 'react-table';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
@@ -39,7 +39,7 @@ const ShopMenuCell = ({ row }: Cell<IShop>) => {
     <DropdownButton
       options={userMenu}
       placement={Placements.leftStart}
-      icon={dotsMenuIcon}
+      icon={<IconDotsMenu className="secondary-icon" />}
       variant={DropdownButtonVariants.link}
     />
   );

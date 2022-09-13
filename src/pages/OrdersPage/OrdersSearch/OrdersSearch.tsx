@@ -2,10 +2,9 @@ import { useDebounce } from 'hooks';
 import { useAppDispatch } from 'hooks/redux';
 import { searchOrdersAPI } from 'http/orderAPI';
 import { useEffect, useState } from 'react';
-import { searchIcon } from 'icons';
 import { IFoundOrders } from 'models/IOrder';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import styles from './OrdersSearch.module.css';
+import { NavmenuSearch } from 'components';
 
 const OrdersSearch = () => {
   const [searchText, setSearchText] = useState<string>('');
@@ -42,15 +41,11 @@ const OrdersSearch = () => {
   };
 
   return (
-    <div className={styles.input_container}>
-      <img className={styles.icon} src={searchIcon} alt="search-icon" />
-      <input
-        className={styles.input}
-        placeholder="Поиск заказов"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-      />
-    </div>
+    <NavmenuSearch
+      placeholder="Поиск заказов"
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+    />
   );
 };
 

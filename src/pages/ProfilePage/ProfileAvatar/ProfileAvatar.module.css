@@ -11,8 +11,8 @@
 
 .avatar_fogging {
   background: #000;
-  width: 160px;
-  height: 160px;
+  width: 161px;
+  height: 161px;
   border-radius: 50%;
   position: absolute;
   opacity: 0;
@@ -27,6 +27,10 @@
   z-index: 2;
   opacity: 0;
   transition: opacity 200ms;
+}
+
+.avatar_edit_icon:hover + .avatar_fogging {
+  opacity: 0.4;
 }
 
 .avatar_container:hover .avatar_edit_icon {

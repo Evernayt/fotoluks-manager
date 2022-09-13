@@ -16,6 +16,7 @@
 
 .default {
   background-color: var(--secondary-color);
+  color: var(--text-color);
 }
 
 .default:hover {
@@ -32,6 +33,7 @@
 
 .primary_deemphasized {
   background-color: var(--primary-deemphasized-color);
+  color: var(--text-color);
 }
 
 .primary_deemphasized:hover {

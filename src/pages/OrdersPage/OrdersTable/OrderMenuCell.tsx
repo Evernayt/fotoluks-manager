@@ -2,7 +2,7 @@ import { DropdownButton } from 'components';
 import { DropdownButtonVariants } from 'components/UI/DropdownButton/DropdownButton';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch } from 'hooks/redux';
-import { dotsMenuIcon } from 'icons';
+import { IconDotsMenu } from 'icons';
 import { IOrder } from 'models/IOrder';
 import { Cell } from 'react-table';
 import { modalSlice } from 'store/reducers/ModalSlice';
@@ -45,7 +45,7 @@ const OrderMenuCell = ({ row }: Cell<IOrder>) => {
     <DropdownButton
       options={orderMenu}
       placement={Placements.leftStart}
-      icon={dotsMenuIcon}
+      icon={<IconDotsMenu className="link-icon" />}
       variant={DropdownButtonVariants.link}
     />
   );

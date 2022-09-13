@@ -12,8 +12,8 @@
 .form_container {
   background-color: var(--card-background);
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px var(--shadow-1);
-  box-shadow: 0 12px 28px var(--shadow-2);
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1),
+    inset 0 0 0 1px var(--shadow-inset);
   margin: 24px;
 }
 

@@ -3,7 +3,7 @@ import { DropdownButtonVariants } from 'components/UI/DropdownButton/DropdownBut
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch } from 'hooks/redux';
 import { updateFeatureAPI } from 'http/featureAPI';
-import { dotsMenuIcon } from 'icons';
+import { IconDotsMenu } from 'icons';
 import { IFeature } from 'models/IFeature';
 import { Cell } from 'react-table';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
@@ -39,7 +39,7 @@ const FeatureMenuCell = ({ row }: Cell<IFeature>) => {
     <DropdownButton
       options={userMenu}
       placement={Placements.leftStart}
-      icon={dotsMenuIcon}
+      icon={<IconDotsMenu className="secondary-icon" />}
       variant={DropdownButtonVariants.link}
     />
   );

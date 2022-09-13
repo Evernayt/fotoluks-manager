@@ -1,7 +1,7 @@
 import { Button, CircleButton, Tooltip } from 'components';
 import { defaultAvatar, email, telegram, vk } from 'constants/images';
 import { useAppDispatch } from 'hooks/redux';
-import { close2Icon } from 'icons';
+import { IconClose } from 'icons';
 import { IUser } from 'models/IUser';
 import { mask } from 'node-masker';
 import { FC, useState } from 'react';
@@ -78,9 +78,8 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
           </div>
         </div>
         <CircleButton
-          icon={close2Icon}
+          icon={<IconClose className="secondary-icon" size={14} />}
           style={{ width: '18px', height: '18px' }}
-          iconStyle={{ width: '24px', height: '24px' }}
           onClick={close}
         />
       </div>

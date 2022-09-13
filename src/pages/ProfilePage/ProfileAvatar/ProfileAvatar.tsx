@@ -2,7 +2,7 @@ import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { uploadAvatarAPI } from 'http/uploadFileAPI';
 import { updateUserAPI } from 'http/userAPI';
-import { editWhiteIcon } from 'icons';
+import { IconEdit } from 'icons';
 import { IUser } from 'models/IUser';
 import { ChangeEvent, useRef } from 'react';
 import { userSlice } from 'store/reducers/UserSlice';
@@ -45,8 +45,10 @@ const ProfileAvatar = () => {
   return (
     <div>
       <div className={styles.avatar_container} onClick={handleImageClick}>
+        <IconEdit
+          className={[styles.avatar_edit_icon, 'secondary-dark-icon'].join(' ')}
+        />
         <div className={styles.avatar_fogging} />
-        <img className={styles.avatar_edit_icon} src={editWhiteIcon} />
       </div>
       <input
         type="file"

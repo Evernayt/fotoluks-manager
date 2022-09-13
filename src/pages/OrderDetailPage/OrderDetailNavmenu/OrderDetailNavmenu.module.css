@@ -15,6 +15,15 @@
   align-items: center;
 }
 
+.close_btn {
+  margin-right: 8px;
+  background-color: var(--secondary-dark-color);
+}
+
+.close_btn:hover {
+  background-color: var(--hover-secondary-dark-color);
+}
+
 .logo {
   margin-right: 8px;
   width: 42px;

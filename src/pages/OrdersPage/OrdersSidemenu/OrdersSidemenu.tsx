@@ -1,19 +1,13 @@
 import {
-  allOrdersCheckedIcon,
-  allOrdersIcon,
-  canceledOrdersCheckedIcon,
-  canceledOrdersIcon,
-  givenOrdersCheckedIcon,
-  givenOrdersIcon,
-  inWorkOrdersCheckedIcon,
-  inWorkOrdersIcon,
-  newOrderIcon,
-  newOrdersCheckedIcon,
-  newOrdersIcon,
-  readyOrdersCheckedIcon,
-  readyOrdersIcon,
-  sidemenuCheckedIcon,
-  sidemenuIcon,
+  IconAllOrders,
+  IconCanceledOrders,
+  IconGivenOrders,
+  IconInWorkOrders,
+  IconNewOrders,
+  IconReadyOrders,
+  IconSidemenuChecked,
+  IconSidemenu,
+  IconPlus,
 } from 'icons';
 import { useNavigate } from 'react-router-dom';
 import { ORDER_DETAIL_ROUTE } from 'constants/paths';
@@ -34,7 +28,12 @@ const OrdersSidemenu = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const setActiveStatus = (status: IStatus) => {
+  const setActiveStatus = (sidemenuItem: ISidemenu) => {
+    const status: IStatus = {
+      id: sidemenuItem.id,
+      name: sidemenuItem.name,
+      color: '',
+    };
     dispatch(orderSlice.actions.setActiveStatus(status));
   };
 
@@ -46,45 +45,33 @@ const OrdersSidemenu = () => {
     () => [
       {
         id: 0,
-        checkedIcon: allOrdersCheckedIcon,
-        icon: allOrdersIcon,
+        Icon: IconAllOrders,
         name: 'Все заказы',
-        color: '',
       },
       {
         id: 1,
-        checkedIcon: newOrdersCheckedIcon,
-        icon: newOrdersIcon,
+        Icon: IconNewOrders,
         name: 'Новые',
-        color: '',
       },
       {
         id: 2,
-        checkedIcon: inWorkOrdersCheckedIcon,
-        icon: inWorkOrdersIcon,
+        Icon: IconInWorkOrders,
         name: 'В работе',
-        color: '',
       },
       {
         id: 3,
-        checkedIcon: readyOrdersCheckedIcon,
-        icon: readyOrdersIcon,
+        Icon: IconReadyOrders,
         name: 'Готовые',
-        color: '',
       },
       {
         id: 4,
-        checkedIcon: givenOrdersCheckedIcon,
-        icon: givenOrdersIcon,
+        Icon: IconGivenOrders,
         name: 'Отданные',
-        color: '',
       },
       {
         id: 5,
-        checkedIcon: canceledOrdersCheckedIcon,
-        icon: canceledOrdersIcon,
+        Icon: IconCanceledOrders,
         name: 'Отмененные',
-        color: '',
       },
     ],
     []
@@ -107,7 +94,7 @@ const OrdersSidemenu = () => {
             onClick={() => navigate(ORDER_DETAIL_ROUTE)}
           >
             <div className={styles.btn_icon}>
-              <img src={newOrderIcon} alt="new-order" />
+              <IconPlus className="link-checked-icon" size={20} />
             </div>
             <span
               className={styles.text}
@@ -124,47 +111,50 @@ const OrdersSidemenu = () => {
 
         <div className="separator" />
 
-        {statuses.map((status) => (
-          <Tooltip
-            label={status.name}
-            placement="right"
-            delay={400}
-            disabled={!isMinimizedSidemenu}
-            key={status.id}
-          >
-            <div>
-              <input
-                id={status.id.toString()}
-                name="orders-sidemenu"
-                type="radio"
-                checked={activeStatus?.id === status.id}
-                onChange={() => setActiveStatus(status)}
-              />
-              <label className={styles.rbtn} htmlFor={status.id.toString()}>
-                <div className={styles.rbtn_icon}>
-                  <img
-                    src={
-                      activeStatus?.id === status.id
-                        ? status.checkedIcon
-                        : status.icon
+        {statuses.map((status) => {
+          const { Icon } = status;
+          return (
+            <Tooltip
+              label={status.name}
+              placement="right"
+              delay={400}
+              disabled={!isMinimizedSidemenu}
+              key={status.id}
+            >
+              <div>
+                <input
+                  id={status.id.toString()}
+                  name="orders-sidemenu"
+                  type="radio"
+                  checked={activeStatus?.id === status.id}
+                  onChange={() => setActiveStatus(status)}
+                />
+                <label className={styles.rbtn} htmlFor={status.id.toString()}>
+                  <div className={styles.rbtn_icon}>
+                    <Icon
+                      className={
+                        activeStatus?.id === status.id
+                          ? 'secondary-checked-icon'
+                          : 'secondary-icon'
+                      }
+                      size={20}
+                    />
+                  </div>
+                  <div
+                    className={styles.text}
+                    style={
+                      isMinimizedSidemenu
+                        ? { opacity: '0', visibility: 'hidden' }
+                        : { opacity: '1', visibility: 'visible' }
                     }
-                    alt={status.name}
-                  />
-                </div>
-                <div
-                  className={styles.text}
-                  style={
-                    isMinimizedSidemenu
-                      ? { opacity: '0', visibility: 'hidden' }
-                      : { opacity: '1', visibility: 'visible' }
-                  }
-                >
-                  {status.name}
-                </div>
-              </label>
-            </div>
-          </Tooltip>
-        ))}
+                  >
+                    {status.name}
+                  </div>
+                </label>
+              </div>
+            </Tooltip>
+          );
+        })}
       </div>
       <div>
         <input
@@ -174,10 +164,11 @@ const OrdersSidemenu = () => {
           onChange={toggleSidemenu}
         />
         <label className={styles.toggle} htmlFor="sidemenu_toggle">
-          <img
-            src={isMinimizedSidemenu ? sidemenuIcon : sidemenuCheckedIcon}
-            alt="sidemenu"
-          />
+          {isMinimizedSidemenu ? (
+            <IconSidemenu className="link-icon" size={20} />
+          ) : (
+            <IconSidemenuChecked className="link-icon" size={20} />
+          )}
         </label>
       </div>
     </div>

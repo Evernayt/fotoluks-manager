@@ -11,7 +11,7 @@ import { Modes } from 'constants/app';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchFeaturesAPI } from 'http/featureAPI';
 import { createParamAPI, fetchParamAPI, updateParamAPI } from 'http/paramAPI';
-import { plusIcon } from 'icons';
+import { IconPlus } from 'icons';
 import { IFeature } from 'models/IFeature';
 import { IParam } from 'models/IParam';
 import { useEffect, useState } from 'react';
@@ -136,7 +136,10 @@ const ControlPanelEditParamModal = () => {
 
           <Tooltip label="Добавить характеристику">
             <div>
-              <IconButton icon={plusIcon} onClick={openEditFeatureModal} />
+              <IconButton
+                icon={<IconPlus className="secondary-icon" />}
+                onClick={openEditFeatureModal}
+              />
             </div>
           </Tooltip>
         </div>

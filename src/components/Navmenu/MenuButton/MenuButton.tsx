@@ -4,7 +4,7 @@ import DropdownButton, {
 import { LOGIN_ROUTE, SETTINGS_ROUTE } from 'constants/paths';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch } from 'hooks/redux';
-import { dropIcon } from 'icons';
+import { IconDrop } from 'icons';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
@@ -45,7 +45,7 @@ const MenuButton = () => {
   return (
     <DropdownButton
       placement={Placements.bottomEnd}
-      icon={dropIcon}
+      icon={<IconDrop className="secondary-icon" size={20}/>}
       circle
       options={items}
     />

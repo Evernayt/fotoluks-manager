@@ -3,7 +3,7 @@ import { DropdownButtonVariants } from 'components/UI/DropdownButton/DropdownBut
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch } from 'hooks/redux';
 import { updateTypeAPI } from 'http/typeAPI';
-import { dotsMenuIcon } from 'icons';
+import { IconDotsMenu } from 'icons';
 import { IType } from 'models/IType';
 import { Cell } from 'react-table';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
@@ -39,7 +39,7 @@ const TypeMenuCell = ({ row }: Cell<IType>) => {
     <DropdownButton
       options={userMenu}
       placement={Placements.leftStart}
-      icon={dotsMenuIcon}
+      icon={<IconDotsMenu className="secondary-icon" />}
       variant={DropdownButtonVariants.link}
     />
   );

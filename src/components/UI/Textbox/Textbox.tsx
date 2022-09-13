@@ -1,4 +1,4 @@
-import { eyeIcon, eyeOffIcon } from 'icons';
+import { IconEye, IconEyeOff } from 'icons';
 import { CSSProperties, FC, InputHTMLAttributes, memo, useState } from 'react';
 import styles from './Textbox.module.css';
 
@@ -19,11 +19,13 @@ const Textbox: FC<TextboxProps> = memo(
     return (
       <div className={styles.container} style={containerStyle}>
         {isPassword && (
-          <img
-            className={styles.icon}
-            src={isPasswordShowing ? eyeOffIcon : eyeIcon}
-            onClick={passwordShowingToggle}
-          />
+          <div className={styles.icon} onClick={passwordShowingToggle}>
+            {isPasswordShowing ? (
+              <IconEyeOff className="link-icon" size={20} />
+            ) : (
+              <IconEye className="link-icon" size={20} />
+            )}
+          </div>
         )}
         <input
           className={styles.textbox}

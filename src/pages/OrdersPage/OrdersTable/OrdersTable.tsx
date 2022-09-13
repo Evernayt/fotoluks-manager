@@ -306,8 +306,8 @@ const OrdersTable = () => {
                         if (isStatus) {
                           return (
                             <td
+                              className={styles.status_cell}
                               {...cell.getCellProps()}
-                              style={{ borderBottom: '1px solid #EEEDE8' }}
                             >
                               <StatusSelectButton
                                 statuses={statuses}

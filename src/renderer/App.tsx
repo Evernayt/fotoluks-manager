@@ -19,8 +19,18 @@ import {
 } from 'pages';
 import { GlobalMessage } from 'components';
 import './App.css';
+import { useLayoutEffect } from 'react';
+import { useAppSelector } from 'hooks/redux';
+import { THEME_KEY } from 'constants/localStorage';
 
 export default function App() {
+  const theme = useAppSelector((state) => state.app.theme);
+
+  useLayoutEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme.value);
+    localStorage.setItem(THEME_KEY, JSON.stringify(theme));
+  }, [theme]);
+
   return (
     <Router>
       <GlobalMessage />

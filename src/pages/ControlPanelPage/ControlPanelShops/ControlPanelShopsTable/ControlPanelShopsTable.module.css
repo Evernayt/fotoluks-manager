@@ -17,7 +17,7 @@
 
 .column {
   padding: var(--table-column-padding);
-  border-bottom: 1px solid #eeede8;
+  border-bottom: 1px solid var(--talbe-border-color);
   color: var(--secondary-text-on-bg-color);
   font-weight: 400;
   text-align: left;
@@ -31,7 +31,7 @@
 
 .cell {
   padding: var(--table-cell-padding);
-  border-bottom: 1px solid #eeede8;
+  border-bottom: 1px solid var(--talbe-border-color);
 }
 
 .pagination {

@@ -1,17 +1,16 @@
-import { ButtonHTMLAttributes, CSSProperties, FC, memo } from 'react';
+import { ButtonHTMLAttributes, FC, memo, ReactNode } from 'react';
 import styles from './CircleButton.module.css';
 
 interface CircleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  icon: string;
-  iconStyle?: CSSProperties;
+  icon: ReactNode;
   className?: string;
 }
 
 const CircleButton: FC<CircleButtonProps> = memo(
-  ({ icon, iconStyle, className, ...props }) => {
+  ({ icon, className, ...props }) => {
     return (
       <button className={[styles.container, className].join(' ')} {...props}>
-        <img src={icon} alt="" style={iconStyle} />
+        {icon}
       </button>
     );
   }

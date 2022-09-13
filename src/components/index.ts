@@ -18,6 +18,7 @@ import Loader from './Loader/Loader';
 import Notification from './Notification/Notification';
 import CircleDiagram from './UI/CircleDiagram/CircleDiagram';
 import GlobalMessage from './GlobalMessage/GlobalMessage';
+import NavmenuSearch from './NavmenuSearch/NavmenuSearch';
 
 export {
   Navmenu,
@@ -39,5 +40,6 @@ export {
   Loader,
   Notification,
   CircleDiagram,
-  GlobalMessage
+  GlobalMessage,
+  NavmenuSearch,
 };

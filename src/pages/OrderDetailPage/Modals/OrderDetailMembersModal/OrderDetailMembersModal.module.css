@@ -50,11 +50,6 @@
   font-weight: 500;
 }
 
-.shop_button {
-  min-height: 32px;
-  padding: 4px;
-}
-
 .items_container {
   display: flex;
   flex-wrap: wrap;

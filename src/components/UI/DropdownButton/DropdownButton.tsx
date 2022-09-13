@@ -18,7 +18,7 @@ export enum DropdownButtonVariants {
 
 interface DropdownButtonProps extends HTMLAttributes<HTMLElement> {
   options?: IDropdownButtonOption[];
-  icon?: string;
+  icon?: ReactNode;
   text?: string;
   placement: Placements;
   variant?: DropdownButtonVariants;
@@ -65,10 +65,17 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
           onClick={toggle}
           ref={ref}
           style={
-            circle ? { borderRadius: '50%', height: '40px', width: '16px' } : {}
+            circle
+              ? {
+                  borderRadius: '50%',
+                  height: '40px',
+                  width: '40px',
+                  padding: 0,
+                }
+              : {}
           }
         >
-          {icon ? <img src={icon} alt="" /> : <span>{text}</span>}
+          {icon ? icon : <span>{text}</span>}
         </div>
         <ul
           className={styles.menu}

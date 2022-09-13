@@ -3,7 +3,7 @@ import { defaultAvatar } from 'constants/images';
 import { useDebounce } from 'hooks';
 import { useAppDispatch } from 'hooks/redux';
 import { searchUsersAPI } from 'http/userAPI';
-import { createIcon } from 'icons';
+import { IconPlus } from 'icons';
 import { IUser } from 'models/IUser';
 import { FC, HTMLAttributes, useEffect, useState } from 'react';
 import { mask } from 'node-masker';
@@ -78,7 +78,7 @@ const OrderDetailClientSearch: FC<OrderDetailClientSearchProps> = ({
       ))}
       <div className={styles.result} onClick={createOnRequest}>
         <div className={styles.create_icon}>
-          <img src={createIcon} alt="" />
+          <IconPlus className="primary-icon" />
         </div>
         <span className={styles.create_btn}>
           Создать по запросу{' '}

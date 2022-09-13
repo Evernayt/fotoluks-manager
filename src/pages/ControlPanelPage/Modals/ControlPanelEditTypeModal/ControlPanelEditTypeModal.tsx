@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { fetchFeaturesAPI } from 'http/featureAPI';
 import { fetchProductsAPI } from 'http/productAPI';
 import { createTypeAPI, fetchTypeAPI, updateTypeAPI } from 'http/typeAPI';
-import { minusIcon, plusIcon } from 'icons';
+import { IconMinus, IconPlus } from 'icons';
 import { IFeature } from 'models/IFeature';
 import { IProduct } from 'models/IProduct';
 import { IType } from 'models/IType';
@@ -232,7 +232,10 @@ const ControlPanelEditTypeModal = () => {
 
               <Tooltip label="Добавить продукт">
                 <div>
-                  <IconButton icon={plusIcon} onClick={openEditProductModal} />
+                  <IconButton
+                    icon={<IconPlus className="secondary-icon" />}
+                    onClick={openEditProductModal}
+                  />
                 </div>
               </Tooltip>
             </div>
@@ -270,7 +273,7 @@ const ControlPanelEditTypeModal = () => {
               </Button>
 
               <IconButton
-                icon={minusIcon}
+                icon={<IconMinus className="secondary-icon" />}
                 style={{ minHeight: '32px', padding: '4px' }}
                 onClick={() => removeFeature(feature)}
               />
@@ -279,7 +282,7 @@ const ControlPanelEditTypeModal = () => {
 
           <DropdownButton
             options={featureOptions}
-            icon={plusIcon}
+            icon={<IconPlus className="secondary-icon" />}
             placement={Placements.rightStart}
           />
         </div>

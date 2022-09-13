@@ -12,7 +12,7 @@ import {
   deleteAllNotificationsAPI,
   fetchNotificationsAPI,
 } from 'http/notificationAPI';
-import { clearAllIcon, notificationIcon } from 'icons';
+import { IconClearAll, IconNotification } from 'icons';
 import { useEffect, useRef, useState } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
 import { userSlice } from 'store/reducers/UserSlice';
@@ -81,7 +81,7 @@ const NotificationButton = () => {
       {notificationsBadge && <div className={styles.badge} />}
       <DropdownButton
         placement={Placements.bottomEnd}
-        icon={notificationIcon}
+        icon={<IconNotification className="secondary-icon" size={20} />}
         circle
         menuToggleCb={() =>
           dispatch(appSlice.actions.setNoificationsBadge(false))
@@ -93,7 +93,7 @@ const NotificationButton = () => {
               <Tooltip label="Очистить всё" placement="bottom">
                 <div>
                   <IconButton
-                    icon={clearAllIcon}
+                    icon={<IconClearAll className="link-icon" />}
                     variant={IconButtonVariants.link}
                     onClick={deleteAllNotifications}
                   ></IconButton>

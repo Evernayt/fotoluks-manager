@@ -9,7 +9,7 @@
   align-items: center;
   height: 36px;
   width: max-content;
-  border: 1px solid #eeede8;
+  border: 1px solid var(--talbe-border-color);
   padding: 0 12px;
   border-radius: 19px;
   cursor: pointer;
@@ -49,9 +49,7 @@
   cursor: default;
 }
 
-.container
-  input:not(:checked)
-  + .item:hover {
+.container input:not(:checked) + .item:hover {
   background-color: var(--hover-card-color);
   cursor: pointer;
 }

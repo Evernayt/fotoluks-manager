@@ -3,6 +3,10 @@
   height: 100vh;
 }
 
+.container div {
+  transition: background-color 200ms linear;
+}
+
 .panels {
   display: flex;
   margin: 24px 16px 16px 24px;

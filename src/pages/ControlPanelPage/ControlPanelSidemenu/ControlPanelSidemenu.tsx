@@ -1,20 +1,13 @@
 import {
-  boxCheckedIcon,
-  boxIcon,
-  categoryCheckedIcon,
-  categoryIcon,
-  featureCheckedIcon,
-  featureIcon,
-  mugCheckedIcon,
-  mugIcon,
-  paramCheckedIcon,
-  paramIcon,
-  shopCheckedIcon,
-  shopIcon,
-  sidemenuCheckedIcon,
-  sidemenuIcon,
-  userCheckedIcon,
-  userIcon,
+  IconBox,
+  IconCategory,
+  IconFeature,
+  IconMug,
+  IconParam,
+  IconShop,
+  IconUser,
+  IconSidemenuChecked,
+  IconSidemenu,
 } from 'icons';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Tooltip } from 'components';
@@ -37,52 +30,38 @@ const ControlPanelSidemenu = () => {
     () => [
       {
         id: 1,
-        checkedIcon: userCheckedIcon,
-        icon: userIcon,
+        Icon: IconUser,
         name: 'Пользователи',
-        color: '',
       },
       {
         id: 2,
-        checkedIcon: mugCheckedIcon,
-        icon: mugIcon,
+        Icon: IconMug,
         name: 'Товары',
-        color: '',
       },
       {
         id: 3,
-        checkedIcon: boxCheckedIcon,
-        icon: boxIcon,
+        Icon: IconBox,
         name: 'Продукты',
-        color: '',
       },
       {
         id: 4,
-        checkedIcon: categoryCheckedIcon,
-        icon: categoryIcon,
+        Icon: IconCategory,
         name: 'Категории',
-        color: '',
       },
       {
         id: 5,
-        checkedIcon: featureCheckedIcon,
-        icon: featureIcon,
+        Icon: IconFeature,
         name: 'Характеристики',
-        color: '',
       },
       {
         id: 6,
-        checkedIcon: paramCheckedIcon,
-        icon: paramIcon,
+        Icon: IconParam,
         name: 'Параметры',
-        color: '',
       },
       {
         id: 7,
-        checkedIcon: shopCheckedIcon,
-        icon: shopIcon,
+        Icon: IconShop,
         name: 'Филиалы',
-        color: '',
       },
     ],
     []
@@ -100,47 +79,52 @@ const ControlPanelSidemenu = () => {
       style={isMinimizedSidemenu ? { minWidth: '52px' } : { minWidth: '206px' }}
     >
       <div>
-        {items.map((item) => (
-          <Tooltip
-            label={item.name}
-            placement="right"
-            delay={400}
-            disabled={!isMinimizedSidemenu}
-            key={item.id}
-          >
-            <div>
-              <input
-                id={item.id.toString()}
-                name="orders-sidemenu"
-                type="radio"
-                checked={activeItemId === item.id}
-                onChange={() =>
-                  dispatch(controlPanelSlice.actions.setActiveItemId(item.id))
-                }
-              />
-              <label className={styles.rbtn} htmlFor={item.id.toString()}>
-                <div className={styles.rbtn_icon}>
-                  <img
-                    src={
-                      activeItemId === item.id ? item.checkedIcon : item.icon
-                    }
-                    alt={item.name}
-                  />
-                </div>
-                <span
-                  className={styles.text}
-                  style={
-                    isMinimizedSidemenu
-                      ? { opacity: '0', visibility: 'hidden' }
-                      : { opacity: '1', visibility: 'visible' }
+        {items.map((item) => {
+          const { Icon } = item;
+          return (
+            <Tooltip
+              label={item.name}
+              placement="right"
+              delay={400}
+              disabled={!isMinimizedSidemenu}
+              key={item.id}
+            >
+              <div>
+                <input
+                  id={item.id.toString()}
+                  name="orders-sidemenu"
+                  type="radio"
+                  checked={activeItemId === item.id}
+                  onChange={() =>
+                    dispatch(controlPanelSlice.actions.setActiveItemId(item.id))
                   }
-                >
-                  {item.name}
-                </span>
-              </label>
-            </div>
-          </Tooltip>
-        ))}
+                />
+                <label className={styles.rbtn} htmlFor={item.id.toString()}>
+                  <div className={styles.rbtn_icon}>
+                    <Icon
+                      className={
+                        activeItemId === item.id
+                          ? 'secondary-checked-icon'
+                          : 'secondary-icon'
+                      }
+                      size={20}
+                    />
+                  </div>
+                  <span
+                    className={styles.text}
+                    style={
+                      isMinimizedSidemenu
+                        ? { opacity: '0', visibility: 'hidden' }
+                        : { opacity: '1', visibility: 'visible' }
+                    }
+                  >
+                    {item.name}
+                  </span>
+                </label>
+              </div>
+            </Tooltip>
+          );
+        })}
       </div>
       <div>
         <input
@@ -150,10 +134,11 @@ const ControlPanelSidemenu = () => {
           onChange={toggleSidemenu}
         />
         <label className={styles.toggle} htmlFor="sidemenu_toggle">
-          <img
-            src={isMinimizedSidemenu ? sidemenuIcon : sidemenuCheckedIcon}
-            alt="sidemenu"
-          />
+          {isMinimizedSidemenu ? (
+            <IconSidemenu className="link-icon" size={20} />
+          ) : (
+            <IconSidemenuChecked className="link-icon" size={20} />
+          )}
         </label>
       </div>
     </div>

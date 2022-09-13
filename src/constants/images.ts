@@ -5,5 +5,15 @@ import vk from '../../assets/vk.png';
 import telegram from '../../assets/telegram.png';
 import noImage from '../../assets/no-image.jpg';
 import logo from '../../assets/logo.png';
+import logoDark from '../../assets/logo-dark.png';
 
-export { defaultAvatar, logoBird, email, vk, telegram, noImage, logo };
+export {
+  defaultAvatar,
+  logoBird,
+  email,
+  vk,
+  telegram,
+  noImage,
+  logo,
+  logoDark,
+};

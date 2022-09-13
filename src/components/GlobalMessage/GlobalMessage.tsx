@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { closeIcon } from 'icons';
+import { IconClose } from 'icons';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { useEffect } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
@@ -31,9 +31,11 @@ const GlobalMessage = () => {
   return isShowing ? (
     <div className={[styles.container, styles[variant]].join(' ')}>
       <div className={styles.text}>{message}</div>
-      <div className={styles.close_button} onClick={close}>
-        <img className={styles.close_icon} src={closeIcon} />
-      </div>
+      <IconClose
+        className={[styles.close_button, 'secondary-dark-icon'].join(' ')}
+        size={18}
+        onClick={close}
+      />
     </div>
   ) : null;
 };

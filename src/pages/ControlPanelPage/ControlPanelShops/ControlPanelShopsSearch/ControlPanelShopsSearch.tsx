@@ -1,11 +1,10 @@
 import { useDebounce } from 'hooks';
 import { useAppDispatch } from 'hooks/redux';
 import { useEffect, useState } from 'react';
-import { searchIcon } from 'icons';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
-import styles from './ControlPanelShopsSearch.module.css';
 import { IFoundShops } from 'models/IShop';
 import { searchShopsAPI } from 'http/shopAPI';
+import { NavmenuSearch } from 'components';
 
 const ControlPanelShopsSearch = () => {
   const [searchText, setSearchText] = useState<string>('');
@@ -42,15 +41,11 @@ const ControlPanelShopsSearch = () => {
   };
 
   return (
-    <div className={styles.input_container}>
-      <img className={styles.icon} src={searchIcon} alt="search-icon" />
-      <input
-        className={styles.input}
-        placeholder="Поиск филиалов"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-      />
-    </div>
+    <NavmenuSearch
+      placeholder="Поиск филиалов"
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+    />
   );
 };
 

@@ -1,4 +1,5 @@
 import { Button, Checkbox, Navmenu, SelectButton } from 'components';
+import { Themes } from 'constants/app';
 import {
   MAIN_FOLDER_KEY,
   MAXIMIZE_SCREEN_KEY,
@@ -16,6 +17,7 @@ const SettingsPage = () => {
   const [shops, setShops] = useState<IShop[]>([]);
   const [maximizeScreen, setMaximizeScreen] = useState<boolean>(false);
 
+  const theme = useAppSelector((state) => state.app.theme);
   const mainFolder = useAppSelector((state) => state.app.mainFolder);
   const activeShop = useAppSelector((state) => state.app.activeShop);
 
@@ -65,11 +67,27 @@ const SettingsPage = () => {
     setMaximizeScreen(!maximizeScreen);
   };
 
+  const changeTheme = () => {
+    if (theme.value === 'LIGHT') {
+      dispatch(appSlice.actions.setTheme(Themes[1]));
+    } else {
+      dispatch(appSlice.actions.setTheme(Themes[0]));
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Navmenu />
       <div className={styles.panels}>
         <div className={styles.panel}>
+          <div>
+            <div className={styles.label}>Тема</div>
+            <SelectButton
+              items={Themes}
+              defaultSelectedItem={theme}
+              changeHandler={changeTheme}
+            />
+          </div>
           <div>
             <div className={styles.label}>На всеь экран при запуске</div>
             <Checkbox

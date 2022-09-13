@@ -1,5 +1,5 @@
 import { CircleButton } from 'components';
-import { close2Icon } from 'icons';
+import { IconClose } from 'icons';
 import { FC, ReactNode } from 'react';
 import styles from './Modal.module.css';
 
@@ -25,7 +25,7 @@ const Modal: FC<ModalProps> = ({
         <div className={styles.form_header}>
           <span className={styles.form_header_title}>{title}</span>
           <CircleButton
-            icon={close2Icon}
+            icon={<IconClose className="link-icon" />}
             style={{
               height: '36px',
               width: '36px',

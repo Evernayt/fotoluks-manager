@@ -20,7 +20,7 @@
 
 .checkbox:checked {
   background-color: var(--primary-color);
-  background-image: url(/src/icons/checkbox.svg);
+  background-image: var(--check-icon);
   background-repeat: no-repeat;
   background-position: center;
   border: 0;

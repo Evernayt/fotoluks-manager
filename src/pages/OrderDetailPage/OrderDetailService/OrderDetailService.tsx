@@ -3,7 +3,7 @@ import { Modes } from 'constants/app';
 import { noImage } from 'constants/images';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { dotsMenuIcon, editIcon, folderIcon } from 'icons';
+import { IconDotsMenu, IconEdit, IconFolder } from 'icons';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { FC } from 'react';
 import { orderSlice } from 'store/reducers/OrderSlice';
@@ -149,18 +149,18 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
 
       <div className={styles.controls}>
         <IconButton
-          icon={editIcon}
+          icon={<IconEdit className="secondary-icon" />}
           style={{ marginBottom: '8px' }}
           onClick={() => openServiceModal(Modes.EDIT_MODE, finishedProduct)}
         />
         <DropdownButton
           options={serviceMenu}
-          icon={dotsMenuIcon}
+          icon={<IconDotsMenu className="secondary-icon" />}
           placement={Placements.leftStart}
         />
         {finishedProduct.folder && (
           <IconButton
-            icon={folderIcon}
+            icon={<IconFolder className="secondary-icon" />}
             style={{ marginTop: '8px' }}
             onClick={openFolder}
           />

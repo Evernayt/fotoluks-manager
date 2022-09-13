@@ -1,7 +1,7 @@
 import { IconButton } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { deleteFavoriteAPI, fetchFavoritesAPI } from 'http/favoriteAPI';
-import { minusIcon, plusIcon } from 'icons';
+import { IconMinus, IconPlus } from 'icons';
 import { IFavorite } from 'models/IFavorite';
 import { IFinishedProduct } from 'models/IFinishedProduct';
 import { ISelectedParam } from 'models/ISelectedParam';
@@ -67,7 +67,10 @@ const OrderDetailFavorites = () => {
 
   return (
     <div className={styles.container}>
-      <IconButton icon={plusIcon} onClick={openOrderDetailAddFavoriteModal} />
+      <IconButton
+        icon={<IconPlus className="secondary-icon" />}
+        onClick={openOrderDetailAddFavoriteModal}
+      />
       {favorites.map((favorite) => (
         <div className={styles.favorite_container} key={favorite.id}>
           <div
@@ -83,7 +86,11 @@ const OrderDetailFavorites = () => {
 
           <IconButton
             className={styles.delete_button}
-            icon={minusIcon}
+            style={{
+              minHeight: '32px',
+              padding: '4px',
+            }}
+            icon={<IconMinus className="secondary-icon" />}
             onClick={() => deleteFavorite(favorite.id)}
           />
         </div>
