@@ -8,7 +8,7 @@ Password: `ivan321`
 P.S. The server is deployed on «Heroku», so slowdowns are possible.
 
 ###### Orders table
-![img_1](https://user-images.githubusercontent.com/110179244/189907635-7d997959-a0a9-412f-9028-9683dd7b3569.JPG)
+![img_1](https://user-images.githubusercontent.com/110179244/189914906-b65dd6af-aa60-48e9-9735-bc4345149b59.JPG)
 
 ###### Order details
 ![img_2](https://user-images.githubusercontent.com/110179244/189907639-450c03df-5d22-48d1-84ae-2c9746e133b1.JPG)
