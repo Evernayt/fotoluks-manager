@@ -30,6 +30,7 @@ const LoginPage = () => {
   const [recentLogins, setRecentLogins] = useState<IUser[]>([]);
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const activeShop = useAppSelector((state) => state.app.activeShop);
   const theme = useAppSelector((state) => state.app.theme);
@@ -85,6 +86,7 @@ const LoginPage = () => {
   };
 
   const signIn = () => {
+    setIsLoading(true);
     loginAPI(login, password)
       .then((data) => {
         if (data.role === UserRoles.USER) {
@@ -112,7 +114,8 @@ const LoginPage = () => {
             isShowing: true,
           })
         )
-      );
+      )
+      .finally(() => setIsLoading(false));
   };
 
   const navigateToRoute = (route: string) => {
@@ -203,7 +206,14 @@ const LoginPage = () => {
             <Button
               variant={ButtonVariants.primary}
               style={{ fontSize: '16px', fontWeight: 'bold', height: '42px' }}
-              disabled={login === '' || password === '' || activeShop.id === 0}
+              disabled={
+                login === '' ||
+                password === '' ||
+                activeShop.id === 0 ||
+                isLoading
+              }
+              isLoading={isLoading}
+              loadingText="Авторизация..."
               onClick={signIn}
             >
               Войти
