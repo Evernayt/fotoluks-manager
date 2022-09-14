@@ -44,7 +44,6 @@
 .product_param_color {
   padding: 2px 4px;
   border-radius: var(--border-radius);
-  color: white;
 }
 
 .product_price {

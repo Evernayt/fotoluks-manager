@@ -113,7 +113,9 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
                           backgroundColor: selectedParam.param.value,
                         }}
                       >
-                        <span>{selectedParam.param.name}</span>
+                        <span style={{ color: 'white' }}>
+                          {selectedParam.param.name}
+                        </span>
                       </span>
                     </div>
                   );
