@@ -100,6 +100,12 @@ export const orderSlice = createSlice({
         (finishedProduct) => finishedProduct.id !== action.payload
       );
       state.order.finishedProducts = finishedProducts;
+
+      const finishedProductsForCreate = state.finishedProductsForCreate.filter(
+        (finishedProductForCreate) =>
+          finishedProductForCreate.id !== action.payload
+      );
+      state.finishedProductsForCreate = finishedProductsForCreate;
     },
     addFinishedProductsForDelete(state, action: PayloadAction<number>) {
       state.finishedProductsForDelete.push(action.payload);
