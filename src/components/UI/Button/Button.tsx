@@ -11,12 +11,21 @@ export enum ButtonVariants {
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariants;
   className?: string;
+  isLoading?: boolean;
+  loadingText?: string;
   children: ReactNode;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { variant = ButtonVariants.default, className, children, ...props },
+    {
+      variant = ButtonVariants.default,
+      className,
+      isLoading,
+      loadingText = 'Загрузка...',
+      children,
+      ...props
+    },
     ref
   ) => {
     return (
@@ -25,7 +34,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         ref={ref}
       >
-        {children}
+        {isLoading ? loadingText : children}
       </button>
     );
   }
