@@ -1,12 +1,6 @@
 # fotoluks-manager
 Application for managing orders. React + Electron is used.
 
-### Authorization data for test:
-Login: `ivan`\
-Password: `ivan321`
-
-P.S. The server is deployed on «Heroku», so slowdowns are possible.
-
 ###### Orders table
 ![img_1](https://user-images.githubusercontent.com/110179244/189914906-b65dd6af-aa60-48e9-9735-bc4345149b59.JPG)
 
