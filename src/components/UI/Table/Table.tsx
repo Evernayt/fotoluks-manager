@@ -44,7 +44,7 @@ const Table = <T extends object>({
       return (
         <td
           {...cell.getCellProps()}
-          className={styles.cell}
+          className={styles.custom_cell}
           style={{ ...cell.column.style }}
         >
           <CustomCell.cell cell={cell} {...CustomCell.props} />
