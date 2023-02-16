@@ -1,0 +1,33 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  appearance: none;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--hover-card-color);
+  }
+
+  &:checked {
+    background-color: var(--primary-color);
+    background-image: var(--check-icon);
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 0;
+  }
+}
+
+.label {
+  margin-left: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}

@@ -2,7 +2,7 @@ import { Navmenu } from 'components';
 import ProfileAvatar from './ProfileAvatar/ProfileAvatar';
 import ProfileStatistics from './ProfileStatistics/ProfileStatistics';
 import ProfileUserEdit from './ProfileUserEdit/ProfileUserEdit';
-import styles from './ProfilePage.module.css';
+import styles from './ProfilePage.module.scss';
 
 const ProfilePage = () => {
   return (

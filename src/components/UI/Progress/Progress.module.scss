@@ -1,0 +1,14 @@
+.container {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--secondary-color);
+  position: relative;
+
+  div {
+    transition: width 1s;
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 4px;
+  }
+}

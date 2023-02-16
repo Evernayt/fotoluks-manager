@@ -27,6 +27,11 @@ import IconParam from './IconParam';
 import IconShop from './IconShop';
 import IconEye from './IconEye';
 import IconEyeOff from './IconEyeOff';
+import IconMove from './IconMove';
+import IconFriends from './IconFriends';
+import IconMoysklad from './IconMoysklad';
+import IconCloudDownload from './IconCloudDownload';
+import IconArrowBarToDown from './IconArrowBarToDown';
 
 export {
   IconPlus,
@@ -58,4 +63,9 @@ export {
   IconShop,
   IconEye,
   IconEyeOff,
+  IconMove,
+  IconFriends,
+  IconMoysklad,
+  IconCloudDownload,
+  IconArrowBarToDown,
 };

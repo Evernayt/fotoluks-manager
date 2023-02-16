@@ -1,7 +1,7 @@
-import { IUser } from './IUser';
+import { IEmployee } from './api/IEmployee';
 
 export interface IWatcher {
   socketId?: string;
-  user: IUser;
+  employee: IEmployee;
   orderId: number;
 }

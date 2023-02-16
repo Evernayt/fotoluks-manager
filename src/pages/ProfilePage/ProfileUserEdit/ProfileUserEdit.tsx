@@ -1,52 +1,53 @@
+import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
 import { Button, Textbox } from 'components';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { updateUserAPI, updateUserPasswordAPI } from 'http/userAPI';
 import { useEffect, useState } from 'react';
-import { userSlice } from 'store/reducers/UserSlice';
-import styles from './ProfileUserEdit.module.css';
+import { employeeSlice } from 'store/reducers/EmployeeSlice';
+import styles from './ProfileUserEdit.module.scss';
 
 const ProfileUserEdit = () => {
   const [name, setName] = useState<string>('');
   const [login, setLogin] = useState<string>('');
   const [oldPassword, setOldPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
-  const [userMessage, setUserMessage] = useState<string>('');
-  const [passwordMessage, setPasswordMessage] = useState<string>('');
 
-  const user = useAppSelector((state) => state.user.user);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!user) return;
+    if (!employee) return;
 
-    setName(user.name);
-    setLogin(user.login);
+    setName(employee.name);
+    setLogin(employee.login);
   }, []);
 
-  const updateUser = () => {
-    if (!user) return;
+  const updateEmployee = () => {
+    if (!employee) return;
 
-    const updatedUser = { ...user, name, login };
-    updateUserAPI(updatedUser)
+    const updatedEmployee = { ...employee, name, login };
+    EmployeeAPI.update(updatedEmployee)
       .then((data) => {
-        setUserMessage('');
-        dispatch(userSlice.actions.updateUser(data));
+        dispatch(employeeSlice.actions.updateEmployee(data));
       })
-      .catch((e) => setUserMessage(e.response.data.message));
+      .catch((e) => showGlobalMessage(e.response.data.message));
   };
 
-  const updateUserPassword = () => {
-    if (!user) return;
+  const updateEmployeePassword = () => {
+    if (!employee) return;
 
-    updateUserPasswordAPI(user.id, oldPassword, newPassword)
+    EmployeeAPI.updatePassword({
+      id: employee.id,
+      oldPassword,
+      newPassword,
+    })
       .then(() => {
-        setPasswordMessage('');
         setOldPassword('');
         setNewPassword('');
       })
-      .catch((e) => setPasswordMessage(e.response.data.message));
+      .catch((e) => showGlobalMessage(e.response.data.message));
   };
 
   return (
@@ -61,14 +62,11 @@ const ProfileUserEdit = () => {
         value={login}
         onChange={(e) => setLogin(e.target.value)}
       />
-      {userMessage !== '' && (
-        <div className={styles.error_message}>{userMessage}</div>
-      )}
       <Button
         variant={ButtonVariants.primary}
         style={{ marginBottom: '24px' }}
         disabled={name === '' || login === ''}
-        onClick={updateUser}
+        onClick={updateEmployee}
       >
         Изменить
       </Button>
@@ -84,13 +82,10 @@ const ProfileUserEdit = () => {
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
       />
-      {passwordMessage !== '' && (
-        <div className={styles.error_message}>{passwordMessage}</div>
-      )}
       <Button
         variant={ButtonVariants.primary}
         disabled={oldPassword === '' || newPassword === ''}
-        onClick={updateUserPassword}
+        onClick={updateEmployeePassword}
       >
         Изменить пароль
       </Button>

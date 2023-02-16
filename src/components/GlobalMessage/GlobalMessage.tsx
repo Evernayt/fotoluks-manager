@@ -3,7 +3,7 @@ import { IconClose } from 'icons';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { useEffect } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
-import styles from './GlobalMessage.module.css';
+import styles from './GlobalMessage.module.scss';
 
 const GlobalMessage = () => {
   const { message, variant, isShowing } = useAppSelector(
@@ -20,7 +20,7 @@ const GlobalMessage = () => {
 
   const close = () => {
     dispatch(
-      appSlice.actions.showGlobalMessage({
+      appSlice.actions.setGlobalMessage({
         message: '',
         variant: GlobalMessageVariants.success,
         isShowing: false,

@@ -1,35 +1,46 @@
 import { IconSearch } from 'icons';
 import { FC, HTMLAttributes, ReactNode, useEffect, useState } from 'react';
-import styles from './Search.module.css';
+import styles from './Search.module.scss';
 
-interface SearchProps extends HTMLAttributes<HTMLDivElement> {
-  searchText: string;
-  setSearchText: (v: string) => void;
-  placeholder: string;
-  resultMaxHeight: number;
-  children: ReactNode;
+type SimpleSpread<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
+
+interface PropsExtra {
+  onChange: (value: any) => void;
+}
+
+interface SearchProps
+  extends SimpleSpread<HTMLAttributes<HTMLDivElement>, PropsExtra> {
+  value: string;
+  onChange: (value: any) => void;
+  children?: ReactNode;
+  placeholder?: string;
+  resultMaxHeight?: number;
+  showResults?: boolean;
+  className?: string;
 }
 
 const Search: FC<SearchProps> = ({
-  searchText,
-  setSearchText,
-  placeholder,
-  resultMaxHeight,
+  value,
+  onChange,
   children,
+  placeholder = 'Поиск',
+  resultMaxHeight = 300,
+  showResults = true,
+  className,
   ...props
 }) => {
   const [isShowing, setIsShowing] = useState<boolean>(false);
 
   useEffect(() => {
-    if (searchText.length > 0) {
+    if (value.length > 0) {
       setIsShowing(true);
     } else {
       setIsShowing(false);
     }
-  }, [searchText]);
+  }, [value]);
 
   return (
-    <div className={styles.container} {...props}>
+    <div className={[styles.container, className].join(' ')} {...props}>
       <div className={styles.input_container}>
         <IconSearch
           className={[styles.icon, 'link-icon'].join(' ')}
@@ -38,11 +49,11 @@ const Search: FC<SearchProps> = ({
         <input
           className={styles.input}
           placeholder={placeholder}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
       </div>
-      {isShowing && (
+      {showResults && isShowing && (
         <div
           className={styles.result_container}
           style={{ maxHeight: `${resultMaxHeight}px` }}

@@ -1,43 +1,41 @@
+import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { Button, SelectButton } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { logo } from 'constants/images';
-import {
-  INITIAL_SETTINGS_COMPLETED_KEY,
-  MAIN_FOLDER_KEY,
-  SHOP_KEY,
-} from 'constants/localStorage';
 import { LOGIN_ROUTE } from 'constants/paths';
-import { Placements } from 'helpers/calcPlacement';
+import {
+  getActiveShop,
+  getMainFolder,
+  setActiveShop,
+  setInitialSettingsCompleted,
+  setMainFolder,
+} from 'helpers/localStorage';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchShopsAPI } from 'http/shopAPI';
-import { IShop } from 'models/IShop';
+import { IShop } from 'models/api/IShop';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { appSlice } from 'store/reducers/AppSlice';
-import styles from './InitialSettingsPage.module.css';
+import styles from './InitialSettingsPage.module.scss';
 
 const InitialSettingsPage = () => {
+  const [folder, setFolder] = useState<string>(getMainFolder());
   const [shops, setShops] = useState<IShop[]>([]);
 
-  const mainFolder = useAppSelector((state) => state.app.mainFolder);
   const activeShop = useAppSelector((state) => state.app.activeShop);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const folder = localStorage.getItem(MAIN_FOLDER_KEY);
-    dispatch(appSlice.actions.setMainFolder(folder ? folder : ''));
-
     fetchShops();
   }, []);
 
   const fetchShops = () => {
-    fetchShopsAPI().then((data) => {
+    ShopAPI.getAll().then((data) => {
       setShops(data.rows);
 
-      const shop = JSON.parse(localStorage.getItem(SHOP_KEY) || '{}');
-      if (Object.keys(shop).length !== 0) {
+      const shop = getActiveShop();
+      if (shop) {
         dispatch(appSlice.actions.setActiveShop(shop));
       }
     });
@@ -45,12 +43,11 @@ const InitialSettingsPage = () => {
 
   const selectFolder = () => {
     window.electron.ipcRenderer.sendMessage('select-directory', ['']);
-
     window.electron.ipcRenderer.once('select-directory', (arg: any) => {
       const fullPath: string = arg[0][0];
-      if (fullPath === undefined) return;
+      if (!fullPath) return;
 
-      dispatch(appSlice.actions.setMainFolder(fullPath));
+      setFolder(fullPath);
     });
   };
 
@@ -59,9 +56,9 @@ const InitialSettingsPage = () => {
   };
 
   const save = () => {
-    localStorage.setItem(MAIN_FOLDER_KEY, mainFolder);
-    localStorage.setItem(SHOP_KEY, JSON.stringify(activeShop));
-    localStorage.setItem(INITIAL_SETTINGS_COMPLETED_KEY, 'true');
+    setMainFolder(folder);
+    setActiveShop(activeShop);
+    setInitialSettingsCompleted(true);
 
     navigate(LOGIN_ROUTE);
   };
@@ -80,9 +77,9 @@ const InitialSettingsPage = () => {
           </div>
           <div className={styles.folder_select}>
             <Button onClick={selectFolder}>
-              {mainFolder ? 'Изменить папку' : 'Выбрать папку'}
+              {folder ? 'Изменить папку' : 'Выбрать папку'}
             </Button>
-            {mainFolder && <div className={styles.folder}>{mainFolder}</div>}
+            {folder && <div className={styles.folder}>{folder}</div>}
           </div>
         </div>
         <div className={styles.card}>
@@ -91,15 +88,14 @@ const InitialSettingsPage = () => {
             <SelectButton
               items={shops}
               defaultSelectedItem={activeShop}
-              changeHandler={selectShop}
-              placement={Placements.bottomStart}
+              onChange={selectShop}
             />
           </div>
         </div>
         <Button
           className={styles.save_button}
           variant={ButtonVariants.primary}
-          disabled={mainFolder === '' || activeShop.id === 0}
+          disabled={folder === '' || activeShop.id === 0}
           onClick={save}
         >
           Применить

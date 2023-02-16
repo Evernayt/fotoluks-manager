@@ -1,56 +1,28 @@
-import styles from './Navmenu.module.css';
-import { IconControlPanel, IconOrders } from 'icons';
 import logoBird from '../../../assets/logo-bird.png';
-import {
-  CONTROL_PANEL_ROUTE,
-  ORDERS_ROUTE,
-  PROFILE_ROUTE,
-} from 'constants/paths';
-import { useNavigate } from 'react-router-dom';
+import { PROFILE_ROUTE } from 'constants/paths';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FC, ReactNode, useMemo } from 'react';
-import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { useAppSelector } from 'hooks/redux';
 import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { defaultAvatar } from 'constants/images';
-import { UserRoles } from 'models/IUser';
-import { appSlice } from 'store/reducers/AppSlice';
 import NotificationButton from './NotificationButton/NotificationButton';
 import MenuButton from './MenuButton/MenuButton';
+import styles from './Navmenu.module.scss';
+import { getApps } from 'helpers';
+import Updater from 'components/Updater/Updater';
 
-interface INavmenu {
+interface INavmenuProps {
   searchRender?: () => ReactNode;
 }
 
-const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
-  const activeRoute = useAppSelector((state) => state.app.activeRoute);
-  const user = useAppSelector((state) => state.user.user);
+const Navmenu: FC<INavmenuProps> = ({ searchRender = () => null }) => {
+  const employee = useAppSelector((state) => state.employee.employee);
 
-  const dispatch = useAppDispatch();
+  const location = useLocation();
+
   const navigate = useNavigate();
 
-  const navigateToRoute = (route: string) => {
-    dispatch(appSlice.actions.setActiveRoute(route));
-    navigate(route);
-  };
-
-  const pages = useMemo(
-    () => [
-      {
-        id: 'orders_navmenu',
-        route: ORDERS_ROUTE,
-        Icon: IconOrders,
-        name: 'Заказы',
-        access: UserRoles.EMPLOYEE,
-      },
-      {
-        id: 'control_panel_navmenu',
-        route: CONTROL_PANEL_ROUTE,
-        Icon: IconControlPanel,
-        name: 'Панель управления',
-        access: UserRoles.ADMIN,
-      },
-    ],
-    []
-  );
+  const employeeApps = useMemo(() => getApps(employee?.apps), [employee?.apps]);
 
   return (
     <div className={styles.container}>
@@ -59,38 +31,31 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
         {searchRender()}
       </div>
       <div className={styles.center_section}>
-        {pages.map((page) => {
-          if (
-            page.access === UserRoles.ADMIN &&
-            user?.role !== UserRoles.ADMIN
-          ) {
-            return null;
-          } else {
-            const { Icon } = page;
-            return (
-              <Tooltip label={page.name} placement="bottom" key={page.id}>
-                <div>
-                  <input
-                    id={page.id}
-                    name="navmenu"
-                    type="radio"
-                    checked={activeRoute === page.route}
-                    onChange={() => navigateToRoute(page.route)}
+        {employeeApps.map((app) => {
+          const { Icon } = app;
+          return (
+            <Tooltip label={app.description} placement="bottom" key={app.value}>
+              <div>
+                <input
+                  id={app.value}
+                  name="navmenu"
+                  type="radio"
+                  checked={location.pathname === app.route}
+                  onChange={() => navigate(app.route)}
+                />
+                <label className={styles.center_rbtn} htmlFor={app.value}>
+                  <Icon
+                    className={
+                      location.pathname === app.route
+                        ? 'link-checked-icon'
+                        : 'link-icon'
+                    }
                   />
-                  <label className={styles.center_rbtn} htmlFor={page.id}>
-                    <Icon
-                      className={
-                        activeRoute === page.route
-                          ? 'link-checked-icon'
-                          : 'link-icon'
-                      }
-                    />
-                    <div className={styles.center_rbtn_line} />
-                  </label>
-                </div>
-              </Tooltip>
-            );
-          }
+                  <div className={styles.center_rbtn_line} />
+                </label>
+              </div>
+            </Tooltip>
+          );
         })}
       </div>
       <div className={styles.right_section}>
@@ -98,17 +63,18 @@ const Navmenu: FC<INavmenu> = ({ searchRender = () => null }) => {
           id="profile_navmenu"
           name="navmenu"
           type="radio"
-          checked={activeRoute === PROFILE_ROUTE}
-          onChange={() => navigateToRoute(PROFILE_ROUTE)}
+          checked={location.pathname === PROFILE_ROUTE}
+          onChange={() => navigate(PROFILE_ROUTE)}
         />
         <label className={styles.profile_rbtn} htmlFor="profile_navmenu">
           <img
             className={styles.profile_avatar}
-            src={user?.avatar ? user.avatar : defaultAvatar}
+            src={employee?.avatar ? employee.avatar : defaultAvatar}
             alt=""
           />
-          <span>{user?.name}</span>
+          <span>{employee?.name}</span>
         </label>
+        <Updater />
         <NotificationButton />
         <MenuButton />
       </div>

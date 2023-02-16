@@ -7,26 +7,26 @@ import OrderDetailSidemenu from './OrderDetailSidemenu/OrderDetailSidemenu';
 import { useModal } from 'hooks';
 import OrderDetailCancelModal from './Modals/OrderDetailCancelModal/OrderDetailCancelModal';
 import OrderDetailUnsavedDataModal from './Modals/OrderDetailUnsavedDataModal/OrderDetailUnsavedDataModal';
-import { createClone, createOrderBodyForSave } from 'helpers';
+import { createClone } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchOrderAPI, saveOrderAPI } from 'http/orderAPI';
-import { IFinishedProduct } from 'models/IFinishedProduct';
-import { DEF_FORMAT, Modes } from 'constants/app';
-import { IOrder } from 'models/IOrder';
-import UserRegistrationModal from './Modals/UserRegistrationModal/UserRegistrationModal';
+import { DEF_DATE_FORMAT, Modes } from 'constants/app';
 import EditUserModal from 'components/UserCard/EditUserModal/EditUserModal';
-import styles from './OrderDetailPage.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import OrderDetailMembersModal from './Modals/OrderDetailMembersModal/OrderDetailMembersModal';
-import { createNotificationAPI } from 'http/notificationAPI';
-import { IUser } from 'models/IUser';
 import moment from 'moment';
 import socketio from 'socket/socketio';
 import OrderDetailFavorites from './OrderDetailFavorites/OrderDetailFavorites';
 import OrderDetailAddFavoriteModal from './Modals/OrderDetailAddFavoriteModal/OrderDetailAddFavoriteModal';
 import { Loader } from 'components';
-import { appSlice } from 'store/reducers/AppSlice';
-import { GlobalMessageVariants } from 'models/IGlobalMessage';
+import { IFinishedProduct } from 'models/api/IFinishedProduct';
+import OrderAPI from 'api/OrderAPI/OrderAPI';
+import { IEmployee } from 'models/api/IEmployee';
+import { IOrder } from 'models/api/IOrder';
+import NotificationAPI from 'api/NotificationAPI/NotificationAPI';
+import { createOrderBodyForSave } from './OrderDetailPage.service';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
+import styles from './OrderDetailPage.module.scss';
+import UserRegistrationModal from './Modals/UserRegistrationModal/UserRegistrationModal';
 
 type LocationState = {
   state: {
@@ -67,7 +67,7 @@ const OrderDetailPage = () => {
   );
   const order = useAppSelector((state) => state.order.order);
   const beforeOrder = useAppSelector((state) => state.order.beforeOrder);
-  const user = useAppSelector((state) => state.user.user);
+  const employee = useAppSelector((state) => state.employee.employee);
   const activeShop = useAppSelector((state) => state.app.activeShop);
   const orderMembersForCreate = useAppSelector(
     (state) => state.order.orderMembersForCreate
@@ -79,11 +79,11 @@ const OrderDetailPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (state?.orderId !== undefined) {
+    if (state?.orderId) {
       fetchOrder(state.orderId);
 
-      if (user) {
-        socketio.addWatcher({ user, orderId: state.orderId });
+      if (employee) {
+        socketio.addWatcher({ employee, orderId: state.orderId });
       }
     }
   }, []);
@@ -100,7 +100,7 @@ const OrderDetailPage = () => {
 
   const fetchOrder = (orderId: number) => {
     setIsLoading(true);
-    fetchOrderAPI(orderId)
+    OrderAPI.getOne(orderId)
       .then((data) => {
         dispatch(orderSlice.actions.setBeforeOrder(data));
         dispatch(orderSlice.actions.setOrder(data));
@@ -117,27 +117,30 @@ const OrderDetailPage = () => {
     serviceModal.toggle();
   };
 
-  const notifyMembersEdit = (user: IUser, order: IOrder) => {
+  const notifyMembersEdit = (employee: IEmployee, order: IOrder) => {
     if (orderMembersForCreate.length > 0) {
-      const userIds = [];
-
+      const employeeIds = [];
       for (let i = 0; i < orderMembersForCreate.length; i++) {
-        userIds.push(orderMembersForCreate[i].user.id);
+        employeeIds.push(orderMembersForCreate[i].employee.id);
       }
 
       const title = 'Добавлен в участники';
-      const text = `${user.name} добавил вас в участники заказа № ${order.id}`;
+      const text = `${employee.name} добавил вас в участники заказа № ${order.id}`;
 
-      createNotificationAPI(title, text, userIds).then((data) => {
+      NotificationAPI.create({ title, text, employeeIds }).then((data) => {
         socketio.sendNotification(data);
       });
     }
 
     if (orderMembersForDelete.length > 0) {
       const title = 'Удален из участников';
-      const text = `${user.name} удалил вас из участников заказа № ${order.id}`;
+      const text = `${employee.name} удалил вас из участников заказа № ${order.id}`;
 
-      createNotificationAPI(title, text, orderMembersForDelete).then((data) => {
+      NotificationAPI.create({
+        title,
+        text,
+        employeeIds: orderMembersForDelete,
+      }).then((data) => {
         socketio.sendNotification(data);
       });
     }
@@ -145,22 +148,22 @@ const OrderDetailPage = () => {
 
   const notifyMembers = (orderClone: IOrder, beforeOrderClone: IOrder) => {
     if (orderClone.id === 0) return;
-    if (orderClone.orderMembers.length === 0) return;
+    if (!orderClone.orderMembers?.length) return;
 
-    const orderMembersIds = [];
+    const employeeIds = [];
     for (let i = 0; i < orderClone.orderMembers.length; i++) {
-      orderMembersIds.push(orderClone.orderMembers[i].user.id);
+      employeeIds.push(orderClone.orderMembers[i].employee.id);
     }
 
     if (orderClone.deadline !== beforeOrderClone.deadline) {
       const title = 'Изменен срок заказа';
-      const text = `${user?.name} изменил срок заказа № ${
+      const text = `${employee?.name} изменил срок заказа № ${
         orderClone.id
-      } с ${moment(beforeOrderClone.deadline).format(DEF_FORMAT)} на ${moment(
-        orderClone.deadline
-      ).format(DEF_FORMAT)}`;
+      } с ${moment(beforeOrderClone.deadline).format(
+        DEF_DATE_FORMAT
+      )} на ${moment(orderClone.deadline).format(DEF_DATE_FORMAT)}`;
 
-      createNotificationAPI(title, text, orderMembersIds).then((data) => {
+      NotificationAPI.create({ title, text, employeeIds }).then((data) => {
         socketio.sendNotification(data);
       });
     }
@@ -171,7 +174,7 @@ const OrderDetailPage = () => {
       return;
     }
 
-    if (!user) return;
+    if (!employee) return;
 
     setIsLoading(true);
 
@@ -183,13 +186,13 @@ const OrderDetailPage = () => {
       finishedProductsForDelete,
       order,
       sum,
-      user.id,
+      employee.id,
       activeShop.id,
       orderMembersForCreate,
       orderMembersForDelete
     );
 
-    saveOrderAPI(body)
+    OrderAPI.create(body)
       .then((data) => {
         let orderClone: IOrder = createClone(order);
         const beforeOrderClone: IOrder = createClone(beforeOrder);
@@ -208,23 +211,17 @@ const OrderDetailPage = () => {
         dispatch(orderSlice.actions.saveOrder(orderClone));
         dispatch(orderSlice.actions.setHaveUnsavedData(false));
 
-        notifyMembersEdit(user, data.order);
+        notifyMembersEdit(employee, data.order);
         notifyMembers(orderClone, beforeOrderClone);
 
         socketio.updateOrder(data.order);
 
         if (isOrderCreate) {
-          socketio.addWatcher({ user, orderId: data.order.id });
+          socketio.addWatcher({ employee, orderId: data.order.id });
         }
       })
       .catch((e) =>
-        dispatch(
-          appSlice.actions.showGlobalMessage({
-            message: e.response.data ? e.response.data.message : e.message,
-            variant: GlobalMessageVariants.danger,
-            isShowing: true,
-          })
-        )
+        showGlobalMessage(e.response.data ? e.response.data.message : e.message)
       )
       .finally(() => setIsLoading(false));
   };
@@ -281,7 +278,7 @@ const OrderDetailPage = () => {
           </div>
           <div className={styles.services_section}>
             <div className={styles.services_cards}>
-              {finishedProducts.map((finishedProduct) => (
+              {finishedProducts?.map((finishedProduct) => (
                 <OrderDetailService
                   finishedProduct={finishedProduct}
                   openServiceModal={openServiceModal}

@@ -3,7 +3,7 @@ import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch } from 'hooks/redux';
 import { FC } from 'react';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import styles from './OrderDetailCancelModal.module.css';
+import styles from './OrderDetailCancelModal.module.scss';
 
 interface OrderDetailCancelModalProps {
   isShowing: boolean;

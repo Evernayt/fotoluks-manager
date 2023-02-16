@@ -1,3 +1,5 @@
+import ProductAPI from 'api/ProductAPI/ProductAPI';
+import TypeAPI from 'api/TypeAPI/TypeAPI';
 import {
   Button,
   Loader,
@@ -7,24 +9,24 @@ import {
   Textbox,
   Tooltip,
 } from 'components';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { Modes } from 'constants/app';
+import { INITIAL_PRODUCT } from 'constants/states/product-states';
+import { INITIAL_TYPE } from 'constants/states/type-states';
 import { groupBy } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchProductsAPI } from 'http/productAPI';
-import { fetchTypesByProductIdAPI } from 'http/typeAPI';
-import { IFinishedProduct } from 'models/IFinishedProduct';
+import { IFinishedProduct } from 'models/api/IFinishedProduct';
+import { IParam } from 'models/api/IParam';
+import { IProduct } from 'models/api/IProduct';
+import { ISelectedParam } from 'models/api/ISelectedParam';
+import { IType } from 'models/api/IType';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
-import { IParam } from 'models/IParam';
-import { IProduct } from 'models/IProduct';
-import { ISelectedParam } from 'models/ISelectedParam';
-import { IType } from 'models/IType';
 import { FC, useEffect, useState } from 'react';
-import { appSlice } from 'store/reducers/AppSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { v4 as uuidv4 } from 'uuid';
 import OrderDetailServiceSearch from '../../OrderDetailServiceSearch/OrderDetailServiceSearch';
-import styles from './OrderDetailServiceModal.module.css';
+import styles from './OrderDetailServiceModal.module.scss';
 
 interface OrderDetailServiceModalProps {
   isShowing: boolean;
@@ -39,27 +41,11 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
   mode,
   finishedProduct,
 }) => {
-  const initialProduct: IProduct = {
-    id: 0,
-    name: 'Выберите продукт',
-    pluralName: '',
-    description: '',
-    image: '',
-  };
-
-  const initialType: IType = {
-    id: 0,
-    name: 'Выберите тип',
-    price: 0,
-    image: '',
-    features: [],
-  };
-
   const [products, setProducts] = useState<IProduct[]>([]);
   const [types, setTypes] = useState<IType[]>([]);
   const [selectedProduct, setSelectedProduct] =
-    useState<IProduct>(initialProduct);
-  const [selectedType, setSelectedType] = useState<IType>(initialType);
+    useState<IProduct>(INITIAL_PRODUCT);
+  const [selectedType, setSelectedType] = useState<IType>(INITIAL_TYPE);
   const [features, setFeatures] = useState<IParam[][]>([]);
   const [selectedParams, setSelectedParams] = useState<ISelectedParam[]>([]);
   const [price, setPrice] = useState<number>(0);
@@ -79,16 +65,18 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
       setQuantity(finishedProduct.quantity);
       setComment(finishedProduct.comment);
 
-      fetchProductsAPI().then((productData) => {
+      ProductAPI.getAll().then((productData) => {
         setProducts(productData.rows);
+        if (!finishedProduct.product) return;
         setSelectedProduct(finishedProduct.product);
 
-        fetchTypesByProductIdAPI(finishedProduct.product.id)
+        const productId = finishedProduct.product.id;
+        TypeAPI.getAll({ productId })
           .then((typeData) => {
-            setTypes(typeData);
+            setTypes(typeData.rows);
 
-            const selectedFinishedProductType = typeData.find(
-              (type) => type.id === finishedProduct.type.id
+            const selectedFinishedProductType = typeData.rows.find(
+              (type) => type.id === finishedProduct.type?.id
             );
             if (!selectedFinishedProductType) return;
             setSelectedType(selectedFinishedProductType);
@@ -98,12 +86,14 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
                 groupBy(selectedFinishedProductType.params, 'featureId')
               );
 
+              if (!finishedProduct.selectedParams) return;
               for (let i = 0; i < finishedProduct.selectedParams.length; i++) {
+                const selectedParam = finishedProduct.selectedParams[i];
                 setSelectedParams((prevState) => [
                   ...prevState,
                   {
-                    id: finishedProduct.selectedParams[i].id,
-                    param: finishedProduct.selectedParams[i].param,
+                    id: selectedParam.id,
+                    param: selectedParam.param,
                   },
                 ]);
               }
@@ -117,22 +107,24 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
   }, []);
 
   const fetchProducts = () => {
-    fetchProductsAPI().then((data) => {
+    ProductAPI.getAll().then((data) => {
       setProducts(data.rows);
     });
   };
 
   const fetchTypes = (productId: number) => {
-    fetchTypesByProductIdAPI(productId).then((data) => {
-      setTypes(data);
+    TypeAPI.getAll({ productId }).then((data) => {
+      setTypes(data.rows);
     });
   };
 
   const selectProduct = (product: IProduct) => {
+    if (product === INITIAL_PRODUCT) return;
+
     setSelectedProduct(product);
     setPrice(0);
 
-    setSelectedType(initialType);
+    setSelectedType(INITIAL_TYPE);
     setFeatures([]);
     setSelectedParams([]);
     fetchTypes(product.id);
@@ -170,69 +162,57 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     setSelectedProduct(product);
     setPrice(0);
 
-    setSelectedType(initialType);
-    fetchTypesByProductIdAPI(product.id).then((data) => {
-      setTypes(data);
+    setSelectedType(INITIAL_TYPE);
+    TypeAPI.getAll({ productId: product.id }).then((data) => {
+      setTypes(data.rows);
       selectType(type);
     });
   };
 
   const isValidationSuccess = () => {
     if (selectedProduct.id === 0) {
-      dispatch(
-        appSlice.actions.showGlobalMessage({
-          message: 'Выберите продукт',
-          variant: GlobalMessageVariants.warning,
-          isShowing: true,
-        })
-      );
+      showGlobalMessage('Выберите продукт', GlobalMessageVariants.warning);
       return false;
     } else if (types.length !== 0 && selectedType.id === 0) {
-      dispatch(
-        appSlice.actions.showGlobalMessage({
-          message: 'Выберите тип',
-          variant: GlobalMessageVariants.warning,
-          isShowing: true,
-        })
-      );
+      showGlobalMessage('Выберите тип', GlobalMessageVariants.warning);
       return false;
     } else {
       return true;
     }
   };
 
+  const createFinishedProduct = (
+    finishedProductId: number | string
+  ): IFinishedProduct => {
+    return {
+      id: finishedProductId,
+      price,
+      quantity,
+      comment,
+      folder: '',
+      product: selectedProduct,
+      type: selectedType,
+      selectedParams,
+    };
+  };
+
+  const updateFinishedProduct = (
+    finishedProduct: IFinishedProduct
+  ): IFinishedProduct => {
+    return {
+      id: finishedProduct.id,
+      price,
+      quantity,
+      comment,
+      folder: finishedProduct.folder,
+      product: selectedProduct,
+      type: selectedType,
+      selectedParams,
+    };
+  };
+
   const createOrUpdateFinishedProduct = () => {
     if (!isValidationSuccess()) return;
-
-    const createFinishedProduct = (
-      finishedProductId: number | string
-    ): IFinishedProduct => {
-      return {
-        id: finishedProductId,
-        price,
-        quantity,
-        comment,
-        folder: '',
-        product: selectedProduct,
-        type: selectedType,
-        selectedParams,
-      };
-    };
-
-    const updateFinishedProduct = (
-      finishedProduct: IFinishedProduct
-    ): IFinishedProduct => {
-      return {
-        id: finishedProduct.id,
-        price,
-        quantity,
-        comment,
-        folder: finishedProduct.folder,
-        product: selectedProduct,
-        type: selectedType,
-        selectedParams,
-      };
-    };
 
     if (mode === Modes.ADD_MODE) {
       const createdFinishedProduct = createFinishedProduct(uuidv4());
@@ -285,8 +265,8 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         )}
         {mode === Modes.ADD_MODE && (
           <OrderDetailServiceSearch
-            searchSelect={searchSelect}
             style={{ marginBottom: '16px' }}
+            onClick={searchSelect}
           />
         )}
         <div className={styles.main_controls}>
@@ -294,14 +274,14 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
             items={products}
             defaultSelectedItem={selectedProduct}
             disabled={mode === Modes.EDIT_MODE}
-            changeHandler={(e) => selectProduct(e)}
+            onChange={(e) => selectProduct(e)}
             style={{ width: '228px' }}
           />
           {types.length !== 0 && (
             <SelectButton
               items={types}
               defaultSelectedItem={selectedType}
-              changeHandler={(e) => selectType(e)}
+              onChange={(e) => selectType(e)}
               style={{ width: '228px' }}
             />
           )}
@@ -317,7 +297,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
                 <SelectButton
                   items={feature}
                   defaultSelectedItem={selectedParams[index]?.param!}
-                  changeHandler={(e) => selectParam(e)}
+                  onChange={(e) => selectParam(e)}
                   style={{ width: '228px' }}
                 />
               </div>
@@ -327,7 +307,6 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         <div className={styles.main_controls}>
           <Textbox
             label="Количество"
-            style={{ width: '100%' }}
             type="number"
             min={1}
             value={quantity}
@@ -335,7 +314,6 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
           />
           <Textbox
             label="Цена"
-            style={{ width: '100%' }}
             type="number"
             min={0}
             value={price}

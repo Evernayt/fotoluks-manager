@@ -1,6 +1,6 @@
 import { mask as masker, unMask } from 'node-masker';
 import { CSSProperties, FC, InputHTMLAttributes } from 'react';
-import styles from './MaskedTextbox.module.css';
+import styles from './MaskedTextbox.module.scss';
 
 interface MaskedTextboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;

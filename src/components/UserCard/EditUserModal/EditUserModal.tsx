@@ -1,15 +1,15 @@
+import { UpdateUserDto } from 'api/UserAPI/dto/update-user.dto';
+import UserAPI from 'api/UserAPI/UserAPI';
+import VerificationAPI from 'api/VerificationAPI/VerificationAPI';
 import { Button, MaskedTextbox, Modal, Textbox } from 'components';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { updateUserAPI } from 'http/userAPI';
-import { isVerifiedAPI } from 'http/verificationAPI';
-import { GlobalMessageVariants } from 'models/IGlobalMessage';
-import { IUser } from 'models/IUser';
+import { IUser } from 'models/api/IUser';
 import { useEffect, useState } from 'react';
-import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import styles from './EditUserModal.module.css';
+import styles from './EditUserModal.module.scss';
 
 const EditUserModal = () => {
   const [name, setName] = useState<string>('');
@@ -31,7 +31,7 @@ const EditUserModal = () => {
   }, [editUserModal.isShowing]);
 
   const isVerified = () => {
-    isVerifiedAPI(editUserModal.phone).then((data) => {
+    VerificationAPI.isVerified(editUserModal.phone).then((data) => {
       setIsPhoneVerified(data.phoneVerified);
       setName(data.user.name);
       setPhone(data.user.phone);
@@ -43,7 +43,7 @@ const EditUserModal = () => {
   };
 
   const close = () => {
-    dispatch(modalSlice.actions.closeEditUserModal());
+    dispatch(modalSlice.actions.closeModal('editUserModal'));
     setIsPhoneVerified(false);
     setName('');
     setPhone('');
@@ -54,30 +54,22 @@ const EditUserModal = () => {
   };
 
   const updateUser = () => {
-    if (user !== null) {
-      const editedUser: IUser = {
-        ...user,
-        login: phone,
+    if (user) {
+      const editedUser: UpdateUserDto = {
+        id: user.id,
         name,
         phone,
         email,
         vk,
         telegram,
       };
-      updateUserAPI(editedUser)
+
+      UserAPI.update(editedUser)
         .then((data) => {
           dispatch(orderSlice.actions.setOrderUser(data));
           close();
         })
-        .catch((e) =>
-          dispatch(
-            appSlice.actions.showGlobalMessage({
-              message: e.response.data.message,
-              variant: GlobalMessageVariants.danger,
-              isShowing: true,
-            })
-          )
-        );
+        .catch((e) => showGlobalMessage(e.response.data.message));
     }
   };
 

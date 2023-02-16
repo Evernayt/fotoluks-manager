@@ -1,62 +1,68 @@
+import ProductAPI from 'api/ProductAPI/ProductAPI';
 import { Search } from 'components';
 import { noImage } from 'constants/images';
 import { useDebounce } from 'hooks';
-import { searchProductsAPI } from 'http/productAPI';
-import { IProduct } from 'models/IProduct';
-import { IType } from 'models/IType';
+import { IProduct } from 'models/api/IProduct';
+import { IType } from 'models/api/IType';
 import { FC, HTMLAttributes, useEffect, useState } from 'react';
-import styles from './OrderDetailServiceSearch.module.css';
+import styles from './OrderDetailServiceSearch.module.scss';
 
-interface OrderDetailServiceSearchProps extends HTMLAttributes<HTMLDivElement> {
-  searchSelect: (product: IProduct, type: IType) => void;
+type SimpleSpread<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
+
+interface PropsExtra {
+  onClick: (product: IProduct, type: IType) => void;
+}
+
+interface OrderDetailServiceSearchProps
+  extends SimpleSpread<HTMLAttributes<HTMLDivElement>, PropsExtra> {
+  onClick: (product: IProduct, type: IType) => void;
 }
 
 const OrderDetailServiceSearch: FC<OrderDetailServiceSearchProps> = ({
-  searchSelect,
+  onClick,
   ...props
 }) => {
-  const [searchText, setSearchText] = useState<string>('');
-  const [foundServices, setFoundServices] = useState<IProduct[]>([]);
+  const [search, setSearch] = useState<string>('');
+  const [products, setProducts] = useState<IProduct[]>([]);
 
-  const debouncedSearchTerm = useDebounce(searchText, 500);
+  const debouncedSearchTerm = useDebounce(search);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      searchService();
+      fetchProducts();
     } else {
-      setFoundServices([]);
+      setProducts([]);
     }
   }, [debouncedSearchTerm]);
 
-  const searchService = () => {
-    if (searchText.trim() !== '') {
-      searchProductsAPI(15, 1, searchText).then((data) => {
-        setFoundServices(data.rows);
+  const fetchProducts = () => {
+    if (search.trim()) {
+      ProductAPI.getAll({ search }).then((data) => {
+        setProducts(data.rows);
       });
     }
   };
 
   const selectService = (product: IProduct, type: IType) => {
-    searchSelect(product, type);
-    setSearchText('');
+    onClick(product, type);
+    setSearch('');
   };
 
   return (
     <Search
-      searchText={searchText}
-      setSearchText={setSearchText}
+      value={search}
       placeholder="Поиск услуг"
-      resultMaxHeight={300}
+      onChange={setSearch}
       {...props}
     >
-      {foundServices.length > 0 ? (
-        foundServices.map((foundService) => (
-          <div key={foundService.id}>
-            {foundService.types?.map((type) => (
+      {products.length > 0 ? (
+        products.map((product) => (
+          <div key={product.id}>
+            {product.types?.map((type) => (
               <div
                 className={styles.result}
                 key={type.id}
-                onClick={() => selectService(foundService, type)}
+                onClick={() => selectService(product, type)}
               >
                 <img
                   className={styles.type_image}
@@ -64,9 +70,7 @@ const OrderDetailServiceSearch: FC<OrderDetailServiceSearchProps> = ({
                   alt=""
                 />
                 <div className={styles.type_container}>
-                  <span className={styles.product_name}>
-                    {foundService.name}
-                  </span>
+                  <span className={styles.product_name}>{product.name}</span>
                   <span className={styles.type_name}>{type.name}</span>
                 </div>
               </div>

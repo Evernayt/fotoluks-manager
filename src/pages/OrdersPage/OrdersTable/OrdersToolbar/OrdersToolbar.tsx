@@ -1,20 +1,20 @@
-import { Button, SelectButton, Tooltip } from 'components';
+import { Button, SelectButton, Toolbar, Tooltip } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
+import { ISelectItem } from 'components/UI/SelectButton/SelectButton.types';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import styles from './OrdersToolbar.module.css';
 
 interface OrdersToolbarProps {
   reload: () => void;
-  setLimit: (limit: number) => void;
+  onLimitChange: (limit: number) => void;
 }
 
-const OrdersToolbar: FC<OrdersToolbarProps> = ({ reload, setLimit }) => {
+const OrdersToolbar: FC<OrdersToolbarProps> = ({ reload, onLimitChange }) => {
   const ordersFilter = useAppSelector((state) => state.order.ordersFilter);
 
-  const limits = useMemo<any>(
+  const limitItems = useMemo<ISelectItem[]>(
     () => [
       {
         id: 1,
@@ -35,46 +35,33 @@ const OrdersToolbar: FC<OrdersToolbarProps> = ({ reload, setLimit }) => {
     []
   );
 
-  const [selectedLimit, setSelectedLimit] = useState(limits[0]);
-
   const dispatch = useAppDispatch();
 
-  const selectLimit = (e: any) => {
-    setSelectedLimit(e);
-    setLimit(e.value);
-  };
-
   const openOrdersExportModal = () => {
-    dispatch(modalSlice.actions.openOrdersExportModal());
+    dispatch(modalSlice.actions.openModal({ modal: 'ordersExportModal' }));
   };
 
   const openOrdersFilterModal = () => {
-    dispatch(modalSlice.actions.openOrdersFilterModal());
+    dispatch(modalSlice.actions.openModal({ modal: 'ordersFilterModal' }));
   };
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.left_section}>
-        <Button style={{ width: 'max-content' }} onClick={reload}>
-          Обновить
-        </Button>
-      </div>
-      <div className={styles.right_section}>
-        <Button
-          style={{ width: 'max-content' }}
-          onClick={openOrdersExportModal}
-        >
-          Экспорт
-        </Button>
-        <Tooltip
-          label="Фильтры включены"
-          disabled={!ordersFilter.filter.isActive}
-        >
+  const leftSection = () => {
+    return (
+      <>
+        <Button onClick={reload}>Обновить</Button>
+      </>
+    );
+  };
+
+  const rightSection = () => {
+    return (
+      <>
+        <Button onClick={openOrdersExportModal}>Экспорт</Button>
+        <Tooltip label="Фильтры включены" disabled={!ordersFilter.isActive}>
           <Button
-            style={{ width: 'max-content' }}
             onClick={openOrdersFilterModal}
             variant={
-              ordersFilter.filter.isActive
+              ordersFilter.isActive
                 ? ButtonVariants.primaryDeemphasized
                 : ButtonVariants.default
             }
@@ -84,14 +71,16 @@ const OrdersToolbar: FC<OrdersToolbarProps> = ({ reload, setLimit }) => {
         </Tooltip>
 
         <SelectButton
-          items={limits}
-          defaultSelectedItem={selectedLimit}
-          changeHandler={selectLimit}
+          items={limitItems}
+          defaultSelectedItem={limitItems[0]}
+          onChange={(item) => onLimitChange(item.value)}
           placement={Placements.bottomEnd}
         />
-      </div>
-    </div>
-  );
+      </>
+    );
+  };
+
+  return <Toolbar leftSection={leftSection()} rightSection={rightSection()} />;
 };
 
 export default OrdersToolbar;

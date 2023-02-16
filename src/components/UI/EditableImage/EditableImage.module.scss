@@ -1,0 +1,42 @@
+.image_container {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--border-radius);
+
+  &:hover .image_edit_icon {
+    opacity: 1;
+  }
+}
+
+.image_fogging {
+  background: #000;
+  border-radius: var(--border-radius);
+  position: absolute;
+  opacity: 0;
+  transition: opacity 200ms;
+
+  &:hover {
+    opacity: 0.4;
+  }
+}
+
+.image_edit_icon {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 200ms;
+
+  &:hover + .image_fogging {
+    opacity: 0.4;
+  }
+}
+
+.image {
+  position: relative;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}

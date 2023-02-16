@@ -1,0 +1,12 @@
+.container {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.error {
+  color: var(--danger-color);
+  margin-top: 8px;
+  text-align: center;
+}

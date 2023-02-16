@@ -2,12 +2,13 @@ import { DropdownButton, IconButton } from 'components';
 import { Modes } from 'constants/app';
 import { noImage } from 'constants/images';
 import { Placements } from 'helpers/calcPlacement';
+import { getMainFolder } from 'helpers/localStorage';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IconDotsMenu, IconEdit, IconFolder } from 'icons';
-import { IFinishedProduct } from 'models/IFinishedProduct';
+import { IFinishedProduct } from 'models/api/IFinishedProduct';
 import { FC } from 'react';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import styles from './OrderDetailService.module.css';
+import styles from './OrderDetailService.module.scss';
 
 interface OrderDetailServiceProps {
   finishedProduct: IFinishedProduct;
@@ -21,8 +22,6 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
   const finishedProductsForCreate = useAppSelector(
     (state) => state.order.finishedProductsForCreate
   );
-  const mainFolder = useAppSelector((state) => state.app.mainFolder);
-
   const dispatch = useAppDispatch();
 
   const deleteFinishedProduct = () => {
@@ -31,7 +30,7 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
       (x) => x.id === finishedProduct.id
     );
 
-    if (finishedProductForCreate === undefined) {
+    if (!finishedProductForCreate) {
       dispatch(
         orderSlice.actions.addFinishedProductsForDelete(
           Number(finishedProduct.id)
@@ -41,29 +40,62 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
   };
 
   const selectFolder = () => {
-    window.electron.ipcRenderer.sendMessage('select-directory', [mainFolder]);
+    const mainFolder = getMainFolder();
 
+    window.electron.ipcRenderer.sendMessage('select-directory', [mainFolder]);
     window.electron.ipcRenderer.once('select-directory', (arg: any) => {
       const fullPath: string = arg[0][0];
-      if (fullPath === undefined) return;
+      if (!fullPath) return;
 
       const folder = fullPath.replace(mainFolder, '');
+      const updatedFinishedProduct = { ...finishedProduct, folder };
+
+      const isNotFoundForCreate =
+        finishedProductsForCreate.find((x) => x.id === finishedProduct.id) ===
+        undefined;
+
+      if (isNotFoundForCreate) {
+        dispatch(
+          orderSlice.actions.addFinishedProductsForUpdate(
+            updatedFinishedProduct
+          )
+        );
+      } else {
+        dispatch(
+          orderSlice.actions.addFinishedProductsForCreate(
+            updatedFinishedProduct
+          )
+        );
+      }
+
       dispatch(
-        orderSlice.actions.updateFinishedProduct({ ...finishedProduct, folder })
+        orderSlice.actions.updateFinishedProduct(updatedFinishedProduct)
       );
     });
   };
 
   const deleteFolder = () => {
-    dispatch(
-      orderSlice.actions.updateFinishedProduct({
-        ...finishedProduct,
-        folder: '',
-      })
-    );
+    const updatedFinishedProduct = { ...finishedProduct, folder: '' };
+
+    const isNotFoundForCreate =
+      finishedProductsForCreate.find((x) => x.id === finishedProduct.id) ===
+      undefined;
+
+    if (isNotFoundForCreate) {
+      dispatch(
+        orderSlice.actions.addFinishedProductsForUpdate(updatedFinishedProduct)
+      );
+    } else {
+      dispatch(
+        orderSlice.actions.addFinishedProductsForCreate(updatedFinishedProduct)
+      );
+    }
+
+    dispatch(orderSlice.actions.updateFinishedProduct(updatedFinishedProduct));
   };
 
   const openFolder = () => {
+    const mainFolder = getMainFolder();
     const folderPath = mainFolder + finishedProduct.folder;
     window.electron.ipcRenderer.sendMessage('open-folder', [folderPath]);
   };
@@ -88,17 +120,17 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
           <img
             className={styles.img}
             src={
-              finishedProduct.type.image ? finishedProduct.type.image : noImage
+              finishedProduct.type?.image ? finishedProduct.type.image : noImage
             }
             alt=""
           />
           <div className={styles.info}>
             <span className={styles.product_name}>
-              {finishedProduct.product.name},{' '}
-              {finishedProduct.type.name.toLowerCase()}
+              {finishedProduct.product?.name},{' '}
+              {finishedProduct.type?.name.toLowerCase()}
             </span>
             <div>
-              {finishedProduct.selectedParams.map((selectedParam) => {
+              {finishedProduct.selectedParams?.map((selectedParam) => {
                 if (!selectedParam.param) return;
                 if (selectedParam.param.feature?.name === 'Цвет') {
                   return (

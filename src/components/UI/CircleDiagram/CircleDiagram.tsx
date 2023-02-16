@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import styles from './CircleDiagram.module.css';
+import styles from './CircleDiagram.module.scss';
 
 export interface ICircleDiagramData {
   id: number;
-  color: string;
+  color: string | undefined;
   value: number;
 }
 
@@ -29,7 +29,7 @@ const CircleDiagram: FC<CircleDiagramProps> = ({ data, width, height }) => {
         r="15.9"
         cx="50%"
         cy="50%"
-        stroke={item.color}
+        stroke={item.color ? item.color : 'gray'}
         strokeDasharray={`${item.value}, 100`}
         strokeDashoffset={-1 * offsets[index]}
         key={item.id}

@@ -8,22 +8,16 @@ import { IconDrop } from 'icons';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
-import { appSlice } from 'store/reducers/AppSlice';
-import { userSlice } from 'store/reducers/UserSlice';
+import { employeeSlice } from 'store/reducers/EmployeeSlice';
 
 const MenuButton = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const signOut = () => {
-    dispatch(userSlice.actions.signOut());
+    dispatch(employeeSlice.actions.signOut());
     navigate(LOGIN_ROUTE);
     socketio.disconnect();
-  };
-
-  const navigateToRoute = (route: string) => {
-    dispatch(appSlice.actions.setActiveRoute(route));
-    navigate(route);
   };
 
   const items = useMemo<IDropdownButtonOption[]>(
@@ -31,7 +25,7 @@ const MenuButton = () => {
       {
         id: 1,
         name: 'Настройки',
-        onClick: () => navigateToRoute(SETTINGS_ROUTE),
+        onClick: () => navigate(SETTINGS_ROUTE),
       },
       {
         id: 2,
@@ -45,7 +39,7 @@ const MenuButton = () => {
   return (
     <DropdownButton
       placement={Placements.bottomEnd}
-      icon={<IconDrop className="secondary-icon" size={20}/>}
+      icon={<IconDrop className="secondary-icon" size={20} />}
       circle
       options={items}
     />

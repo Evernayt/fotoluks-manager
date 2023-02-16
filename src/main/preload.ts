@@ -4,7 +4,15 @@ export type Channels =
   | 'show-notification'
   | 'select-directory'
   | 'open-folder'
-  | 'maximize';
+  | 'maximize'
+  | 'check-update-pending'
+  | 'check-update-success'
+  | 'check-update-failure'
+  | 'download-update-pending'
+  | 'download-update-success'
+  | 'download-update-failure'
+  | 'download-update-progress'
+  | 'quit-and-install-update';
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {

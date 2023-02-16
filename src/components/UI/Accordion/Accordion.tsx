@@ -1,6 +1,6 @@
 import { FC, HTMLAttributes, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import styles from './Accordion.module.css';
+import styles from './Accordion.module.scss';
 
 interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
   label: string;
@@ -19,7 +19,7 @@ const Accordion: FC<AccordionProps> = ({
   return (
     <AnimatePresence>
       <div className={styles.accordion} onClick={toggle} {...props}>
-        {isShowing ? 'Скрыть' : label}
+        {isShowing ? `Скрыть — ${label.toLowerCase()}` : label}
       </div>
 
       {isShowing && (

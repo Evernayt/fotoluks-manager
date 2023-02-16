@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  font-weight: 500;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 16px;
+  height: 33px;
+  padding: 0 8px;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.active {
+  border-radius: var(--border-radius);
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
+  cursor: default;
+}
+
+.next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 16px;
+  min-height: 33px;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.disabled {
+  color: var(--secondary-text-on-bg-color);
+  cursor: default;
+}
+
+.break {
+  padding: 8px;
+  cursor: pointer;
+}

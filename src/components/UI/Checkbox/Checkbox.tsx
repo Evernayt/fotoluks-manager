@@ -1,5 +1,5 @@
 import { FC, InputHTMLAttributes } from 'react';
-import styles from './Checkbox.module.css';
+import styles from './Checkbox.module.scss';
 
 interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   text: string;

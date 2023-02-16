@@ -1,0 +1,61 @@
+.container {
+  background-color: var(--background-color);
+  height: 100vh;
+}
+
+.loader {
+  position: absolute;
+  z-index: 999;
+  height: calc(100% - 56px);
+  width: 100%;
+  background-color: var(--overlay-alpha-80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section {
+  display: flex;
+}
+
+.cards {
+  padding: 24px 16px 16px 24px;
+  width: 100%;
+  height: 100%;
+}
+
+.add_card {
+  background-color: var(--card-background);
+  padding: 16px;
+  height: min-content;
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 2px var(--shadow-2);
+  margin-bottom: 16px;
+}
+
+.open_btn {
+  height: 40px;
+  background-color: var(--background-color);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 20px;
+  color: var(--secondary-text-on-bg-color);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--hover-background-color);
+  }
+}
+
+.services_section {
+  overflow: auto;
+  max-height: calc(100vh - 275px);
+}
+
+.services_cards {
+  padding-bottom: 100px;
+  display: grid;
+  grid-gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}

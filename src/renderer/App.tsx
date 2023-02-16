@@ -3,6 +3,8 @@ import {
   CONTROL_PANEL_ROUTE,
   INITIAL_SETTINGS_ROUTE,
   LOGIN_ROUTE,
+  MOVES_DETAIL_ROUTE,
+  MOYSKLAD_ROUTE,
   ORDERS_ROUTE,
   ORDER_DETAIL_ROUTE,
   PROFILE_ROUTE,
@@ -12,34 +14,42 @@ import {
   ControlPanelPage,
   InitialSettingsPage,
   LoginPage,
+  MoyskladPage,
   OrderDetailPage,
   OrdersPage,
   ProfilePage,
   SettingsPage,
 } from 'pages';
-import { GlobalMessage } from 'components';
+import { GlobalMessage, UpdaterModal } from 'components';
 import './App.css';
 import { useLayoutEffect } from 'react';
 import { useAppSelector } from 'hooks/redux';
-import { THEME_KEY } from 'constants/localStorage';
+import { setTheme } from 'helpers/localStorage';
+import { MoyskladMovesDetailPage } from 'pages/MoyskladPage/DetailPages';
 
 export default function App() {
   const theme = useAppSelector((state) => state.app.theme);
 
   useLayoutEffect(() => {
     document.documentElement.setAttribute('data-theme', theme.value);
-    localStorage.setItem(THEME_KEY, JSON.stringify(theme));
+    setTheme(theme);
   }, [theme]);
 
   return (
     <Router>
+      <UpdaterModal />
       <GlobalMessage />
       <Routes>
         <Route path={LOGIN_ROUTE} element={<LoginPage />} />
         <Route path={ORDERS_ROUTE} element={<OrdersPage />} />
         <Route path={ORDER_DETAIL_ROUTE} element={<OrderDetailPage />} />
-        <Route path={CONTROL_PANEL_ROUTE} element={<ControlPanelPage />} />
         <Route path={PROFILE_ROUTE} element={<ProfilePage />} />
+        <Route path={MOYSKLAD_ROUTE} element={<MoyskladPage />} />
+        <Route
+          path={MOVES_DETAIL_ROUTE}
+          element={<MoyskladMovesDetailPage />}
+        />
+        <Route path={CONTROL_PANEL_ROUTE} element={<ControlPanelPage />} />
         <Route
           path={INITIAL_SETTINGS_ROUTE}
           element={<InitialSettingsPage />}

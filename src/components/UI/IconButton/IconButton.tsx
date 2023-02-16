@@ -1,9 +1,11 @@
 import { ButtonHTMLAttributes, FC, ReactNode } from 'react';
-import styles from './IconButton.module.css';
+import styles from './IconButton.module.scss';
 
 export enum IconButtonVariants {
   default = 'default',
+  primary = 'primary',
   link = 'link',
+  dark = 'dark',
 }
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,6 +13,7 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: IconButtonVariants;
   className?: string;
   children?: ReactNode;
+  circle?: boolean;
 }
 
 const IconButton: FC<IconButtonProps> = ({
@@ -18,10 +21,25 @@ const IconButton: FC<IconButtonProps> = ({
   variant = IconButtonVariants.default,
   className,
   children,
+  circle,
   ...props
 }) => {
   return (
-    <button className={[styles[variant], className].join(' ')} {...props}>
+    <button
+      className={[styles.base, styles[variant], className].join(' ')}
+      {...props}
+      style={
+        circle
+          ? {
+              borderRadius: '50%',
+              height: '40px',
+              width: '40px',
+              padding: 0,
+              ...props.style,
+            }
+          : props.style
+      }
+    >
       {icon}
       {children}
     </button>

@@ -1,0 +1,33 @@
+.container {
+  width: 160px;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 0 1px var(--border-color);
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 2px 12px var(--shadow-2);
+  }
+}
+
+.close_button {
+  position: absolute;
+  margin-top: 4px;
+  margin-left: 4px;
+  opacity: 0.8;
+}
+
+.avatar {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+.user_name {
+  color: var(--secondary-text-on-bg-color);
+  padding: 12px;
+  text-align: center;
+}

@@ -1,3 +1,6 @@
+import AuthAPI from 'api/AuthAPI/AuthAPI';
+import { CreateUserDto } from 'api/UserAPI/dto/create-user.dto';
+import UserAPI from 'api/UserAPI/UserAPI';
 import {
   Accordion,
   Button,
@@ -6,19 +9,17 @@ import {
   Textbox,
   UserCard,
 } from 'components';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { firstLetterToUpperCase } from 'helpers';
 import { useModal } from 'hooks';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchUserByPhoneAPI, registrationAPI } from 'http/userAPI';
-import { GlobalMessageVariants } from 'models/IGlobalMessage';
-import { IUser, UserRoles } from 'models/IUser';
+import { IUser } from 'models/api/IUser';
 import { useEffect, useState } from 'react';
-import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { v4 as uuidv4 } from 'uuid';
-import styles from './UserRegistrationModal.module.css';
+import styles from './UserRegistrationModal.module.scss';
 
 const UserRegistrationModal = () => {
   const [name, setName] = useState<string>('');
@@ -31,7 +32,6 @@ const UserRegistrationModal = () => {
   const userRegistrationModal = useAppSelector(
     (state) => state.modal.userRegistrationModal
   );
-  const activeShop = useAppSelector((state) => state.app.activeShop);
 
   const additionalAccordion = useModal();
 
@@ -65,37 +65,28 @@ const UserRegistrationModal = () => {
   }, [userRegistrationModal.isShowing]);
 
   const registration = () => {
-    fetchUserByPhoneAPI(phone).then((data) => {
+    UserAPI.getOneByPhone(phone).then((data) => {
       if (data) {
         setUser(data);
       } else {
         setUser(null);
-        const user: IUser = {
-          id: 0,
+        const user: CreateUserDto = {
           name: firstLetterToUpperCase(name),
-          login: phone,
-          password: uuidv4(),
-          avatar: '',
-          role: UserRoles.USER,
           phone,
+          password: uuidv4(),
           email: email.toLowerCase(),
           vk: vk.toLowerCase(),
           telegram: telegram.toLowerCase(),
-          shopId: activeShop.id,
         };
 
-        registrationAPI(user)
+        AuthAPI.registrationUser(user)
           .then((data2) => {
             dispatch(orderSlice.actions.setOrderUser(data2));
             close();
           })
           .catch((e) =>
-            dispatch(
-              appSlice.actions.showGlobalMessage({
-                message: e.response.data.message,
-                variant: GlobalMessageVariants.danger,
-                isShowing: true,
-              })
+            showGlobalMessage(
+              e.response.data ? e.response.data.message : e.message
             )
           );
       }
@@ -110,8 +101,13 @@ const UserRegistrationModal = () => {
   };
 
   const close = () => {
-    dispatch(modalSlice.actions.closeUserRegistrationModal());
+    dispatch(modalSlice.actions.closeModal('userRegistrationModal'));
     setUser(null);
+    setName('');
+    setPhone('');
+    setEmail('');
+    setVk('');
+    setTelegram('');
   };
 
   return (

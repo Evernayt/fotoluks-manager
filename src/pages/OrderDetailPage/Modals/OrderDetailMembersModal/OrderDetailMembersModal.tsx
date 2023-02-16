@@ -1,21 +1,22 @@
-import { IconButton, Loader, Modal } from 'components';
+import { Button, Loader, Modal, Search } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchUsersAPI } from 'http/userAPI';
-import { IUser, UserRoles } from 'models/IUser';
-import { IOrderMember } from 'models/IOrderMember';
 import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import OrderDetailMemberItem from './OrderDetailMemberItem/OrderDetailMemberItem';
 import { v4 as uuidv4 } from 'uuid';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import styles from './OrderDetailMembersModal.module.css';
-import { fetchShopsAPI } from 'http/shopAPI';
-import { IShop } from 'models/IShop';
-import { IconMinus, IconPlus } from 'icons';
+import { IEmployee } from 'models/api/IEmployee';
+import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
+import { IOrderMember } from 'models/api/IOrderMember';
+import styles from './OrderDetailMembersModal.module.scss';
 
 const OrderDetailMembersModal = () => {
-  const [shops, setShops] = useState<IShop[]>([]);
-  const [users, setUsers] = useState<IUser[]>([]);
+  const [employees, setEmployees] = useState<IEmployee[]>([]);
+  const [foundEmployees, setFoundEmployees] = useState<IEmployee[]>([]);
+  const [foundOrderMembers, setFoundOrderMembers] = useState<IOrderMember[]>(
+    []
+  );
+  const [search, setSearch] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const orderMembersModal = useAppSelector(
@@ -28,95 +29,115 @@ const OrderDetailMembersModal = () => {
 
   useEffect(() => {
     if (orderMembersModal.isShowing) {
-      fetchShops();
-      fetchUsers();
+      fetchEmployees();
     }
   }, [orderMembersModal.isShowing]);
 
-  const fetchShops = () => {
-    fetchShopsAPI(100, 1, true).then((data) => {
-      setShops(data.rows);
-    });
-  };
+  useEffect(() => {
+    if (orderMembersModal.isShowing && search !== '') {
+      searchHandler(search);
+    }
+  }, [employees, order.orderMembers]);
 
-  const fetchUsers = () => {
-    fetchUsersAPI(100, 1, [UserRoles.EMPLOYEE, UserRoles.ADMIN])
+  const fetchEmployees = () => {
+    EmployeeAPI.getAll({ appId: 1 })
       .then((data) => {
-        setUsers(usersMinusMembers(data.rows, order.orderMembers));
+        if (order.orderMembers) {
+          setEmployees(employeesMinusMembers(data.rows, order.orderMembers));
+        } else {
+          setEmployees(data.rows);
+        }
       })
       .finally(() => setIsLoading(false));
   };
 
-  const usersMinusMembers = (
-    users: IUser[],
+  const employeesMinusMembers = (
+    employees: IEmployee[],
     orderMembers: IOrderMember[]
-  ): IUser[] => {
-    return users.filter((user) => {
+  ) => {
+    return employees.filter((employee) => {
       return !orderMembers.find((orderMember) => {
-        return user.id === orderMember.user.id;
+        return employee.id === orderMember.employee.id;
       });
     });
   };
 
-  const addOrderMember = (user: IUser) => {
+  const addOrderMember = (employee: IEmployee) => {
     const createdOrderMember: IOrderMember = {
       id: uuidv4(),
-      user,
+      employee,
     };
     dispatch(orderSlice.actions.addOrderMember(createdOrderMember));
-    setUsers((prevState) => prevState.filter((state) => state.id !== user.id));
+    setEmployees((prevState) =>
+      prevState.filter((state) => state.id !== employee.id)
+    );
 
     dispatch(orderSlice.actions.addOrderMemberForCreate(createdOrderMember));
   };
 
   const deleteOrderMember = (orderMember: IOrderMember) => {
-    dispatch(orderSlice.actions.deleteOrderMemberByUserId(orderMember.user.id));
-    setUsers((prevState) => [...prevState, orderMember.user]);
+    dispatch(
+      orderSlice.actions.deleteOrderMemberByEmployeeId(orderMember.employee.id)
+    );
+    setEmployees((prevState) => [...prevState, orderMember.employee]);
 
     dispatch(
-      orderSlice.actions.addOrderMemberForDeleteByUserId(orderMember.user.id)
+      orderSlice.actions.addOrderMemberForDeleteByEmployeeId(
+        orderMember.employee.id
+      )
     );
   };
 
-  const addAllOrderMembers = (shopId: number) => {
-    const foundUsers = users.filter((user) => user.shopId === shopId);
-
+  const addAllOrderMembers = () => {
     const createdOrderMembers: IOrderMember[] = [];
-    for (let i = 0; i < foundUsers.length; i++) {
+    for (let i = 0; i < employees.length; i++) {
       createdOrderMembers.push({
         id: uuidv4(),
-        user: foundUsers[i],
+        employee: employees[i],
       });
     }
-
     dispatch(orderSlice.actions.addOrderMembers(createdOrderMembers));
-    setUsers((prevState) =>
-      prevState.filter((state) => state.shopId !== shopId)
-    );
-
+    setEmployees([]);
     dispatch(orderSlice.actions.addOrderMembersForCreate(createdOrderMembers));
   };
 
-  const deleteAllOrderMembers = (shopId: number) => {
-    const foundOrderMembers = order.orderMembers.filter(
-      (orderMember) => orderMember.user.shopId === shopId
+  const deleteAllOrderMembers = () => {
+    if (!order.orderMembers) return;
+
+    const orderMembers = order.orderMembers;
+    const newEmployees: IEmployee[] = [];
+    const employeeIds: number[] = [];
+    for (let i = 0; i < orderMembers.length; i++) {
+      newEmployees.push(orderMembers[i].employee);
+      employeeIds.push(orderMembers[i].employee.id);
+    }
+    dispatch(orderSlice.actions.deleteOrderMembers());
+    setEmployees((prevState) => [...prevState, ...newEmployees]);
+    dispatch(
+      orderSlice.actions.addOrderMembersForDeleteByEmployeeIds(employeeIds)
+    );
+  };
+
+  const searchHandler = (value: string) => {
+    setSearch(value);
+
+    const filteredEmployees = employees.filter((employee) =>
+      employee.name.toLowerCase().includes(value)
+    );
+    const filteredOrderMembers = order.orderMembers?.filter((orderMember) =>
+      orderMember.employee.name.toLowerCase().includes(value)
     );
 
-    const foundUsers: IUser[] = [];
-    const userIds: number[] = [];
-    for (let i = 0; i < foundOrderMembers.length; i++) {
-      foundUsers.push(foundOrderMembers[i].user);
-      userIds.push(foundOrderMembers[i].user.id);
-    }
-
-    dispatch(orderSlice.actions.deleteOrderMembersByShopId(shopId));
-    setUsers((prevState) => [...prevState, ...foundUsers]);
-
-    dispatch(orderSlice.actions.addOrderMembersForDeleteByUserId(userIds));
+    setFoundEmployees(filteredEmployees);
+    setFoundOrderMembers(filteredOrderMembers ? filteredOrderMembers : []);
   };
 
   const close = () => {
-    dispatch(modalSlice.actions.closeOrderMembersModal());
+    dispatch(modalSlice.actions.closeModal('orderMembersModal'));
+    setSearch('');
+    setFoundEmployees([]);
+    setFoundOrderMembers([]);
+    setIsLoading(true);
   };
 
   return (
@@ -131,77 +152,64 @@ const OrderDetailMembersModal = () => {
             <Loader />
           </div>
         )}
-        <div className={styles.section}>
-          <div className={styles.title}>Участвуют в заказе:</div>
-          <div className={styles.shops_container}>
-            {shops.map((shop) => (
-              <div key={shop.id}>
-                <div className={styles.shop_item}>
-                  {shop.name}
-                  <IconButton
-                    style={{
-                      minHeight: '32px',
-                      padding: '4px',
-                    }}
-                    icon={<IconMinus className="secondary-icon" />}
-                    onClick={() => deleteAllOrderMembers(shop.id)}
-                  />
-                </div>
-                <div className={styles.items_container}>
-                  {order.orderMembers.map((orderMember) => {
-                    if (orderMember.user.shopId === shop.id) {
-                      return (
-                        <OrderDetailMemberItem
-                          user={orderMember.user}
-                          isAdded={true}
-                          clickHandler={() => deleteOrderMember(orderMember)}
-                          key={orderMember.user.id}
-                        />
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
-                </div>
+        <Search
+          value={search}
+          onChange={searchHandler}
+          placeholder="Поиск сотрудников"
+          showResults={false}
+          className={styles.search}
+        />
+        <div className={styles.employees_container}>
+          <div className={styles.section}>
+            <div className={styles.title}>Участвуют в заказе:</div>
+            <div className={styles.items_container}>
+              <div className={styles.employees}>
+                {search !== ''
+                  ? foundOrderMembers.map((orderMember) => (
+                      <OrderDetailMemberItem
+                        employee={orderMember.employee}
+                        isAdded={true}
+                        onClick={() => deleteOrderMember(orderMember)}
+                        key={orderMember.employee.id}
+                      />
+                    ))
+                  : order.orderMembers?.map((orderMember) => (
+                      <OrderDetailMemberItem
+                        employee={orderMember.employee}
+                        isAdded={true}
+                        onClick={() => deleteOrderMember(orderMember)}
+                        key={orderMember.employee.id}
+                      />
+                    ))}
               </div>
-            ))}
+            </div>
+            <Button onClick={deleteAllOrderMembers}>Удалить всех</Button>
           </div>
-        </div>
-        <div className={styles.separator} />
-        <div className={styles.section}>
-          <div className={styles.title}>Не участвуют в заказе:</div>
-          <div className={styles.shops_container}>
-            {shops.map((shop) => (
-              <div key={shop.id}>
-                <div className={styles.shop_item}>
-                  {shop.name}
-                  <IconButton
-                    style={{
-                      minHeight: '32px',
-                      padding: '4px',
-                    }}
-                    icon={<IconPlus className="secondary-icon" />}
-                    onClick={() => addAllOrderMembers(shop.id)}
-                  />
-                </div>
-                <div className={styles.items_container}>
-                  {users.map((user) => {
-                    if (user.shopId === shop.id) {
-                      return (
-                        <OrderDetailMemberItem
-                          user={user}
-                          isAdded={false}
-                          clickHandler={() => addOrderMember(user)}
-                          key={user.id}
-                        />
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
-                </div>
+          <div className={styles.separator} />
+          <div className={styles.section}>
+            <div className={styles.title}>Не участвуют в заказе:</div>
+            <div className={styles.items_container}>
+              <div className={styles.employees}>
+                {search !== ''
+                  ? foundEmployees.map((employee) => (
+                      <OrderDetailMemberItem
+                        employee={employee}
+                        isAdded={false}
+                        onClick={() => addOrderMember(employee)}
+                        key={employee.id}
+                      />
+                    ))
+                  : employees.map((employee) => (
+                      <OrderDetailMemberItem
+                        employee={employee}
+                        isAdded={false}
+                        onClick={() => addOrderMember(employee)}
+                        key={employee.id}
+                      />
+                    ))}
               </div>
-            ))}
+            </div>
+            <Button onClick={addAllOrderMembers}>Добавить всех</Button>
           </div>
         </div>
       </div>

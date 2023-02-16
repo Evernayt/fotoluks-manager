@@ -1,12 +1,12 @@
-import { Button, CircleButton, Tooltip } from 'components';
+import { Button, IconButton, Tooltip } from 'components';
 import { defaultAvatar, email, telegram, vk } from 'constants/images';
 import { useAppDispatch } from 'hooks/redux';
 import { IconClose } from 'icons';
-import { IUser } from 'models/IUser';
+import { IUser } from 'models/api/IUser';
 import { mask } from 'node-masker';
 import { FC, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import styles from './UserCard.module.css';
+import styles from './UserCard.module.scss';
 
 interface UserCardProps {
   user: IUser;
@@ -27,7 +27,12 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
   };
 
   const openEditUserModal = () => {
-    dispatch(modalSlice.actions.openEditUserModal(user.phone!));
+    dispatch(
+      modalSlice.actions.openModal({
+        modal: 'editUserModal',
+        props: { phone: user.phone },
+      })
+    );
   };
 
   return (
@@ -77,9 +82,10 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
             </div>
           </div>
         </div>
-        <CircleButton
+        <IconButton
           icon={<IconClose className="secondary-icon" size={14} />}
-          style={{ width: '18px', height: '18px' }}
+          circle
+          style={{ width: '18px', maxHeight: '18px', minHeight: '18px' }}
           onClick={close}
         />
       </div>

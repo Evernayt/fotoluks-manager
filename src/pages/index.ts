@@ -5,8 +5,7 @@ import ControlPanelPage from './ControlPanelPage/ControlPanelPage';
 import ProfilePage from './ProfilePage/ProfilePage';
 import InitialSettingsPage from './InitialSettingsPage/InitialSettingsPage';
 import SettingsPage from './SettingsPage/SettingsPage';
-// import TasksPage from './TasksPage/TasksPage';
-// import MessengerPage from './MessengerPage/MessengerPage';
+import MoyskladPage from './MoyskladPage/MoyskladPage';
 
 export {
   LoginPage,
@@ -16,6 +15,5 @@ export {
   ProfilePage,
   InitialSettingsPage,
   SettingsPage,
-  // TasksPage,
-  // MessengerPage,
+  MoyskladPage,
 };

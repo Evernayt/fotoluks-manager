@@ -1,34 +1,30 @@
 import { IconButton } from 'components';
 import { defaultAvatar } from 'constants/images';
 import { IconMinus, IconPlus } from 'icons';
-import { IUser } from 'models/IUser';
+import { IEmployee } from 'models/api/IEmployee';
 import { FC } from 'react';
-import styles from './OrderDetailMemberItem.module.css';
+import styles from './OrderDetailMemberItem.module.scss';
 
 interface OrderDetailMemberItemProps {
-  user: IUser;
+  employee: IEmployee;
   isAdded: boolean;
-  clickHandler: () => void;
+  onClick: () => void;
 }
 
 const OrderDetailMemberItem: FC<OrderDetailMemberItemProps> = ({
-  user,
+  employee,
   isAdded,
-  clickHandler,
+  onClick,
 }) => {
   return (
     <div className={styles.container}>
       <img
         className={styles.avatar}
-        src={user.avatar ? user.avatar : defaultAvatar}
+        src={employee.avatar ? employee.avatar : defaultAvatar}
       />
-      {user.name}
+      {employee.name}
       <IconButton
         className={styles.button}
-        style={{
-          minHeight: '32px',
-          padding: '4px',
-        }}
         icon={
           isAdded ? (
             <IconMinus className="secondary-icon" />
@@ -36,7 +32,7 @@ const OrderDetailMemberItem: FC<OrderDetailMemberItemProps> = ({
             <IconPlus className="secondary-icon" />
           )
         }
-        onClick={clickHandler}
+        onClick={onClick}
       />
     </div>
   );

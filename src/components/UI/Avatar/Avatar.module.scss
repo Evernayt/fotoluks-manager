@@ -1,0 +1,42 @@
+.avatar_container {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+
+  &:hover .avatar_edit_icon {
+    opacity: 1;
+  }
+}
+
+.avatar_fogging {
+  background: #000;
+  border-radius: 50%;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 200ms;
+
+  &:hover {
+    opacity: 0.4;
+  }
+}
+
+.avatar_edit_icon {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 200ms;
+
+  &:hover + .avatar_fogging {
+    opacity: 0.4;
+  }
+}
+
+.avatar {
+  position: relative;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}

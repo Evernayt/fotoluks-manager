@@ -1,7 +1,7 @@
 import { defaultAvatar } from 'constants/images';
 import { IWatcher } from 'models/IWatcher';
 import { FC } from 'react';
-import styles from './OrderDetailWatchers.module.css';
+import styles from './OrderDetailWatchers.module.scss';
 
 interface OrderDetailWatchersProps {
   watchers: IWatcher[];
@@ -11,12 +11,14 @@ const OrderDetailWatchers: FC<OrderDetailWatchersProps> = ({ watchers }) => {
   return (
     <div className={styles.container}>
       {watchers.map((watcher) => (
-        <div className={styles.watcher_item} key={watcher.user.id}>
+        <div className={styles.watcher_item} key={watcher.employee.id}>
           <img
             className={styles.avatar}
-            src={watcher.user.avatar ? watcher.user.avatar : defaultAvatar}
+            src={
+              watcher.employee.avatar ? watcher.employee.avatar : defaultAvatar
+            }
           />
-          <div>{watcher.user.name}</div>
+          <div>{watcher.employee.name}</div>
         </div>
       ))}
     </div>

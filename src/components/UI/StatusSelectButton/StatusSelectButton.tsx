@@ -1,21 +1,21 @@
 import { useOnClickOutside } from 'hooks';
-import { IOrder } from 'models/IOrder';
-import { IStatus } from 'models/IStatus';
+import { IOrder } from 'models/api/IOrder';
+import { IStatus } from 'models/api/IStatus';
 import { FC, useEffect, useRef, useState } from 'react';
-import styles from './StatusSelectButton.module.css';
+import styles from './StatusSelectButton.module.scss';
 
 interface StatusSelectButtonProps {
   statuses: IStatus[];
-  changeHandler: (status: IStatus, order: IOrder) => void;
   defaultSelectedStatus: IStatus;
   order: IOrder;
+  onChange: (status: IStatus, order: IOrder) => void;
 }
 
 const StatusSelectButton: FC<StatusSelectButtonProps> = ({
   statuses,
-  changeHandler,
   defaultSelectedStatus,
   order,
+  onChange,
 }) => {
   const [isHidden, setIsHidden] = useState<boolean>(true);
   const [selectedStatus, setSelectedStatus] = useState<IStatus>(
@@ -30,10 +30,10 @@ const StatusSelectButton: FC<StatusSelectButtonProps> = ({
     setSelectedStatus(defaultSelectedStatus);
   }, [defaultSelectedStatus]);
 
-  const selectStatus = (status: IStatus) => {
+  const statusChangeHandler = (status: IStatus) => {
     setIsHidden(true);
     setSelectedStatus(status);
-    changeHandler(status, order);
+    onChange(status, order);
   };
 
   return (
@@ -63,7 +63,7 @@ const StatusSelectButton: FC<StatusSelectButtonProps> = ({
                 name="status_select_btn"
                 type="radio"
                 checked={selectedStatus.id === status.id}
-                onChange={() => selectStatus(status)}
+                onChange={() => statusChangeHandler(status)}
               />
               <label
                 className={styles.item}

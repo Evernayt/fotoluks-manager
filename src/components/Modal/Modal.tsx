@@ -1,35 +1,35 @@
-import { CircleButton } from 'components';
+import { IconButton } from 'components';
 import { IconClose } from 'icons';
 import { FC, ReactNode } from 'react';
-import styles from './Modal.module.css';
+import styles from './Modal.module.scss';
 
 interface ModalProps {
-  title: string;
-  isShowing: boolean;
   hide: () => void;
-  separator?: boolean;
   children: ReactNode;
+  title?: string;
+  isShowing?: boolean;
+  separator?: boolean;
 }
 
 const Modal: FC<ModalProps> = ({
+  hide,
+  children,
   title,
   isShowing,
-  hide,
   separator = true,
-  children,
   ...props
 }) => {
   return isShowing ? (
     <div className={styles.container}>
       <div className={styles.form_container} {...props}>
         <div className={styles.form_header}>
-          <span className={styles.form_header_title}>{title}</span>
-          <CircleButton
+          <span className={styles.form_header_title}>{title ? title : ''}</span>
+          <IconButton
             icon={<IconClose className="link-icon" />}
+            circle
             style={{
               height: '36px',
               width: '36px',
-              paddingLeft: '1px',
               marginLeft: '12px',
             }}
             onClick={hide}

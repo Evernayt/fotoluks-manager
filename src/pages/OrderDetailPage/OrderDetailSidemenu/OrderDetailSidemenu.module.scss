@@ -1,0 +1,54 @@
+.container {
+  height: calc(100vh - 104px);
+}
+
+.order_info {
+  background-color: var(--card-background);
+  min-width: 290px;
+  max-width: 290px;
+  height: calc(100% - 72px);
+  box-shadow: 1px 0 8px var(--shadow-1);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.sum {
+  font-size: 16px;
+}
+
+.paid_container {
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.remainder {
+  color: var(--secondary-text-color);
+  font-size: 12px;
+  margin-left: 16px;
+}
+
+.inputs_container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order_control {
+  position: sticky;
+  padding: 16px 16px 20px 16px;
+  box-shadow: 0 -2px 12px var(--shadow-2);
+  width: 290px;
+  background-color: var(--card-background);
+  display: flex;
+  gap: 8px;
+}

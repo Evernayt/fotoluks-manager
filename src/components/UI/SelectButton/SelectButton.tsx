@@ -3,59 +3,78 @@ import { Placements } from 'helpers/calcPlacement';
 import { useOnClickOutside } from 'hooks';
 import { forwardRef, HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import styles from './SelectButton.module.css';
+import { ISelectItem } from './SelectButton.types';
+import styles from './SelectButton.module.scss';
 
-interface IItem {
-  id: number;
-  name: string;
+type SimpleSpread<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
+
+interface PropsExtra {
+  onChange: (item: any, index: number) => void;
 }
 
-interface SelectButtonProps extends HTMLAttributes<HTMLDivElement> {
-  items: IItem[];
-  changeHandler: (item: any, index: number) => void;
-  defaultSelectedItem: IItem;
+interface SelectButtonProps
+  extends SimpleSpread<HTMLAttributes<HTMLDivElement>, PropsExtra> {
+  items: ISelectItem[];
+  onChange: (item: any, index: number) => void;
+  defaultSelectedItem?: ISelectItem;
   placement?: Placements;
   disabled?: boolean;
+  containerClassName?: string;
 }
 
 const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
   (
     {
       items,
-      changeHandler,
+      onChange,
       defaultSelectedItem,
       placement = Placements.bottomStart,
       disabled,
+      containerClassName,
       ...props
     },
     ref
   ) => {
     const defaultItem = {
-      id: 0,
+      id: -1,
       name: 'Выберите...',
     };
 
     const [isHidden, setIsHidden] = useState<boolean>(true);
-    const [selectedItem, setSelectedItem] = useState<IItem>(defaultItem);
+    const [selectedItem, setSelectedItem] = useState<ISelectItem>(defaultItem);
 
     const selectBtnRef = useRef(null);
 
     useOnClickOutside(selectBtnRef, () => setIsHidden(true));
 
     useEffect(() => {
-      if (defaultSelectedItem !== undefined) {
+      if (defaultSelectedItem) {
         setSelectedItem(defaultSelectedItem);
       }
     }, [defaultSelectedItem]);
 
-    const selectItem = (item: IItem, index: number) => {
+    useEffect(() => {
+      const jsonSelectedItem = JSON.stringify(selectedItem);
+      const jsonDefaultItem = JSON.stringify(defaultItem);
+
+      if (jsonSelectedItem !== jsonDefaultItem) {
+        const index = items.indexOf(selectedItem);
+        selectItem(selectedItem, index);
+      }
+    }, [selectedItem]);
+
+    const selectItem = (item: ISelectItem, index: number) => {
       setIsHidden(true);
       setSelectedItem(item);
-      changeHandler(item, index);
+      onChange(item, index);
     };
 
     return (
-      <div className={styles.container} ref={selectBtnRef} {...props}>
+      <div
+        className={[styles.container, containerClassName].join(' ')}
+        ref={selectBtnRef}
+        {...props}
+      >
         <div
           className={disabled ? styles.disabled : styles.select_btn}
           onClick={
@@ -63,7 +82,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
           }
           ref={ref}
         >
-          {selectedItem.name}
+          {selectedItem?.name}
         </div>
         <ul
           className={styles.menu}
@@ -72,7 +91,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
             ...calcPlacement(placement),
           }}
         >
-          {items.map((item, index) => {
+          {items.map((item) => {
             const id = uuidv4();
             return (
               <li key={item.id}>
@@ -81,8 +100,8 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
                   id={id}
                   name="select_btn"
                   type="radio"
-                  checked={selectedItem.id === item.id}
-                  onChange={() => selectItem(item, index)}
+                  checked={selectedItem?.id === item.id}
+                  onChange={() => setSelectedItem(item)}
                 />
                 <label className={styles.item} htmlFor={id}>
                   {item.name}

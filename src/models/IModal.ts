@@ -1,76 +1,69 @@
 import { Modes } from 'constants/app';
-import { IFeature } from './IFeature';
-import { IOrder } from './IOrder';
-import { IUser } from './IUser';
+import { IEmployee } from './api/IEmployee';
+import { IFeature } from './api/IFeature';
+import { IOrder } from './api/IOrder';
 
 export interface IModal {
-  isShowing: boolean;
+  isShowing?: boolean;
 }
 
-export interface IOrderModal {
-  isShowing: boolean;
+export interface ILoginModal extends IModal {
+  employee: IEmployee | null;
+}
+
+export interface IOrderModal extends IModal {
   order: IOrder | null;
 }
 
-export interface IUserRegistrationModal {
-  isShowing: boolean;
+export interface IUserRegistrationModal extends IModal {
   text: string;
 }
 
-export interface IUserModal {
-  isShowing: boolean;
-  phone: string;
+export interface IEditUserModal extends IModal {
+  userId: number;
+  mode: Modes;
 }
 
-export interface IEditTypeModal {
-  isShowing: boolean;
+export interface IEditTypeModal extends IModal {
   typeId: number;
   mode: Modes;
 }
 
-export interface IEditProductModal {
-  isShowing: boolean;
-  productId: number;
-  mode: Modes;
-}
-
-export interface IEditCategoryModal {
-  isShowing: boolean;
-  categoryId: number;
-  mode: Modes;
-}
-
-export interface IEditTypeParamsModal {
-  isShowing: boolean;
-  typeId: number;
-  feature: IFeature;
-}
-
-export interface ILoginModal {
-  isShowing: boolean;
-  user: IUser | null;
-}
-
-export interface IEditFeatureModal {
-  isShowing: boolean;
-  featureId: number;
-  mode: Modes;
-}
-
-export interface IEditParamModal {
-  isShowing: boolean;
-  paramId: number;
-  mode: Modes;
-}
-
-export interface IEditShopModal {
-  isShowing: boolean;
+export interface IEditShopModal extends IModal {
   shopId: number;
   mode: Modes;
 }
 
-export interface IEditUserModal {
-  isShowing: boolean;
-  userId: number;
+export interface IEditProductModal extends IModal {
+  productId: number;
+  mode: Modes;
+}
+
+export interface IEditParamModal extends IModal {
+  paramId: number;
+  mode: Modes;
+}
+
+export interface IEditFeatureModal extends IModal {
+  featureId: number;
+  mode: Modes;
+}
+
+export interface IEditCategoryModal extends IModal {
+  categoryId: number;
+  mode: Modes;
+}
+
+export interface IUserModal extends IModal {
+  phone: string;
+}
+
+export interface IEditTypeParamsModal extends IModal {
+  typeId: number;
+  feature: IFeature | null;
+}
+
+export interface IEditEmployeeModal extends IModal {
+  employeeId: number;
   mode: Modes;
 }

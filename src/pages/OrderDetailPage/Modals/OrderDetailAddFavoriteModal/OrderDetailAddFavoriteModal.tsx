@@ -1,52 +1,38 @@
+import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
+import ProductAPI from 'api/ProductAPI/ProductAPI';
+import TypeAPI from 'api/TypeAPI/TypeAPI';
 import { Button, Modal, SelectButton, Tooltip } from 'components';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
+import { INITIAL_PRODUCT } from 'constants/states/product-states';
+import { INITIAL_TYPE } from 'constants/states/type-states';
 import { groupBy } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { createFavoriteAPI } from 'http/favoriteAPI';
-import { fetchProductsAPI } from 'http/productAPI';
-import { fetchTypesByProductIdAPI } from 'http/typeAPI';
-import { IFavoriteParam } from 'models/IFavoriteParam';
+import { IFavoriteParam } from 'models/api/IFavoriteParam';
+import { IParam } from 'models/api/IParam';
+import { IProduct } from 'models/api/IProduct';
+import { IType } from 'models/api/IType';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
-import { IParam } from 'models/IParam';
-import { IProduct } from 'models/IProduct';
-import { IType } from 'models/IType';
 import { useEffect, useState } from 'react';
-import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { v4 as uuidv4 } from 'uuid';
 import OrderDetailServiceSearch from '../../OrderDetailServiceSearch/OrderDetailServiceSearch';
-import styles from './OrderDetailAddFavoriteModal.module.css';
+import styles from './OrderDetailAddFavoriteModal.module.scss';
 
 const OrderDetailAddFavoriteModal = () => {
-  const initialProduct: IProduct = {
-    id: 0,
-    name: 'Выберите продукт',
-    pluralName: '',
-    description: '',
-    image: '',
-  };
-
-  const initialType: IType = {
-    id: 0,
-    name: 'Выберите тип',
-    price: 0,
-    image: '',
-    features: [],
-  };
-
   const [products, setProducts] = useState<IProduct[]>([]);
   const [types, setTypes] = useState<IType[]>([]);
   const [selectedProduct, setSelectedProduct] =
-    useState<IProduct>(initialProduct);
-  const [selectedType, setSelectedType] = useState<IType>(initialType);
+    useState<IProduct>(INITIAL_PRODUCT);
+  const [selectedType, setSelectedType] = useState<IType>(INITIAL_TYPE);
   const [features, setFeatures] = useState<IParam[][]>([]);
   const [selectedParams, setSelectedParams] = useState<IFavoriteParam[]>([]);
 
   const orderDetailAddFavoriteModal = useAppSelector(
     (state) => state.modal.orderDetailAddFavoriteModal
   );
-  const user = useAppSelector((state) => state.user.user);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
 
@@ -55,21 +41,21 @@ const OrderDetailAddFavoriteModal = () => {
   }, []);
 
   const fetchProducts = () => {
-    fetchProductsAPI().then((data) => {
+    ProductAPI.getAll().then((data) => {
       setProducts(data.rows);
     });
   };
 
   const fetchTypes = (productId: number) => {
-    fetchTypesByProductIdAPI(productId).then((data) => {
-      setTypes(data);
+    TypeAPI.getAll({ productId }).then((data) => {
+      setTypes(data.rows);
     });
   };
 
   const selectProduct = (product: IProduct) => {
     setSelectedProduct(product);
 
-    setSelectedType(initialType);
+    setSelectedType(INITIAL_TYPE);
     setFeatures([]);
     setSelectedParams([]);
     fetchTypes(product.id);
@@ -105,31 +91,19 @@ const OrderDetailAddFavoriteModal = () => {
   const searchSelect = (product: IProduct, type: IType) => {
     setSelectedProduct(product);
 
-    setSelectedType(initialType);
-    fetchTypesByProductIdAPI(product.id).then((data) => {
-      setTypes(data);
+    setSelectedType(INITIAL_TYPE);
+    TypeAPI.getAll({ productId: product.id }).then((data) => {
+      setTypes(data.rows);
       selectType(type);
     });
   };
 
   const isValidationSuccess = () => {
     if (selectedProduct.id === 0) {
-      dispatch(
-        appSlice.actions.showGlobalMessage({
-          message: 'Выберите продукт',
-          variant: GlobalMessageVariants.warning,
-          isShowing: true,
-        })
-      );
+      showGlobalMessage('Выберите продукт', GlobalMessageVariants.warning);
       return false;
     } else if (types.length !== 0 && selectedType.id === 0) {
-      dispatch(
-        appSlice.actions.showGlobalMessage({
-          message: 'Выберите тип',
-          variant: GlobalMessageVariants.warning,
-          isShowing: true,
-        })
-      );
+      showGlobalMessage('Выберите тип', GlobalMessageVariants.warning);
       return false;
     } else {
       return true;
@@ -137,16 +111,20 @@ const OrderDetailAddFavoriteModal = () => {
   };
 
   const createFavorite = () => {
-    if (!user) return;
+    if (!employee) return;
     if (!isValidationSuccess()) return;
-    createFavoriteAPI(selectedType.id, selectedParams, user.id).then((data) => {
+    FavoriteAPI.create({
+      typeId: selectedType.id,
+      employeeId: employee.id,
+      selectedParams,
+    }).then((data) => {
       dispatch(orderSlice.actions.addFavorite(data));
       close();
     });
   };
 
   const close = () => {
-    dispatch(modalSlice.actions.closeOrderDetailAddFavoriteModal());
+    dispatch(modalSlice.actions.closeModal('orderDetailAddFavoriteModal'));
   };
 
   return (
@@ -157,21 +135,21 @@ const OrderDetailAddFavoriteModal = () => {
     >
       <div className={styles.container}>
         <OrderDetailServiceSearch
-          searchSelect={searchSelect}
           style={{ marginBottom: '16px' }}
+          onClick={searchSelect}
         />
         <div className={styles.main_controls}>
           <SelectButton
             items={products}
             defaultSelectedItem={selectedProduct}
-            changeHandler={(e) => selectProduct(e)}
+            onChange={(e) => selectProduct(e)}
             style={{ width: '228px' }}
           />
           {types.length !== 0 && (
             <SelectButton
               items={types}
               defaultSelectedItem={selectedType}
-              changeHandler={(e) => selectType(e)}
+              onChange={(e) => selectType(e)}
               style={{ width: '228px' }}
             />
           )}
@@ -187,7 +165,7 @@ const OrderDetailAddFavoriteModal = () => {
                 <SelectButton
                   items={feature}
                   defaultSelectedItem={selectedParams[index]?.param!}
-                  changeHandler={(e) => selectParam(e)}
+                  onChange={(e) => selectParam(e)}
                   style={{ width: '228px' }}
                 />
               </div>

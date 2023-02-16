@@ -2,7 +2,7 @@ import { calcPlacement } from 'helpers';
 import { Placements } from 'helpers/calcPlacement';
 import { useOnClickOutside } from 'hooks';
 import { forwardRef, HTMLAttributes, ReactNode, useRef, useState } from 'react';
-import styles from './DropdownButton.module.css';
+import styles from './DropdownButton.module.scss';
 
 export interface IDropdownButtonOption {
   id: number;
@@ -20,11 +20,12 @@ interface DropdownButtonProps extends HTMLAttributes<HTMLElement> {
   options?: IDropdownButtonOption[];
   icon?: ReactNode;
   text?: string;
-  placement: Placements;
+  placement?: Placements;
   variant?: DropdownButtonVariants;
   circle?: boolean;
   menuToggleCb?: () => void;
   itemRender?: () => ReactNode;
+  containerClassName?: string;
 }
 
 const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
@@ -33,16 +34,17 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
       options,
       icon,
       text,
-      placement,
+      placement = Placements.bottomStart,
       variant = DropdownButtonVariants.default,
       circle,
       menuToggleCb,
       itemRender,
+      containerClassName,
       ...props
     },
     ref
   ) => {
-    const [isHidden, setIsHidden] = useState(true);
+    const [isHidden, setIsHidden] = useState<boolean>(true);
 
     const dropdownBtnRef = useRef(null);
 
@@ -59,7 +61,11 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
     };
 
     return (
-      <div className={styles.container} ref={dropdownBtnRef} {...props}>
+      <div
+        className={[styles.container, containerClassName].join(' ')}
+        ref={dropdownBtnRef}
+        {...props}
+      >
         <div
           className={[styles.dropdown_btn, styles[variant]].join(' ')}
           onClick={toggle}
@@ -84,7 +90,7 @@ const DropdownButton = forwardRef<HTMLDivElement, DropdownButtonProps>(
             ...calcPlacement(placement),
           }}
         >
-          {itemRender === undefined
+          {!itemRender
             ? options?.map((option) => (
                 <li key={option.id}>
                   <div

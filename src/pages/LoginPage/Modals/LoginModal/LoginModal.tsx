@@ -1,76 +1,78 @@
+import AuthAPI from 'api/AuthAPI/AuthAPI';
+import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
 import { Button, Modal, Textbox } from 'components';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { defaultAvatar } from 'constants/images';
-import { ORDERS_ROUTE } from 'constants/paths';
-import { enterPressHandler } from 'helpers';
+import { enterPressHandler, getApps } from 'helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { loginAPI } from 'http/userAPI';
-import { GlobalMessageVariants } from 'models/IGlobalMessage';
-import { UserRoles } from 'models/IUser';
 import { KeyboardEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
-import { appSlice } from 'store/reducers/AppSlice';
+import { employeeSlice } from 'store/reducers/EmployeeSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import { userSlice } from 'store/reducers/UserSlice';
-import styles from './LoginModal.module.css';
+import { moyskladSlice } from 'store/reducers/MoyskladSlice';
+import styles from './LoginModal.module.scss';
 
 const LoginModal = () => {
   const [password, setPassword] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const activeShop = useAppSelector((state) => state.app.activeShop);
   const loginModal = useAppSelector((state) => state.modal.loginModal);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const close = () => {
-    dispatch(modalSlice.actions.closeLoginModal());
+  const fetchStores = () => {
+    MoyskladAPI.getStores().then((data) => {
+      dispatch(moyskladSlice.actions.setStores(data.rows));
 
-    setPassword('');
+      const activeStore = data.rows.find((store) =>
+        store.name.includes(activeShop.name)
+      );
+      if (activeStore) {
+        dispatch(moyskladSlice.actions.setActiveStore(activeStore));
+      }
+    });
   };
 
   const signIn = () => {
-    if (!loginModal.user) return;
+    if (!loginModal.employee) return;
 
-    loginAPI(loginModal.user.login, password)
+    setIsLoading(true);
+    AuthAPI.login({ login: loginModal.employee.login, password })
       .then((data) => {
-        if (data.role === UserRoles.USER) {
-          dispatch(
-            appSlice.actions.showGlobalMessage({
-              message: 'Нет доступа!',
-              variant: GlobalMessageVariants.danger,
-              isShowing: true,
-            })
-          );
+        const apps = getApps(data.apps);
+        if (!apps.length) {
+          showGlobalMessage('Нет доступных приложений');
           return;
         }
 
-        socketio.connect(data);
-        dispatch(userSlice.actions.signIn(data));
-        navigateToRoute(ORDERS_ROUTE);
+        socketio.connect();
+        fetchStores();
 
+        dispatch(employeeSlice.actions.signIn(data));
+        navigate(apps[0].value);
         close();
       })
-      .catch((e) =>
-        dispatch(
-          appSlice.actions.showGlobalMessage({
-            message: e.response.data.message,
-            variant: GlobalMessageVariants.danger,
-            isShowing: true,
-          })
-        )
-      );
-  };
-
-  const navigateToRoute = (route: string) => {
-    dispatch(appSlice.actions.setActiveRoute(route));
-    navigate(route);
+      .catch((e) => {
+        showGlobalMessage(
+          e.response.data ? e.response.data.message : e.message
+        );
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const onEnterPress = (event: KeyboardEvent) => {
     if (password !== '') {
       enterPressHandler(event, signIn);
     }
+  };
+
+  const close = () => {
+    dispatch(modalSlice.actions.closeModal('loginModal'));
+    setPassword('');
   };
 
   return (
@@ -83,9 +85,13 @@ const LoginModal = () => {
       <div className={styles.container}>
         <img
           className={styles.avatar}
-          src={loginModal.user?.avatar ? loginModal.user.avatar : defaultAvatar}
+          src={
+            loginModal.employee?.avatar
+              ? loginModal.employee.avatar
+              : defaultAvatar
+          }
         />
-        <div className={styles.user_name}>{loginModal.user?.name}</div>
+        <div className={styles.name}>{loginModal.employee?.name}</div>
         <Textbox
           label="Пароль"
           value={password}
@@ -98,6 +104,8 @@ const LoginModal = () => {
           variant={ButtonVariants.primary}
           onClick={signIn}
           disabled={password === ''}
+          isLoading={isLoading}
+          loadingText="Авторизация..."
         >
           Войти
         </Button>

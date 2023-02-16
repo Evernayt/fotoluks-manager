@@ -139,51 +139,6 @@ img {
   margin: 12px 0;
 }
 
-.pagination-container {
-  display: flex;
-  align-items: center;
-  list-style-type: none;
-  font-weight: 500;
-}
-
-.pagination-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 16px;
-  height: 33px;
-  padding: 0 8px;
-  margin: 0 2px;
-  cursor: pointer;
-}
-
-.pagination-active {
-  border-radius: var(--border-radius);
-  background-color: var(--primary-color);
-  color: var(--primary-text-color);
-  cursor: default;
-}
-
-.pagination-previous-next {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 16px;
-  min-height: 33px;
-  padding: 0 8px;
-  cursor: pointer;
-}
-
-.pagination-disabled {
-  color: var(--secondary-text-on-bg-color);
-  cursor: default;
-}
-
-.pagination-break {
-  padding: 8px;
-  cursor: pointer;
-}
-
 .primary-icon {
   stroke: var(--primary-icon-color);
 }

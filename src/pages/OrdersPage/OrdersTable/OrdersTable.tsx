@@ -1,41 +1,39 @@
-import { Loader, StatusSelectButton } from 'components';
-import { fetchOrdersAPI, updateStatusAPI } from 'http/orderAPI';
-import { useEffect, useMemo, useState } from 'react';
-import { Cell, Row, useTable } from 'react-table';
-import { fetchStatusesAPI } from 'http/statusAPI';
-import ReactPaginate from 'react-paginate';
-import { useNavigate } from 'react-router-dom';
+import OrderAPI from 'api/OrderAPI/OrderAPI';
+import StatusAPI from 'api/StatusAPI/StatusAPI';
+import { Table } from 'components';
+import { DEF_DATE_FORMAT } from 'constants/app';
 import { ORDER_DETAIL_ROUTE } from 'constants/paths';
-import { IOrder } from 'models/IOrder';
-import { IStatus } from 'models/IStatus';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import OrderMenuCell from './OrderMenuCell';
+import { IOrder, IOrdersFilter } from 'models/api/IOrder';
+import { IStatus } from 'models/api/IStatus';
 import moment from 'moment';
-import { DEF_FORMAT } from 'constants/app';
-import OrdersToolbar from './OrdersToolbar/OrdersToolbar';
-import styles from './OrdersTable.module.css';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Cell, Row } from 'react-table';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import { createNotificationAPI } from 'http/notificationAPI';
-import socketio from 'socket/socketio';
-import { appSlice } from 'store/reducers/AppSlice';
-import { GlobalMessageVariants } from 'models/IGlobalMessage';
+import OrderMenuCell from './OrdersCells/OrderMenuCell';
+import OrderStatusCell from './OrdersCells/OrderStatusCell';
+import OrdersToolbar from './OrdersToolbar/OrdersToolbar';
+import OrderDeadlineCell from './OrdersCells/OrderDeadlineCell';
+import { useDebounce } from 'hooks';
+import { createServicesName } from './OrdersTable.service';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 
 const OrdersTable = () => {
-  const [statuses, setStatuses] = useState<IStatus[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(15);
   const [page, setPage] = useState<number>(1);
-  const [isNotFound, setIsNotFound] = useState<boolean>(false);
+  const [limit, setLimit] = useState<number>(15);
+  const [statuses, setStatuses] = useState<IStatus[]>([]);
 
   const orders = useAppSelector((state) => state.order.orders);
+  const isLoading = useAppSelector((state) => state.order.isLoading);
+  const ordersFilter = useAppSelector((state) => state.order.ordersFilter);
   const activeStatus = useAppSelector((state) => state.order.activeStatus);
   const activeShop = useAppSelector((state) => state.app.activeShop);
-  const user = useAppSelector((state) => state.user.user);
+  const search = useAppSelector((state) => state.order.search);
   const forceUpdate = useAppSelector((state) => state.order.forceUpdate);
-  const ordersFilter = useAppSelector((state) => state.order.ordersFilter);
-  const foundOrders = useAppSelector((state) => state.order.foundOrders);
-  const isLoading = useAppSelector((state) => state.order.isLoading);
 
+  const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -49,25 +47,13 @@ const OrdersTable = () => {
         Header: 'Дата создания',
         accessor: 'createdAt',
         style: { minWidth: '110px' },
-        Cell: ({ value }: Cell<IOrder>) => moment(value).format(DEF_FORMAT),
+        Cell: ({ value }: Cell<IOrder>) =>
+          moment(value).format(DEF_DATE_FORMAT),
       },
       {
         Header: 'Услуги',
         style: { width: '100%' },
-        accessor: (d: IOrder) => {
-          const finishedProducts = d.finishedProducts?.filter(
-            (elem, index, self) =>
-              self.findIndex((t) => {
-                return t.type.id === elem.type.id;
-              }) === index
-          );
-          return finishedProducts
-            .map(
-              (element) =>
-                `${element.product.name} ${element.type.name.toLowerCase()}`
-            )
-            .join(', ');
-        },
+        accessor: (order: IOrder) => createServicesName(order),
       },
       {
         Header: 'Сумма',
@@ -87,7 +73,7 @@ const OrdersTable = () => {
         style: { minWidth: '110px' },
         accessor: 'deadline',
         Cell: ({ value }: Cell<IOrder>) =>
-          value === null ? 'Не указано' : moment(value).format(DEF_FORMAT),
+          value === null ? 'Не указано' : moment(value).format(DEF_DATE_FORMAT),
       },
       {
         Header: 'Имя клиента',
@@ -108,142 +94,67 @@ const OrdersTable = () => {
   }, []);
 
   useEffect(() => {
-    setPage(1);
-    if (foundOrders.orderData.rows.length === 0) {
-      if (foundOrders.searchText === '') {
-        dispatch(orderSlice.actions.setForceUpdate(true));
-        setIsNotFound(false);
-      } else {
-        setPageCount(1);
-        setIsNotFound(true);
-      }
-    } else {
-      dispatch(orderSlice.actions.setOrders(foundOrders.orderData.rows));
-      const count = Math.ceil(foundOrders.orderData.count / limit);
-      setPageCount(count);
-      setIsNotFound(false);
-    }
-  }, [foundOrders]);
-
-  useEffect(() => {
-    setPage(1);
-    if (ordersFilter.filter.isActive) {
-      fetchWithFilters();
-    } else {
-      fetchOrders(1, [1, activeShop.id]);
-    }
+    pageChangeHandler(1);
   }, [activeStatus]);
 
   useEffect(() => {
-    if (ordersFilter.filter.isActive) {
-      fetchWithFilters();
-    } else if (ordersFilter.filter.isPendingDeactivation) {
-      dispatch(orderSlice.actions.deactiveOrdersFilter());
-      fetchOrders(page, [1, activeShop.id]);
-    } else if (forceUpdate) {
-      fetchOrders(page, [1, activeShop.id]);
+    if (debouncedSearchTerm) {
+      fetchOrders(page, { ...ordersFilter, search });
+    } else {
+      reload(page);
     }
+  }, [debouncedSearchTerm]);
 
+  useEffect(() => {
+    if (ordersFilter.isActive) {
+      fetchOrders(page, ordersFilter);
+    } else if (ordersFilter.isPendingDeactivation) {
+      dispatch(orderSlice.actions.deactiveOrdersFilter());
+      fetchOrders(page, { shopIds: [1, activeShop.id] });
+    } else if (forceUpdate) {
+      fetchOrders(page, { shopIds: [1, activeShop.id] });
+    }
     dispatch(orderSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
 
-  const fetchOrders = (
-    page: number,
-    shopIds: number[],
-    startDate?: string,
-    endDate?: string,
-    userId?: number
-  ) => {
+  const fetchOrders = (page: number, filter?: IOrdersFilter) => {
     if (!activeStatus) return;
     dispatch(orderSlice.actions.setIsLoading(true));
 
-    fetchOrdersAPI(
+    OrderAPI.getAll({
+      ...filter,
       limit,
       page,
-      activeStatus.id,
-      shopIds,
-      startDate,
-      endDate,
-      userId
-    )
+      statusId: activeStatus.id,
+    })
       .then((data) => {
         dispatch(orderSlice.actions.setOrders(data.rows));
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
       .catch((e) =>
-        dispatch(
-          appSlice.actions.showGlobalMessage({
-            message: e.response.data ? e.response.data.message : e.message,
-            variant: GlobalMessageVariants.danger,
-            isShowing: true,
-          })
-        )
+        showGlobalMessage(e.response.data ? e.response.data.message : e.message)
       )
       .finally(() => dispatch(orderSlice.actions.setIsLoading(false)));
   };
 
   const fetchStatuses = () => {
-    fetchStatusesAPI().then((data) => {
-      setStatuses(data);
+    StatusAPI.getAll().then((data) => {
+      setStatuses(data.rows);
     });
   };
 
-  const fetchWithFilters = () => {
-    const { shop, startDate, endDate, userId } = ordersFilter;
-    fetchOrders(page, [shop.id], startDate, endDate, userId);
+  const reload = (page: number) => {
+    if (ordersFilter.isActive) {
+      fetchOrders(page, ordersFilter);
+    } else {
+      fetchOrders(page, { shopIds: [1, activeShop.id] });
+    }
   };
 
   const pageChangeHandler = (page: number) => {
     setPage(page);
-    if (ordersFilter.filter.isActive) {
-      fetchWithFilters();
-    } else {
-      fetchOrders(page, [1, activeShop.id]);
-    }
-  };
-
-  const reload = () => {
-    if (ordersFilter.filter.isActive) {
-      fetchWithFilters();
-    } else {
-      fetchOrders(page, [1, activeShop.id]);
-    }
-  };
-
-  const notifyStatusChange = (orderId: number, status: IStatus) => {
-    const order = orders.find((order) => order.id === orderId);
-    if (!order) return;
-    if (order.orderMembers.length === 0) return;
-
-    const orderMemberIds = [];
-    for (let i = 0; i < order.orderMembers.length; i++) {
-      orderMemberIds.push(order.orderMembers[i].user.id);
-    }
-
-    const oldStatusName = order.status?.name;
-
-    const updatedOrder = { ...order, status };
-    dispatch(orderSlice.actions.updateOrder(updatedOrder));
-
-    const title = 'Изменен статус';
-    const text = `${user?.name} изменил статус заказа № ${orderId} c "${oldStatusName}" на "${status.name}"`;
-
-    createNotificationAPI(title, text, orderMemberIds).then((data) => {
-      socketio.sendNotification(data);
-    });
-  };
-
-  const updateStatus = (status: IStatus, order: IOrder) => {
-    if (user) {
-      const userId = user.id;
-      updateStatusAPI(status.id, order.id, userId);
-
-      notifyStatusChange(order.id, status);
-
-      const updatedOrder = { ...order, status };
-      socketio.updateOrder(updatedOrder);
-    }
+    reload(page);
   };
 
   const rowClickHandler = (row: Row<IOrder>) => {
@@ -252,125 +163,28 @@ const OrdersTable = () => {
     });
   };
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: orders });
-
   return (
-    <div style={{ height: '100%' }}>
-      <OrdersToolbar setLimit={setLimit} reload={reload} />
-      {isNotFound ? (
-        <div className={[styles.container, styles.message].join(' ')}>
-          Ничего не найдено
-        </div>
-      ) : (
-        <div className={styles.container}>
-          {isLoading ? (
-            <Loader height="calc(100vh - 200px)" />
-          ) : (
-            <table {...getTableProps()} className={styles.section}>
-              <thead>
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column: any) => (
-                      <th
-                        {...column.getHeaderProps()}
-                        className={styles.column}
-                        style={column.style}
-                      >
-                        {column.render('Header')}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr
-                      {...row.getRowProps()}
-                      className={styles.row}
-                      onClick={(e: any) =>
-                        e.target.tagName === 'TD' && rowClickHandler(row)
-                      }
-                    >
-                      {row.cells.map((cell: any) => {
-                        const isStatus = cell.column.id === 'status';
-                        const isDeadlinePass =
-                          cell.column.id === 'deadline' &&
-                          Date.parse(cell.value) < Date.now() &&
-                          ['Новый', 'В работе'].includes(
-                            row.original.status!.name
-                          );
-
-                        if (isStatus) {
-                          return (
-                            <td
-                              className={styles.status_cell}
-                              {...cell.getCellProps()}
-                            >
-                              <StatusSelectButton
-                                statuses={statuses}
-                                changeHandler={(
-                                  status: IStatus,
-                                  order: IOrder
-                                ) => updateStatus(status, order)}
-                                defaultSelectedStatus={cell.value}
-                                order={cell.row.original}
-                                key={cell.row.original.id}
-                              />
-                            </td>
-                          );
-                        } else if (isDeadlinePass) {
-                          return (
-                            <td
-                              {...cell.getCellProps()}
-                              className={styles.cell}
-                              style={{ ...cell.column.style, color: '#FF7613' }}
-                            >
-                              {cell.render('Cell')}
-                            </td>
-                          );
-                        } else {
-                          return (
-                            <td
-                              {...cell.getCellProps()}
-                              className={styles.cell}
-                              style={cell.column.style}
-                            >
-                              {cell.render('Cell')}
-                            </td>
-                          );
-                        }
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
-      <div className={styles.pagination}>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="Вперед"
-          onPageChange={(e) => pageChangeHandler(e.selected + 1)}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="Назад"
-          renderOnZeroPageCount={() => {}}
-          containerClassName="pagination-container"
-          pageLinkClassName="pagination-page"
-          activeLinkClassName="pagination-active"
-          previousLinkClassName="pagination-previous-next"
-          nextLinkClassName="pagination-previous-next"
-          disabledLinkClassName="pagination-disabled"
-          breakLinkClassName="pagination-break"
-          forcePage={page - 1}
-        />
-      </div>
-    </div>
+    <>
+      <OrdersToolbar reload={() => reload(page)} onLimitChange={setLimit} />
+      <Table
+        columns={columns}
+        data={orders}
+        isLoading={isLoading}
+        pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
+        onRowClick={rowClickHandler}
+        customCells={[
+          {
+            accessor: 'status',
+            cell: OrderStatusCell,
+            props: { statuses },
+          },
+          {
+            accessor: 'deadline',
+            cell: OrderDeadlineCell,
+          },
+        ]}
+      />
+    </>
   );
 };
 

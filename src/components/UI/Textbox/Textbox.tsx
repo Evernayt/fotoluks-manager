@@ -1,15 +1,16 @@
 import { IconEye, IconEyeOff } from 'icons';
 import { CSSProperties, FC, InputHTMLAttributes, memo, useState } from 'react';
-import styles from './Textbox.module.css';
+import styles from './Textbox.module.scss';
 
 interface TextboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   isPassword?: boolean;
   containerStyle?: CSSProperties;
+  containerClassName?: string;
 }
 
 const Textbox: FC<TextboxProps> = memo(
-  ({ label, isPassword, containerStyle, ...props }) => {
+  ({ label, isPassword, containerStyle, containerClassName, ...props }) => {
     const [isPasswordShowing, setIsPasswordShowing] = useState<boolean>(false);
 
     const passwordShowingToggle = () => {
@@ -17,7 +18,10 @@ const Textbox: FC<TextboxProps> = memo(
     };
 
     return (
-      <div className={styles.container} style={containerStyle}>
+      <div
+        className={[styles.container, containerClassName].join(' ')}
+        style={{ ...containerStyle, marginTop: label ? '4px' : '0px' }}
+      >
         {isPassword && (
           <div className={styles.icon} onClick={passwordShowingToggle}>
             {isPasswordShowing ? (

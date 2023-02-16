@@ -2,75 +2,79 @@ import { Search } from 'components';
 import { defaultAvatar } from 'constants/images';
 import { useDebounce } from 'hooks';
 import { useAppDispatch } from 'hooks/redux';
-import { searchUsersAPI } from 'http/userAPI';
 import { IconPlus } from 'icons';
-import { IUser } from 'models/IUser';
 import { FC, HTMLAttributes, useEffect, useState } from 'react';
 import { mask } from 'node-masker';
-import styles from './OrderDetailClientSearch.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
+import { IUser } from 'models/api/IUser';
+import UserAPI from 'api/UserAPI/UserAPI';
+import styles from './OrderDetailClientSearch.module.scss';
 
 interface OrderDetailClientSearchProps extends HTMLAttributes<HTMLDivElement> {}
 
 const OrderDetailClientSearch: FC<OrderDetailClientSearchProps> = ({
   ...props
 }) => {
-  const [searchText, setSearchText] = useState<string>('');
-  const [foundUsers, setFoundUsers] = useState<IUser[]>([]);
+  const [search, setSearch] = useState<string>('');
+  const [users, setUsers] = useState<IUser[]>([]);
 
-  const debouncedSearchTerm = useDebounce(searchText, 500);
+  const debouncedSearchTerm = useDebounce(search);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      searchUsers();
+      fetchUsers();
     } else {
-      setFoundUsers([]);
+      setUsers([]);
     }
   }, [debouncedSearchTerm]);
 
-  const searchUsers = () => {
-    searchUsersAPI(15, 1, searchText).then((data) => {
-      setFoundUsers(data.rows);
+  const fetchUsers = () => {
+    UserAPI.getAll({ search }).then((data) => {
+      setUsers(data.rows);
     });
   };
 
   const selectUser = (user: IUser) => {
     dispatch(orderSlice.actions.setOrderUser(user));
-    setSearchText('');
+    setSearch('');
   };
 
   const createOnRequest = () => {
-    dispatch(modalSlice.actions.openUserRegistrationModal(searchText));
-    setSearchText('');
+    dispatch(
+      modalSlice.actions.openModal({
+        modal: 'userRegistrationModal',
+        props: { text: search },
+      })
+    );
+    setSearch('');
   };
 
   return (
     <Search
-      searchText={searchText}
-      setSearchText={setSearchText}
+      value={search}
+      onChange={setSearch}
       placeholder="Поиск клиентов"
-      resultMaxHeight={300}
       {...props}
     >
-      {foundUsers.map((foundUser) => (
+      {users.map((user) => (
         <div
           className={styles.result}
-          key={foundUser.id}
-          onClick={() => selectUser(foundUser)}
+          onClick={() => selectUser(user)}
+          key={user.id}
         >
           <img
             className={styles.user_avatar}
-            src={foundUser.avatar ? foundUser.avatar : defaultAvatar}
+            src={user.avatar ? user.avatar : defaultAvatar}
             alt=""
           />
           <div className={styles.user_container}>
-            <span className={styles.user_name}>{foundUser.name}</span>
+            <span className={styles.user_name}>{user.name}</span>
             <span className={styles.user_phone}>
-              {foundUser.phone
-                ? mask(foundUser.phone, '8 (999) 999-99-99')
+              {user.phone
+                ? mask(user.phone, '8 (999) 999-99-99')
                 : 'Не указано'}
             </span>
           </div>
@@ -82,7 +86,7 @@ const OrderDetailClientSearch: FC<OrderDetailClientSearchProps> = ({
         </div>
         <span className={styles.create_btn}>
           Создать по запросу{' '}
-          <span style={{ fontWeight: '500' }}>"{searchText}"</span>
+          <span style={{ fontWeight: '500' }}>"{search}"</span>
         </span>
       </div>
     </Search>

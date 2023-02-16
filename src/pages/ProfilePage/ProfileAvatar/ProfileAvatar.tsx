@@ -1,67 +1,44 @@
+import { UpdateEmployeeDto } from 'api/EmployeeAPI/dto/update-employee.dto';
+import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
+import FileAPI from 'api/FileAPI/FileAPI';
+import { Avatar } from 'components';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { uploadAvatarAPI } from 'http/uploadFileAPI';
-import { updateUserAPI } from 'http/userAPI';
-import { IconEdit } from 'icons';
-import { IUser } from 'models/IUser';
-import { ChangeEvent, useRef } from 'react';
-import { userSlice } from 'store/reducers/UserSlice';
-import styles from './ProfileAvatar.module.css';
+import { employeeSlice } from 'store/reducers/EmployeeSlice';
 
 const ProfileAvatar = () => {
-  const user = useAppSelector((state) => state.user.user);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
 
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const editAvatar = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const image = event.target.files[0];
-
-      const formData = new FormData();
-      formData.append('avatar', image);
-
-      uploadAvatarAPI(formData)
-        .then((res) => res.text())
-        .then((data) => {
-          if (!user) return;
-
-          const updatedUser: IUser = { ...user, avatar: data };
-          updateUserAPI(updatedUser).then((data) => {
-            dispatch(userSlice.actions.updateUser(data));
-          });
-        })
-        .catch((e) => {
-          console.log(e.response.data.message);
+  const editAvatar = (image: File) => {
+    FileAPI.uploadAvatar(image).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
+          if (employee) {
+            const updatedEmployee: UpdateEmployeeDto = {
+              id: employee.id,
+              avatar: data.link,
+            };
+            EmployeeAPI.update(updatedEmployee).then((data) => {
+              dispatch(employeeSlice.actions.updateEmployee(data));
+            });
+          }
         });
-    }
+      } else {
+        res.json().then((data) => {
+          showGlobalMessage(data.message);
+        });
+      }
+    });
   };
 
   return (
-    <div>
-      <div className={styles.avatar_container} onClick={handleImageClick}>
-        <IconEdit
-          className={[styles.avatar_edit_icon, 'secondary-dark-icon'].join(' ')}
-        />
-        <div className={styles.avatar_fogging} />
-      </div>
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={editAvatar}
-        accept="image/png, image/jpeg"
-      />
-      <img
-        className={styles.avatar}
-        src={user?.avatar ? user.avatar : defaultAvatar}
-      />
-    </div>
+    <Avatar
+      image={employee?.avatar ? employee.avatar : defaultAvatar}
+      onAvatarSelect={editAvatar}
+    />
   );
 };
 

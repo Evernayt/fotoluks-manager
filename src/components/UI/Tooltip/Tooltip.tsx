@@ -13,7 +13,7 @@ import {
   useDismiss,
 } from '@floating-ui/react-dom-interactions';
 import { motion, AnimatePresence } from 'framer-motion';
-import styles from './Tooltip.module.css';
+import styles from './Tooltip.module.scss';
 
 interface TooltipProps {
   label: string;

@@ -1,13 +1,13 @@
+import OrderInfoAPI from 'api/OrderInfoAPI/OrderInfoAPI';
 import { CircleDiagram, Loader, SelectButton } from 'components';
 import { ICircleDiagramData } from 'components/UI/CircleDiagram/CircleDiagram';
-import { INPUT_FORMAT } from 'constants/app';
+import { INPUT_DATE_FORMAT } from 'constants/app';
 import { toPercentages } from 'helpers';
 import { useAppSelector } from 'hooks/redux';
-import { fetchStatusOrdersAPI } from 'http/statusAPI';
-import { IStatus } from 'models/IStatus';
+import { IOrderInfo, IStatistic } from 'models/api/IOrderInfo';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
-import styles from './ProfileStatistics.module.css';
+import styles from './ProfileStatistics.module.scss';
 
 const ProfileStatistics = () => {
   const periods = useMemo(
@@ -15,123 +15,103 @@ const ProfileStatistics = () => {
       {
         id: 1,
         name: 'Текущий день',
-        onClick: () => {
-          const start = moment().startOf('day').format(INPUT_FORMAT);
-          const end = moment().endOf('day').format(INPUT_FORMAT);
-          fetchStatusOrders(start, end);
-        },
+        startDate: moment().startOf('day').format(INPUT_DATE_FORMAT),
+        endDate: moment().endOf('day').format(INPUT_DATE_FORMAT),
       },
       {
         id: 2,
         name: 'Предыдущий день',
-        onClick: () => {
-          const start = moment()
-            .subtract(1, 'day')
-            .startOf('day')
-            .format(INPUT_FORMAT);
-          const end = moment()
-            .subtract(1, 'day')
-            .endOf('day')
-            .format(INPUT_FORMAT);
-          fetchStatusOrders(start, end);
-        },
+        startDate: moment()
+          .subtract(1, 'day')
+          .startOf('day')
+          .format(INPUT_DATE_FORMAT),
+        endDate: moment()
+          .subtract(1, 'day')
+          .endOf('day')
+          .format(INPUT_DATE_FORMAT),
       },
       {
         id: 3,
         name: 'Текущую неделю',
-        onClick: () => {
-          const start = moment().startOf('week').format(INPUT_FORMAT);
-          const end = moment().endOf('week').format(INPUT_FORMAT);
-          fetchStatusOrders(start, end);
-        },
+        startDate: moment().startOf('week').format(INPUT_DATE_FORMAT),
+        endDate: moment().endOf('week').format(INPUT_DATE_FORMAT),
       },
       {
         id: 4,
         name: 'Предыдущую неделю',
-        onClick: () => {
-          const start = moment()
-            .subtract(1, 'week')
-            .startOf('week')
-            .format(INPUT_FORMAT);
-          const end = moment()
-            .subtract(1, 'week')
-            .endOf('week')
-            .format(INPUT_FORMAT);
-          fetchStatusOrders(start, end);
-        },
+        startDate: moment()
+          .subtract(1, 'week')
+          .startOf('week')
+          .format(INPUT_DATE_FORMAT),
+        endDate: moment()
+          .subtract(1, 'week')
+          .endOf('week')
+          .format(INPUT_DATE_FORMAT),
       },
       {
         id: 5,
         name: 'Текущий месяц',
-        onClick: () => {
-          const start = moment().startOf('month').format(INPUT_FORMAT);
-          const end = moment().endOf('month').format(INPUT_FORMAT);
-          fetchStatusOrders(start, end);
-        },
+        startDate: moment().startOf('month').format(INPUT_DATE_FORMAT),
+        endDate: moment().endOf('month').format(INPUT_DATE_FORMAT),
       },
       {
         id: 6,
         name: 'Предыдущий месяц',
-        onClick: () => {
-          const start = moment()
-            .subtract(1, 'month')
-            .startOf('month')
-            .format(INPUT_FORMAT);
-          const end = moment()
-            .subtract(1, 'month')
-            .endOf('month')
-            .format(INPUT_FORMAT);
-          fetchStatusOrders(start, end);
-        },
+        startDate: moment()
+          .subtract(1, 'month')
+          .startOf('month')
+          .format(INPUT_DATE_FORMAT),
+        endDate: moment()
+          .subtract(1, 'month')
+          .endOf('month')
+          .format(INPUT_DATE_FORMAT),
       },
     ],
     []
   );
 
   const [diagramData, setDiagramData] = useState<ICircleDiagramData[]>([]);
-  const [statusOrders, setStatusOrders] = useState<IStatus[]>([]);
+  const [orderInfos, setOrderInfos] = useState<IOrderInfo[]>([]);
+  const [statistics, setStatistics] = useState<IStatistic[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedPeriod, setSelectedPeriod] = useState(periods[4]);
 
-  const user = useAppSelector((state) => state.user.user);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   useEffect(() => {
-    const start = moment().startOf('month').format(INPUT_FORMAT);
-    const end = moment().endOf('month').format(INPUT_FORMAT);
-    fetchStatusOrders(start, end);
+    fetchStatistics(periods[4].startDate, periods[4].endDate);
   }, []);
 
-  const fetchStatusOrders = (startDate: string, endDate: string) => {
-    if (user) {
-      setIsLoading(true);
-      fetchStatusOrdersAPI(user.id, startDate, endDate)
-        .then((data) => {
-          const tempDiagramData: ICircleDiagramData[] = [];
-          const values: number[] = [];
-          for (let i = 0; i < data.length; i++) {
-            values.push(data[i].ordersCount!);
-          }
+  const fetchStatistics = (startDate: string, endDate: string) => {
+    if (!employee) return;
 
-          const percentageValues = toPercentages(values);
+    OrderInfoAPI.getStatistics({ employeeId: employee.id, startDate, endDate })
+      .then((data) => {
+        const counts: number[] = [];
+        data.count.forEach((c) => {
+          counts.push(c.count);
+        });
 
-          for (let j = 0; j < percentageValues.length; j++) {
-            tempDiagramData.push({
-              id: data[j].id,
-              color: data[j].color,
-              value: percentageValues[j],
-            });
-          }
+        const tempDiagramData: ICircleDiagramData[] = [];
+        const percentageCounts = toPercentages(counts);
 
-          setDiagramData(tempDiagramData);
-          setStatusOrders(data);
-        })
-        .finally(() => setIsLoading(false));
-    }
+        for (let i = 0; i < percentageCounts.length; i++) {
+          tempDiagramData.push({
+            id: data.rows[i].id,
+            color: data.rows[i].status?.color,
+            value: percentageCounts[i],
+          });
+        }
+        setDiagramData(tempDiagramData);
+        setOrderInfos(data.rows);
+        setStatistics(data.count);
+      })
+      .finally(() => setIsLoading(false));
   };
 
-  const selectPeriod = (changeHandler: () => void, index: number) => {
-    changeHandler();
-    setSelectedPeriod(periods[index]);
+  const periodChangeHandler = (period: typeof periods[0]) => {
+    setSelectedPeriod(period);
+    fetchStatistics(period.startDate, period.endDate);
   };
 
   return (
@@ -143,21 +123,19 @@ const ProfileStatistics = () => {
           <>
             <CircleDiagram data={diagramData} width={250} height={250} />
             <div className={styles.status_items}>
-              <div>Колличество измененных статусов за:</div>
+              <div>Ваши заказы за:</div>
               <SelectButton
                 items={periods}
                 defaultSelectedItem={selectedPeriod}
-                changeHandler={(item, index) =>
-                  selectPeriod(item.onClick, index)
-                }
+                onChange={periodChangeHandler}
               />
-              {statusOrders.map((statusOrder) => (
-                <div className={styles.status_item} key={statusOrder.id}>
+              {orderInfos.map((orderInfo, index) => (
+                <div className={styles.status_item} key={orderInfo.id}>
                   <div
                     className={styles.status_item_color}
-                    style={{ backgroundColor: statusOrder.color }}
+                    style={{ backgroundColor: orderInfo.status?.color }}
                   />
-                  {`${statusOrder.name}: ${statusOrder.ordersCount}`}
+                  {`${orderInfo.status?.name}: ${statistics[index].count}`}
                 </div>
               ))}
             </div>

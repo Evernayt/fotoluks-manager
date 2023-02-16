@@ -1,0 +1,42 @@
+.container {
+  background-color: var(--card-background);
+  position: sticky;
+  height: 56px;
+  box-shadow: 0 1px 8px var(--shadow-1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.left_section {
+  display: flex;
+  align-items: center;
+}
+
+.close_btn {
+  margin-right: 8px;
+}
+
+.logo {
+  margin-right: 8px;
+  width: 42px;
+  height: 42px;
+}
+
+.center_section {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.right_section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

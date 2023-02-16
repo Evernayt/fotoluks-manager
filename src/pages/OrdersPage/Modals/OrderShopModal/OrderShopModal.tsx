@@ -1,29 +1,23 @@
+import NotificationAPI from 'api/NotificationAPI/NotificationAPI';
+import OrderAPI from 'api/OrderAPI/OrderAPI';
+import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { Button, Modal, SelectButton, Tooltip } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
+import { INITIAL_SHOP } from 'constants/states/shop-states';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { createNotificationAPI } from 'http/notificationAPI';
-import { updateOrderShopAPI } from 'http/orderAPI';
-import { fetchShopsAPI } from 'http/shopAPI';
-import { IShop } from 'models/IShop';
+import { IShop } from 'models/api/IShop';
 import { useEffect, useState } from 'react';
 import socketio from 'socket/socketio';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import styles from './OrderShopModal.module.css';
+import styles from './OrderShopModal.module.scss';
 
 const OrderShopModal = () => {
-  const initialShop: IShop = {
-    id: 0,
-    name: 'Выберите филиал',
-    address: '',
-    description: '',
-  };
-
   const [shops, setShops] = useState<IShop[]>([]);
-  const [selectedShop, setSelectedShop] = useState<IShop>(initialShop);
+  const [selectedShop, setSelectedShop] = useState<IShop>(INITIAL_SHOP);
 
   const orderShopModal = useAppSelector((state) => state.modal.orderShopModal);
-  const user = useAppSelector((state) => state.user.user);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
 
@@ -32,15 +26,17 @@ const OrderShopModal = () => {
   }, []);
 
   const fetchShops = () => {
-    fetchShopsAPI(100, 1, true).then((data) => {
+    ShopAPI.getAll({ isIncludeGeneral: true }).then((data) => {
       setShops(data.rows);
     });
   };
 
-  const updateShop = () => {
+  const editShop = () => {
     if (!orderShopModal.order) return;
 
-    updateOrderShopAPI(orderShopModal.order.id, selectedShop.id).then(() => {
+    const orderId = orderShopModal.order.id;
+    const shopId = selectedShop.id;
+    OrderAPI.editShop({ orderId, shopId }).then(() => {
       dispatch(orderSlice.actions.setForceUpdate(true));
       close();
 
@@ -51,23 +47,23 @@ const OrderShopModal = () => {
   const notifyShopUpdate = () => {
     const order = orderShopModal.order;
     if (!order) return;
-    if (order.orderMembers.length === 0) return;
+    if (!order.orderMembers?.length) return;
 
-    const orderMemberIds = [];
+    const employeeIds = [];
     for (let i = 0; i < order.orderMembers.length; i++) {
-      orderMemberIds.push(order.orderMembers[i].user.id);
+      employeeIds.push(order.orderMembers[i].employee.id);
     }
 
     const title = 'Заказ перемещен';
-    const text = `${user?.name} переместил заказ № ${order.id} c филиала "${order.shop?.name}" на "${selectedShop.name}"`;
+    const text = `${employee?.name} переместил заказ № ${order.id} c филиала «${order.shop?.name}» на «${selectedShop.name}»`;
 
-    createNotificationAPI(title, text, orderMemberIds).then((data) => {
+    NotificationAPI.create({ title, text, employeeIds }).then((data) => {
       socketio.sendNotification(data);
     });
   };
 
   const close = () => {
-    dispatch(modalSlice.actions.closeOrderShopModal());
+    dispatch(modalSlice.actions.closeModal('orderShopModal'));
   };
 
   return (
@@ -82,7 +78,7 @@ const OrderShopModal = () => {
             <SelectButton
               items={shops}
               defaultSelectedItem={selectedShop}
-              changeHandler={setSelectedShop}
+              onChange={setSelectedShop}
               style={{ width: '100%' }}
             />
           </div>
@@ -91,7 +87,7 @@ const OrderShopModal = () => {
       <div className={styles.controls}>
         <Button
           variant={ButtonVariants.primary}
-          onClick={updateShop}
+          onClick={editShop}
           disabled={selectedShop.id === 0}
         >
           Переместить

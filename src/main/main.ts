@@ -19,7 +19,9 @@ import {
 } from 'electron';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-//import * as fs from 'fs';
+import { autoUpdater } from 'electron-updater';
+
+autoUpdater.autoDownload = false;
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -99,6 +101,8 @@ const createWindow = async () => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
+
+  //mainWindow.webContents.openDevTools();
 };
 
 const showNotification = (title: string, body: string) => {
@@ -110,6 +114,49 @@ const showNotification = (title: string, body: string) => {
 
   new Notification(options).show();
 };
+
+ipcMain.on('check-update-pending', (event) => {
+  const { sender } = event;
+
+  if (isDebug) {
+    sender.send('check-update-success');
+  } else {
+    const result = autoUpdater.checkForUpdates();
+    result
+      .then((checkResult) => {
+        sender.send('check-update-success', checkResult?.updateInfo);
+      })
+      .catch(() => {
+        sender.send('check-update-failure');
+      });
+  }
+});
+
+ipcMain.on('download-update-pending', (event) => {
+  const { sender } = event;
+
+  const result = autoUpdater.downloadUpdate();
+  result
+    .then(() => {
+      sender.send('download-update-success');
+    })
+    .catch(() => {
+      sender.send('download-update-failure');
+    });
+});
+
+autoUpdater.on('download-progress', () => {});
+ipcMain.on('download-update-progress', (event) => {
+  const { sender } = event;
+
+  autoUpdater.signals.progress((info) => {
+    sender.send('download-update-progress', info.percent);
+  });
+});
+
+ipcMain.on('quit-and-install-update', () => {
+  autoUpdater.quitAndInstall(true, true);
+});
 
 ipcMain.on('show-notification', async (_event, args) => {
   const title = args[0];

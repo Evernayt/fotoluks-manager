@@ -1,37 +1,42 @@
-import { Button, SelectButton, Textbox } from 'components';
+import { Button, SelectButton, Textbox, Updater } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import {
-  INITIAL_SETTINGS_COMPLETED_KEY,
-  MAXIMIZE_SCREEN_KEY,
-  RECENT_LOGINS_KEY,
-  SHOP_KEY,
-} from 'constants/localStorage';
-import { INITIAL_SETTINGS_ROUTE, ORDERS_ROUTE } from 'constants/paths';
+import { INITIAL_SETTINGS_ROUTE } from 'constants/paths';
 import { Placements } from 'helpers/calcPlacement';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchShopsAPI } from 'http/shopAPI';
-import { loginAPI } from 'http/userAPI';
-import { IShop } from 'models/IShop';
+import { IShop } from 'models/api/IShop';
 import { KeyboardEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { appSlice } from 'store/reducers/AppSlice';
-import { userSlice } from 'store/reducers/UserSlice';
-import styles from './LoginPage.module.css';
 import socketio from 'socket/socketio';
-import { IUser, UserRoles } from 'models/IUser';
 import { logo, logoDark } from 'constants/images';
 import RecentLogin from './RecentLogin/RecentLogin';
 import LoginModal from './Modals/LoginModal/LoginModal';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
-import { enterPressHandler } from 'helpers';
+import { enterPressHandler, getApps } from 'helpers';
+import ShopAPI from 'api/ShopAPI/ShopAPI';
+import AuthAPI from 'api/AuthAPI/AuthAPI';
+import { employeeSlice } from 'store/reducers/EmployeeSlice';
+import { IEmployee } from 'models/api/IEmployee';
+import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
+import { moyskladSlice } from 'store/reducers/MoyskladSlice';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
+import styles from './LoginPage.module.scss';
+import {
+  getActiveShop,
+  getInitialSettingsCompleted,
+  getMaximizeScreen,
+  getRecentLogins,
+  setActiveShop,
+  setRecentLogins,
+} from 'helpers/localStorage';
 
 const LoginPage = () => {
-  const [shops, setShops] = useState<IShop[]>([]);
-  const [recentLogins, setRecentLogins] = useState<IUser[]>([]);
+  const [recentEmployees, setRecentEmployees] = useState<IEmployee[]>([]);
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const shops = useAppSelector((state) => state.app.shops);
   const activeShop = useAppSelector((state) => state.app.activeShop);
   const theme = useAppSelector((state) => state.app.theme);
 
@@ -39,118 +44,108 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const initialSettingsCopmleted: boolean =
-      localStorage.getItem(INITIAL_SETTINGS_COMPLETED_KEY) === 'true';
-    if (!initialSettingsCopmleted) {
+    if (!getInitialSettingsCompleted()) {
       navigate(INITIAL_SETTINGS_ROUTE);
       return;
     }
 
-    const maximizeScreen: boolean =
-      localStorage.getItem(MAXIMIZE_SCREEN_KEY) === 'true';
-    if (maximizeScreen) {
+    if (getMaximizeScreen()) {
       window.electron.ipcRenderer.sendMessage('maximize', []);
     }
 
-    const shop = JSON.parse(localStorage.getItem(SHOP_KEY) || '{}');
-    if (Object.keys(shop).length !== 0) {
+    const shop = getActiveShop();
+    if (shop) {
       dispatch(appSlice.actions.setActiveShop(shop));
     }
 
-    const localRecentLogins: IUser[] = JSON.parse(
-      localStorage.getItem(RECENT_LOGINS_KEY) || '[]'
-    );
-    setRecentLogins(localRecentLogins);
-    fetchShops();
+    setRecentEmployees(getRecentLogins());
+
+    const controller = new AbortController();
+    fetchShops(controller.signal);
+    return () => controller.abort();
   }, []);
 
-  const fetchShops = () => {
-    fetchShopsAPI()
+  const fetchShops = (signal?: AbortSignal) => {
+    ShopAPI.getAll({}, signal)
       .then((data) => {
-        setShops(data.rows);
+        dispatch(appSlice.actions.setShops(data.rows));
       })
       .catch((e) =>
-        dispatch(
-          appSlice.actions.showGlobalMessage({
-            message: e.message,
-            variant: GlobalMessageVariants.danger,
-            isShowing: true,
-          })
-        )
+        showGlobalMessage(e.response.data ? e.response.data.message : e.message)
       );
   };
 
-  const selectShop = (e: IShop) => {
-    dispatch(appSlice.actions.setActiveShop(e));
-    localStorage.setItem(SHOP_KEY, JSON.stringify(e));
+  const fetchStores = () => {
+    MoyskladAPI.getStores().then((data) => {
+      dispatch(moyskladSlice.actions.setStores(data.rows));
+
+      const activeStore = data.rows.find((store) =>
+        store.name.includes(activeShop.name)
+      );
+      if (activeStore) {
+        dispatch(moyskladSlice.actions.setActiveStore(activeStore));
+      }
+    });
+  };
+
+  const shopChangeHandler = (shop: IShop) => {
+    dispatch(appSlice.actions.setActiveShop(shop));
+    setActiveShop(shop);
   };
 
   const signIn = () => {
+    if (activeShop.id === 0) {
+      showGlobalMessage('Выберите филиал', GlobalMessageVariants.warning);
+      return;
+    }
+
     setIsLoading(true);
-    loginAPI(login, password)
+    AuthAPI.login({ login, password })
       .then((data) => {
-        if (data.role === UserRoles.USER) {
-          dispatch(
-            appSlice.actions.showGlobalMessage({
-              message: 'Нет доступа!',
-              variant: GlobalMessageVariants.danger,
-              isShowing: true,
-            })
-          );
+        const apps = getApps(data.apps);
+        if (!apps.length) {
+          showGlobalMessage('Нет доступных приложений');
           return;
         }
 
-        socketio.connect(data);
-        dispatch(userSlice.actions.signIn(data));
-        navigateToRoute(ORDERS_ROUTE);
+        socketio.connect();
+        fetchStores();
 
+        dispatch(employeeSlice.actions.signIn(data));
+        navigate(apps[0].value);
         addRecentLogin(data);
       })
-      .catch((e) =>
-        dispatch(
-          appSlice.actions.showGlobalMessage({
-            message: e.response.data ? e.response.data.message : e.message,
-            variant: GlobalMessageVariants.danger,
-            isShowing: true,
-          })
-        )
-      )
+      .catch((e) => {
+        showGlobalMessage(
+          e.response.data ? e.response.data.message : e.message
+        );
+      })
       .finally(() => setIsLoading(false));
   };
 
-  const navigateToRoute = (route: string) => {
-    dispatch(appSlice.actions.setActiveRoute(route));
-    navigate(route);
-  };
+  const addRecentLogin = (employee: IEmployee) => {
+    const recentLogins = getRecentLogins();
 
-  const addRecentLogin = (user: IUser) => {
-    const localRecentLogins: IUser[] = JSON.parse(
-      localStorage.getItem(RECENT_LOGINS_KEY) || '[]'
-    );
-
-    for (let i = 0; i < localRecentLogins.length; i++) {
-      if (localRecentLogins[i].id === user.id) {
+    for (let i = 0; i < recentLogins.length; i++) {
+      if (recentLogins[i].id === employee.id) {
         return;
       }
     }
 
-    if (localRecentLogins.length === 2) {
-      localRecentLogins.shift();
+    if (recentLogins.length === 2) {
+      recentLogins.shift();
     }
 
-    localRecentLogins.push(user);
-    localStorage.setItem(RECENT_LOGINS_KEY, JSON.stringify(localRecentLogins));
+    recentLogins.push(employee);
+    setRecentLogins(recentLogins);
   };
 
-  const removeRecentLogin = (userId: number) => {
-    const changedRecentLogins = recentLogins.filter(
-      (state) => state.id !== userId
+  const removeRecentLogin = (employeeId: number) => {
+    const recentLogins = recentEmployees.filter(
+      (state) => state.id !== employeeId
     );
-    setRecentLogins(changedRecentLogins);
-    localStorage.setItem(
-      RECENT_LOGINS_KEY,
-      JSON.stringify(changedRecentLogins)
-    );
+    setRecentEmployees(recentLogins);
+    setRecentLogins(recentLogins);
   };
 
   const onEnterPress = (event: KeyboardEvent) => {
@@ -162,6 +157,9 @@ const LoginPage = () => {
   return (
     <div className={styles.container}>
       <LoginModal />
+      <div className={styles.header}>
+        <Updater />
+      </div>
       <div className={styles.main_section}>
         <div>
           <img
@@ -169,18 +167,18 @@ const LoginPage = () => {
             src={theme.value === 'DARK' ? logoDark : logo}
             alt="logo"
           />
-          {recentLogins.length > 0 ? (
+          {recentEmployees.length > 0 ? (
             <>
               <div className={styles.title}>Недавние входы</div>
               <div className={styles.text}>
                 Нажмите на изображение чтобы войти.
               </div>
               <div className={styles.recent_logins}>
-                {recentLogins.map((recentLogin) => (
+                {recentEmployees.map((recentEmployee) => (
                   <RecentLogin
-                    user={recentLogin}
+                    employee={recentEmployee}
                     removeRecentLogin={removeRecentLogin}
-                    key={recentLogin.id}
+                    key={recentEmployee.id}
                   />
                 ))}
               </div>
@@ -205,13 +203,8 @@ const LoginPage = () => {
             />
             <Button
               variant={ButtonVariants.primary}
-              style={{ fontSize: '16px', fontWeight: 'bold', height: '42px' }}
-              disabled={
-                login === '' ||
-                password === '' ||
-                activeShop.id === 0 ||
-                isLoading
-              }
+              className={styles.login_btn}
+              disabled={login === '' || password === ''}
               isLoading={isLoading}
               loadingText="Авторизация..."
               onClick={signIn}
@@ -225,7 +218,7 @@ const LoginPage = () => {
         <SelectButton
           items={shops}
           defaultSelectedItem={activeShop}
-          changeHandler={selectShop}
+          onChange={shopChangeHandler}
           placement={Placements.topEnd}
         />
       </div>

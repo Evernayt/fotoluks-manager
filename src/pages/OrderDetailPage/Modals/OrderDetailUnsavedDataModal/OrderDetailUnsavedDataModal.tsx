@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import styles from './OrderDetailUnsavedDataModal.module.css';
+import styles from './OrderDetailUnsavedDataModal.module.scss';
 
 interface OrderDetailUnsavedDataModalProps {
   isShowing: boolean;
@@ -18,7 +18,7 @@ const OrderDetailUnsavedDataModal: FC<OrderDetailUnsavedDataModalProps> = ({
   hide,
   saveOrder,
 }) => {
-  const user = useAppSelector((state) => state.user.user);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -28,8 +28,8 @@ const OrderDetailUnsavedDataModal: FC<OrderDetailUnsavedDataModalProps> = ({
     dispatch(orderSlice.actions.clearOrder());
     navigate(-1);
 
-    if (user) {
-      socketio.removeWatcher(user.id);
+    if (employee) {
+      socketio.removeWatcher(employee.id);
     }
   };
 

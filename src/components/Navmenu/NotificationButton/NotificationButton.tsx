@@ -1,3 +1,4 @@
+import NotificationAPI from 'api/NotificationAPI/NotificationAPI';
 import Loader from 'components/Loader/Loader';
 import Notification from 'components/Notification/Notification';
 import DropdownButton from 'components/UI/DropdownButton/DropdownButton';
@@ -8,25 +9,19 @@ import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { Placements } from 'helpers/calcPlacement';
 import { useElementOnScreen } from 'hooks';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import {
-  deleteAllNotificationsAPI,
-  fetchNotificationsAPI,
-} from 'http/notificationAPI';
 import { IconClearAll, IconNotification } from 'icons';
 import { useEffect, useRef, useState } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
-import { userSlice } from 'store/reducers/UserSlice';
-import styles from './NotificationButton.module.css';
-
-const limit = 25;
+import { employeeSlice } from 'store/reducers/EmployeeSlice';
+import styles from './NotificationButton.module.scss';
 
 const NotificationButton = () => {
   const [pageCount, setPageCount] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const notifications = useAppSelector((state) => state.user.notifications);
-  const user = useAppSelector((state) => state.user.user);
+  const notifications = useAppSelector((state) => state.employee.notifications);
+  const employee = useAppSelector((state) => state.employee.employee);
   const notificationsBadge = useAppSelector(
     (state) => state.app.notificationsBadge
   );
@@ -38,41 +33,46 @@ const NotificationButton = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(userSlice.actions.clearNotifications());
-    fetchUserNotifications(page);
+    dispatch(employeeSlice.actions.clearNotifications());
+    fetchNotifications(page);
   }, []);
 
   useEffect(() => {
-    if (loading || !isVisible) return;
+    if (isLoading || !isVisible) return;
 
-    setLoading(true);
+    setIsLoading(true);
     setPage((prevState) => prevState + 1);
-    fetchUserNotifications(page + 1);
+    fetchNotifications(page + 1);
   }, [isVisible]);
 
-  const fetchUserNotifications = (page: number) => {
-    if (user) {
-      fetchNotificationsAPI(limit, page, user.id)
+  const fetchNotifications = (page: number) => {
+    if (employee) {
+      const limit = 25;
+
+      NotificationAPI.getAll({
+        limit,
+        page,
+        employeeId: employee.id,
+      })
         .then((data) => {
-          dispatch(userSlice.actions.addNotifications(data.rows));
+          dispatch(employeeSlice.actions.addNotifications(data.rows));
           const count = Math.ceil(data.count / limit);
           setPageCount(count);
         })
-        .finally(() => setLoading(false));
+        .finally(() => setIsLoading(false));
     }
   };
 
   const deleteAllNotifications = () => {
-    if (user) {
-      deleteAllNotificationsAPI(user.id)
-        .then((data) => {
-          if (data.message === 'DELETED') {
-            dispatch(userSlice.actions.clearNotifications());
-            setPage(1);
-            setPageCount(1);
-          }
+    if (employee) {
+      setIsLoading(true);
+      NotificationAPI.deleteByEmployeeId(employee.id)
+        .then(() => {
+          dispatch(employeeSlice.actions.clearNotifications());
+          setPage(1);
+          setPageCount(1);
         })
-        .finally(() => setLoading(false));
+        .finally(() => setIsLoading(false));
     }
   };
 
@@ -96,29 +96,33 @@ const NotificationButton = () => {
                     icon={<IconClearAll className="link-icon" />}
                     variant={IconButtonVariants.link}
                     onClick={deleteAllNotifications}
-                  ></IconButton>
+                  />
                 </div>
               </Tooltip>
             </div>
 
             <div className={styles.notifications}>
-              {notifications.length === 0 && (
-                <div className={styles.no_notifications}>Нет уведомлений</div>
-              )}
-              {notifications.map((notification) => (
-                <Notification
-                  title={notification.title}
-                  text={notification.text}
-                  createdAt={notification.createdAt}
-                  key={notification.id}
-                />
-              ))}
-              {loading && (
+              {isLoading ? (
                 <div className={styles.loader_container}>
                   <Loader height="50px" width="50px" />
                 </div>
+              ) : (
+                <>
+                  {!notifications.length && (
+                    <div className={styles.no_notifications}>
+                      Нет уведомлений
+                    </div>
+                  )}
+                  {notifications.map((notification) => (
+                    <Notification
+                      title={notification.title}
+                      text={notification.text}
+                      createdAt={notification.createdAt}
+                      key={notification.id}
+                    />
+                  ))}
+                </>
               )}
-
               {page !== pageCount && <div ref={targetRef} />}
             </div>
           </div>

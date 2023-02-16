@@ -5,10 +5,10 @@ import { IModal } from 'hooks/useModal';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import moment from 'moment';
-import { INPUT_FORMAT } from 'constants/app';
-import styles from './OrderDetailSidemenu.module.css';
+import { INPUT_DATE_FORMAT } from 'constants/app';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
+import styles from './OrderDetailSidemenu.module.scss';
 
 interface OrderDetailSidemenuProps {
   sum: number;
@@ -62,7 +62,12 @@ const OrderDetailSidemenu: FC<OrderDetailSidemenuProps> = ({
   };
 
   const openUserRegistrationModal = () => {
-    dispatch(modalSlice.actions.openUserRegistrationModal(''));
+    dispatch(
+      modalSlice.actions.openModal({
+        modal: 'userRegistrationModal',
+        props: { text: '' },
+      })
+    );
   };
 
   return (
@@ -70,15 +75,15 @@ const OrderDetailSidemenu: FC<OrderDetailSidemenuProps> = ({
       <div className={styles.order_info}>
         <span className={styles.title}>Клиент</span>
         <OrderDetailClientSearch style={{ marginBottom: '16px' }} />
-        {user === null ? (
+        {user ? (
+          <UserCard user={user} isEditable={true} close={clearUser} />
+        ) : (
           <Button
             variant={ButtonVariants.primaryDeemphasized}
             onClick={openUserRegistrationModal}
           >
             Зарегистрировать клиента
           </Button>
-        ) : (
-          <UserCard user={user!} isEditable={true} close={clearUser} />
         )}
 
         <span className={styles.title} style={{ marginTop: '24px' }}>
@@ -100,41 +105,38 @@ const OrderDetailSidemenu: FC<OrderDetailSidemenuProps> = ({
             </span>
           )}
         </div>
-        <Textbox
-          label="Предоплата"
-          type="number"
-          min={0}
-          max={sum}
-          value={prepayment}
-          onChange={(e) =>
-            dispatch(orderSlice.actions.setPrepayment(Number(e.target.value)))
-          }
-        />
-        <Textbox
-          label="Срок заказа"
-          type="datetime-local"
-          containerStyle={{ margin: '12px 0' }}
-          value={moment(deadline).format(INPUT_FORMAT)}
-          onChange={(e) =>
-            dispatch(orderSlice.actions.setDeadline(e.target.value))
-          }
-        />
-        <Textarea
-          label="Комментарий"
-          style={{ resize: 'vertical' }}
-          value={comment}
-          onChange={(e) =>
-            dispatch(orderSlice.actions.setComment(e.target.value))
-          }
-        />
+        <div className={styles.inputs_container}>
+          <Textbox
+            label="Предоплата"
+            type="number"
+            min={0}
+            max={sum}
+            value={prepayment}
+            onChange={(e) =>
+              dispatch(orderSlice.actions.setPrepayment(Number(e.target.value)))
+            }
+          />
+          <Textbox
+            label="Срок заказа"
+            type="datetime-local"
+            value={moment(deadline).format(INPUT_DATE_FORMAT)}
+            onChange={(e) =>
+              dispatch(orderSlice.actions.setDeadline(e.target.value))
+            }
+          />
+          <Textarea
+            label="Комментарий"
+            style={{ resize: 'vertical' }}
+            value={comment}
+            onChange={(e) =>
+              dispatch(orderSlice.actions.setComment(e.target.value))
+            }
+          />
+        </div>
       </div>
 
       <div className={styles.order_control}>
-        {haveUnsavedData && (
-          <Button style={{ marginRight: '8px' }} onClick={openCancelModal}>
-            Отменить
-          </Button>
-        )}
+        {haveUnsavedData && <Button onClick={openCancelModal}>Отменить</Button>}
         <Button
           variant={ButtonVariants.primary}
           disabled={!haveUnsavedData}

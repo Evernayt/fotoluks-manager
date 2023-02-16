@@ -1,6 +1,6 @@
 import { IconSearch } from 'icons';
 import { FC, InputHTMLAttributes } from 'react';
-import styles from './NavmenuSearch.module.css';
+import styles from './NavmenuSearch.module.scss';
 
 interface NavmenuSearchProps extends InputHTMLAttributes<HTMLInputElement> {}
 

@@ -1,11 +1,8 @@
-import logoBird from '../../../../assets/logo-bird.png';
-import { Button, CircleButton, DropdownButton } from 'components';
-import { IconClose } from 'icons';
+import { Button, DetailNavmenu, DropdownButton } from 'components';
 import { useNavigate } from 'react-router-dom';
 import { IModal } from 'hooks/useModal';
 import { FC, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import styles from './OrderDetailNavmenu.module.css';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import socketio from 'socket/socketio';
@@ -28,7 +25,7 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
     (state) => state.order.haveUnsavedData
   );
   const watchers = useAppSelector((state) => state.order.watchers);
-  const user = useAppSelector((state) => state.user.user);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const title = order?.id === 0 ? 'Новый заказ' : `Заказ № ${order?.id}`;
 
@@ -38,7 +35,7 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
   useEffect(() => {
     if (order.id !== 0) {
       const filteredWatchers = watchers.filter(
-        (x) => x.orderId === order.id && x.user.id !== user?.id
+        (x) => x.orderId === order.id && x.employee.id !== employee?.id
       );
       setOrderWatchers(filteredWatchers);
     }
@@ -51,8 +48,8 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
       dispatch(orderSlice.actions.clearOrder());
       navigate(-1);
 
-      if (user) {
-        socketio.removeWatcher(user.id);
+      if (employee) {
+        socketio.removeWatcher(employee.id);
       }
     }
   };
@@ -62,23 +59,12 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
   };
 
   const openMembersModal = () => {
-    dispatch(modalSlice.actions.openOrderMembersModal());
+    dispatch(modalSlice.actions.openModal({ modal: 'orderMembersModal' }));
   };
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.left_section}>
-        <CircleButton
-          className={styles.close_btn}
-          icon={<IconClose className="secondary-dark-icon" />}
-          onClick={closeOrderDetail}
-        />
-        <img className={styles.logo} src={logoBird} alt="logo" />
-      </div>
-      <div className={styles.center_section}>
-        <span style={{ fontSize: '18px', fontWeight: '500' }}>{title}</span>
-      </div>
-      <div className={styles.right_section}>
+  const rightSection = () => {
+    return (
+      <>
         {orderWatchers.length > 0 && (
           <DropdownButton
             placement={Placements.bottomEnd}
@@ -88,10 +74,18 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
           />
         )}
         <Button onClick={openMembersModal}>
-          Участники: {order.orderMembers.length}
+          Участники: {order.orderMembers ? order.orderMembers.length : 0}
         </Button>
-      </div>
-    </div>
+      </>
+    );
+  };
+
+  return (
+    <DetailNavmenu
+      title={title}
+      onClose={closeOrderDetail}
+      rightSection={rightSection()}
+    />
   );
 };
 

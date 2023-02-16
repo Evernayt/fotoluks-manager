@@ -1,45 +1,43 @@
+import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { Button, Checkbox, Navmenu, SelectButton } from 'components';
-import { Themes } from 'constants/app';
+import { THEMES } from 'constants/app';
 import {
-  MAIN_FOLDER_KEY,
-  MAXIMIZE_SCREEN_KEY,
-  SHOP_KEY,
-} from 'constants/localStorage';
-import { Placements } from 'helpers/calcPlacement';
+  getActiveShop,
+  getMainFolder,
+  getMaximizeScreen,
+  setActiveShop,
+  setMainFolder,
+  setMaximizeScreen,
+} from 'helpers/localStorage';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchShopsAPI } from 'http/shopAPI';
-import { IShop } from 'models/IShop';
+import { IShop } from 'models/api/IShop';
+import { ITheme } from 'models/ITheme';
 import { useEffect, useState } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
-import styles from './SettingsPage.module.css';
+import styles from './SettingsPage.module.scss';
 
 const SettingsPage = () => {
-  const [shops, setShops] = useState<IShop[]>([]);
-  const [maximizeScreen, setMaximizeScreen] = useState<boolean>(false);
-
   const theme = useAppSelector((state) => state.app.theme);
-  const mainFolder = useAppSelector((state) => state.app.mainFolder);
+
+  const [folder, setFolder] = useState<string>(getMainFolder());
+  const [selectedTheme, setSelectedTheme] = useState<ITheme>(theme);
+  const [shops, setShops] = useState<IShop[]>([]);
+  const [maximize, setMaximize] = useState<boolean>(getMaximizeScreen());
+
   const activeShop = useAppSelector((state) => state.app.activeShop);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const maximize: boolean =
-      localStorage.getItem(MAXIMIZE_SCREEN_KEY) === 'true';
-    setMaximizeScreen(maximize);
-
-    const folder = localStorage.getItem(MAIN_FOLDER_KEY);
-    dispatch(appSlice.actions.setMainFolder(folder ? folder : ''));
-
     fetchShops();
   }, []);
 
   const fetchShops = () => {
-    fetchShopsAPI().then((data) => {
+    ShopAPI.getAll().then((data) => {
       setShops(data.rows);
 
-      const shop = JSON.parse(localStorage.getItem(SHOP_KEY) || '{}');
-      if (Object.keys(shop).length !== 0) {
+      const shop = getActiveShop();
+      if (shop) {
         dispatch(appSlice.actions.setActiveShop(shop));
       }
     });
@@ -47,32 +45,30 @@ const SettingsPage = () => {
 
   const selectFolder = () => {
     window.electron.ipcRenderer.sendMessage('select-directory', ['']);
-
     window.electron.ipcRenderer.once('select-directory', (arg: any) => {
       const fullPath: string = arg[0][0];
-      if (fullPath === undefined) return;
+      if (!fullPath) return;
 
-      dispatch(appSlice.actions.setMainFolder(fullPath));
-      localStorage.setItem(MAIN_FOLDER_KEY, fullPath);
+      setFolder(fullPath);
+      setMainFolder(fullPath);
     });
   };
 
-  const selectShop = (e: IShop) => {
-    dispatch(appSlice.actions.setActiveShop(e));
-    localStorage.setItem(SHOP_KEY, JSON.stringify(e));
+  const shopChangeHandler = (shop: IShop) => {
+    dispatch(appSlice.actions.setActiveShop(shop));
+    setActiveShop(shop);
   };
 
   const maximizeScreenSizeToggle = () => {
-    localStorage.setItem(MAXIMIZE_SCREEN_KEY, `${!maximizeScreen}`);
-    setMaximizeScreen(!maximizeScreen);
+    setMaximizeScreen(!maximize);
+    setMaximize(!maximize);
   };
 
-  const changeTheme = () => {
-    if (theme.value === 'LIGHT') {
-      dispatch(appSlice.actions.setTheme(Themes[1]));
-    } else {
-      dispatch(appSlice.actions.setTheme(Themes[0]));
-    }
+  const themeChangeHandler = (theme: ITheme) => {
+    if (theme.id === selectedTheme.id) return;
+
+    setSelectedTheme(theme);
+    dispatch(appSlice.actions.setTheme(theme));
   };
 
   return (
@@ -83,16 +79,16 @@ const SettingsPage = () => {
           <div>
             <div className={styles.label}>Тема</div>
             <SelectButton
-              items={Themes}
-              defaultSelectedItem={theme}
-              changeHandler={changeTheme}
+              items={THEMES}
+              defaultSelectedItem={selectedTheme}
+              onChange={themeChangeHandler}
             />
           </div>
           <div>
-            <div className={styles.label}>На всеь экран при запуске</div>
+            <div className={styles.label}>На весь экран при запуске</div>
             <Checkbox
-              text={maximizeScreen ? 'Включено' : 'Выключено'}
-              checked={maximizeScreen}
+              text={maximize ? 'Включено' : 'Выключено'}
+              checked={maximize}
               onChange={maximizeScreenSizeToggle}
             />
           </div>
@@ -102,9 +98,9 @@ const SettingsPage = () => {
             </div>
             <div className={styles.folder_select}>
               <Button onClick={selectFolder}>
-                {mainFolder ? 'Изменить папку' : 'Выбрать папку'}
+                {folder ? 'Изменить папку' : 'Выбрать папку'}
               </Button>
-              {mainFolder && <div className={styles.folder}>{mainFolder}</div>}
+              {folder && <div className={styles.folder}>{folder}</div>}
             </div>
           </div>
           <div>
@@ -113,8 +109,7 @@ const SettingsPage = () => {
               <SelectButton
                 items={shops}
                 defaultSelectedItem={activeShop}
-                changeHandler={selectShop}
-                placement={Placements.bottomStart}
+                onChange={shopChangeHandler}
               />
             </div>
           </div>

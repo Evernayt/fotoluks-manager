@@ -1,19 +1,17 @@
 import { SERVER_API_URL } from 'constants/api';
-import { INotification } from 'models/INotification';
-import { IOrder } from 'models/IOrder';
-import { IUser } from 'models/IUser';
+import { INotification } from 'models/api/INotification';
+import { IOrder } from 'models/api/IOrder';
 import { IWatcher } from 'models/IWatcher';
 import { io, Socket } from 'socket.io-client';
 import store from 'store';
 import { appSlice } from 'store/reducers/AppSlice';
+import { employeeSlice } from 'store/reducers/EmployeeSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import { userSlice } from 'store/reducers/UserSlice';
 
 let socket: Socket;
 
-const connect = (user: IUser) => {
+const connect = () => {
   socket = io(SERVER_API_URL);
-  socket.emit('addUser', user);
 
   subscribeToNotifications();
   subscribeToOrderUpdates();
@@ -25,11 +23,11 @@ const disconnect = () => {
 };
 
 const isConnected = () => {
-  if (socket === undefined) {
-    connect(store.getState().user.user!);
-    return false;
-  } else {
+  if (socket) {
     return true;
+  } else {
+    connect();
+    return false;
   }
 };
 
@@ -40,7 +38,7 @@ const subscribeToNotifications = () => {
       notification.text,
     ]);
 
-    store.dispatch(userSlice.actions.addNotification(notification));
+    store.dispatch(employeeSlice.actions.addNotification(notification));
     store.dispatch(appSlice.actions.setNoificationsBadge(true));
   });
 };
