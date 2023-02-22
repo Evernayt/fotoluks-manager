@@ -1,3 +1,4 @@
+import { UpdateVariantDto } from './dto/update-variant.dto';
 import { $authHost } from 'api';
 import { IMoyskladData } from 'models/api/moysklad/IMoyskladData';
 import { ILoss } from 'models/api/moysklad/ILoss';
@@ -18,6 +19,13 @@ import { EditMovePositionDto } from './dto/edit-move-position.dto';
 import { DeleteMovePositionDto } from './dto/delete-move-position.dto';
 import { GetAssortmentDto } from './dto/get-assortment.dto';
 import { IAssortment } from 'models/api/moysklad/IAssortment';
+import { INotification } from 'models/api/moysklad/INotification';
+import { GetNotificationsDto } from './dto/get-notifications.dto';
+import { IProduct } from 'models/api/moysklad/IProduct';
+import { GetStocksDto } from './dto/get-stocks.dto';
+import { IStock } from 'models/api/moysklad/IStock';
+import { IVariant } from 'models/api/moysklad/IVariant';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 export default class MoyskladAPI {
   // Loss
@@ -145,6 +153,56 @@ export default class MoyskladAPI {
   ): Promise<IMoyskladData<IAssortment>> {
     const { data } = await $authHost.get('moysklad/assortment', {
       params: getAssortmentDto,
+      signal,
+    });
+    return data;
+  }
+
+  // Notification
+  static async getNotifications(
+    getNotificationsDto: GetNotificationsDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<INotification>> {
+    const { data } = await $authHost.get('moysklad/notification', {
+      params: getNotificationsDto,
+      signal,
+    });
+    return data;
+  }
+
+  // Product
+  static async getProduct(id: string): Promise<IProduct> {
+    const { data } = await $authHost.get(`moysklad/product/${id}`);
+    return data;
+  }
+
+  static async updateProduct(
+    updateProductDto: UpdateProductDto
+  ): Promise<IProduct> {
+    const { data } = await $authHost.put('moysklad/product', updateProductDto);
+    return data;
+  }
+
+  // Variant
+  static async getVariant(id: string): Promise<IVariant> {
+    const { data } = await $authHost.get(`moysklad/variant/${id}`);
+    return data;
+  }
+
+  static async updateVariant(
+    updateVariantDto: UpdateVariantDto
+  ): Promise<IVariant> {
+    const { data } = await $authHost.put('moysklad/variant', updateVariantDto);
+    return data;
+  }
+
+  // Stock
+  static async getStocks(
+    getStocksDto: GetStocksDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<IStock>> {
+    const { data } = await $authHost.get('moysklad/stock', {
+      params: getStocksDto,
       signal,
     });
     return data;

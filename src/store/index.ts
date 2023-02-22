@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import AppSlice from './reducers/AppSlice';
 import ControlPanelSlice from './reducers/ControlPanelSlice';
 import EmployeeSlice from './reducers/EmployeeSlice';
-import LossSlice from './reducers/LossSlice';
+import EndingGoodsSlice from './reducers/EndingGoodsSlice';
 import ModalSlice from './reducers/ModalSlice';
 import MoveSlice from './reducers/MoveSlice';
 import MoyskladSlice from './reducers/MoyskladSlice';
@@ -15,9 +15,9 @@ const store = configureStore({
     employee: EmployeeSlice,
     order: OrderSlice,
     controlPanel: ControlPanelSlice,
-    loss: LossSlice,
     moysklad: MoyskladSlice,
     move: MoveSlice,
+    endingGoods: EndingGoodsSlice,
   },
 });
 

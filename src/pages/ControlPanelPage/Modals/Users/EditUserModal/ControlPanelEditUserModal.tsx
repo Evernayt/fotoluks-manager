@@ -44,7 +44,7 @@ const ControlPanelEditUserModal = () => {
     UserAPI.getOne(editUserModal.userId).then((data) => {
       setName(data.name);
       setPhone(data.phone);
-      setAvatar(data.avatar ? data.avatar : '');
+      setAvatar(data.avatar || '');
       setEmail(data.email);
       setVk(data.vk);
       setTelegram(data.telegram);

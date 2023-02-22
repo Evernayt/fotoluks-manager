@@ -289,7 +289,7 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         <div className={styles.features_container}>
           {features.map((feature, index) => (
             <Tooltip
-              label={feature[0].feature?.name ? feature[0].feature?.name : ''}
+              label={feature[0].feature?.name || ''}
               delay={600}
               key={index}
             >

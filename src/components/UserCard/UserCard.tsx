@@ -41,7 +41,7 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
         <div className={styles.user_container}>
           <img
             className={styles.user_avatar}
-            src={user.avatar ? user.avatar : defaultAvatar}
+            src={user.avatar || defaultAvatar}
             alt=""
           />
           <div className={styles.user_info}>

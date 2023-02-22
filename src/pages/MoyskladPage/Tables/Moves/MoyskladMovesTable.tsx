@@ -14,7 +14,7 @@ import MoyskladMovesToolbar from './Toolbar/MoyskladMovesToolbar';
 const MoyskladMovesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(15);
+  const [limit, setLimit] = useState<number>(25);
   const [moves, setMoves] = useState<IMove[]>([]);
   const [targetShop, setTargetShop] = useState<string>('');
 
@@ -66,6 +66,7 @@ const MoyskladMovesTable = () => {
           setPageCount(0);
         }
         setMoves(data.rows);
+        setPageCount(Math.ceil(500 / limit));
       })
       .catch(() => {})
       .finally(() => dispatch(moyskladSlice.actions.setIsLoading(false)));

@@ -55,7 +55,7 @@ const OrderDetailFavorites = () => {
     const createdFinishedProduct: IFinishedProduct = {
       id: uuidv4(),
       quantity: 1,
-      price: favorite.type ? favorite.type.price : 0,
+      price: favorite.type?.price || 0,
       comment: '',
       product: favorite.type?.product,
       type: favorite.type,

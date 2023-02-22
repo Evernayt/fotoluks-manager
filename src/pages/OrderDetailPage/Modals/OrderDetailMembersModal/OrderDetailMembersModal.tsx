@@ -129,7 +129,7 @@ const OrderDetailMembersModal = () => {
     );
 
     setFoundEmployees(filteredEmployees);
-    setFoundOrderMembers(filteredOrderMembers ? filteredOrderMembers : []);
+    setFoundOrderMembers(filteredOrderMembers || []);
   };
 
   const close = () => {

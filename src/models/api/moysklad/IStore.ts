@@ -4,4 +4,5 @@ export interface IStore {
   meta: IMeta;
   id: string;
   name: string;
+  stock: number;
 }

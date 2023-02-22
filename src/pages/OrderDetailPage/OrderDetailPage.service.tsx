@@ -108,9 +108,9 @@ export const createOrderBodyForSave: ICreateOrderBodyForSave = (
 ) => {
   const orderBody: IOrderBody = {
     id: order.id,
-    userId: order.user?.id ? order.user.id : null,
-    statusId: order.status?.id ? order.status.id : 1,
-    shopId: order.shop?.id ? order.shop.id : activeShopId,
+    userId: order.user?.id || null,
+    statusId: order.status?.id || 1,
+    shopId: order.shop?.id || activeShopId,
     sum,
     deadline: order.deadline,
     comment: order.comment,

@@ -14,9 +14,7 @@ const OrderDetailWatchers: FC<OrderDetailWatchersProps> = ({ watchers }) => {
         <div className={styles.watcher_item} key={watcher.employee.id}>
           <img
             className={styles.avatar}
-            src={
-              watcher.employee.avatar ? watcher.employee.avatar : defaultAvatar
-            }
+            src={watcher.employee.avatar || defaultAvatar}
           />
           <div>{watcher.employee.name}</div>
         </div>

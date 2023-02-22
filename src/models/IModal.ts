@@ -2,6 +2,7 @@ import { Modes } from 'constants/app';
 import { IEmployee } from './api/IEmployee';
 import { IFeature } from './api/IFeature';
 import { IOrder } from './api/IOrder';
+import { INotification } from './api/moysklad/INotification';
 
 export interface IModal {
   isShowing?: boolean;
@@ -66,4 +67,13 @@ export interface IEditTypeParamsModal extends IModal {
 export interface IEditEmployeeModal extends IModal {
   employeeId: number;
   mode: Modes;
+}
+
+export interface IEndingGoodsProductModal extends IModal {
+  notification: INotification | null;
+}
+
+export interface IEndingGoodsEditProductModal extends IModal {
+  productId: string;
+  type: string;
 }

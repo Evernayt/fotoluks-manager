@@ -119,9 +119,7 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
         <div className={styles.main_info}>
           <img
             className={styles.img}
-            src={
-              finishedProduct.type?.image ? finishedProduct.type.image : noImage
-            }
+            src={finishedProduct.type?.image || noImage}
             alt=""
           />
           <div className={styles.info}>

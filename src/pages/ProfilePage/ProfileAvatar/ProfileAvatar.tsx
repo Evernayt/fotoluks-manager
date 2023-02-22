@@ -36,7 +36,7 @@ const ProfileAvatar = () => {
 
   return (
     <Avatar
-      image={employee?.avatar ? employee.avatar : defaultAvatar}
+      image={employee?.avatar || defaultAvatar}
       onAvatarSelect={editAvatar}
     />
   );

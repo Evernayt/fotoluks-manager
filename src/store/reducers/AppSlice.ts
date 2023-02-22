@@ -63,6 +63,9 @@ export const appSlice = createSlice({
       state.downloadUpdate.success = action.payload.success || false;
       state.downloadUpdate.failure = action.payload.failure || false;
     },
+    clearState(state) {
+      state.notificationsBadge = initialState.notificationsBadge;
+    },
   },
 });
 

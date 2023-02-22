@@ -29,6 +29,7 @@ import EditableImage from './UI/EditableImage/EditableImage';
 import Updater from './Updater/Updater';
 import UpdaterModal from './UpdaterModal/UpdaterModal';
 import Progress from './UI/Progress/Progress';
+import CopiedItem from './UI/CopiedItem/CopiedItem';
 
 export {
   Navmenu,
@@ -62,4 +63,5 @@ export {
   Updater,
   UpdaterModal,
   Progress,
+  CopiedItem,
 };

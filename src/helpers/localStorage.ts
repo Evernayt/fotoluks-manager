@@ -10,6 +10,8 @@ const INITIAL_SETTINGS_COMPLETED_KEY = 'INITIAL_SETTINGS_COMPLETED_KEY';
 const MAXIMIZE_SCREEN_KEY = 'MAXIMIZE_SCREEN_KEY';
 const TOKEN_KEY = 'TOKEN_KEY';
 const THEME_KEY = 'THEME_KEY';
+const ORDERED_GOODS_KEY = 'ORDERED_GOODS_KEY';
+const NOT_AVAILABLE_GOODS_KEY = 'NOT_AVAILABLE_GOODS_KEY';
 
 const setMainFolder = (folder: string) => {
   localStorage.setItem(MAIN_FOLDER_KEY, folder);
@@ -17,7 +19,7 @@ const setMainFolder = (folder: string) => {
 
 const getMainFolder = (): string => {
   const folder = localStorage.getItem(MAIN_FOLDER_KEY);
-  return folder ? folder : '';
+  return folder || '';
 };
 
 const setActiveShop = (shop: IShop) => {
@@ -66,7 +68,7 @@ const setToken = (token: string) => {
 
 const getToken = (): string => {
   const token = localStorage.getItem(TOKEN_KEY);
-  return token ? token : '';
+  return token || '';
 };
 
 const setTheme = (theme: ITheme) => {
@@ -80,6 +82,39 @@ const getTheme = (): ITheme => {
   } else {
     return THEMES[0];
   }
+};
+
+const setOrderedGoods = (orderedGoods: string[]) => {
+  localStorage.setItem(ORDERED_GOODS_KEY, JSON.stringify(orderedGoods));
+};
+
+const getOrderedGoods = (): string[] => {
+  const orderedGoods = JSON.parse(
+    localStorage.getItem(ORDERED_GOODS_KEY) || '[]'
+  );
+  return orderedGoods;
+};
+
+const removeOrderedGoods = () => {
+  localStorage.removeItem(ORDERED_GOODS_KEY);
+};
+
+const setNotAvailableGoods = (notAvailableGoods: string[]) => {
+  localStorage.setItem(
+    NOT_AVAILABLE_GOODS_KEY,
+    JSON.stringify(notAvailableGoods)
+  );
+};
+
+const getNotAvailableGoods = (): string[] => {
+  const notAvailableGoods = JSON.parse(
+    localStorage.getItem(NOT_AVAILABLE_GOODS_KEY) || '[]'
+  );
+  return notAvailableGoods;
+};
+
+const removeNotAvailableGoods = () => {
+  localStorage.removeItem(NOT_AVAILABLE_GOODS_KEY);
 };
 
 export {
@@ -97,4 +132,10 @@ export {
   getToken,
   setTheme,
   getTheme,
+  setOrderedGoods,
+  getOrderedGoods,
+  setNotAvailableGoods,
+  getNotAvailableGoods,
+  removeOrderedGoods,
+  removeNotAvailableGoods,
 };

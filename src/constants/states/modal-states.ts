@@ -1,3 +1,4 @@
+import { IEndingGoodsEditProductModal } from './../../models/IModal';
 import { Modes } from 'constants/app';
 import {
   IEditCategoryModal,
@@ -14,6 +15,7 @@ import {
   IEditShopModal,
   IEditUserModal,
   IEditEmployeeModal,
+  IEndingGoodsProductModal,
 } from 'models/IModal';
 import { INITIAL_FEATURE } from './feature-states';
 
@@ -94,3 +96,14 @@ export const INITIAL_EDIT_EMPLOYEE_MODAL: IEditEmployeeModal = {
   employeeId: 0,
   mode: Modes.ADD_MODE,
 };
+
+export const INITIAL_ENDING_GOODS_PRODUCT_MODAL: IEndingGoodsProductModal = {
+  ...INITIAL_MODAL,
+  notification: null,
+};
+
+export const INITIAL_ENDING_GOODS_EDIT_PRODUCT_MODAL: IEndingGoodsEditProductModal =
+  {
+    ...INITIAL_MODAL,
+    productId: '',
+  };

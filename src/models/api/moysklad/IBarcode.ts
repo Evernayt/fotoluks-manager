@@ -1,3 +1,3 @@
 export interface IBarcode {
-  ean13: string;
+  ean13?: string;
 }

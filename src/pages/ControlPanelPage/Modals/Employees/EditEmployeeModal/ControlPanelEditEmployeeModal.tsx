@@ -67,7 +67,7 @@ const ControlPanelEditEmployeeModal = () => {
     EmployeeAPI.getOne(editEmployeeModal.employeeId).then((data) => {
       setName(data.name);
       setLogin(data.login);
-      setAvatar(data.avatar ? data.avatar : '');
+      setAvatar(data.avatar || '');
       setEmployee(data);
       if (data.apps) {
         setApps(data.apps);

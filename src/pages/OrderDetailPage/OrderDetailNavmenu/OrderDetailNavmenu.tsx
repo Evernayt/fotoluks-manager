@@ -74,7 +74,7 @@ const OrderDetailNavmenu: FC<OrderDetailNavmenuProps> = ({
           />
         )}
         <Button onClick={openMembersModal}>
-          Участники: {order.orderMembers ? order.orderMembers.length : 0}
+          Участники: {order.orderMembers?.length || 0}
         </Button>
       </>
     );

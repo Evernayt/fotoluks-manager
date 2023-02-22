@@ -22,10 +22,6 @@ export const employeeSlice = createSlice({
       state.isAuth = true;
       state.employee = action.payload;
     },
-    signOut(state) {
-      state.isAuth = false;
-      state.employee = null;
-    },
     addNotifications(state, action: PayloadAction<INotification[]>) {
       state.notifications.push(...action.payload);
     },
@@ -38,6 +34,9 @@ export const employeeSlice = createSlice({
     },
     updateEmployee(state, action: PayloadAction<IEmployee>) {
       state.employee = action.payload;
+    },
+    clearState(state) {
+      state = initialState;
     },
   },
 });

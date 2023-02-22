@@ -69,7 +69,7 @@ const Navmenu: FC<INavmenuProps> = ({ searchRender = () => null }) => {
         <label className={styles.profile_rbtn} htmlFor="profile_navmenu">
           <img
             className={styles.profile_avatar}
-            src={employee?.avatar ? employee.avatar : defaultAvatar}
+            src={employee?.avatar || defaultAvatar}
             alt=""
           />
           <span>{employee?.name}</span>

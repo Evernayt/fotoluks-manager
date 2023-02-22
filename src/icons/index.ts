@@ -32,6 +32,7 @@ import IconFriends from './IconFriends';
 import IconMoysklad from './IconMoysklad';
 import IconCloudDownload from './IconCloudDownload';
 import IconArrowBarToDown from './IconArrowBarToDown';
+import IconShoppingCart from './IconShoppingCart';
 
 export {
   IconPlus,
@@ -68,4 +69,5 @@ export {
   IconMoysklad,
   IconCloudDownload,
   IconArrowBarToDown,
+  IconShoppingCart,
 };

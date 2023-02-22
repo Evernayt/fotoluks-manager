@@ -67,7 +67,7 @@ const OrderDetailClientSearch: FC<OrderDetailClientSearchProps> = ({
         >
           <img
             className={styles.user_avatar}
-            src={user.avatar ? user.avatar : defaultAvatar}
+            src={user.avatar || defaultAvatar}
             alt=""
           />
           <div className={styles.user_container}>

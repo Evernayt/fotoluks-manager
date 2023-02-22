@@ -18,10 +18,7 @@ const OrderDetailMemberItem: FC<OrderDetailMemberItemProps> = ({
 }) => {
   return (
     <div className={styles.container}>
-      <img
-        className={styles.avatar}
-        src={employee.avatar ? employee.avatar : defaultAvatar}
-      />
+      <img className={styles.avatar} src={employee.avatar || defaultAvatar} />
       {employee.name}
       <IconButton
         className={styles.button}

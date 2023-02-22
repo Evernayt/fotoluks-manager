@@ -8,14 +8,26 @@ import { IconDrop } from 'icons';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
+import { appSlice } from 'store/reducers/AppSlice';
+import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { employeeSlice } from 'store/reducers/EmployeeSlice';
+import { endingGoodsSlice } from 'store/reducers/EndingGoodsSlice';
+import { moveSlice } from 'store/reducers/MoveSlice';
+import { moyskladSlice } from 'store/reducers/MoyskladSlice';
+import { orderSlice } from 'store/reducers/OrderSlice';
 
 const MenuButton = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const signOut = () => {
-    dispatch(employeeSlice.actions.signOut());
+    dispatch(employeeSlice.actions.clearState());
+    dispatch(appSlice.actions.clearState());
+    dispatch(controlPanelSlice.actions.clearState());
+    dispatch(endingGoodsSlice.actions.clearState());
+    dispatch(moveSlice.actions.clearState());
+    dispatch(moyskladSlice.actions.clearState());
+    dispatch(orderSlice.actions.clearState());
     navigate(LOGIN_ROUTE);
     socketio.disconnect();
   };

@@ -29,7 +29,7 @@ const CircleDiagram: FC<CircleDiagramProps> = ({ data, width, height }) => {
         r="15.9"
         cx="50%"
         cy="50%"
-        stroke={item.color ? item.color : 'gray'}
+        stroke={item.color || 'gray'}
         strokeDasharray={`${item.value}, 100`}
         strokeDashoffset={-1 * offsets[index]}
         key={item.id}

@@ -78,8 +78,12 @@ const ProfileStatistics = () => {
 
   const employee = useAppSelector((state) => state.employee.employee);
 
+  const includeOrderApp = employee?.apps?.find((app) => app.value === 'ORDERS');
+
   useEffect(() => {
-    fetchStatistics(periods[4].startDate, periods[4].endDate);
+    if (includeOrderApp) {
+      fetchStatistics(periods[4].startDate, periods[4].endDate);
+    }
   }, []);
 
   const fetchStatistics = (startDate: string, endDate: string) => {
@@ -116,32 +120,34 @@ const ProfileStatistics = () => {
 
   return (
     <div>
-      <div className={styles.diagram_container}>
-        {isLoading ? (
-          <Loader width="250px" height="250px" />
-        ) : (
-          <>
-            <CircleDiagram data={diagramData} width={250} height={250} />
-            <div className={styles.status_items}>
-              <div>Ваши заказы за:</div>
-              <SelectButton
-                items={periods}
-                defaultSelectedItem={selectedPeriod}
-                onChange={periodChangeHandler}
-              />
-              {orderInfos.map((orderInfo, index) => (
-                <div className={styles.status_item} key={orderInfo.id}>
-                  <div
-                    className={styles.status_item_color}
-                    style={{ backgroundColor: orderInfo.status?.color }}
-                  />
-                  {`${orderInfo.status?.name}: ${statistics[index].count}`}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+      {includeOrderApp && (
+        <div className={styles.diagram_container}>
+          {isLoading ? (
+            <Loader width="250px" height="250px" />
+          ) : (
+            <>
+              <CircleDiagram data={diagramData} width={250} height={250} />
+              <div className={styles.status_items}>
+                <div>Ваши заказы за:</div>
+                <SelectButton
+                  items={periods}
+                  defaultSelectedItem={selectedPeriod}
+                  onChange={periodChangeHandler}
+                />
+                {orderInfos.map((orderInfo, index) => (
+                  <div className={styles.status_item} key={orderInfo.id}>
+                    <div
+                      className={styles.status_item_color}
+                      style={{ backgroundColor: orderInfo.status?.color }}
+                    />
+                    {`${orderInfo.status?.name}: ${statistics[index].count}`}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

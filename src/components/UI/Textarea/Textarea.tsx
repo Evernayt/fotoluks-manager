@@ -2,7 +2,7 @@ import { CSSProperties, FC, memo, TextareaHTMLAttributes } from 'react';
 import styles from './Textarea.module.scss';
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label: string;
+  label?: string;
   containerStyle?: CSSProperties;
 }
 

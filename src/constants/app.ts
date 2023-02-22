@@ -9,6 +9,7 @@ enum Modes {
 
 const INPUT_DATE_FORMAT = 'YYYY-MM-DDTHH:mm';
 const DEF_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
+const NOT_INDICATED = 'Не указано';
 
 const THEMES: ITheme[] = [
   {
@@ -44,4 +45,11 @@ const APPS = [
   },
 ];
 
-export { Modes, INPUT_DATE_FORMAT, DEF_DATE_FORMAT, THEMES, APPS };
+export {
+  Modes,
+  INPUT_DATE_FORMAT,
+  DEF_DATE_FORMAT,
+  THEMES,
+  APPS,
+  NOT_INDICATED,
+};

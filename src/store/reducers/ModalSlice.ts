@@ -9,6 +9,8 @@ import {
   INITIAL_EDIT_TYPE_MODAL,
   INITIAL_EDIT_TYPE_PARAMS_MODAL,
   INITIAL_EDIT_USER_MODAL,
+  INITIAL_ENDING_GOODS_EDIT_PRODUCT_MODAL,
+  INITIAL_ENDING_GOODS_PRODUCT_MODAL,
   INITIAL_LOGIN_MODAL,
   INITIAL_MODAL,
   INITIAL_ORDER_MODAL,
@@ -30,6 +32,8 @@ import {
   IEditShopModal,
   IEditUserModal,
   IEditEmployeeModal,
+  IEndingGoodsProductModal,
+  IEndingGoodsEditProductModal,
 } from 'models/IModal';
 
 type ModalState = {
@@ -60,6 +64,9 @@ type ModalState = {
   controlPanelEmployeeFilterModal: IModal;
   editUserModal: IUserModal;
   updaterModal: IModal;
+  endingGoodsProductModal: IEndingGoodsProductModal;
+  endingGoodsEditProductModal: IEndingGoodsEditProductModal;
+  endingGoodsClearOrderedModal: IModal;
 };
 
 const initialState: ModalState = {
@@ -90,6 +97,9 @@ const initialState: ModalState = {
   controlPanelEmployeeFilterModal: INITIAL_MODAL,
   editUserModal: INITIAL_USER_MODAL,
   updaterModal: INITIAL_MODAL,
+  endingGoodsProductModal: INITIAL_ENDING_GOODS_PRODUCT_MODAL,
+  endingGoodsEditProductModal: INITIAL_ENDING_GOODS_EDIT_PRODUCT_MODAL,
+  endingGoodsClearOrderedModal: INITIAL_MODAL,
 };
 
 interface OpenModalProps<K = keyof ModalState> {

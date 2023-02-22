@@ -1,9 +1,9 @@
-import { IconMove } from 'icons';
+import { IconMove, IconShoppingCart } from 'icons';
 import { useAppDispatch } from 'hooks/redux';
 import { Sidemenu } from 'components';
 import { useMemo } from 'react';
 import { ISidemenuItem } from 'components/Sidemenu/Sidemenu.types';
-import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
+import { moyskladSlice } from 'store/reducers/MoyskladSlice';
 
 const MoyskladSidemenu = () => {
   const dispatch = useAppDispatch();
@@ -15,12 +15,17 @@ const MoyskladSidemenu = () => {
         Icon: IconMove,
         name: 'Перемещение',
       },
+      {
+        id: 2,
+        Icon: IconShoppingCart,
+        name: 'Заканчивающиеся',
+      },
     ],
     []
   );
 
   const changeHandler = (item: ISidemenuItem) => {
-    dispatch(controlPanelSlice.actions.setActiveTableId(item.id));
+    dispatch(moyskladSlice.actions.setActiveTableId(item.id));
   };
 
   return (

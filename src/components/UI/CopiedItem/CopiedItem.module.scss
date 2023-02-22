@@ -1,0 +1,15 @@
+.item {
+  background-color: var(--secondary-color);
+  padding: 2px 8px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.danger {
+  background-color: var(--danger-color);
+  color: white;
+}

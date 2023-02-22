@@ -118,7 +118,11 @@ const Table = <T extends object>({
                               <td
                                 {...cell.getCellProps()}
                                 className={styles.cell}
-                                style={cell.column.style}
+                                style={
+                                  cell.row.original.active
+                                    ? { ...cell.column.style, color: '#14a44d' }
+                                    : cell.column.style
+                                }
                               >
                                 {cell.render('Cell')}
                               </td>
