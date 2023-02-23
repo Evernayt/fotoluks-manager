@@ -173,6 +173,12 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
     if (selectedProduct.id === 0) {
       showGlobalMessage('Выберите продукт', GlobalMessageVariants.warning);
       return false;
+    } else if (!types.length) {
+      showGlobalMessage(
+        'У данного товара нет типа',
+        GlobalMessageVariants.danger
+      );
+      return false;
     } else if (types.length !== 0 && selectedType.id === 0) {
       showGlobalMessage('Выберите тип', GlobalMessageVariants.warning);
       return false;

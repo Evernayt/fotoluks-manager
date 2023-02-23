@@ -110,6 +110,7 @@ const ProfileStatistics = () => {
         setOrderInfos(data.rows);
         setStatistics(data.count);
       })
+      .catch()
       .finally(() => setIsLoading(false));
   };
 

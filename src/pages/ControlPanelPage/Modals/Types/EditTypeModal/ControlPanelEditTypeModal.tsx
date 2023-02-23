@@ -80,20 +80,24 @@ const ControlPanelEditTypeModal = () => {
   const fetchType = () => {
     if (editTypeModal.mode === Modes.ADD_MODE) return;
 
-    TypeAPI.getOne(editTypeModal.typeId).then((data) => {
-      setType(data);
-      setName(data.name);
-      setImage(data.image);
-      if (data.features) {
-        setTypeFeatures(data.features);
-        createFeatureOptions(data.features);
-      }
-      setPrice(data.price);
+    TypeAPI.getOne(editTypeModal.typeId)
+      .then((data) => {
+        setType(data);
+        setName(data.name);
+        setImage(data.image);
+        if (data.features) {
+          setTypeFeatures(data.features);
+          createFeatureOptions(data.features);
+        }
+        setPrice(data.price);
 
-      if (data.product) {
-        setSelectedProduct(data.product);
-      }
-    });
+        if (data.product) {
+          setSelectedProduct(data.product);
+        }
+      })
+      .catch((e) =>
+        showGlobalMessage(e.response.data ? e.response.data.message : e.message)
+      );
   };
 
   const createFeatureOptions = (features: IFeature[]) => {
@@ -145,10 +149,16 @@ const ControlPanelEditTypeModal = () => {
         featureIds.push(typeFeature.id);
       });
 
-      TypeAPI.update({ ...updatedType, featureIds }).then(() => {
-        dispatch(controlPanelSlice.actions.setForceUpdate(true));
-        close();
-      });
+      TypeAPI.update({ ...updatedType, featureIds })
+        .then(() => {
+          dispatch(controlPanelSlice.actions.setForceUpdate(true));
+          close();
+        })
+        .catch((e) =>
+          showGlobalMessage(
+            e.response.data ? e.response.data.message : e.message
+          )
+        );
     }
   };
 
@@ -165,10 +175,14 @@ const ControlPanelEditTypeModal = () => {
       featureIds,
     };
 
-    TypeAPI.create(createdType).then(() => {
-      dispatch(controlPanelSlice.actions.setForceUpdate(true));
-      close();
-    });
+    TypeAPI.create(createdType)
+      .then(() => {
+        dispatch(controlPanelSlice.actions.setForceUpdate(true));
+        close();
+      })
+      .catch((e) =>
+        showGlobalMessage(e.response.data ? e.response.data.message : e.message)
+      );
   };
 
   const openEditProductModal = () => {
@@ -199,25 +213,35 @@ const ControlPanelEditTypeModal = () => {
   };
 
   const editImage = (image: File) => {
-    FileAPI.uploadFile(image, { isManagerFile: true }).then((res) => {
-      if (res.ok) {
-        res.json().then((data) => {
-          if (type) {
-            const updatedType: UpdateTypeDto = {
-              id: type.id,
-              image: data.link,
-            };
-            TypeAPI.update(updatedType).then(() => {
-              setImage(data.link);
-            });
-          }
-        });
-      } else {
-        res.json().then((data) => {
-          showGlobalMessage(data.message);
-        });
-      }
-    });
+    FileAPI.uploadFile(image, { isManagerFile: true })
+      .then((res) => {
+        if (res.ok) {
+          res.json().then((data) => {
+            if (type) {
+              const updatedType: UpdateTypeDto = {
+                id: type.id,
+                image: data.link,
+              };
+              TypeAPI.update(updatedType)
+                .then(() => {
+                  setImage(data.link);
+                })
+                .catch((e) =>
+                  showGlobalMessage(
+                    e.response.data ? e.response.data.message : e.message
+                  )
+                );
+            }
+          });
+        } else {
+          res.json().then((data) => {
+            showGlobalMessage(data.message);
+          });
+        }
+      })
+      .catch((e) =>
+        showGlobalMessage(e.response.data ? e.response.data.message : e.message)
+      );
   };
 
   return (
@@ -270,6 +294,7 @@ const ControlPanelEditTypeModal = () => {
             <Textbox
               label="Цена"
               value={price}
+              type="number"
               onChange={(e) => setPrice(Number(e.target.value))}
             />
           </div>
