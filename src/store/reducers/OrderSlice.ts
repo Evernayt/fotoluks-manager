@@ -176,8 +176,7 @@ export const orderSlice = createSlice({
       state.ordersFilter = INITIAL_FILTER;
     },
     clearOrdersFilter(state) {
-      state.ordersFilter = INITIAL_FILTER;
-      state.ordersFilter.isPendingDeactivation = true;
+      state.ordersFilter = { ...INITIAL_FILTER, isPendingDeactivation: true };
     },
     setForceUpdate(state, action: PayloadAction<boolean>) {
       state.forceUpdate = action.payload;

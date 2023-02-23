@@ -106,4 +106,5 @@ export const INITIAL_ENDING_GOODS_EDIT_PRODUCT_MODAL: IEndingGoodsEditProductMod
   {
     ...INITIAL_MODAL,
     productId: '',
+    type: '',
   };

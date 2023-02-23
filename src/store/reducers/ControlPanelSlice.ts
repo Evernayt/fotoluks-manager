@@ -72,8 +72,10 @@ export const controlPanelSlice = createSlice({
       state[action.payload] = INITIAL_FILTER;
     },
     clearFilter(state, action: PayloadAction<keyof Filters>) {
-      state[action.payload] = INITIAL_FILTER;
-      state[action.payload].isPendingDeactivation = true;
+      state[action.payload] = {
+        ...INITIAL_FILTER,
+        isPendingDeactivation: true,
+      };
     },
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
