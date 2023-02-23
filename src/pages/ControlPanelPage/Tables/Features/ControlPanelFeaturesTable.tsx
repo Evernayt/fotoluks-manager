@@ -36,11 +36,12 @@ const ControlPanelFeaturesTable = () => {
       {
         Header: 'Наименование',
         accessor: 'name',
-        style: { width: '100%' },
+        style: { width: '20%' },
       },
       {
         Header: 'Наименование (во мн. ч.)',
         accessor: 'pluralName',
+        style: { width: '80%' },
       },
       {
         Header: '',

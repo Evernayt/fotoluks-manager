@@ -36,15 +36,17 @@ const ControlPanelParamsTable = () => {
       {
         Header: 'Наименование',
         accessor: 'name',
-        style: { width: '100%' },
+        style: { width: '30%' },
       },
       {
         Header: 'Значение',
         accessor: 'value',
+        style: { width: '30%' },
       },
       {
         Header: 'Характеристика',
         accessor: 'feature.name',
+        style: { width: '40%' },
       },
       {
         Header: '',

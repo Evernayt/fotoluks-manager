@@ -36,11 +36,12 @@ const ControlPanelEmployeesTable = () => {
       {
         Header: 'Имя',
         accessor: 'name',
-        style: { width: '100%' },
+        style: { width: '30%' },
       },
       {
         Header: 'Логин',
         accessor: 'login',
+        style: { width: '70%' },
       },
       {
         Header: '',

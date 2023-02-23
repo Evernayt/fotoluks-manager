@@ -34,11 +34,12 @@ const ControlPanelTypesTable = () => {
       {
         Header: 'Продукт',
         accessor: 'product.name',
-        style: { width: '100%' },
+        style: { width: '20%' },
       },
       {
         Header: 'Тип',
         accessor: 'name',
+        style: { width: '80%' },
       },
       {
         Header: 'Категория',

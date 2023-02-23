@@ -36,15 +36,17 @@ const ControlPanelProductsTable = () => {
       {
         Header: 'Наименование',
         accessor: 'name',
+        style: { width: '20%' },
       },
       {
         Header: 'Наименование (во мн. ч.)',
         accessor: 'pluralName',
+        style: { width: '30%' },
       },
       {
         Header: 'Описание',
         accessor: 'description',
-        style: { width: '100%' },
+        style: { width: '50%' },
       },
       {
         Header: 'Категория',
