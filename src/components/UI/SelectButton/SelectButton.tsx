@@ -82,7 +82,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
           }
           ref={ref}
         >
-          {selectedItem?.name}
+          <div className={styles.name}>{selectedItem?.name}</div>
         </div>
         <ul
           className={styles.menu}

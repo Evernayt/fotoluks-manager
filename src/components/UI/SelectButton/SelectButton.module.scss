@@ -44,6 +44,11 @@
   cursor: no-drop;
 }
 
+.name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .input {
   display: none;
 }
@@ -73,7 +78,6 @@
   cursor: pointer;
   white-space: nowrap;
   width: 100%;
-  cursor: default;
 
   &:active {
     transform: scale(0.98);

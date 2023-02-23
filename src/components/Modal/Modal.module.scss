@@ -29,6 +29,10 @@
   margin-left: 36px;
   font-weight: 500;
   font-size: 18px;
+  text-overflow: ellipsis;
+  width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .form {
