@@ -35,13 +35,16 @@
 
 .disabled {
   background-color: var(--disabled-background);
-  color: var(--disabled-text);
   display: flex;
   align-items: center;
   height: 36px;
   padding: 0 12px;
   border-radius: var(--border-radius);
   cursor: no-drop;
+
+  .name {
+    color: var(--disabled-text);
+  }
 }
 
 .name {

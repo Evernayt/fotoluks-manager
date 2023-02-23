@@ -164,8 +164,25 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
 
     setSelectedType(INITIAL_TYPE);
     TypeAPI.getAll({ productId: product.id }).then((data) => {
+      if (!data.rows.length) return;
       setTypes(data.rows);
-      selectType(type);
+      const foundType = data.rows.find((x) => x.id === type.id) || type;
+      selectType(foundType);
+
+      if (foundType.params) {
+        const gropedParams: IParam[][] = groupBy(foundType.params, 'featureId');
+        setFeatures(gropedParams);
+        setSelectedParams([]);
+        for (let i = 0; i < gropedParams.length; i++) {
+          setSelectedParams((prevState) => [
+            ...prevState,
+            {
+              id: uuidv4(),
+              param: gropedParams[i][0],
+            },
+          ]);
+        }
+      }
     });
   };
 

@@ -18,7 +18,7 @@
 
 .img {
   height: 90px;
-  width: 90px;
+  min-width: 90px;
   object-fit: cover;
   border-radius: var(--border-radius);
   margin-right: 12px;
@@ -28,7 +28,6 @@
 .info {
   display: flex;
   flex-direction: column;
-  white-space: nowrap;
 }
 
 .product_name {
