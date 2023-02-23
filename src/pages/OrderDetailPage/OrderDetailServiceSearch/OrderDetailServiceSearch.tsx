@@ -66,7 +66,7 @@ const OrderDetailServiceSearch: FC<OrderDetailServiceSearchProps> = ({
               >
                 <img
                   className={styles.type_image}
-                  src={type.image === '' ? noImage : type.image}
+                  src={type.image || noImage}
                   alt=""
                 />
                 <div className={styles.type_container}>

@@ -97,7 +97,7 @@ const ControlPanelEditParamModal = () => {
   };
 
   const createParam = () => {
-    ParamAPI.create({ name, value }).then(() => {
+    ParamAPI.create({ name, value, featureId: selectedFeature.id }).then(() => {
       dispatch(controlPanelSlice.actions.setForceUpdate(true));
       close();
     });
