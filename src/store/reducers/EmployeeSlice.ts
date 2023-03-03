@@ -35,8 +35,8 @@ export const employeeSlice = createSlice({
     updateEmployee(state, action: PayloadAction<IEmployee>) {
       state.employee = action.payload;
     },
-    clearState(state) {
-      state = initialState;
+    clearState() {
+      return initialState;
     },
   },
 });

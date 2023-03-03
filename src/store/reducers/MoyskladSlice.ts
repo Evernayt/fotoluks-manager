@@ -31,8 +31,8 @@ export const moyskladSlice = createSlice({
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
-    clearState(state) {
-      state = initialState;
+    clearState() {
+      return initialState;
     },
   },
 });

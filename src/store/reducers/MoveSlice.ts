@@ -34,8 +34,8 @@ export const moveSlice = createSlice({
     setDepartment(state, action: PayloadAction<IDepartment>) {
       state.department = action.payload;
     },
-    clearState(state) {
-      state = initialState;
+    clearState() {
+      return initialState;
     },
   },
 });

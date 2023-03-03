@@ -78,8 +78,8 @@ export const endingGoodsSlice = createSlice({
     setForceUpdateProduct(state, action: PayloadAction<boolean>) {
       state.forceUpdateProduct = action.payload;
     },
-    clearState(state) {
-      state = initialState;
+    clearState() {
+      return initialState;
     },
   },
 });
