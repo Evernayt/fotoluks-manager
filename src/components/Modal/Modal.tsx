@@ -23,7 +23,9 @@ const Modal: FC<ModalProps> = ({
     <div className={styles.container}>
       <div className={styles.form_container} {...props}>
         <div className={styles.form_header}>
-          <div className={styles.form_header_title}>{title || ''}</div>
+          <div className={styles.form_header_title} title={title}>
+            {title || ''}
+          </div>
           <IconButton
             icon={<IconClose className="link-icon" />}
             circle
