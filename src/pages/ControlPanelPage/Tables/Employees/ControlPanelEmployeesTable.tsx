@@ -54,8 +54,10 @@ const ControlPanelEmployeesTable = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchEmployees(page, { ...employeesFilter, search });
+      dispatch(controlPanelSlice.actions.setDisableFilter(true));
+      fetchEmployees(page, { search });
     } else {
+      dispatch(controlPanelSlice.actions.setDisableFilter(false));
       reload(page);
     }
   }, [debouncedSearchTerm]);

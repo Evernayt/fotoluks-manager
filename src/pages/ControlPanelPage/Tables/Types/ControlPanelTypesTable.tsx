@@ -60,8 +60,10 @@ const ControlPanelTypesTable = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchTypes(page, { ...typesFilter, search });
+      dispatch(controlPanelSlice.actions.setDisableFilter(true));
+      fetchTypes(page, { search });
     } else {
+      dispatch(controlPanelSlice.actions.setDisableFilter(false));
       reload(page);
     }
   }, [debouncedSearchTerm]);

@@ -31,6 +31,7 @@ type ControlPanelState = Filters & {
   forceUpdate: boolean;
   isLoading: boolean;
   search: string;
+  disableFilter: boolean;
 };
 
 const initialState: ControlPanelState = {
@@ -38,6 +39,7 @@ const initialState: ControlPanelState = {
   forceUpdate: false,
   isLoading: false,
   search: '',
+  disableFilter: false,
   usersFilter: INITIAL_FILTER,
   typesFilter: INITIAL_FILTER,
   productsFilter: INITIAL_FILTER,
@@ -77,11 +79,14 @@ export const controlPanelSlice = createSlice({
         isPendingDeactivation: true,
       };
     },
+    setDisableFilter(state, action: PayloadAction<boolean>) {
+      state.disableFilter = action.payload;
+    },
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
     },
-    clearState(state) {
-      state = initialState;
+    clearState() {
+      return initialState;
     },
   },
 });

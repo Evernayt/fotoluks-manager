@@ -19,6 +19,9 @@ const ControlPanelEmployeesToolbar: FC<ControlPanelEmployeesToolbarProps> = ({
   const employeesFilter = useAppSelector(
     (state) => state.controlPanel.employeesFilter
   );
+  const disableFilter = useAppSelector(
+    (state) => state.controlPanel.disableFilter
+  );
 
   const limitItems = useMemo<ISelectItem[]>(
     () => [
@@ -81,6 +84,7 @@ const ControlPanelEmployeesToolbar: FC<ControlPanelEmployeesToolbarProps> = ({
                 ? ButtonVariants.primaryDeemphasized
                 : ButtonVariants.default
             }
+            disabled={disableFilter}
           >
             Фильтры
           </Button>

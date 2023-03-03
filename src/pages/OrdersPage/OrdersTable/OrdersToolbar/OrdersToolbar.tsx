@@ -13,6 +13,9 @@ interface OrdersToolbarProps {
 
 const OrdersToolbar: FC<OrdersToolbarProps> = ({ reload, onLimitChange }) => {
   const ordersFilter = useAppSelector((state) => state.order.ordersFilter);
+  const disableOrdersFilter = useAppSelector(
+    (state) => state.order.disableOrdersFilter
+  );
 
   const limitItems = useMemo<ISelectItem[]>(
     () => [
@@ -65,6 +68,7 @@ const OrdersToolbar: FC<OrdersToolbarProps> = ({ reload, onLimitChange }) => {
                 ? ButtonVariants.primaryDeemphasized
                 : ButtonVariants.default
             }
+            disabled={disableOrdersFilter}
           >
             Фильтры
           </Button>

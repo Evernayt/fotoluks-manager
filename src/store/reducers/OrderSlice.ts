@@ -26,6 +26,7 @@ type OrderState = {
   favorites: IFavorite[];
   watchers: IWatcher[];
   search: string;
+  disableOrdersFilter: boolean;
 };
 
 const initialState: OrderState = {
@@ -45,6 +46,7 @@ const initialState: OrderState = {
   favorites: [],
   watchers: [],
   search: '',
+  disableOrdersFilter: false,
 };
 
 export const orderSlice = createSlice({
@@ -178,6 +180,9 @@ export const orderSlice = createSlice({
     clearOrdersFilter(state) {
       state.ordersFilter = { ...INITIAL_FILTER, isPendingDeactivation: true };
     },
+    setDisableOrdersFilter(state, action: PayloadAction<boolean>) {
+      state.disableOrdersFilter = action.payload;
+    },
     setForceUpdate(state, action: PayloadAction<boolean>) {
       state.forceUpdate = action.payload;
     },
@@ -238,8 +243,8 @@ export const orderSlice = createSlice({
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
     },
-    clearState(state) {
-      state = initialState;
+    clearState() {
+      return initialState;
     },
   },
 });

@@ -17,6 +17,9 @@ const ControlPanelTypesToolbar: FC<ControlPanelTypesToolbarProps> = ({
   onLimitChange,
 }) => {
   const typesFilter = useAppSelector((state) => state.controlPanel.typesFilter);
+  const disableFilter = useAppSelector(
+    (state) => state.controlPanel.disableFilter
+  );
 
   const limitItems = useMemo<ISelectItem[]>(
     () => [
@@ -77,6 +80,7 @@ const ControlPanelTypesToolbar: FC<ControlPanelTypesToolbarProps> = ({
                 ? ButtonVariants.primaryDeemphasized
                 : ButtonVariants.default
             }
+            disabled={disableFilter}
           >
             Фильтры
           </Button>

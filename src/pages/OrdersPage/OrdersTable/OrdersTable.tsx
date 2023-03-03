@@ -99,8 +99,10 @@ const OrdersTable = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchOrders(page, { ...ordersFilter, search });
+      dispatch(orderSlice.actions.setDisableOrdersFilter(true));
+      fetchOrders(page, { search });
     } else {
+      dispatch(orderSlice.actions.setDisableOrdersFilter(false));
       reload(page);
     }
   }, [debouncedSearchTerm]);
@@ -170,7 +172,12 @@ const OrdersTable = () => {
         columns={columns}
         data={orders}
         isLoading={isLoading}
-        pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
+        pagination={{
+          page,
+          pageCount,
+          onPageChange: pageChangeHandler,
+          isShowing: search ? false : true,
+        }}
         onRowClick={rowClickHandler}
         customCells={[
           {

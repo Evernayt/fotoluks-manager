@@ -19,6 +19,9 @@ const ControlPanelProductsToolbar: FC<ControlPanelProductsToolbarProps> = ({
   const productsFilter = useAppSelector(
     (state) => state.controlPanel.productsFilter
   );
+  const disableFilter = useAppSelector(
+    (state) => state.controlPanel.disableFilter
+  );
 
   const limitItems = useMemo<ISelectItem[]>(
     () => [
@@ -79,6 +82,7 @@ const ControlPanelProductsToolbar: FC<ControlPanelProductsToolbarProps> = ({
                 ? ButtonVariants.primaryDeemphasized
                 : ButtonVariants.default
             }
+            disabled={disableFilter}
           >
             Фильтры
           </Button>

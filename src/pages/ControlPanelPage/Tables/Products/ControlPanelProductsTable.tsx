@@ -63,8 +63,10 @@ const ControlPanelProductsTable = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchProducts(page, { ...productsFilter, search });
+      dispatch(controlPanelSlice.actions.setDisableFilter(true));
+      fetchProducts(page, { search });
     } else {
+      dispatch(controlPanelSlice.actions.setDisableFilter(false));
       reload(page);
     }
   }, [debouncedSearchTerm]);
@@ -125,7 +127,12 @@ const ControlPanelProductsTable = () => {
         columns={columns}
         data={products}
         isLoading={isLoading}
-        pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
+        pagination={{
+          page,
+          pageCount,
+          onPageChange: pageChangeHandler,
+          isShowing: search ? false : true,
+        }}
         onRowClick={rowClickHandler}
       />
     </>
