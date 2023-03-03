@@ -124,8 +124,8 @@ const MoyskladEndingGoodsTable = () => {
   };
 
   const reload = () => {
-    setPage(1);
-    fetchEndingGoods(0);
+    const offset = limit * (page - 1);
+    fetchEndingGoods(offset);
   };
 
   const rowClickHandler = (row: Row<INotification>) => {
