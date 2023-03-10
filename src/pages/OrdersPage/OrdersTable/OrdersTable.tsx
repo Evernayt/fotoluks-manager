@@ -172,12 +172,8 @@ const OrdersTable = () => {
         columns={columns}
         data={orders}
         isLoading={isLoading}
-        pagination={{
-          page,
-          pageCount,
-          onPageChange: pageChangeHandler,
-          isShowing: search ? false : true,
-        }}
+        pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
+        paginationVisibility={search ? false : true}
         onRowClick={rowClickHandler}
         customCells={[
           {

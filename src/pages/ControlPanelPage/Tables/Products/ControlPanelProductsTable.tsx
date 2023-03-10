@@ -127,12 +127,8 @@ const ControlPanelProductsTable = () => {
         columns={columns}
         data={products}
         isLoading={isLoading}
-        pagination={{
-          page,
-          pageCount,
-          onPageChange: pageChangeHandler,
-          isShowing: search ? false : true,
-        }}
+        pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
+        paginationVisibility={search ? false : true}
         onRowClick={rowClickHandler}
       />
     </>

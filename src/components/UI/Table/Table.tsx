@@ -1,9 +1,9 @@
 import Loader from 'components/Loader/Loader';
 import { ReactNode } from 'react';
 import { Column, Row, useTable } from 'react-table';
-import Pagination from '../Pagination/Pagination';
+import Pagination, { PaginationProps } from '../Pagination/Pagination';
 import styles from './Table.module.scss';
-import { IPagination, ITableCustomCell } from './Table.types';
+import { ITableCustomCell } from './Table.types';
 
 interface TableProps<T extends object> {
   columns: Column<T>[];
@@ -14,7 +14,8 @@ interface TableProps<T extends object> {
   notFoundText?: string;
   updateMyData?: (index: number, id: string, value: string) => void;
   skipPageReset?: boolean;
-  pagination?: IPagination;
+  pagination?: PaginationProps;
+  paginationVisibility?: boolean;
   isHaveToolbar?: boolean;
 }
 
@@ -28,6 +29,7 @@ const Table = <T extends object>({
   updateMyData,
   skipPageReset,
   pagination,
+  paginationVisibility = true,
   isHaveToolbar = true,
 }: TableProps<T>) => {
   const rowClickHandler = (row: Row<T>) => {
@@ -138,7 +140,7 @@ const Table = <T extends object>({
           </>
         )}
       </div>
-      {pagination && pagination.isShowing && pagination.pageCount > 0 && (
+      {pagination && paginationVisibility && pagination.pageCount > 0 && (
         <div className={styles.pagination}>
           <Pagination
             page={pagination.page}
