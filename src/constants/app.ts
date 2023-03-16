@@ -1,6 +1,11 @@
-import { IconControlPanel, IconMoysklad, IconOrders } from 'icons';
+import { IconControlPanel, IconMoysklad, IconNote, IconOrders } from 'icons';
 import { ITheme } from 'models/ITheme';
-import { CONTROL_PANEL_ROUTE, MOYSKLAD_ROUTE, ORDERS_ROUTE } from './paths';
+import {
+  CONTROL_PANEL_ROUTE,
+  MOYSKLAD_ROUTE,
+  ORDERS_ROUTE,
+  TASKS_ROUTE,
+} from './paths';
 
 enum Modes {
   ADD_MODE = 'ADD_MODE',
@@ -30,6 +35,12 @@ const APPS = [
     description: 'Заказы',
     route: ORDERS_ROUTE,
     Icon: IconOrders,
+  },
+  {
+    value: 'TASKS',
+    description: 'Задачи',
+    route: TASKS_ROUTE,
+    Icon: IconNote,
   },
   {
     value: 'MOYSKLAD',

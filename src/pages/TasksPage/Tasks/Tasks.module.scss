@@ -1,0 +1,25 @@
+.tasks {
+  display: grid;
+  grid-gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  padding: 16px;
+  overflow: auto;
+  height: calc(100% - 138px);
+}
+
+.message {
+  height: calc(100% - 106px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+.pagination {
+  border-top: 1px solid var(--separator-color);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+}

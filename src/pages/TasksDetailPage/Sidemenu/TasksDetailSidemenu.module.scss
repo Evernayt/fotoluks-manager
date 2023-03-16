@@ -1,0 +1,72 @@
+.container {
+  height: calc(100vh - 104px);
+}
+
+.info {
+  background-color: var(--card-background);
+  min-width: 290px;
+  max-width: 290px;
+  height: calc(100% - 72px);
+  box-shadow: 1px 0 8px var(--shadow-1);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 16px;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.items {
+  display: flex;
+  column-gap: 12px;
+  row-gap: 4px;
+  flex-wrap: wrap;
+}
+
+.urgent {
+  background-color: var(--danger-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.item_icon {
+  stroke: var(--secondary-text-color);
+  stroke-width: 1.25px;
+  width: 20px;
+  height: 20px;
+}
+
+.item_text {
+  color: var(--secondary-text-color);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.controls {
+  position: sticky;
+  padding: 16px 16px 20px 16px;
+  box-shadow: 0 -2px 12px var(--shadow-2);
+  width: 290px;
+  background-color: var(--card-background);
+  display: flex;
+  gap: 8px;
+}

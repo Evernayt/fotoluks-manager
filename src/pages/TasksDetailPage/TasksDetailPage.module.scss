@@ -1,0 +1,25 @@
+.container {
+  background-color: var(--background-color);
+  height: 100vh;
+}
+
+.loader {
+  position: absolute;
+  z-index: 999;
+  height: calc(100% - 56px);
+  width: 100%;
+  background-color: var(--overlay-alpha-80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section {
+  display: flex;
+}
+
+.comments {
+  padding: 24px 16px 16px 24px;
+  width: 100%;
+  height: calc(100vh - 96px);
+}

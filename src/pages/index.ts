@@ -6,6 +6,8 @@ import ProfilePage from './ProfilePage/ProfilePage';
 import InitialSettingsPage from './InitialSettingsPage/InitialSettingsPage';
 import SettingsPage from './SettingsPage/SettingsPage';
 import MoyskladPage from './MoyskladPage/MoyskladPage';
+import TasksPage from './TasksPage/TasksPage';
+import TasksDetailPage from './TasksDetailPage/TasksDetailPage';
 
 export {
   LoginPage,
@@ -16,4 +18,6 @@ export {
   InitialSettingsPage,
   SettingsPage,
   MoyskladPage,
+  TasksPage,
+  TasksDetailPage,
 };

@@ -9,6 +9,8 @@ import {
   ORDER_DETAIL_ROUTE,
   PROFILE_ROUTE,
   SETTINGS_ROUTE,
+  TASKS_DETAIL_ROUTE,
+  TASKS_ROUTE,
 } from 'constants/paths';
 import {
   ControlPanelPage,
@@ -19,6 +21,8 @@ import {
   OrdersPage,
   ProfilePage,
   SettingsPage,
+  TasksDetailPage,
+  TasksPage,
 } from 'pages';
 import { GlobalMessage, UpdaterModal } from 'components';
 import './App.css';
@@ -55,6 +59,8 @@ export default function App() {
           element={<InitialSettingsPage />}
         />
         <Route path={SETTINGS_ROUTE} element={<SettingsPage />} />
+        <Route path={TASKS_ROUTE} element={<TasksPage />} />
+        <Route path={TASKS_DETAIL_ROUTE} element={<TasksDetailPage />} />
       </Routes>
     </Router>
   );

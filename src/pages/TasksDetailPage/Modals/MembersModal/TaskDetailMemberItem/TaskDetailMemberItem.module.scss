@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--secondary-deemphasized-color);
+  padding: 4px;
+  border-radius: var(--border-radius);
+  cursor: default;
+
+  &:hover .button {
+    opacity: 1;
+  }
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.button {
+  opacity: 0;
+  transition: opacity 200ms;
+  min-height: 32px;
+  padding: 4px;
+}

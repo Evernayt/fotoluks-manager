@@ -33,6 +33,17 @@ import IconMoysklad from './IconMoysklad';
 import IconCloudDownload from './IconCloudDownload';
 import IconArrowBarToDown from './IconArrowBarToDown';
 import IconShoppingCart from './IconShoppingCart';
+import IconNote from './IconNote';
+import IconCheckFilled from './IconCheckFilled';
+import IconCalendarDue from './IconCalendarDue';
+import IconMessageCircle from './IconMessageCircle';
+import IconBinaryTree from './IconBinaryTree';
+import IconSend from './IconSend';
+import IconTrash from './IconTrash';
+import IconTrashOff from './IconTrashOff';
+import IconCheck from './IconCheck';
+import IconCircle from './IconCircle';
+import IconNotebook from './IconNotebook';
 
 export {
   IconPlus,
@@ -70,4 +81,15 @@ export {
   IconCloudDownload,
   IconArrowBarToDown,
   IconShoppingCart,
+  IconNote,
+  IconCheckFilled,
+  IconCalendarDue,
+  IconMessageCircle,
+  IconBinaryTree,
+  IconSend,
+  IconTrash,
+  IconTrashOff,
+  IconCheck,
+  IconCircle,
+  IconNotebook,
 };

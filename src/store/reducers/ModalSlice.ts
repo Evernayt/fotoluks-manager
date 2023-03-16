@@ -67,6 +67,8 @@ type ModalState = {
   endingGoodsProductModal: IEndingGoodsProductModal;
   endingGoodsEditProductModal: IEndingGoodsEditProductModal;
   endingGoodsClearOrderedModal: IModal;
+  taskMembersModal: IModal;
+  tasksFilterModal: IModal;
 };
 
 const initialState: ModalState = {
@@ -100,6 +102,8 @@ const initialState: ModalState = {
   endingGoodsProductModal: INITIAL_ENDING_GOODS_PRODUCT_MODAL,
   endingGoodsEditProductModal: INITIAL_ENDING_GOODS_EDIT_PRODUCT_MODAL,
   endingGoodsClearOrderedModal: INITIAL_MODAL,
+  taskMembersModal: INITIAL_MODAL,
+  tasksFilterModal: INITIAL_MODAL,
 };
 
 interface OpenModalProps<K = keyof ModalState> {

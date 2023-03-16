@@ -15,6 +15,7 @@ import { endingGoodsSlice } from 'store/reducers/EndingGoodsSlice';
 import { moveSlice } from 'store/reducers/MoveSlice';
 import { moyskladSlice } from 'store/reducers/MoyskladSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
+import { taskSlice } from 'store/reducers/TaskSlice';
 
 const MenuButton = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ const MenuButton = () => {
     dispatch(moveSlice.actions.clearState());
     dispatch(moyskladSlice.actions.clearState());
     dispatch(orderSlice.actions.clearState());
+    dispatch(taskSlice.actions.clearState());
     navigate(LOGIN_ROUTE);
     socketio.disconnect();
   };

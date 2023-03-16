@@ -28,6 +28,8 @@ html[data-theme='LIGHT'] {
   --danger-color: #eb5c5c;
   --success-color: #14a44d;
   --warning-color: #ff8c00;
+  --completed-color: #daf5da;
+  --completed-text-color: #14a44d;
 
   /* COLORS: HOVER */
   --hover-primary-color: #f5cd0a;
@@ -78,6 +80,8 @@ html[data-theme='DARK'] {
   --danger-color: #eb5c5c;
   --success-color: #14a44d;
   --warning-color: #ff8c00;
+  --completed-color: #3b423b;
+  --completed-text-color: #daf5da;
 
   /* COLORS: HOVER */
   --hover-primary-color: #f5cd0a;
