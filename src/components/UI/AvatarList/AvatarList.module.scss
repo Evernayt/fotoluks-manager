@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  margin-left: 4px;
+  flex-wrap: wrap;
+}
+
+.item {
+  margin-left: -5px;
+  transition: 0.2s transform ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+    z-index: 2;
+  }
+}
+
+.image {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  outline: 3px solid var(--card-background);
+  outline-offset: -1px;
+}

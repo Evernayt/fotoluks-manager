@@ -30,6 +30,7 @@ import Updater from './Updater/Updater';
 import UpdaterModal from './UpdaterModal/UpdaterModal';
 import Progress from './UI/Progress/Progress';
 import CopiedItem from './UI/CopiedItem/CopiedItem';
+import AvatarList from './UI/AvatarList/AvatarList';
 
 export {
   Navmenu,
@@ -64,4 +65,5 @@ export {
   UpdaterModal,
   Progress,
   CopiedItem,
+  AvatarList,
 };
