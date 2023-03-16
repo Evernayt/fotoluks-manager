@@ -3,7 +3,7 @@ import { ElementType } from 'react';
 export interface ISidemenuItem {
   id: number;
   name: string;
-  Icon: ElementType;
+  Icon?: ElementType;
 }
 
 export interface ISidemenuAddButton {

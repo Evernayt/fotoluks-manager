@@ -115,9 +115,7 @@ const NotificationButton = () => {
                   )}
                   {notifications.map((notification) => (
                     <Notification
-                      title={notification.title}
-                      text={notification.text}
-                      createdAt={notification.createdAt}
+                      notification={notification}
                       key={notification.id}
                     />
                   ))}

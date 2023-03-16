@@ -14,7 +14,7 @@ const GlobalMessage = () => {
 
   useEffect(() => {
     if (isShowing) {
-      setTimeout(close, 5000);
+      setTimeout(close, 3000);
     }
   }, [isShowing]);
 

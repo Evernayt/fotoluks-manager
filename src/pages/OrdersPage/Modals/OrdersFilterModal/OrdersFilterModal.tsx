@@ -20,16 +20,16 @@ import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './OrdersFilterModal.module.scss';
 
 const OrdersFilterModal = () => {
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
   const [shops, setShops] = useState<IShop[]>([]);
-  const [selectedShop, setSelectedShop] = useState<IShop>(ALL_SHOPS);
-  const [iOrderMember, setIOrderMember] = useState<boolean>(false);
 
   const ordersFilterModal = useAppSelector(
     (state) => state.modal.ordersFilterModal
   );
   const employee = useAppSelector((state) => state.employee.employee);
+  const startDate = useAppSelector((state) => state.order.startDate);
+  const endDate = useAppSelector((state) => state.order.endDate);
+  const selectedShop = useAppSelector((state) => state.order.selectedShop);
+  const iOrderMember = useAppSelector((state) => state.order.iOrderMember);
 
   const dispatch = useAppDispatch();
 
@@ -40,10 +40,10 @@ const OrdersFilterModal = () => {
         name: 'Текущий день',
         onClick: () => {
           const start = moment().startOf('day').format(INPUT_DATE_FORMAT);
-          setStartDate(start);
+          dispatch(orderSlice.actions.setStartDate(start));
 
           const end = moment().endOf('day').format(INPUT_DATE_FORMAT);
-          setEndDate(end);
+          dispatch(orderSlice.actions.setEndDate(end));
         },
       },
       {
@@ -54,13 +54,13 @@ const OrdersFilterModal = () => {
             .subtract(1, 'day')
             .startOf('day')
             .format(INPUT_DATE_FORMAT);
-          setStartDate(start);
+          dispatch(orderSlice.actions.setStartDate(start));
 
           const end = moment()
             .subtract(1, 'day')
             .endOf('day')
             .format(INPUT_DATE_FORMAT);
-          setEndDate(end);
+          dispatch(orderSlice.actions.setEndDate(end));
         },
       },
       {
@@ -68,10 +68,10 @@ const OrdersFilterModal = () => {
         name: 'Текущая неделя',
         onClick: () => {
           const start = moment().startOf('week').format(INPUT_DATE_FORMAT);
-          setStartDate(start);
+          dispatch(orderSlice.actions.setStartDate(start));
 
           const end = moment().endOf('week').format(INPUT_DATE_FORMAT);
-          setEndDate(end);
+          dispatch(orderSlice.actions.setEndDate(end));
         },
       },
       {
@@ -82,13 +82,13 @@ const OrdersFilterModal = () => {
             .subtract(1, 'week')
             .startOf('week')
             .format(INPUT_DATE_FORMAT);
-          setStartDate(start);
+          dispatch(orderSlice.actions.setStartDate(start));
 
           const end = moment()
             .subtract(1, 'week')
             .endOf('week')
             .format(INPUT_DATE_FORMAT);
-          setEndDate(end);
+          dispatch(orderSlice.actions.setEndDate(end));
         },
       },
       {
@@ -96,10 +96,10 @@ const OrdersFilterModal = () => {
         name: 'Текущий месяц',
         onClick: () => {
           const start = moment().startOf('month').format(INPUT_DATE_FORMAT);
-          setStartDate(start);
+          dispatch(orderSlice.actions.setStartDate(start));
 
           const end = moment().endOf('month').format(INPUT_DATE_FORMAT);
-          setEndDate(end);
+          dispatch(orderSlice.actions.setEndDate(end));
         },
       },
       {
@@ -110,13 +110,13 @@ const OrdersFilterModal = () => {
             .subtract(1, 'month')
             .startOf('month')
             .format(INPUT_DATE_FORMAT);
-          setStartDate(start);
+          dispatch(orderSlice.actions.setStartDate(start));
 
           const end = moment()
             .subtract(1, 'month')
             .endOf('month')
             .format(INPUT_DATE_FORMAT);
-          setEndDate(end);
+          dispatch(orderSlice.actions.setEndDate(end));
         },
       },
     ],
@@ -132,12 +132,12 @@ const OrdersFilterModal = () => {
           .subtract(1, 'month')
           .startOf('month')
           .format(INPUT_DATE_FORMAT);
-        setStartDate(start);
+        dispatch(orderSlice.actions.setStartDate(start));
       }
 
       if (endDate === '') {
         const end = moment().format(INPUT_DATE_FORMAT);
-        setEndDate(end);
+        dispatch(orderSlice.actions.setEndDate(end));
       }
     }
   }, [ordersFilterModal.isShowing]);
@@ -177,18 +177,18 @@ const OrdersFilterModal = () => {
   };
 
   const reset = () => {
-    setSelectedShop(ALL_SHOPS);
+    dispatch(orderSlice.actions.setSelectedShop(ALL_SHOPS));
 
     const start = moment()
       .subtract(1, 'month')
       .startOf('month')
       .format(INPUT_DATE_FORMAT);
-    setStartDate(start);
+    dispatch(orderSlice.actions.setStartDate(start));
 
     const end = moment().format(INPUT_DATE_FORMAT);
-    setEndDate(end);
+    dispatch(orderSlice.actions.setEndDate(end));
 
-    setIOrderMember(false);
+    dispatch(orderSlice.actions.setIOrderMember(false));
   };
 
   return (
@@ -204,7 +204,9 @@ const OrdersFilterModal = () => {
               containerClassName={styles.shops_sb}
               items={shops}
               defaultSelectedItem={selectedShop}
-              onChange={(item) => setSelectedShop(item)}
+              onChange={(item) =>
+                dispatch(orderSlice.actions.setSelectedShop(item))
+              }
             />
           </div>
         </Tooltip>
@@ -215,18 +217,24 @@ const OrdersFilterModal = () => {
           label="От"
           type="datetime-local"
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          onChange={(e) =>
+            dispatch(orderSlice.actions.setStartDate(e.target.value))
+          }
         />
         <Textbox
           label="До"
           type="datetime-local"
           value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
+          onChange={(e) =>
+            dispatch(orderSlice.actions.setEndDate(e.target.value))
+          }
         />
         <Checkbox
           text="Я участвую в заказе"
           checked={iOrderMember}
-          onChange={() => setIOrderMember((prevState) => !prevState)}
+          onChange={() =>
+            dispatch(orderSlice.actions.setIOrderMember(!iOrderMember))
+          }
         />
       </div>
       <div className={styles.controls}>

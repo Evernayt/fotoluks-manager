@@ -1,24 +1,24 @@
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ISidemenuItem, ISidemenuAddButton } from './Sidemenu.types';
 import styles from './Sidemenu.module.scss';
 import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { IconPlus, IconSidemenu, IconSidemenuChecked } from 'icons';
 
-interface SidemenuProps {
-  items?: ISidemenuItem[];
-  defaultActiveItem?: ISidemenuItem;
-  onChange?: (item: ISidemenuItem) => void;
+interface SidemenuProps<T extends ISidemenuItem> {
+  items?: T[];
+  defaultActiveItem?: T;
+  onChange?: (item: T, index: number) => void;
   addButton?: ISidemenuAddButton;
 }
 
-const Sidemenu: FC<SidemenuProps> = ({
+const Sidemenu = <T extends ISidemenuItem>({
   items,
   defaultActiveItem,
   onChange,
   addButton,
-}) => {
+}: SidemenuProps<T>) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [activeItem, setActiveItem] = useState<ISidemenuItem | undefined>(
+  const [activeItem, setActiveItem] = useState<T | undefined>(
     defaultActiveItem
   );
 
@@ -34,10 +34,11 @@ const Sidemenu: FC<SidemenuProps> = ({
     }
   }, [activeItem]);
 
-  const selectItem = (item: ISidemenuItem) => {
+  const selectItem = (item: T) => {
     setActiveItem(item);
     if (!onChange) return;
-    onChange(item);
+    const index = items?.indexOf(item) || 0;
+    onChange(item, index);
   };
 
   const toggleSidemenu = () => {
@@ -98,14 +99,16 @@ const Sidemenu: FC<SidemenuProps> = ({
                 />
                 <label className={styles.rbtn} htmlFor={item.name}>
                   <div className={styles.rbtn_icon}>
-                    <Icon
-                      className={
-                        activeItem?.name === item.name
-                          ? 'secondary-checked-icon'
-                          : 'secondary-icon'
-                      }
-                      size={20}
-                    />
+                    {Icon && (
+                      <Icon
+                        className={
+                          activeItem?.name === item.name
+                            ? 'secondary-checked-icon'
+                            : 'secondary-icon'
+                        }
+                        size={20}
+                      />
+                    )}
                   </div>
                   <div
                     className={styles.text}

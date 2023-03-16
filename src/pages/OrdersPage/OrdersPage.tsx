@@ -15,7 +15,7 @@ const OrdersPage = () => {
       <OrdersExportModal />
       <OrderShopModal />
       <OrdersFilterModal />
-      <Navmenu searchRender={() => <OrdersSearch />} />
+      <Navmenu searchRender={OrdersSearch} />
       <div className={styles.section}>
         <OrdersSidemenu />
         <div className={styles.panel}>

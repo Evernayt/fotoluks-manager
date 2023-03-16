@@ -8,7 +8,7 @@ import {
 } from 'icons';
 import { useNavigate } from 'react-router-dom';
 import { ORDER_DETAIL_ROUTE } from 'constants/paths';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { Sidemenu } from 'components';
 import { useMemo } from 'react';
@@ -19,6 +19,10 @@ import {
 import { IStatus } from 'models/api/IStatus';
 
 const OrdersSidemenu = () => {
+  const activeSidemenuIndex = useAppSelector(
+    (state) => state.order.activeSidemenuIndex
+  );
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -58,13 +62,14 @@ const OrdersSidemenu = () => {
     []
   );
 
-  const changeHandler = (item: ISidemenuItem) => {
+  const changeHandler = (item: ISidemenuItem, index: number) => {
     const status: IStatus = {
       id: item.id,
       name: item.name,
       color: '',
     };
     dispatch(orderSlice.actions.setActiveStatus(status));
+    dispatch(orderSlice.actions.setActiveSidemenuIndex(index));
   };
 
   const addButton: ISidemenuAddButton = {
@@ -76,7 +81,7 @@ const OrdersSidemenu = () => {
     <Sidemenu
       addButton={addButton}
       items={items}
-      defaultActiveItem={items[0]}
+      defaultActiveItem={items[activeSidemenuIndex]}
       onChange={changeHandler}
     />
   );

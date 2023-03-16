@@ -80,7 +80,7 @@ const ControlPanelPage = () => {
       <ControlPanelEditShopModal />
       <ControlPanelEmployeesFilterModal />
       <ControlPanelEditEmployeeModal />
-      <Navmenu searchRender={() => <ControlPanelSearch />} />
+      <Navmenu searchRender={ControlPanelSearch} />
       <div className={styles.section}>
         <ControlPanelSidemenu />
         <div className={styles.panel}>{renderTable()}</div>

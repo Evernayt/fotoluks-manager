@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { INITIAL_FILTER } from 'constants/states/filter-states';
 import { INITIAL_ORDER } from 'constants/states/order-states';
+import { ALL_SHOPS } from 'constants/states/shop-states';
 import { IFavorite } from 'models/api/IFavorite';
 import { IFinishedProduct } from 'models/api/IFinishedProduct';
 import { IOrder, IOrdersFilter } from 'models/api/IOrder';
 import { IOrderMember } from 'models/api/IOrderMember';
+import { IShop } from 'models/api/IShop';
 import { IStatus } from 'models/api/IStatus';
 import { IUser } from 'models/api/IUser';
 import { IWatcher } from 'models/IWatcher';
@@ -14,6 +16,7 @@ type OrderState = {
   order: IOrder;
   beforeOrder: IOrder;
   activeStatus: IStatus | null;
+  activeSidemenuIndex: number;
   finishedProductsForCreate: IFinishedProduct[];
   finishedProductsForUpdate: IFinishedProduct[];
   finishedProductsForDelete: number[];
@@ -27,6 +30,10 @@ type OrderState = {
   watchers: IWatcher[];
   search: string;
   disableOrdersFilter: boolean;
+  startDate: string;
+  endDate: string;
+  selectedShop: IShop;
+  iOrderMember: boolean;
 };
 
 const initialState: OrderState = {
@@ -34,6 +41,7 @@ const initialState: OrderState = {
   order: INITIAL_ORDER,
   beforeOrder: INITIAL_ORDER,
   activeStatus: { id: 0, name: '', color: '#fff' },
+  activeSidemenuIndex: 0,
   finishedProductsForCreate: [],
   finishedProductsForUpdate: [],
   finishedProductsForDelete: [],
@@ -47,6 +55,10 @@ const initialState: OrderState = {
   watchers: [],
   search: '',
   disableOrdersFilter: false,
+  startDate: '',
+  endDate: '',
+  selectedShop: ALL_SHOPS,
+  iOrderMember: false,
 };
 
 export const orderSlice = createSlice({
@@ -58,6 +70,9 @@ export const orderSlice = createSlice({
     },
     setActiveStatus(state, action: PayloadAction<IStatus>) {
       state.activeStatus = action.payload;
+    },
+    setActiveSidemenuIndex(state, action: PayloadAction<number>) {
+      state.activeSidemenuIndex = action.payload;
     },
     setBeforeOrder(state, action: PayloadAction<IOrder>) {
       state.beforeOrder = action.payload;
@@ -242,6 +257,18 @@ export const orderSlice = createSlice({
     },
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
+    },
+    setStartDate(state, action: PayloadAction<string>) {
+      state.startDate = action.payload;
+    },
+    setEndDate(state, action: PayloadAction<string>) {
+      state.endDate = action.payload;
+    },
+    setSelectedShop(state, action: PayloadAction<IShop>) {
+      state.selectedShop = action.payload;
+    },
+    setIOrderMember(state, action: PayloadAction<boolean>) {
+      state.iOrderMember = action.payload;
     },
     clearState() {
       return initialState;

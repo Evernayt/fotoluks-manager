@@ -48,9 +48,11 @@ const OrderStatusCell: FC<OrderStatusCellProps> = ({ statuses, cell }) => {
     const title = 'Изменен статус';
     const text = `${employee?.name} изменил статус заказа № ${order.id} c "${oldStatusName}" на "${status.name}"`;
 
-    NotificationAPI.create({ title, text, employeeIds }).then((data) => {
-      socketio.sendNotification(data);
-    });
+    NotificationAPI.create({ title, text, employeeIds, appId: 1 }).then(
+      (data) => {
+        socketio.sendNotification(data);
+      }
+    );
   };
 
   return (

@@ -1,24 +1,51 @@
 .conatiner {
-  min-width: 260px;
+  display: flex;
+  gap: 8px;
+  min-width: 300px;
   background-color: var(--card-background);
   padding: 8px;
   border-radius: var(--border-radius);
+  font-weight: 400;
 
   &:hover {
     background-color: var(--primary-deemphasized-color);
+
+    .separator {
+      border-right: 1px solid var(--text-color);
+    }
   }
 }
 
-.title {
-  font-size: 16px;
+.icon {
+  margin-top: 2px;
 }
 
-.text {
-  font-weight: 400;
+.separator {
+  border-right: 1px solid var(--border-color);
+}
+
+.notification {
+  width: 100%;
+}
+
+.title_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 15px;
+  white-space: nowrap;
 }
 
 .created_date {
   font-weight: 400;
   color: var(--secondary-text-on-bg-color);
-  margin-top: 4px;
+}
+
+.text {
+  font-weight: 400;
 }
