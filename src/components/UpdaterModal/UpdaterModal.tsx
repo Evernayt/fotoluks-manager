@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useEffect, useState } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import { version as currentAppVersion } from '../../../release/app/package.json';
+import packageInfo from '../../../release/app/package.json';
 import styles from './UpdaterModal.module.scss';
 
 const UpdaterModal = () => {
@@ -30,7 +30,7 @@ const UpdaterModal = () => {
   const updateCheck = () => {
     window.electron.ipcRenderer.sendMessage('check-update-pending', []);
     window.electron.ipcRenderer.on('check-update-success', (event: any) => {
-      if (event && event.version !== currentAppVersion) {
+      if (event && event.version !== packageInfo.version) {
         dispatch(appSlice.actions.setCheckUpdate({ success: true }));
         setVersion(event.version);
       } else {
