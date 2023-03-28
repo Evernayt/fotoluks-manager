@@ -1,4 +1,5 @@
 import { IAssortment } from './IAssortment';
+import { IGtd } from './IGtd';
 
 export interface IPosition {
   id?: string;
@@ -6,4 +7,5 @@ export interface IPosition {
   assortment: IAssortment;
   price?: number;
   reason?: string;
+  gtd?: IGtd;
 }

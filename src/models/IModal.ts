@@ -77,3 +77,8 @@ export interface IEndingGoodsEditProductModal extends IModal {
   productId: string;
   type: string;
 }
+
+export interface IUpdatePriceModal extends IModal {
+  id: string;
+  name: string;
+}

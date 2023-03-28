@@ -8,6 +8,7 @@ import MoveSlice from './reducers/MoveSlice';
 import MoyskladSlice from './reducers/MoyskladSlice';
 import OrderSlice from './reducers/OrderSlice';
 import TaskSlice from './reducers/TaskSlice';
+import UpdatePriceSlice from './reducers/UpdatePriceSlice';
 
 const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ const store = configureStore({
     moysklad: MoyskladSlice,
     move: MoveSlice,
     endingGoods: EndingGoodsSlice,
+    updatePrice: UpdatePriceSlice,
     task: TaskSlice,
   },
 });

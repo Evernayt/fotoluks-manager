@@ -2,6 +2,7 @@ import { ISupplier } from './ISupplier';
 import { IBarcode } from './IBarcode';
 import { IMeta } from './IMeta';
 import { IPrice } from './IPrice';
+import { ISalePrice } from './ISalePrice';
 
 export interface IProduct {
   id: string;
@@ -15,4 +16,5 @@ export interface IProduct {
   minimumBalance?: number;
   supplier?: ISupplier;
   description?: string;
+  salePrices?: ISalePrice[];
 }

@@ -26,6 +26,10 @@ import { GetStocksDto } from './dto/get-stocks.dto';
 import { IStock } from 'models/api/moysklad/IStock';
 import { IVariant } from 'models/api/moysklad/IVariant';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { GetSuppliesDto } from './dto/get-supplies.dto';
+import { ISupply } from 'models/api/moysklad/ISupply';
+import { GetSupplyPositionsDto } from './dto/get-supply-positions.dto';
+import { EditSupplyDto } from './dto/edit-supply.dto';
 
 export default class MoyskladAPI {
   // Loss
@@ -183,6 +187,13 @@ export default class MoyskladAPI {
     return data;
   }
 
+  static async updateProducts(
+    products: UpdateProductDto[]
+  ): Promise<IProduct[]> {
+    const { data } = await $authHost.put('moysklad/product/multiple', products);
+    return data;
+  }
+
   // Variant
   static async getVariant(id: string): Promise<IVariant> {
     const { data } = await $authHost.get(`moysklad/variant/${id}`);
@@ -205,6 +216,34 @@ export default class MoyskladAPI {
       params: getStocksDto,
       signal,
     });
+    return data;
+  }
+
+  // Supply
+  static async getSupplies(
+    getSuppliesDto: GetSuppliesDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<ISupply>> {
+    const { data } = await $authHost.get('moysklad/supply', {
+      params: getSuppliesDto,
+      signal,
+    });
+    return data;
+  }
+
+  static async getSupplyPositions(
+    getSupplyPositionsDto: GetSupplyPositionsDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<IPosition>> {
+    const { data } = await $authHost.get('moysklad/supply/positions', {
+      params: getSupplyPositionsDto,
+      signal,
+    });
+    return data;
+  }
+
+  static async updateSupply(editSupplyDto: EditSupplyDto): Promise<ISupply> {
+    const { data } = await $authHost.put('moysklad/supply', editSupplyDto);
     return data;
   }
 }

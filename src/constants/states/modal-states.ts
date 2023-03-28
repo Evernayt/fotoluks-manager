@@ -1,4 +1,7 @@
-import { IEndingGoodsEditProductModal } from './../../models/IModal';
+import {
+  IEndingGoodsEditProductModal,
+  IUpdatePriceModal,
+} from './../../models/IModal';
 import { Modes } from 'constants/app';
 import {
   IEditCategoryModal,
@@ -108,3 +111,9 @@ export const INITIAL_ENDING_GOODS_EDIT_PRODUCT_MODAL: IEndingGoodsEditProductMod
     productId: '',
     type: '',
   };
+
+export const INITIAL_UPDATE_PRICE_MODAL: IUpdatePriceModal = {
+  ...INITIAL_MODAL,
+  id: '',
+  name: '',
+};

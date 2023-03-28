@@ -1,11 +1,15 @@
-import { IconMove, IconShoppingCart } from 'icons';
-import { useAppDispatch } from 'hooks/redux';
+import { IconCurrencyRubel, IconMove, IconShoppingCart } from 'icons';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Sidemenu } from 'components';
 import { useMemo } from 'react';
 import { ISidemenuItem } from 'components/Sidemenu/Sidemenu.types';
 import { moyskladSlice } from 'store/reducers/MoyskladSlice';
 
 const MoyskladSidemenu = () => {
+  const activeSidemenuIndex = useAppSelector(
+    (state) => state.moysklad.activeSidemenuIndex
+  );
+
   const dispatch = useAppDispatch();
 
   const items = useMemo<ISidemenuItem[]>(
@@ -20,18 +24,23 @@ const MoyskladSidemenu = () => {
         Icon: IconShoppingCart,
         name: 'Заканчивающиеся',
       },
+      {
+        id: 3,
+        Icon: IconCurrencyRubel,
+        name: 'Обновить цены',
+      },
     ],
     []
   );
 
-  const changeHandler = (item: ISidemenuItem) => {
-    dispatch(moyskladSlice.actions.setActiveTableId(item.id));
+  const changeHandler = (_item: ISidemenuItem, index: number) => {
+    dispatch(moyskladSlice.actions.setActiveSidemenuIndex(index));
   };
 
   return (
     <Sidemenu
       items={items}
-      defaultActiveItem={items[0]}
+      defaultActiveItem={items[activeSidemenuIndex]}
       onChange={changeHandler}
     />
   );

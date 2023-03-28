@@ -7,13 +7,20 @@ import {
   EndingGoodsProductModal,
   EndingGoodsEditProductModal,
   EndingGoodsClearOrderedModal,
+  UpdatePriceModal,
 } from './Modals';
 import styles from './MoyskladPage.module.scss';
 import MoyskladSidemenu from './Sidemenu/MoyskladSidemenu';
-import { MoyskladMovesTable, MoyskladEndingGoodsTable } from './Tables';
+import {
+  MoyskladMovesTable,
+  MoyskladEndingGoodsTable,
+  MoyskladUpdatePrices,
+} from './Tables';
 
 const MoyskladPage = () => {
-  const activeTableId = useAppSelector((state) => state.moysklad.activeTableId);
+  const activeSidemenuIndex = useAppSelector(
+    (state) => state.moysklad.activeSidemenuIndex
+  );
 
   const dispatch = useAppDispatch();
 
@@ -26,11 +33,13 @@ const MoyskladPage = () => {
   }, []);
 
   const renderTable = () => {
-    switch (activeTableId) {
-      case 1:
+    switch (activeSidemenuIndex) {
+      case 0:
         return <MoyskladMovesTable />;
-      case 2:
+      case 1:
         return <MoyskladEndingGoodsTable />;
+      case 2:
+        return <MoyskladUpdatePrices />;
       default:
         return null;
     }
@@ -41,6 +50,7 @@ const MoyskladPage = () => {
       <EndingGoodsProductModal />
       <EndingGoodsEditProductModal />
       <EndingGoodsClearOrderedModal />
+      <UpdatePriceModal />
       <Navmenu />
       <div className={styles.section}>
         <MoyskladSidemenu />
