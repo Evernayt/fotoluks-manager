@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { ISupply } from 'models/api/moysklad/ISupply';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Cell, Row } from 'react-table';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { moyskladSlice } from 'store/reducers/MoyskladSlice';
@@ -20,7 +19,6 @@ const MoyskladUpdatePrices = () => {
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const columns = useMemo<any>(
     () => [
@@ -43,6 +41,7 @@ const MoyskladUpdatePrices = () => {
       {
         Header: 'Сумма',
         accessor: 'sum',
+        Cell: ({ value }: Cell<ISupply>) => (value * 0.01).toFixed(2),
       },
       {
         Header: 'Описание',
