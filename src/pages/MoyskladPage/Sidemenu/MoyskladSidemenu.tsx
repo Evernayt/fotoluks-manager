@@ -1,4 +1,4 @@
-import { IconCurrencyRubel, IconMove, IconShoppingCart } from 'icons';
+import { Icon123, IconCurrencyRubel, IconMove, IconShoppingCart } from 'icons';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Sidemenu } from 'components';
 import { useMemo } from 'react';
@@ -16,16 +16,21 @@ const MoyskladSidemenu = () => {
     () => [
       {
         id: 1,
+        Icon: Icon123,
+        name: 'Остатки',
+      },
+      {
+        id: 2,
         Icon: IconMove,
         name: 'Перемещение',
       },
       {
-        id: 2,
+        id: 3,
         Icon: IconShoppingCart,
         name: 'Заканчивающиеся',
       },
       {
-        id: 3,
+        id: 4,
         Icon: IconCurrencyRubel,
         name: 'Обновить цены',
       },

@@ -10,11 +10,13 @@ import {
   UpdatePriceModal,
 } from './Modals';
 import styles from './MoyskladPage.module.scss';
+import MoyskladSearch from './Search/MoyskladSearch';
 import MoyskladSidemenu from './Sidemenu/MoyskladSidemenu';
 import {
   MoyskladMovesTable,
   MoyskladEndingGoodsTable,
   MoyskladUpdatePrices,
+  MoyskladStocks,
 } from './Tables';
 
 const MoyskladPage = () => {
@@ -35,11 +37,22 @@ const MoyskladPage = () => {
   const renderTable = () => {
     switch (activeSidemenuIndex) {
       case 0:
-        return <MoyskladMovesTable />;
+        return <MoyskladStocks />;
       case 1:
-        return <MoyskladEndingGoodsTable />;
+        return <MoyskladMovesTable />;
       case 2:
+        return <MoyskladEndingGoodsTable />;
+      case 3:
         return <MoyskladUpdatePrices />;
+      default:
+        return null;
+    }
+  };
+
+  const renderSearch = () => {
+    switch (activeSidemenuIndex) {
+      case 0:
+        return <MoyskladSearch />;
       default:
         return null;
     }
@@ -51,7 +64,7 @@ const MoyskladPage = () => {
       <EndingGoodsEditProductModal />
       <EndingGoodsClearOrderedModal />
       <UpdatePriceModal />
-      <Navmenu />
+      <Navmenu searchRender={renderSearch} />
       <div className={styles.section}>
         <MoyskladSidemenu />
         <div className={styles.panel}>{renderTable()}</div>

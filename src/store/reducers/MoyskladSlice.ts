@@ -6,6 +6,7 @@ type MoyskladState = {
   activeStore: IStore | null;
   activeSidemenuIndex: number;
   isLoading: boolean;
+  search: string;
 };
 
 const initialState: MoyskladState = {
@@ -13,6 +14,7 @@ const initialState: MoyskladState = {
   activeStore: null,
   activeSidemenuIndex: 0,
   isLoading: false,
+  search: '',
 };
 
 export const moyskladSlice = createSlice({
@@ -30,6 +32,9 @@ export const moyskladSlice = createSlice({
     },
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
+    },
+    setSearch(state, action: PayloadAction<string>) {
+      state.search = action.payload;
     },
     clearState() {
       return initialState;

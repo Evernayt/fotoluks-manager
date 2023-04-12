@@ -45,6 +45,7 @@ import IconCheck from './IconCheck';
 import IconCircle from './IconCircle';
 import IconNotebook from './IconNotebook';
 import IconCurrencyRubel from './IconCurrencyRubel';
+import Icon123 from './Icon123';
 
 export {
   IconPlus,
@@ -94,4 +95,5 @@ export {
   IconCircle,
   IconNotebook,
   IconCurrencyRubel,
+  Icon123,
 };
