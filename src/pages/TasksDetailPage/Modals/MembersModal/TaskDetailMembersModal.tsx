@@ -164,7 +164,7 @@ const TaskDetailMembersModal = () => {
         />
         <div className={styles.employees_container}>
           <div className={styles.section}>
-            <div className={styles.title}>Участвуют в заказе:</div>
+            <div className={styles.title}>Участвуют в задаче:</div>
             <div className={styles.items_container}>
               <div className={styles.employees}>
                 {search !== ''
@@ -190,7 +190,7 @@ const TaskDetailMembersModal = () => {
           </div>
           <div className={styles.separator} />
           <div className={styles.section}>
-            <div className={styles.title}>Не участвуют в заказе:</div>
+            <div className={styles.title}>Не участвуют в задаче:</div>
             <div className={styles.items_container}>
               <div className={styles.employees}>
                 {search !== ''
