@@ -100,11 +100,15 @@ const TasksDetailComments = () => {
 
     const title = `${employee?.name} — Задача № ${task.id}`;
 
-    NotificationAPI.create({ title, text, employeeIds, appId: 4 }).then(
-      (data) => {
-        socketio.sendNotification(data);
-      }
-    );
+    NotificationAPI.create({
+      title,
+      text,
+      employeeIds,
+      appId: 4,
+      notificationCategoryId: 2,
+    }).then((data) => {
+      socketio.sendNotification(data);
+    });
   };
 
   return (

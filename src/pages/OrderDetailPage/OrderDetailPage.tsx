@@ -127,11 +127,15 @@ const OrderDetailPage = () => {
       const title = 'Добавлен в участники';
       const text = `${employee.name} добавил вас в участники заказа № ${order.id}`;
 
-      NotificationAPI.create({ title, text, employeeIds, appId: 1 }).then(
-        (data) => {
-          socketio.sendNotification(data);
-        }
-      );
+      NotificationAPI.create({
+        title,
+        text,
+        employeeIds,
+        appId: 1,
+        notificationCategoryId: 1,
+      }).then((data) => {
+        socketio.sendNotification(data);
+      });
     }
 
     if (orderMembersForDelete.length > 0) {
@@ -143,6 +147,7 @@ const OrderDetailPage = () => {
         text,
         employeeIds: orderMembersForDelete,
         appId: 1,
+        notificationCategoryId: 1,
       }).then((data) => {
         socketio.sendNotification(data);
       });
@@ -166,11 +171,15 @@ const OrderDetailPage = () => {
         DEF_DATE_FORMAT
       )} на ${moment(orderClone.deadline).format(DEF_DATE_FORMAT)}`;
 
-      NotificationAPI.create({ title, text, employeeIds, appId: 1 }).then(
-        (data) => {
-          socketio.sendNotification(data);
-        }
-      );
+      NotificationAPI.create({
+        title,
+        text,
+        employeeIds,
+        appId: 1,
+        notificationCategoryId: 5,
+      }).then((data) => {
+        socketio.sendNotification(data);
+      });
     }
   };
 

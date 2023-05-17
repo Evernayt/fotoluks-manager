@@ -57,11 +57,15 @@ const OrderShopModal = () => {
     const title = 'Заказ перемещен';
     const text = `${employee?.name} переместил заказ № ${order.id} c филиала «${order.shop?.name}» на «${selectedShop.name}»`;
 
-    NotificationAPI.create({ title, text, employeeIds, appId: 1 }).then(
-      (data) => {
-        socketio.sendNotification(data);
-      }
-    );
+    NotificationAPI.create({
+      title,
+      text,
+      employeeIds,
+      appId: 1,
+      notificationCategoryId: 5,
+    }).then((data) => {
+      socketio.sendNotification(data);
+    });
   };
 
   const close = () => {
