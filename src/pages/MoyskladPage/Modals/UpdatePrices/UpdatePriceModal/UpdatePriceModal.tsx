@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { getNewSalePrices } from './UpdatePriceModal.service';
 import styles from './UpdatePriceModal.module.scss';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 
 interface IPositionToUpdate {
   position: IPosition;
@@ -137,37 +138,42 @@ const UpdatePriceModal = () => {
       }
     });
 
-    MoyskladAPI.updateProducts(products).then(() => {
-      if (!variantsToUpdate.length && !markPrices) {
-        setIsLoading(false);
-      }
+    MoyskladAPI.updateProducts(products)
+      .then(() => {
+        if (!variantsToUpdate.length && !markPrices) {
+          setIsLoading(false);
+        }
 
-      const variantProducts: UpdateProductDto[] = [];
-      variantsToUpdate.forEach((variantToUpdate) => {
-        MoyskladAPI.getProduct(variantToUpdate.productId).then((data) => {
-          const salePrices = data.salePrices;
-          if (!salePrices) return;
+        const variantProducts: UpdateProductDto[] = [];
+        variantsToUpdate.forEach((variantToUpdate) => {
+          MoyskladAPI.getProduct(variantToUpdate.productId).then((data) => {
+            const salePrices = data.salePrices;
+            if (!salePrices) return;
 
-          const newSalePrices = getNewSalePrices(
-            salePrices,
-            variantToUpdate.newPrice
-          );
-          if (newSalePrices.salePrices.length === 0) return;
-
-          const product: UpdateProductDto = {
-            ...data,
-            salePrices: newSalePrices.salePrices,
-          };
-          variantProducts.push(product);
-
-          if (variantProducts.length === variantsToUpdate.length) {
-            MoyskladAPI.updateProducts(variantProducts).finally(() =>
-              setIsLoading(false)
+            const newSalePrices = getNewSalePrices(
+              salePrices,
+              variantToUpdate.newPrice
             );
-          }
+            if (newSalePrices.salePrices.length === 0) return;
+
+            const product: UpdateProductDto = {
+              ...data,
+              salePrices: newSalePrices.salePrices,
+            };
+            variantProducts.push(product);
+
+            if (variantProducts.length === variantsToUpdate.length) {
+              MoyskladAPI.updateProducts(variantProducts).finally(() =>
+                setIsLoading(false)
+              );
+            }
+          });
         });
+      })
+      .catch((e) => {
+        showGlobalMessage(e.response.data.message || 'Ошибка');
+        setIsLoading(false);
       });
-    });
 
     if (markPrices) {
       const markedPositions: any[] = [];
