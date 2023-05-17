@@ -3,7 +3,7 @@ import styles from './Checkbox.module.scss';
 
 interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   text: string;
-  containerClassName: string;
+  containerClassName?: string;
 }
 
 const Checkbox: FC<CheckboxProps> = ({
