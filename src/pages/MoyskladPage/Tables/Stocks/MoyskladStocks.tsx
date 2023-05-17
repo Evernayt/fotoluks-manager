@@ -57,22 +57,22 @@ const MoyskladStocks = () => {
         accessor: 'michStock',
       },
     ],
-    [page, limit]
+    []
   );
 
   useEffect(() => {
-    fetchAssortments(0);
+    fetchAssortments();
   }, []);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchAssortments(page);
+      fetchAssortments();
     } else {
       reload();
     }
   }, [debouncedSearchTerm]);
 
-  const fetchAssortments = (offset: number) => {
+  const fetchAssortments = (offset: number = 0) => {
     dispatch(moyskladSlice.actions.setIsLoading(true));
 
     MoyskladAPI.getStores().then((data) => {
@@ -134,7 +134,7 @@ const MoyskladStocks = () => {
 
   const reload = () => {
     setPage(1);
-    fetchAssortments(0);
+    fetchAssortments();
   };
 
   return (
