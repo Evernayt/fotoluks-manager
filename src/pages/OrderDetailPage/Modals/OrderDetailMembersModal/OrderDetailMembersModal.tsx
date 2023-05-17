@@ -121,11 +121,12 @@ const OrderDetailMembersModal = () => {
   const searchHandler = (value: string) => {
     setSearch(value);
 
+    const lowerCaseValue = value.toLowerCase();
     const filteredEmployees = employees.filter((employee) =>
-      employee.name.toLowerCase().includes(value)
+      employee.name.toLowerCase().includes(lowerCaseValue)
     );
     const filteredOrderMembers = order.orderMembers?.filter((orderMember) =>
-      orderMember.employee.name.toLowerCase().includes(value)
+      orderMember.employee.name.toLowerCase().includes(lowerCaseValue)
     );
 
     setFoundEmployees(filteredEmployees);

@@ -124,11 +124,12 @@ const TaskDetailMembersModal = () => {
   const searchHandler = (value: string) => {
     setSearch(value);
 
+    const lowerCaseValue = value.toLowerCase();
     const filteredEmployees = employees.filter((employee) =>
-      employee.name.toLowerCase().includes(value)
+      employee.name.toLowerCase().includes(lowerCaseValue)
     );
     const filteredTaskMembers = task.taskMembers?.filter((taskMember) =>
-      taskMember.employee.name.toLowerCase().includes(value)
+      taskMember.employee.name.toLowerCase().includes(lowerCaseValue)
     );
 
     setFoundEmployees(filteredEmployees);
