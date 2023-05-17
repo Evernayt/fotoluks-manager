@@ -40,7 +40,7 @@ const Textbox: FC<TextboxProps> = memo(
           {...props}
           placeholder=" "
         />
-        <div className={styles.label}>{label}</div>
+        {label && <div className={styles.label}>{label}</div>}
       </div>
     );
   }
