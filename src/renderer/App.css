@@ -137,6 +137,10 @@ img {
   user-select: none;
 }
 
+b {
+  font-weight: 500;
+}
+
 .separator {
   border: 0;
   border-top: 1px solid var(--separator-color);

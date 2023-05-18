@@ -1,6 +1,7 @@
 import { THEMES } from 'constants/app';
 import { IEmployee } from 'models/api/IEmployee';
 import { IShop } from 'models/api/IShop';
+import { IDefectiveGood } from 'models/IDefectiveGood';
 import { ITheme } from 'models/ITheme';
 
 const MAIN_FOLDER_KEY = 'MAIN_FOLDER_KEY';
@@ -12,6 +13,7 @@ const TOKEN_KEY = 'TOKEN_KEY';
 const THEME_KEY = 'THEME_KEY';
 const ORDERED_GOODS_KEY = 'ORDERED_GOODS_KEY';
 const NOT_AVAILABLE_GOODS_KEY = 'NOT_AVAILABLE_GOODS_KEY';
+const DEFECTIVE_GOODS_KEY = 'DEFECTIVE_GOODS_KEY';
 
 const setMainFolder = (folder: string) => {
   localStorage.setItem(MAIN_FOLDER_KEY, folder);
@@ -117,6 +119,17 @@ const removeNotAvailableGoods = () => {
   localStorage.removeItem(NOT_AVAILABLE_GOODS_KEY);
 };
 
+const setDefectiveGoods = (defectiveGoods: IDefectiveGood[]) => {
+  localStorage.setItem(DEFECTIVE_GOODS_KEY, JSON.stringify(defectiveGoods));
+};
+
+const getDefectiveGoods = (): IDefectiveGood[] => {
+  const defectiveGoods = JSON.parse(
+    localStorage.getItem(DEFECTIVE_GOODS_KEY) || '[]'
+  );
+  return defectiveGoods;
+};
+
 export {
   setMainFolder,
   getMainFolder,
@@ -138,4 +151,6 @@ export {
   getNotAvailableGoods,
   removeOrderedGoods,
   removeNotAvailableGoods,
+  setDefectiveGoods,
+  getDefectiveGoods,
 };

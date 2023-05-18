@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import AppSlice from './reducers/AppSlice';
 import ControlPanelSlice from './reducers/ControlPanelSlice';
+import DefectiveGoodsSlice from './reducers/DefectiveGoodsSlice';
 import EmployeeSlice from './reducers/EmployeeSlice';
 import EndingGoodsSlice from './reducers/EndingGoodsSlice';
 import ModalSlice from './reducers/ModalSlice';
@@ -22,6 +23,7 @@ const store = configureStore({
     endingGoods: EndingGoodsSlice,
     updatePrice: UpdatePriceSlice,
     task: TaskSlice,
+    defectiveGoods: DefectiveGoodsSlice,
   },
 });
 

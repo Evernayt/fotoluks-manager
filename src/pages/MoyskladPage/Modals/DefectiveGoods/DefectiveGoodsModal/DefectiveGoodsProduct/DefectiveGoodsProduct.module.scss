@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.last {
+  div, b {
+    color: var(--success-color);
+  }
+}
+
+.name {
+  width: 100%;
+}
+
+.quantity {
+  width: 90px;
+}

@@ -1,3 +1,4 @@
+import { IAgent } from './IAgent';
 import { IMeta } from './IMeta';
 
 export interface ISupply {
@@ -6,6 +7,8 @@ export interface ISupply {
   created: string;
   name: string;
   sum: number;
+  incomingDate?: string;
   incomingNumber: string;
   description: string;
+  agent: IAgent;
 }

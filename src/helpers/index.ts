@@ -7,6 +7,7 @@ import toPercentages from './toPercentages';
 import enterPressHandler from './enterPressHandler';
 import getYears from './getYears';
 import getApps from './getApps';
+import getDateDiffDays from './getDateDiffDays';
 
 export {
   calcPlacement,
@@ -18,4 +19,5 @@ export {
   enterPressHandler,
   getYears,
   getApps,
+  getDateDiffDays,
 };
