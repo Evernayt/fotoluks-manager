@@ -41,6 +41,10 @@ const RESOURCES_PATH = app.isPackaged
   ? path.join(process.resourcesPath, 'assets')
   : path.join(__dirname, '../../assets');
 
+const getAssetPath = (...paths: string[]): string => {
+  return path.join(RESOURCES_PATH, ...paths);
+};
+
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
@@ -58,10 +62,6 @@ const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
   }
-
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -102,6 +102,10 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
+  if (process.platform === 'win32') {
+    app.setAppUserModelId('Fotoluks Manager');
+  }
+
   //mainWindow.webContents.openDevTools();
 };
 
@@ -109,7 +113,7 @@ const showNotification = (title: string, body: string) => {
   const options = {
     title,
     body,
-    icon: path.join(RESOURCES_PATH, '/logo-bird.png'),
+    icon: getAssetPath('icon.ico'),
   };
 
   new Notification(options).show();

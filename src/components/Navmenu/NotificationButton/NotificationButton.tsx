@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
 import { employeeSlice } from 'store/reducers/EmployeeSlice';
 import styles from './NotificationButton.module.scss';
+import { NOTIF_LIMIT } from 'constants/app';
 
 const NotificationButton = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -47,16 +48,14 @@ const NotificationButton = () => {
 
   const fetchNotifications = (page: number) => {
     if (employee) {
-      const limit = 25;
-
       NotificationAPI.getAll({
-        limit,
+        limit: NOTIF_LIMIT,
         page,
         employeeId: employee.id,
       })
         .then((data) => {
           dispatch(employeeSlice.actions.addNotifications(data.rows));
-          const count = Math.ceil(data.count / limit);
+          const count = Math.ceil(data.count / NOTIF_LIMIT);
           setPageCount(count);
         })
         .finally(() => setIsLoading(false));

@@ -119,10 +119,10 @@ const OrderDetailPage = () => {
 
   const notifyMembersEdit = (employee: IEmployee, order: IOrder) => {
     if (orderMembersForCreate.length > 0) {
-      const employeeIds = [];
-      for (let i = 0; i < orderMembersForCreate.length; i++) {
-        employeeIds.push(orderMembersForCreate[i].employee.id);
-      }
+      const employeeIds: number[] = [];
+      orderMembersForCreate.forEach((orderMember) => {
+        employeeIds.push(orderMember.employee.id);
+      });
 
       const title = 'Добавлен в участники';
       const text = `${employee.name} добавил вас в участники заказа № ${order.id}`;
@@ -134,7 +134,7 @@ const OrderDetailPage = () => {
         appId: 1,
         notificationCategoryId: 1,
       }).then((data) => {
-        socketio.sendNotification(data);
+        socketio.sendNotification(data, employeeIds);
       });
     }
 
@@ -149,7 +149,7 @@ const OrderDetailPage = () => {
         appId: 1,
         notificationCategoryId: 1,
       }).then((data) => {
-        socketio.sendNotification(data);
+        socketio.sendNotification(data, orderMembersForDelete);
       });
     }
   };
@@ -158,10 +158,10 @@ const OrderDetailPage = () => {
     if (orderClone.id === 0) return;
     if (!orderClone.orderMembers?.length) return;
 
-    const employeeIds = [];
-    for (let i = 0; i < orderClone.orderMembers.length; i++) {
-      employeeIds.push(orderClone.orderMembers[i].employee.id);
-    }
+    const employeeIds: number[] = [];
+    orderClone.orderMembers.forEach((orderMember) => {
+      employeeIds.push(orderMember.employee.id);
+    });
 
     if (orderClone.deadline !== beforeOrderClone.deadline) {
       const title = 'Изменен срок заказа';
@@ -178,7 +178,7 @@ const OrderDetailPage = () => {
         appId: 1,
         notificationCategoryId: 5,
       }).then((data) => {
-        socketio.sendNotification(data);
+        socketio.sendNotification(data, employeeIds);
       });
     }
   };

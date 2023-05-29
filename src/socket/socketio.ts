@@ -8,6 +8,11 @@ import { appSlice } from 'store/reducers/AppSlice';
 import { employeeSlice } from 'store/reducers/EmployeeSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 
+interface INotificationInfo {
+  notification: INotification;
+  employeeIds: number[];
+}
+
 let socket: Socket;
 
 const connect = () => {
@@ -32,14 +37,19 @@ const isConnected = () => {
 };
 
 const subscribeToNotifications = () => {
-  socket.on('getNotification', (notification: INotification) => {
-    window.electron.ipcRenderer.sendMessage('show-notification', [
-      notification.title,
-      notification.text,
-    ]);
+  socket.on('getNotification', (data: INotificationInfo) => {
+    const employee = store.getState().employee.employee;
+    const isNotifForMe = data.employeeIds.some((id) => id === employee?.id);
 
-    store.dispatch(employeeSlice.actions.addNotification(notification));
-    store.dispatch(appSlice.actions.setNoificationsBadge(true));
+    if (isNotifForMe) {
+      window.electron.ipcRenderer.sendMessage('show-notification', [
+        data.notification.title,
+        data.notification.text,
+      ]);
+
+      store.dispatch(employeeSlice.actions.addNotification(data.notification));
+      store.dispatch(appSlice.actions.setNoificationsBadge(true));
+    }
   });
 };
 
@@ -55,9 +65,12 @@ const subscribeToWatchers = () => {
   });
 };
 
-const sendNotification = (notification: INotification) => {
+const sendNotification = (
+  notification: INotification,
+  employeeIds: number[]
+) => {
   if (!isConnected()) return;
-  socket.emit('sendNotification', notification);
+  socket.emit('sendNotification', { notification, employeeIds });
 };
 
 const updateOrder = (order: IOrder) => {

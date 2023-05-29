@@ -49,10 +49,10 @@ const OrderShopModal = () => {
     if (!order) return;
     if (!order.orderMembers?.length) return;
 
-    const employeeIds = [];
-    for (let i = 0; i < order.orderMembers.length; i++) {
-      employeeIds.push(order.orderMembers[i].employee.id);
-    }
+    const employeeIds: number[] = [];
+    order.orderMembers.forEach((orderMember) => {
+      employeeIds.push(orderMember.employee.id);
+    });
 
     const title = 'Заказ перемещен';
     const text = `${employee?.name} переместил заказ № ${order.id} c филиала «${order.shop?.name}» на «${selectedShop.name}»`;
@@ -64,7 +64,7 @@ const OrderShopModal = () => {
       appId: 1,
       notificationCategoryId: 5,
     }).then((data) => {
-      socketio.sendNotification(data);
+      socketio.sendNotification(data, employeeIds);
     });
   };
 

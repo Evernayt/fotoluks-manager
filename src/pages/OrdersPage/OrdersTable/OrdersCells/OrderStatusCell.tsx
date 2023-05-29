@@ -36,10 +36,10 @@ const OrderStatusCell: FC<OrderStatusCellProps> = ({ statuses, cell }) => {
   const notifyStatusChange = (order: IOrder, status: IStatus) => {
     if (!order.orderMembers?.length) return;
 
-    const employeeIds = [];
-    for (let i = 0; i < order.orderMembers.length; i++) {
-      employeeIds.push(order.orderMembers[i].employee.id);
-    }
+    const employeeIds: number[] = [];
+    order.orderMembers.forEach((orderMember) => {
+      employeeIds.push(orderMember.employee.id);
+    });
 
     const updatedOrder = { ...order, status };
     dispatch(orderSlice.actions.updateOrder(updatedOrder));
@@ -55,7 +55,7 @@ const OrderStatusCell: FC<OrderStatusCellProps> = ({ statuses, cell }) => {
       appId: 1,
       notificationCategoryId: 4,
     }).then((data) => {
-      socketio.sendNotification(data);
+      socketio.sendNotification(data, employeeIds);
     });
   };
 

@@ -15,6 +15,7 @@ enum Modes {
 const INPUT_DATE_FORMAT = 'YYYY-MM-DDTHH:mm';
 const DEF_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 const NOT_INDICATED = 'Не указано';
+const NOTIF_LIMIT = 25;
 
 const THEMES: ITheme[] = [
   {
@@ -31,24 +32,28 @@ const THEMES: ITheme[] = [
 
 const APPS = [
   {
+    id: 1,
     value: 'ORDERS',
     description: 'Заказы',
     route: ORDERS_ROUTE,
     Icon: IconOrders,
   },
   {
+    id: 4,
     value: 'TASKS',
     description: 'Задачи',
     route: TASKS_ROUTE,
     Icon: IconNote,
   },
   {
+    id: 3,
     value: 'MOYSKLAD',
     description: 'МойСклад',
     route: MOYSKLAD_ROUTE,
     Icon: IconMoysklad,
   },
   {
+    id: 2,
     value: 'CONTROL_PANEL',
     description: 'Панель управления',
     route: CONTROL_PANEL_ROUTE,
@@ -63,4 +68,5 @@ export {
   THEMES,
   APPS,
   NOT_INDICATED,
+  NOTIF_LIMIT,
 };

@@ -7,6 +7,7 @@ export interface INotification {
   title: string;
   text: string;
   createdAt: string;
+  appId?: number;
   app?: IApp;
   notificationCategory?: INotificationCategory;
 }

@@ -10,7 +10,7 @@ interface NotificationProps {
 
 const Notification: FC<NotificationProps> = ({ notification }) => {
   const Icon =
-    APPS.find((x) => x.value === notification.app?.value)?.Icon || APPS[0].Icon;
+    APPS.find((x) => x.id === notification.appId)?.Icon || APPS[0].Icon;
 
   return (
     <div className={styles.conatiner}>

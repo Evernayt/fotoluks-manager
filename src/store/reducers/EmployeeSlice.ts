@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { NOTIF_LIMIT } from 'constants/app';
 import { IEmployee } from 'models/api/IEmployee';
 import { INotification } from 'models/api/INotification';
 
@@ -27,7 +28,9 @@ export const employeeSlice = createSlice({
     },
     addNotification(state, action: PayloadAction<INotification>) {
       state.notifications.unshift(action.payload);
-      state.notifications.pop();
+      if (state.notifications.length > NOTIF_LIMIT) {
+        state.notifications.pop();
+      }
     },
     clearNotifications(state) {
       state.notifications = [];

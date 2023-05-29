@@ -92,6 +92,9 @@ const TasksDetailComments = () => {
     if (!task.taskMembers?.length) return;
 
     const employeeIds: number[] = [];
+    if (task.creator && task.creator.id !== employee?.id) {
+      employeeIds.push(task.creator.id);
+    }
     task.taskMembers.forEach((taskMember) => {
       if (taskMember.employee.id !== employee?.id) {
         employeeIds.push(taskMember.employee.id);
@@ -107,7 +110,7 @@ const TasksDetailComments = () => {
       appId: 4,
       notificationCategoryId: 2,
     }).then((data) => {
-      socketio.sendNotification(data);
+      socketio.sendNotification(data, employeeIds);
     });
   };
 
