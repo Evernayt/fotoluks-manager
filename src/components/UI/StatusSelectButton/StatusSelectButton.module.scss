@@ -2,6 +2,7 @@
   display: inline-block;
   position: relative;
   font-weight: 500;
+  user-select: none;
 
   input:not(:checked) + .item:hover {
     background-color: var(--hover-card-color);
@@ -25,6 +26,12 @@
 
   &:hover {
     border-color: var(--hover-secondary-color);
+  }
+
+  &:active {
+    .indicator {
+      transform: scale(1.2);
+    }
   }
 }
 
@@ -52,10 +59,12 @@
 .item {
   padding: 8px;
   border-radius: 4px;
-  cursor: pointer;
   white-space: nowrap;
   width: 100%;
-  cursor: default;
+
+  &:active {
+    transform: scale(0.98);
+  }
 }
 
 .indicator {
