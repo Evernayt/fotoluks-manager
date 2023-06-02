@@ -1,6 +1,13 @@
 import DepartmentAPI from 'api/DepartmentAPI/DepartmentAPI';
 import ShopAPI from 'api/ShopAPI/ShopAPI';
-import { Button, Checkbox, Modal, SelectButton, Tooltip } from 'components';
+import {
+  Button,
+  Checkbox,
+  Modal,
+  SelectButton,
+  Textbox,
+  Tooltip,
+} from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { ALL_DEPARTMENTS } from 'constants/states/department-states';
 import { ALL_SHOPS } from 'constants/states/shop-states';
@@ -11,10 +18,14 @@ import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { taskSlice } from 'store/reducers/TaskSlice';
 import styles from './TasksFilterModal.module.scss';
+import { accessCheck } from 'helpers';
 
 const TasksFilterModal = () => {
   const [shops, setShops] = useState<IShop[]>([]);
   const [departments, setDepartments] = useState<IDepartment[]>([]);
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [urgent, setUrgent] = useState<boolean>(false);
 
   const tasksFilterModal = useAppSelector(
     (state) => state.modal.tasksFilterModal
@@ -70,6 +81,9 @@ const TasksFilterModal = () => {
         creatorId: iTaskCreator ? employee?.id : undefined,
         employeeId: iTaskMember ? employee?.id : undefined,
         archive,
+        startDate,
+        endDate,
+        urgent,
       })
     );
     close();
@@ -81,6 +95,9 @@ const TasksFilterModal = () => {
     dispatch(taskSlice.actions.setITaskCreator(false));
     dispatch(taskSlice.actions.setITaskMember(false));
     dispatch(taskSlice.actions.setArchive(false));
+    setStartDate('');
+    setEndDate('');
+    setUrgent(false);
   };
 
   return (
@@ -114,19 +131,38 @@ const TasksFilterModal = () => {
             />
           </div>
         </Tooltip>
-        <Checkbox
-          text="Я участвую в задаче"
-          checked={iTaskMember}
-          onChange={() =>
-            dispatch(taskSlice.actions.setITaskMember(!iTaskMember))
-          }
+        <Textbox
+          label="От"
+          type="datetime-local"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
         />
+        <Textbox
+          label="До"
+          type="datetime-local"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
+        {accessCheck(employee, 1) && (
+          <Checkbox
+            text="Я участвую в задаче"
+            checked={iTaskMember}
+            onChange={() =>
+              dispatch(taskSlice.actions.setITaskMember(!iTaskMember))
+            }
+          />
+        )}
         <Checkbox
           text="Я создатель задачи"
           checked={iTaskCreator}
           onChange={() =>
             dispatch(taskSlice.actions.setITaskCreator(!iTaskCreator))
           }
+        />
+        <Checkbox
+          text="Срочная задача"
+          checked={urgent}
+          onChange={() => setUrgent((prevState) => !prevState)}
         />
         <Checkbox
           text="В архиве"

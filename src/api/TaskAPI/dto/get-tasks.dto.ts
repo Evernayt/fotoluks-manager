@@ -8,4 +8,7 @@ export class GetTasksDto {
   readonly shopIds?: number[];
   readonly departmentIds?: number[];
   readonly search?: string;
+  readonly startDate?: string;
+  readonly endDate?: string;
+  readonly urgent?: boolean;
 }
