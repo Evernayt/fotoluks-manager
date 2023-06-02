@@ -21,7 +21,7 @@ html[data-theme='LIGHT'] {
   --primary-icon-color: #050505;
   --primary-checked-icon-color: #514a26;
   --secondary-icon-color: #050505;
-  --secondary-checked-icon-color: #ffffff;
+  --secondary-checked-icon-color: #050505;
   --secondary-dark-icon-color: #ffffff;
   --link-icon-color: #6b6a65;
   --link-checked-icon-color: #ffd60a;

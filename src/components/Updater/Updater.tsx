@@ -28,7 +28,12 @@ const Updater = () => {
         <Tooltip label="Доступна новая версия" placement="left">
           <div>
             <IconButton
-              icon={<IconCloudDownload className="secondary-icon" size={20} />}
+              icon={
+                <IconCloudDownload
+                  className="secondary-checked-icon"
+                  size={20}
+                />
+              }
               variant={IconButtonVariants.primary}
               circle
               onClick={openUpdaterModal}
@@ -43,7 +48,9 @@ const Updater = () => {
             <IconButton
               icon={
                 <IconCloudDownload
-                  className={['secondary-icon', styles.animate].join(' ')}
+                  className={['secondary-checked-icon', styles.animate].join(
+                    ' '
+                  )}
                   size={20}
                 />
               }
@@ -58,7 +65,12 @@ const Updater = () => {
         <Tooltip label="Обновление скачано" placement="left">
           <div>
             <IconButton
-              icon={<IconArrowBarToDown className="secondary-icon" size={20} />}
+              icon={
+                <IconArrowBarToDown
+                  className="secondary-checked-icon"
+                  size={20}
+                />
+              }
               variant={IconButtonVariants.primary}
               circle
               onClick={openUpdaterModal}
