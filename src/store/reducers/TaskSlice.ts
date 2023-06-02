@@ -67,6 +67,9 @@ export const taskSlice = createSlice({
     setTask(state, action: PayloadAction<ITask>) {
       state.task = action.payload;
     },
+    setName(state, action: PayloadAction<string>) {
+      state.task.name = action.payload;
+    },
     setTitle(state, action: PayloadAction<string>) {
       state.task.title = action.payload;
     },

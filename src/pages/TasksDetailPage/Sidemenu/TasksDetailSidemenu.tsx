@@ -5,8 +5,10 @@ import {
   AvatarList,
   Button,
   Checkbox,
+  ElectronLinkify,
   SelectButton,
   Textarea,
+  Textbox,
   Tooltip,
 } from 'components';
 import { IAvatarListItem } from 'components/UI/AvatarList/AvatarList.types';
@@ -34,9 +36,11 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
 }) => {
   const [shops, setShops] = useState<IShop[]>([]);
   const [departments, setDepartments] = useState<IDepartment[]>([]);
+  const [completionNote, setCompletionNote] = useState<string>('');
 
   const task = useAppSelector((state) => state.task.task);
   const beforeTask = useAppSelector((state) => state.task.beforeTask);
+  const name = useAppSelector((state) => state.task.task.name);
   const title = useAppSelector((state) => state.task.task.title);
   const description = useAppSelector((state) => state.task.task.description);
   const shop = useAppSelector((state) => state.task.task.shop);
@@ -90,6 +94,7 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
       id: task.id,
       completed: true,
       completedDate: new Date().toUTCString(),
+      completionNote,
       executorId: employee?.id,
     }).then((data) => {
       dispatch(taskSlice.actions.setTask(data));
@@ -106,23 +111,37 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
     dispatch(modalSlice.actions.openModal({ modal: 'taskMembersModal' }));
   };
 
+  const taskCompletedRender = () => {
+    return task.completed ? (
+      <TasksDetailExecutor />
+    ) : (
+      <>
+        <div className={styles.inputs}>
+          <Button
+            variant={ButtonVariants.primaryDeemphasized}
+            onClick={completeTask}
+          >
+            Завершить
+          </Button>
+          <Textbox
+            label="Примечание (необязательно)"
+            value={completionNote}
+            onChange={(e) => setCompletionNote(e.target.value)}
+          />
+        </div>
+        <div className="separator" />
+      </>
+    );
+  };
+
   const editingRender = () => {
     return (
       <div className={styles.inputs}>
-        {isTaskCreated && (
-          <>
-            {task.completed ? (
-              <TasksDetailExecutor />
-            ) : (
-              <Button
-                variant={ButtonVariants.primaryDeemphasized}
-                onClick={completeTask}
-              >
-                Завершить
-              </Button>
-            )}
-          </>
-        )}
+        <Textbox
+          label="Заголовок"
+          value={name}
+          onChange={(e) => dispatch(taskSlice.actions.setName(e.target.value))}
+        />
         <Textarea
           label="Что не так"
           style={{ resize: 'vertical' }}
@@ -168,16 +187,6 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
   const readingRender = () => {
     return (
       <>
-        {task.completed ? (
-          <TasksDetailExecutor />
-        ) : (
-          <Button
-            variant={ButtonVariants.primaryDeemphasized}
-            onClick={completeTask}
-          >
-            Завершить
-          </Button>
-        )}
         <div className={styles.items}>
           {task.urgent && <div className={styles.urgent}>Срочно</div>}
           <div className={styles.item}>
@@ -194,13 +203,19 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
             >{`Создатель: ${task.creator?.name}`}</div>
           </div>
         </div>
+        {name && (
+          <div>
+            <div className={styles.title}>Заголовок</div>
+            <ElectronLinkify>{name}</ElectronLinkify>
+          </div>
+        )}
         <div>
           <div className={styles.title}>Что не так</div>
-          <div>{title}</div>
+          <ElectronLinkify>{title}</ElectronLinkify>
         </div>
         <div>
           <div className={styles.title}>Что сделать</div>
-          <div>{description}</div>
+          <ElectronLinkify>{description}</ElectronLinkify>
         </div>
         {taskMembers.length > 0 && (
           <div>
@@ -215,10 +230,15 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
   return (
     <div className={styles.container}>
       <div
-        className={styles.info}
+        className={styles.panel}
         style={{ height: iCreator ? 'calc(100% - 72px)' : '100%' }}
       >
-        {iCreator ? editingRender() : readingRender()}
+        <div>
+          {isTaskCreated && taskCompletedRender()}
+          <div className={styles.info}>
+            {iCreator ? editingRender() : readingRender()}
+          </div>
+        </div>
       </div>
 
       {iCreator && (

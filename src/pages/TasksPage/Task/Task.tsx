@@ -1,4 +1,3 @@
-import { AvatarList } from 'components';
 import { IAvatarListItem } from 'components/UI/AvatarList/AvatarList.types';
 import { DEF_DATE_FORMAT } from 'constants/app';
 import { defaultAvatar } from 'constants/images';
@@ -21,18 +20,6 @@ interface TaskProps {
 }
 
 const Task: FC<TaskProps> = ({ task }) => {
-  const taskMembers = useMemo(() => {
-    const employees: IAvatarListItem[] = [];
-    task.taskMembers?.forEach((taskMember) => {
-      employees.push({
-        id: taskMember.employee.id,
-        name: taskMember.employee.name,
-        avatar: taskMember.employee.avatar || defaultAvatar,
-      });
-    });
-    return employees;
-  }, [task.taskMembers]);
-
   const navigate = useNavigate();
 
   const created = moment(task.createdAt).format(DEF_DATE_FORMAT);
@@ -58,7 +45,7 @@ const Task: FC<TaskProps> = ({ task }) => {
             task.completed && styles.title_completed,
           ].join(' ')}
         >
-          {`${task.id}. ${task.title}`}
+          {`${task.id}. ${task.name || task.title}`}
         </div>
 
         {!task.completed && (
@@ -66,7 +53,6 @@ const Task: FC<TaskProps> = ({ task }) => {
         )}
       </div>
       <div>
-        <AvatarList items={taskMembers} />
         <div className={styles.info}>
           {task.urgent && <div className={styles.urgent}>Срочно</div>}
           <div className={styles.item}>

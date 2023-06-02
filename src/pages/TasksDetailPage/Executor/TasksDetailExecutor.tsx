@@ -1,5 +1,5 @@
 import TaskAPI from 'api/TaskAPI/TaskAPI';
-import { Button } from 'components';
+import { Button, ElectronLinkify } from 'components';
 import { DEF_DATE_FORMAT } from 'constants/app';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IconCheckFilled } from 'icons';
@@ -20,6 +20,7 @@ const TasksDetailExecutor = () => {
       id: task.id,
       completed: false,
       completedDate: null,
+      completionNote: '',
       executorId: null,
     }).then((data) => {
       dispatch(taskSlice.actions.setTask(data));
@@ -36,6 +37,9 @@ const TasksDetailExecutor = () => {
       </div>
       <div>{`Исполнитель: ${task.executor?.name}`}</div>
       <div>{`Дата и время: ${date}`}</div>
+      {task.completionNote && (
+        <ElectronLinkify>{`Примечание: ${task.completionNote}`}</ElectronLinkify>
+      )}
       {(employee?.id === task.executor?.id ||
         employee?.id === task.creator?.id) && (
         <Button className={styles.cancel_btn} onClick={cancelTask}>

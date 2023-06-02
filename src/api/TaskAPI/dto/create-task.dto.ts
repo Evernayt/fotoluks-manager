@@ -1,4 +1,5 @@
 export class CreateTaskDto {
+  readonly name?: string;
   readonly title?: string;
   readonly description?: string;
   readonly urgent?: boolean;

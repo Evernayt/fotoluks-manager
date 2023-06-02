@@ -9,12 +9,14 @@ import { ITaskMessage } from './ITaskMessage';
 
 export interface ITask {
   id: number;
+  name: string;
   title: string;
   description: string;
   urgent: boolean;
   createdAt: string;
   completed: boolean;
   completedDate: string;
+  completionNote: string;
   archive: boolean;
   shop?: IShop;
   department?: IDepartment;

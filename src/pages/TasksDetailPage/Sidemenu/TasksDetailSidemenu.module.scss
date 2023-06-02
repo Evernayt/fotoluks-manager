@@ -2,17 +2,20 @@
   height: calc(100vh - 104px);
 }
 
-.info {
+.panel {
   background-color: var(--card-background);
   min-width: 290px;
   max-width: 290px;
   height: calc(100% - 72px);
   box-shadow: 1px 0 8px var(--shadow-1);
   padding: 24px 16px;
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
