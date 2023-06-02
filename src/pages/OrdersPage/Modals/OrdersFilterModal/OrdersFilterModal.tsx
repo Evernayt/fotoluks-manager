@@ -126,19 +126,6 @@ const OrdersFilterModal = () => {
   useEffect(() => {
     if (ordersFilterModal.isShowing) {
       fetchShops();
-
-      if (startDate === '') {
-        const start = moment()
-          .subtract(1, 'month')
-          .startOf('month')
-          .format(INPUT_DATE_FORMAT);
-        dispatch(orderSlice.actions.setStartDate(start));
-      }
-
-      if (endDate === '') {
-        const end = moment().format(INPUT_DATE_FORMAT);
-        dispatch(orderSlice.actions.setEndDate(end));
-      }
     }
   }, [ordersFilterModal.isShowing]);
 
@@ -178,16 +165,8 @@ const OrdersFilterModal = () => {
 
   const reset = () => {
     dispatch(orderSlice.actions.setSelectedShop(ALL_SHOPS));
-
-    const start = moment()
-      .subtract(1, 'month')
-      .startOf('month')
-      .format(INPUT_DATE_FORMAT);
-    dispatch(orderSlice.actions.setStartDate(start));
-
-    const end = moment().format(INPUT_DATE_FORMAT);
-    dispatch(orderSlice.actions.setEndDate(end));
-
+    dispatch(orderSlice.actions.setStartDate(''));
+    dispatch(orderSlice.actions.setEndDate(''));
     dispatch(orderSlice.actions.setIOrderMember(false));
   };
 
