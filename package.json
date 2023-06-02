@@ -83,6 +83,7 @@
     "electron-updater": "^5.3.0",
     "framer-motion": "^6.3.6",
     "jwt-decode": "^3.1.2",
+    "linkify-react": "^4.1.1",
     "moment": "^2.29.3",
     "node-masker": "^1.0.9",
     "react": "^18.2.0",

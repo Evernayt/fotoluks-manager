@@ -31,6 +31,7 @@ import UpdaterModal from './UpdaterModal/UpdaterModal';
 import Progress from './UI/Progress/Progress';
 import CopiedItem from './UI/CopiedItem/CopiedItem';
 import AvatarList from './UI/AvatarList/AvatarList';
+import ElectronLinkify from './UI/ElectronLinkify/ElectronLinkify';
 
 export {
   Navmenu,
@@ -66,4 +67,5 @@ export {
   Progress,
   CopiedItem,
   AvatarList,
+  ElectronLinkify,
 };

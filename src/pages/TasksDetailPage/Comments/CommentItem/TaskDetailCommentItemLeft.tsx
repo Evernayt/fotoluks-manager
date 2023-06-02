@@ -4,6 +4,7 @@ import { ITaskMessage } from 'models/api/ITaskMessage';
 import moment from 'moment';
 import { FC } from 'react';
 import styles from './TaskDetailCommentItem.module.scss';
+import { ElectronLinkify } from 'components';
 
 interface TaskDetailCommentItemLeftProps {
   taskMessage: ITaskMessage;
@@ -24,7 +25,7 @@ const TaskDetailCommentItemLeft: FC<TaskDetailCommentItemLeftProps> = ({
       <div>
         <div className={styles.name}>{taskMessage.employee.name}</div>
         <div className={styles.left_section}>
-          <div>{taskMessage.message}</div>
+          <ElectronLinkify>{taskMessage.message}</ElectronLinkify>
           <div className={styles.date}>{created}</div>
         </div>
       </div>
