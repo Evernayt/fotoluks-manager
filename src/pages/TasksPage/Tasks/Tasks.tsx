@@ -9,6 +9,7 @@ import { taskSlice } from 'store/reducers/TaskSlice';
 import Task from '../Task/Task';
 import TasksToolbar from '../Toolbar/TasksToolbar';
 import styles from './Tasks.module.scss';
+import { accessCheck } from 'helpers';
 
 const Tasks = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -22,6 +23,7 @@ const Tasks = () => {
   const forceUpdate = useAppSelector((state) => state.task.forceUpdate);
   const activeStatus = useAppSelector((state) => state.task.activeStatus);
   const activeShop = useAppSelector((state) => state.app.activeShop);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
@@ -55,7 +57,13 @@ const Tasks = () => {
   const fetchTasks = (page: number, filter?: ITasksFilter) => {
     dispatch(taskSlice.actions.setIsLoading(true));
 
-    TaskAPI.getAll({ ...filter, limit, page, status: activeStatus })
+    TaskAPI.getAll({
+      employeeId: accessCheck(employee, 1) ? undefined : employee?.id,
+      ...filter,
+      limit,
+      page,
+      status: activeStatus,
+    })
       .then((data) => {
         dispatch(taskSlice.actions.setTasks(data.rows));
         const count = Math.ceil(data.count / limit);
