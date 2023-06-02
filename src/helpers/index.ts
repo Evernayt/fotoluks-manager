@@ -8,6 +8,7 @@ import enterPressHandler from './enterPressHandler';
 import getYears from './getYears';
 import getApps from './getApps';
 import getDateDiffDays from './getDateDiffDays';
+import accessCheck from './accessCheck';
 
 export {
   calcPlacement,
@@ -20,4 +21,5 @@ export {
   getYears,
   getApps,
   getDateDiffDays,
+  accessCheck,
 };
