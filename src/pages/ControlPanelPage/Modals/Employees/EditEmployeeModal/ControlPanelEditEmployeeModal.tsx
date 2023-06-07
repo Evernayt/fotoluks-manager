@@ -4,7 +4,9 @@ import {
   Button,
   DropdownButton,
   IconButton,
+  Loader,
   Modal,
+  SelectButton,
   Textbox,
 } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
@@ -30,6 +32,10 @@ import { IDropdownButtonOption } from 'components/UI/DropdownButton/DropdownButt
 import AppAPI from 'api/AppAPI/AppAPI';
 import { useModal } from 'hooks';
 import DepartmentAPI from 'api/DepartmentAPI/DepartmentAPI';
+import { IRole } from 'models/api/IRole';
+import RoleAPI from 'api/RoleAPI/RoleAPI';
+import { INITIAL_ROLE } from 'constants/states/role-states';
+import { CreateEmployeeDto } from 'api/EmployeeAPI/dto/create-employee.dto';
 
 const ControlPanelEditEmployeeModal = () => {
   const [name, setName] = useState<string>('');
@@ -43,6 +49,9 @@ const ControlPanelEditEmployeeModal = () => {
   const [departmentOptions, setDepartmentsOptions] = useState<
     IDropdownButtonOption[]
   >([]);
+  const [roles, setRoles] = useState<IRole[]>([]);
+  const [selectedRole, setSelectedRole] = useState<IRole>(INITIAL_ROLE);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const editEmployeeModal = useAppSelector(
     (state) => state.modal.controlPanelEditEmployeeModal
@@ -55,29 +64,37 @@ const ControlPanelEditEmployeeModal = () => {
   useEffect(() => {
     if (editEmployeeModal.isShowing) {
       if (editEmployeeModal.mode === Modes.EDIT_MODE) {
-        fetchEmployee();
+        Promise.all([fetchEmployee(), fetchRoles()]).finally(() =>
+          setIsLoading(false)
+        );
       } else {
+        fetchRoles().finally(() => setIsLoading(false));
         createAppOptions([]);
         createDepartmentOptions([]);
       }
     }
   }, [editEmployeeModal.isShowing]);
 
-  const fetchEmployee = () => {
-    EmployeeAPI.getOne(editEmployeeModal.employeeId).then((data) => {
-      setName(data.name);
-      setLogin(data.login);
-      setAvatar(data.avatar || '');
-      setEmployee(data);
-      if (data.apps) {
-        setApps(data.apps);
-        createAppOptions(data.apps);
-      }
-      if (data.departments) {
-        setDepartments(data.departments);
-        createDepartmentOptions(data.departments);
-      }
-    });
+  const fetchEmployee = async () => {
+    const data = await EmployeeAPI.getOne(editEmployeeModal.employeeId);
+    setName(data.name);
+    setLogin(data.login);
+    setAvatar(data.avatar || '');
+    setEmployee(data);
+    if (data.role) setSelectedRole(data.role);
+    if (data.apps) {
+      setApps(data.apps);
+      createAppOptions(data.apps);
+    }
+    if (data.departments) {
+      setDepartments(data.departments);
+      createDepartmentOptions(data.departments);
+    }
+  };
+
+  const fetchRoles = async () => {
+    const data = await RoleAPI.getAll();
+    setRoles(data.rows);
   };
 
   const createAppOptions = (apps: IApp[]) => {
@@ -161,6 +178,9 @@ const ControlPanelEditEmployeeModal = () => {
     setDepartments([]);
     setAppOptions([]);
     setDepartmentsOptions([]);
+    setRoles([]);
+    setSelectedRole(INITIAL_ROLE);
+    setIsLoading(true);
   };
 
   const updateEmployee = () => {
@@ -173,6 +193,7 @@ const ControlPanelEditEmployeeModal = () => {
       id: employee?.id,
       name,
       login,
+      roleId: selectedRole.id,
     };
     EmployeeAPI.update(updatedEmployee)
       .then((data) => {
@@ -196,7 +217,13 @@ const ControlPanelEditEmployeeModal = () => {
     apps.forEach((app) => appIds.push(app.id));
     departments.forEach((department) => departmentIds.push(department.id));
 
-    AuthAPI.registration({ name, login, password }).then((data) => {
+    const createdEmployee: CreateEmployeeDto = {
+      name,
+      login,
+      password,
+      roleId: selectedRole.id,
+    };
+    AuthAPI.registration(createdEmployee).then((data) => {
       if (appIds.length) {
         EmployeeAPI.addApp({ appIds, employeeId: data.id });
       }
@@ -244,101 +271,120 @@ const ControlPanelEditEmployeeModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        {editEmployeeModal.mode === Modes.EDIT_MODE && (
-          <div className={styles.avatar_container}>
-            <Avatar
-              image={avatar ? avatar : defaultAvatar}
-              size={120}
-              onAvatarSelect={editAvatar}
-            />
-          </div>
-        )}
-        <div className={styles.controls}>
-          <Textbox
-            label="Имя"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Textbox
-            label="Логин"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-          />
-        </div>
-        {editEmployeeModal.mode === Modes.ADD_MODE && (
-          <Textbox
-            label="Пароль"
-            value={password}
-            isPassword={true}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        )}
-        <Accordion
-          label="Доступные приложения"
-          isShowing={appsAccordion.isShowing}
-          toggle={appsAccordion.toggle}
-        >
-          <div className={styles.options_container}>
-            {apps.map((app) => (
-              <div className={styles.option_item} key={app.id}>
-                {app.description}
-                <IconButton
-                  icon={<IconMinus className="secondary-icon" />}
-                  style={{ minHeight: '32px', padding: '4px' }}
-                  onClick={() => removeApp(app)}
+        {isLoading ? (
+          <Loader height="255px" />
+        ) : (
+          <>
+            {editEmployeeModal.mode === Modes.EDIT_MODE && (
+              <div className={styles.avatar_container}>
+                <Avatar
+                  image={avatar ? avatar : defaultAvatar}
+                  size={120}
+                  onAvatarSelect={editAvatar}
                 />
               </div>
-            ))}
-            <DropdownButton
-              options={appOptions}
-              icon={<IconPlus className="secondary-icon" />}
-              placement={Placements.rightStart}
+            )}
+            <div className={styles.controls}>
+              <Textbox
+                label="Имя"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Textbox
+                label="Логин"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+              />
+            </div>
+            <SelectButton
+              title="Роль"
+              items={roles}
+              defaultSelectedItem={selectedRole}
+              onChange={setSelectedRole}
             />
-          </div>
-        </Accordion>
-        <Accordion
-          label="Отделы"
-          isShowing={departmentsAccordion.isShowing}
-          toggle={departmentsAccordion.toggle}
-        >
-          <div className={styles.options_container}>
-            {departments.map((department) => (
-              <div className={styles.option_item} key={department.id}>
-                {department.name}
-                <IconButton
-                  icon={<IconMinus className="secondary-icon" />}
-                  style={{ minHeight: '32px', padding: '4px' }}
-                  onClick={() => removeDepartment(department)}
+            {editEmployeeModal.mode === Modes.ADD_MODE && (
+              <Textbox
+                label="Пароль"
+                value={password}
+                isPassword={true}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            )}
+            <Accordion
+              label="Доступные приложения"
+              isShowing={appsAccordion.isShowing}
+              toggle={appsAccordion.toggle}
+            >
+              <div className={styles.options_container}>
+                {apps.map((app) => (
+                  <div className={styles.option_item} key={app.id}>
+                    {app.description}
+                    <IconButton
+                      icon={<IconMinus className="secondary-icon" />}
+                      style={{ minHeight: '32px', padding: '4px' }}
+                      onClick={() => removeApp(app)}
+                    />
+                  </div>
+                ))}
+                <DropdownButton
+                  options={appOptions}
+                  icon={<IconPlus className="secondary-icon" />}
+                  placement={Placements.rightStart}
                 />
               </div>
-            ))}
-            <DropdownButton
-              options={departmentOptions}
-              icon={<IconPlus className="secondary-icon" />}
-              placement={Placements.rightStart}
-            />
-          </div>
-        </Accordion>
-        <div className={styles.controls}>
-          <Button onClick={close}>Отменить</Button>
-          {editEmployeeModal.mode === Modes.ADD_MODE ? (
-            <Button
-              variant={ButtonVariants.primary}
-              disabled={name === '' || login === '' || password === ''}
-              onClick={registrationEmployee}
+            </Accordion>
+            <Accordion
+              label="Отделы"
+              isShowing={departmentsAccordion.isShowing}
+              toggle={departmentsAccordion.toggle}
             >
-              Зарегистрировать
-            </Button>
-          ) : (
-            <Button
-              variant={ButtonVariants.primary}
-              disabled={name === '' || login === ''}
-              onClick={updateEmployee}
-            >
-              Изменить
-            </Button>
-          )}
-        </div>
+              <div className={styles.options_container}>
+                {departments.map((department) => (
+                  <div className={styles.option_item} key={department.id}>
+                    {department.name}
+                    <IconButton
+                      icon={<IconMinus className="secondary-icon" />}
+                      style={{ minHeight: '32px', padding: '4px' }}
+                      onClick={() => removeDepartment(department)}
+                    />
+                  </div>
+                ))}
+                <DropdownButton
+                  options={departmentOptions}
+                  icon={<IconPlus className="secondary-icon" />}
+                  placement={Placements.rightStart}
+                />
+              </div>
+            </Accordion>
+            <div className={styles.controls}>
+              <Button onClick={close}>Отменить</Button>
+              {editEmployeeModal.mode === Modes.ADD_MODE ? (
+                <Button
+                  variant={ButtonVariants.primary}
+                  disabled={
+                    name === '' ||
+                    login === '' ||
+                    password === '' ||
+                    selectedRole === INITIAL_ROLE
+                  }
+                  onClick={registrationEmployee}
+                >
+                  Зарегистрировать
+                </Button>
+              ) : (
+                <Button
+                  variant={ButtonVariants.primary}
+                  disabled={
+                    name === '' || login === '' || selectedRole === INITIAL_ROLE
+                  }
+                  onClick={updateEmployee}
+                >
+                  Изменить
+                </Button>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </Modal>
   );

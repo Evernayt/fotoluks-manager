@@ -41,7 +41,12 @@ const ControlPanelEmployeesTable = () => {
       {
         Header: 'Логин',
         accessor: 'login',
-        style: { width: '70%' },
+        style: { width: '40%' },
+      },
+      {
+        Header: 'Роль',
+        accessor: 'role.name',
+        style: { width: '30%' },
       },
       {
         Header: '',
