@@ -1,7 +1,7 @@
 import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
 import ProductAPI from 'api/ProductAPI/ProductAPI';
 import TypeAPI from 'api/TypeAPI/TypeAPI';
-import { Button, Modal, SelectButton, Tooltip } from 'components';
+import { Button, Modal, SelectButton } from 'components';
 import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { INITIAL_PRODUCT } from 'constants/states/product-states';
@@ -156,20 +156,15 @@ const OrderDetailAddFavoriteModal = () => {
         </div>
         <div className={styles.features_container}>
           {features.map((feature, index) => (
-            <Tooltip
-              label={feature[0].feature?.name ? feature[0].feature?.name : ''}
-              delay={600}
+            <SelectButton
+              title={feature[0].feature?.name || ''}
+              items={feature}
+              defaultSelectedItem={selectedParams[index]?.param!}
+              onChange={(e) => selectParam(e)}
+              style={{ width: '228px' }}
+              tooltipProps={{ delay: 600 }}
               key={index}
-            >
-              <div>
-                <SelectButton
-                  items={feature}
-                  defaultSelectedItem={selectedParams[index]?.param!}
-                  onChange={(e) => selectParam(e)}
-                  style={{ width: '228px' }}
-                />
-              </div>
-            </Tooltip>
+            />
           ))}
         </div>
         <Button variant={ButtonVariants.primary} onClick={createFavorite}>

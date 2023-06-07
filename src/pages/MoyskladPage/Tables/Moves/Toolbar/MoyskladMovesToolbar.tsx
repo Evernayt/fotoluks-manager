@@ -1,4 +1,4 @@
-import { Button, SelectButton, Toolbar, Tooltip } from 'components';
+import { Button, SelectButton, Toolbar } from 'components';
 import { ISelectItem } from 'components/UI/SelectButton/SelectButton.types';
 import { MOVES_DETAIL_ROUTE } from 'constants/paths';
 import { Placements } from 'helpers/calcPlacement';
@@ -82,23 +82,22 @@ const MoyskladMovesToolbar: FC<MoyskladMovesToolbarProps> = ({
     return (
       <>
         {employee?.departments && (
-          <Tooltip label="Отдел" delay={800}>
-            <SelectButton
-              items={employee.departments}
-              defaultSelectedItem={employee.departments[0]}
-              onChange={departmentChangeHandler}
-              placement={Placements.bottomEnd}
-            />
-          </Tooltip>
-        )}
-        <Tooltip label="На склад">
           <SelectButton
-            items={targetShopItems}
-            defaultSelectedItem={targetShopItems[0]}
-            onChange={(item) => onTargetShopChange(item.name)}
+            title="Отдел"
+            items={employee.departments}
+            defaultSelectedItem={employee.departments[0]}
+            onChange={departmentChangeHandler}
             placement={Placements.bottomEnd}
+            tooltipProps={{ delay: 800 }}
           />
-        </Tooltip>
+        )}
+        <SelectButton
+          title="На склад"
+          items={targetShopItems}
+          defaultSelectedItem={targetShopItems[0]}
+          onChange={(item) => onTargetShopChange(item.name)}
+          placement={Placements.bottomEnd}
+        />
         <SelectButton
           items={limitItems}
           defaultSelectedItem={limitItems[0]}

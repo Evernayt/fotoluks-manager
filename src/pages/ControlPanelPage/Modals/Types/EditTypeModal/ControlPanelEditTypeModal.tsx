@@ -268,15 +268,14 @@ const ControlPanelEditTypeModal = () => {
           )}
           <div className={styles.controls_container}>
             <div className={styles.main_controls}>
-              <Tooltip label="Продукт">
-                <SelectButton
-                  items={products}
-                  defaultSelectedItem={selectedProduct}
-                  onChange={setSelectedProduct}
-                  style={{ width: '185px' }}
-                  disabled={editTypeModal.mode === Modes.EDIT_MODE}
-                />
-              </Tooltip>
+              <SelectButton
+                title="Продукт"
+                items={products}
+                defaultSelectedItem={selectedProduct}
+                onChange={setSelectedProduct}
+                style={{ width: '185px' }}
+                disabled={editTypeModal.mode === Modes.EDIT_MODE}
+              />
               <Tooltip label="Добавить продукт">
                 <div>
                   <IconButton

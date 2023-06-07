@@ -7,7 +7,6 @@ import {
   SelectButton,
   Textarea,
   Textbox,
-  Tooltip,
 } from 'components';
 import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
@@ -311,20 +310,15 @@ const OrderDetailServiceModal: FC<OrderDetailServiceModalProps> = ({
         </div>
         <div className={styles.features_container}>
           {features.map((feature, index) => (
-            <Tooltip
-              label={feature[0].feature?.name || ''}
-              delay={600}
+            <SelectButton
+              title={feature[0].feature?.name || ''}
+              items={feature}
+              defaultSelectedItem={selectedParams[index]?.param!}
+              onChange={(e) => selectParam(e)}
+              style={{ width: '228px' }}
+              tooltipProps={{ delay: 600 }}
               key={index}
-            >
-              <div>
-                <SelectButton
-                  items={feature}
-                  defaultSelectedItem={selectedParams[index]?.param!}
-                  onChange={(e) => selectParam(e)}
-                  style={{ width: '228px' }}
-                />
-              </div>
-            </Tooltip>
+            />
           ))}
         </div>
         <div className={styles.main_controls}>

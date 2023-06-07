@@ -125,17 +125,13 @@ const ControlPanelEditParamModal = () => {
       <div>
         <div className={styles.controls_container}>
           <div className={styles.main_controls}>
-            <Tooltip label="Характеристика">
-              <div style={{ width: '100%' }}>
-                <SelectButton
-                  items={features}
-                  defaultSelectedItem={selectedFeature}
-                  onChange={setSelectedFeature}
-                  style={{ width: '100%' }}
-                />
-              </div>
-            </Tooltip>
-
+            <SelectButton
+              title="Характеристика"
+              items={features}
+              defaultSelectedItem={selectedFeature}
+              onChange={setSelectedFeature}
+              style={{ width: '100%' }}
+            />
             <Tooltip label="Добавить характеристику">
               <div>
                 <IconButton

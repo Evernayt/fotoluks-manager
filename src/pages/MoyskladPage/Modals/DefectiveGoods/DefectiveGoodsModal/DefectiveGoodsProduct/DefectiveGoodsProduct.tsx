@@ -5,6 +5,7 @@ import { IDefectiveGood } from 'models/IDefectiveGood';
 import { FC } from 'react';
 import { defectiveGoodsSlice } from 'store/reducers/DefectiveGoodsSlice';
 import styles from './DefectiveGoodsProduct.module.scss';
+import { IconButtonVariants } from 'components/UI/IconButton/IconButton';
 
 interface DefectiveGoodsProductProps {
   defectiveGood: IDefectiveGood;
@@ -48,7 +49,11 @@ const DefectiveGoodsProduct: FC<DefectiveGoodsProductProps> = ({
         value={defectiveGood.quantity}
         onChange={(e) => setQuantity(Number(e.target.value))}
       />
-      <IconButton icon={<IconTrash />} onClick={remove} />
+      <IconButton
+        icon={<IconTrash className="link-icon" />}
+        variant={IconButtonVariants.link}
+        onClick={remove}
+      />
     </div>
   );
 };

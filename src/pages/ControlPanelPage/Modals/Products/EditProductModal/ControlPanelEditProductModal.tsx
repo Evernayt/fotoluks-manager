@@ -179,17 +179,13 @@ const ControlPanelEditProductModal = () => {
           )}
           <div className={styles.controls_container}>
             <div className={styles.main_controls}>
-              <Tooltip label="Категория">
-                <div style={{ width: '100%' }}>
-                  <SelectButton
-                    items={categories}
-                    defaultSelectedItem={selectedCategory}
-                    onChange={setSelectedCategory}
-                    style={{ width: '100%' }}
-                  />
-                </div>
-              </Tooltip>
-
+              <SelectButton
+                title="Категория"
+                items={categories}
+                defaultSelectedItem={selectedCategory}
+                onChange={setSelectedCategory}
+                style={{ width: '100%' }}
+              />
               <Tooltip label="Добавить категорию">
                 <div>
                   <IconButton

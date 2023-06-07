@@ -1,7 +1,7 @@
 import NotificationAPI from 'api/NotificationAPI/NotificationAPI';
 import OrderAPI from 'api/OrderAPI/OrderAPI';
 import ShopAPI from 'api/ShopAPI/ShopAPI';
-import { Button, Modal, SelectButton, Tooltip } from 'components';
+import { Button, Modal, SelectButton } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { INITIAL_SHOP } from 'constants/states/shop-states';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
@@ -79,16 +79,13 @@ const OrderShopModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        <Tooltip label="Филиал">
-          <div>
-            <SelectButton
-              items={shops}
-              defaultSelectedItem={selectedShop}
-              onChange={setSelectedShop}
-              style={{ width: '100%' }}
-            />
-          </div>
-        </Tooltip>
+        <SelectButton
+          title="Филиал"
+          items={shops}
+          defaultSelectedItem={selectedShop}
+          onChange={setSelectedShop}
+          style={{ width: '100%' }}
+        />
       </div>
       <div className={styles.controls}>
         <Button

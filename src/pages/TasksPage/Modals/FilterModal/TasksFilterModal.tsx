@@ -1,13 +1,6 @@
 import DepartmentAPI from 'api/DepartmentAPI/DepartmentAPI';
 import ShopAPI from 'api/ShopAPI/ShopAPI';
-import {
-  Button,
-  Checkbox,
-  Modal,
-  SelectButton,
-  Textbox,
-  Tooltip,
-} from 'components';
+import { Button, Checkbox, Modal, SelectButton, Textbox } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { ALL_DEPARTMENTS } from 'constants/states/department-states';
 import { ALL_SHOPS } from 'constants/states/shop-states';
@@ -107,30 +100,22 @@ const TasksFilterModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        <Tooltip label="Филиал">
-          <div>
-            <SelectButton
-              containerClassName={styles.select_btn}
-              items={shops}
-              defaultSelectedItem={selectedShop}
-              onChange={(item) =>
-                dispatch(taskSlice.actions.setSelectedShop(item))
-              }
-            />
-          </div>
-        </Tooltip>
-        <Tooltip label="Отдел">
-          <div>
-            <SelectButton
-              containerClassName={styles.select_btn}
-              items={departments}
-              defaultSelectedItem={selectedDepartment}
-              onChange={(item) =>
-                dispatch(taskSlice.actions.setSelectedDepartment(item))
-              }
-            />
-          </div>
-        </Tooltip>
+        <SelectButton
+          title="Филиал"
+          containerClassName={styles.select_btn}
+          items={shops}
+          defaultSelectedItem={selectedShop}
+          onChange={(item) => dispatch(taskSlice.actions.setSelectedShop(item))}
+        />
+        <SelectButton
+          title="Отдел"
+          containerClassName={styles.select_btn}
+          items={departments}
+          defaultSelectedItem={selectedDepartment}
+          onChange={(item) =>
+            dispatch(taskSlice.actions.setSelectedDepartment(item))
+          }
+        />
         <Textbox
           label="От"
           type="datetime-local"

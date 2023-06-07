@@ -6,7 +6,6 @@ import {
   Modal,
   SelectButton,
   Textbox,
-  Tooltip,
 } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { INPUT_DATE_FORMAT } from 'constants/app';
@@ -177,18 +176,15 @@ const OrdersFilterModal = () => {
       hide={close}
     >
       <div className={styles.container}>
-        <Tooltip label="Филиал">
-          <div>
-            <SelectButton
-              containerClassName={styles.shops_sb}
-              items={shops}
-              defaultSelectedItem={selectedShop}
-              onChange={(item) =>
-                dispatch(orderSlice.actions.setSelectedShop(item))
-              }
-            />
-          </div>
-        </Tooltip>
+        <SelectButton
+          title="Филиал"
+          containerClassName={styles.shops_sb}
+          items={shops}
+          defaultSelectedItem={selectedShop}
+          onChange={(item) =>
+            dispatch(orderSlice.actions.setSelectedShop(item))
+          }
+        />
 
         <DropdownButton text="Период" options={periods} />
 
