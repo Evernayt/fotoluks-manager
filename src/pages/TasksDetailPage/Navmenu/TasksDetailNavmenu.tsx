@@ -11,11 +11,11 @@ import { useNavigate } from 'react-router-dom';
 import { taskSlice } from 'store/reducers/TaskSlice';
 
 interface TasksDetailNavmenuProps {
-  unsavedDataModal: IModal;
+  checkUnsavedDataAndCloseTaskDetail: () => void;
 }
 
 const TasksDetailNavmenu: FC<TasksDetailNavmenuProps> = ({
-  unsavedDataModal,
+  checkUnsavedDataAndCloseTaskDetail,
 }) => {
   const task = useAppSelector((state) => state.task.task);
   const employee = useAppSelector((state) => state.employee.employee);
@@ -34,19 +34,6 @@ const TasksDetailNavmenu: FC<TasksDetailNavmenuProps> = ({
       dispatch(taskSlice.actions.setBeforeTask(data));
       dispatch(taskSlice.actions.setHaveUnsavedData(false));
     });
-  };
-
-  const closeTaskDetail = () => {
-    if (haveUnsavedData) {
-      openUnsavedDataModal();
-    } else {
-      dispatch(taskSlice.actions.clearTask());
-      navigate(-1);
-    }
-  };
-
-  const openUnsavedDataModal = () => {
-    unsavedDataModal.toggle();
   };
 
   const rightSection = () => {
@@ -79,7 +66,7 @@ const TasksDetailNavmenu: FC<TasksDetailNavmenuProps> = ({
   return (
     <DetailNavmenu
       title={title}
-      onClose={closeTaskDetail}
+      onClose={checkUnsavedDataAndCloseTaskDetail}
       rightSection={rightSection()}
     />
   );

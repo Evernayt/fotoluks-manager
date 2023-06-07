@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { ITask } from 'models/api/ITask';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import socketio from 'socket/socketio';
 import { taskSlice } from 'store/reducers/TaskSlice';
 import TasksDetailComments from './Comments/TasksDetailComments';
@@ -20,6 +20,7 @@ import TaskDetailUnsavedDataModal from './Modals/UnsavedDataModal/TaskDetailUnsa
 import TasksDetailNavmenu from './Navmenu/TasksDetailNavmenu';
 import TasksDetailSidemenu from './Sidemenu/TasksDetailSidemenu';
 import styles from './TasksDetailPage.module.scss';
+import TaskDetailSubtasksModal from './Modals/SubtasksModal/TaskDetailSubtasksModal';
 
 type LocationState = {
   state: {
@@ -43,6 +44,15 @@ const TasksDetailPage = () => {
   const taskMembersForDelete = useAppSelector(
     (state) => state.task.taskMembersForDelete
   );
+  const taskSubtasksForCreate = useAppSelector(
+    (state) => state.task.taskSubtasksForCreate
+  );
+  const taskSubtasksForUpdate = useAppSelector(
+    (state) => state.task.taskSubtasksForUpdate
+  );
+  const taskSubtasksForDelete = useAppSelector(
+    (state) => state.task.taskSubtasksForDelete
+  );
 
   const isTaskCreated = task.id !== 0;
 
@@ -50,6 +60,7 @@ const TasksDetailPage = () => {
   const unsavedDataModal = useModal();
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (state?.taskId) {
@@ -108,6 +119,20 @@ const TasksDetailPage = () => {
     }
   };
 
+  const checkUnsavedDataAndCloseTaskDetail = () => {
+    if (haveUnsavedData) {
+      unsavedDataModal.toggle();
+    } else {
+      closeTaskDetail();
+    }
+  };
+
+  const closeTaskDetail = () => {
+    dispatch(taskSlice.actions.clearTask());
+    dispatch(taskSlice.actions.setForceUpdate(true));
+    navigate(-1);
+  };
+
   const isValidationSuccess = () => {
     if (task.shop?.id === 0) {
       showGlobalMessage('Выберите филиал', GlobalMessageVariants.warning);
@@ -128,7 +153,7 @@ const TasksDetailPage = () => {
     notifyMembersEdit(task);
   };
 
-  const saveTask = () => {
+  const saveTask = (close: boolean = false) => {
     if (!isValidationSuccess() || !haveUnsavedData || !employee) return;
 
     setIsLoading(true);
@@ -140,11 +165,15 @@ const TasksDetailPage = () => {
         departmentId: task.department?.id,
         taskMembersForCreate,
         taskMembersForDelete,
+        taskSubtasksForCreate,
+        taskSubtasksForUpdate,
+        taskSubtasksForDelete,
       };
 
       TaskAPI.update(updateBody)
         .then((data) => {
           updateTaskState(data);
+          if (close) closeTaskDetail();
         })
         .catch((e) =>
           showGlobalMessage(
@@ -159,6 +188,7 @@ const TasksDetailPage = () => {
         departmentId: task.department?.id,
         creatorId: employee.id,
         taskMembersForCreate,
+        taskSubtasksForCreate,
       };
 
       TaskAPI.create(createBody)
@@ -169,6 +199,7 @@ const TasksDetailPage = () => {
             createdAt: data.createdAt,
           };
           updateTaskState(taskClone);
+          if (close) closeTaskDetail();
         })
         .catch((e) =>
           showGlobalMessage(
@@ -192,10 +223,14 @@ const TasksDetailPage = () => {
           isShowing={unsavedDataModal.isShowing}
           hide={unsavedDataModal.toggle}
           saveTask={saveTask}
+          closeTaskDetail={closeTaskDetail}
         />
       )}
+      <TaskDetailSubtasksModal />
       <TaskDetailMembersModal />
-      <TasksDetailNavmenu unsavedDataModal={unsavedDataModal} />
+      <TasksDetailNavmenu
+        checkUnsavedDataAndCloseTaskDetail={checkUnsavedDataAndCloseTaskDetail}
+      />
       {isLoading && (
         <div className={styles.loader}>
           <Loader />
@@ -205,6 +240,7 @@ const TasksDetailPage = () => {
         <TasksDetailSidemenu
           cancelTaskModal={cancelTaskModal}
           saveTask={saveTask}
+          closeTaskDetail={closeTaskDetail}
         />
         <div className={styles.comments}>
           {isTaskCreated && <TasksDetailComments />}

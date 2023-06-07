@@ -1,29 +1,24 @@
 import { Button, Modal } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { useAppDispatch } from 'hooks/redux';
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { taskSlice } from 'store/reducers/TaskSlice';
 import styles from './TaskDetailUnsavedDataModal.module.scss';
 
 interface TaskDetailUnsavedDataModalProps {
   isShowing: boolean;
   hide: () => void;
   saveTask: () => void;
+  closeTaskDetail: () => void;
 }
 
 const TaskDetailUnsavedDataModal: FC<TaskDetailUnsavedDataModalProps> = ({
   isShowing,
   hide,
   saveTask,
+  closeTaskDetail,
 }) => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
   const closeTask = () => {
     hide();
-    dispatch(taskSlice.actions.clearTask());
-    navigate(-1);
+    closeTaskDetail();
   };
 
   const saveTaskAndClose = () => {
