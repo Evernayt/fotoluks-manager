@@ -73,6 +73,7 @@ type ModalState = {
   tasksFilterModal: IModal;
   updatePriceModal: IUpdatePriceModal;
   defectiveGoodsModal: IModal;
+  taskSubtasksModal: IModal;
 };
 
 const initialState: ModalState = {
@@ -110,6 +111,7 @@ const initialState: ModalState = {
   tasksFilterModal: INITIAL_MODAL,
   updatePriceModal: INITIAL_UPDATE_PRICE_MODAL,
   defectiveGoodsModal: INITIAL_MODAL,
+  taskSubtasksModal: INITIAL_MODAL,
 };
 
 interface OpenModalProps<K = keyof ModalState> {

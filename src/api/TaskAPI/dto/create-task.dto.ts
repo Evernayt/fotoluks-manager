@@ -1,3 +1,5 @@
+import { ITaskSubtask } from 'models/api/ITaskSubtask';
+
 export class CreateTaskDto {
   readonly name?: string;
   readonly title?: string;
@@ -7,4 +9,5 @@ export class CreateTaskDto {
   readonly departmentId?: number;
   readonly creatorId?: number;
   readonly taskMembersForCreate?: number[];
+  readonly taskSubtasksForCreate?: ITaskSubtask[];
 }

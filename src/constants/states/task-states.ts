@@ -17,4 +17,5 @@ export const INITIAL_TASK: ITask = {
   department: INITIAL_DEPARTMENT,
   taskMembers: [],
   taskMessages: [],
+  taskSubtasks: [],
 };

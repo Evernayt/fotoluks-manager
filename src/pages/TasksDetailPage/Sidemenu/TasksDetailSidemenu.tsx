@@ -6,17 +6,24 @@ import {
   Button,
   Checkbox,
   ElectronLinkify,
+  IconButton,
   SelectButton,
   Textarea,
   Textbox,
-  Tooltip,
 } from 'components';
 import { IAvatarListItem } from 'components/UI/AvatarList/AvatarList.types';
 import { ButtonVariants } from 'components/UI/Button/Button';
 import { defaultAvatar } from 'constants/images';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IModal } from 'hooks/useModal';
-import { IconBinaryTree, IconShop } from 'icons';
+import {
+  IconBinaryTree,
+  IconDeviceFloppy,
+  IconEye,
+  IconEyeOff,
+  IconRotate2,
+  IconShop,
+} from 'icons';
 import { IDepartment } from 'models/api/IDepartment';
 import { IShop } from 'models/api/IShop';
 import { FC, useEffect, useMemo, useState } from 'react';
@@ -24,19 +31,25 @@ import { modalSlice } from 'store/reducers/ModalSlice';
 import { taskSlice } from 'store/reducers/TaskSlice';
 import TasksDetailExecutor from '../Executor/TasksDetailExecutor';
 import styles from './TasksDetailSidemenu.module.scss';
+import TaskSubtaskAPI from 'api/TaskSubtaskAPI/TaskSubtaskAPI';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
+import { IconButtonVariants } from 'components/UI/IconButton/IconButton';
 
 interface TasksDetailSidemenuProps {
   cancelTaskModal: IModal;
-  saveTask: () => void;
+  saveTask: (close: boolean) => void;
+  closeTaskDetail: () => void;
 }
 
 const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
   cancelTaskModal,
   saveTask,
+  closeTaskDetail,
 }) => {
   const [shops, setShops] = useState<IShop[]>([]);
   const [departments, setDepartments] = useState<IDepartment[]>([]);
   const [completionNote, setCompletionNote] = useState<string>('');
+  const [viewMode, setViewMode] = useState<boolean>(false);
 
   const task = useAppSelector((state) => state.task.task);
   const beforeTask = useAppSelector((state) => state.task.beforeTask);
@@ -72,6 +85,7 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
   }, []);
 
   useEffect(() => {
+    if (viewMode) return;
     JSON.stringify(task) != JSON.stringify(beforeTask)
       ? dispatch(taskSlice.actions.setHaveUnsavedData(true))
       : dispatch(taskSlice.actions.setHaveUnsavedData(false));
@@ -103,8 +117,24 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
     });
   };
 
+  const toggleSubtask = (id: number | string, completed: boolean) => {
+    if (typeof id === 'string') return;
+
+    dispatch(taskSlice.actions.editTaskSubtaskById({ id, completed }));
+    TaskSubtaskAPI.update({ id, completed }).catch((e) => {
+      showGlobalMessage(e.response.data ? e.response.data.message : e.message);
+      dispatch(
+        taskSlice.actions.editTaskSubtaskById({ id, completed: !completed })
+      );
+    });
+  };
+
   const openCancelModal = () => {
     cancelTaskModal.toggle();
+  };
+
+  const openTaskSubtasksModal = () => {
+    dispatch(modalSlice.actions.openModal({ modal: 'taskSubtasksModal' }));
   };
 
   const openTaskMembersModal = () => {
@@ -156,20 +186,23 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
             dispatch(taskSlice.actions.setDescription(e.target.value))
           }
         />
-        <Tooltip label="Филиал">
-          <SelectButton
-            items={shops}
-            defaultSelectedItem={shop}
-            onChange={(item) => dispatch(taskSlice.actions.setShop(item))}
-          />
-        </Tooltip>
-        <Tooltip label="Отдел">
-          <SelectButton
-            items={departments}
-            defaultSelectedItem={department}
-            onChange={(item) => dispatch(taskSlice.actions.setDepartment(item))}
-          />
-        </Tooltip>
+        <Button onClick={openTaskSubtasksModal}>
+          {task.taskSubtasks && task.taskSubtasks.length > 0
+            ? `Список подзадач: ${task.taskSubtasks.length}`
+            : 'Добавить подзадачи'}
+        </Button>
+        <SelectButton
+          title="Филиал"
+          items={shops}
+          defaultSelectedItem={shop}
+          onChange={(item) => dispatch(taskSlice.actions.setShop(item))}
+        />
+        <SelectButton
+          title="Отдел"
+          items={departments}
+          defaultSelectedItem={department}
+          onChange={(item) => dispatch(taskSlice.actions.setDepartment(item))}
+        />
         <Button onClick={openTaskMembersModal}>
           {task.taskMembers && task.taskMembers.length > 0
             ? `Список участников: ${task.taskMembers.length}`
@@ -217,6 +250,16 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
           <div className={styles.title}>Что сделать</div>
           <ElectronLinkify>{description}</ElectronLinkify>
         </div>
+        <div className={styles.subtasks}>
+          {task.taskSubtasks?.map((taskSubtask) => (
+            <Checkbox
+              text={taskSubtask.text}
+              checked={taskSubtask.completed}
+              onChange={(e) => toggleSubtask(taskSubtask.id, e.target.checked)}
+              key={taskSubtask.id}
+            />
+          ))}
+        </div>
         {taskMembers.length > 0 && (
           <div>
             <div className={styles.title}>Участники</div>
@@ -236,23 +279,54 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
         <div>
           {isTaskCreated && taskCompletedRender()}
           <div className={styles.info}>
-            {iCreator ? editingRender() : readingRender()}
+            {iCreator && !viewMode ? editingRender() : readingRender()}
           </div>
         </div>
       </div>
 
       {iCreator && (
         <div className={styles.controls}>
-          {haveUnsavedData && (
-            <Button onClick={openCancelModal}>Отменить</Button>
+          {haveUnsavedData ? (
+            <>
+              <IconButton
+                icon={<IconRotate2 className="secondary-icon" />}
+                onClick={openCancelModal}
+              />
+              <IconButton
+                variant={IconButtonVariants.primary}
+                icon={<IconDeviceFloppy className="primary-icon" />}
+                onClick={() => saveTask(false)}
+              />
+              <Button
+                variant={ButtonVariants.primary}
+                disabled={!haveUnsavedData}
+                onClick={() => saveTask(true)}
+              >
+                Сохранить и выйти
+              </Button>
+            </>
+          ) : (
+            <>
+              {isTaskCreated && (
+                <IconButton
+                  icon={
+                    viewMode ? (
+                      <IconEyeOff className="secondary-icon" />
+                    ) : (
+                      <IconEye className="secondary-icon" />
+                    )
+                  }
+                  onClick={() => setViewMode((prevState) => !prevState)}
+                />
+              )}
+              <Button
+                variant={ButtonVariants.primary}
+                onClick={closeTaskDetail}
+              >
+                Выйти
+              </Button>
+            </>
           )}
-          <Button
-            variant={ButtonVariants.primary}
-            disabled={!haveUnsavedData}
-            onClick={saveTask}
-          >
-            Сохранить
-          </Button>
         </div>
       )}
     </div>

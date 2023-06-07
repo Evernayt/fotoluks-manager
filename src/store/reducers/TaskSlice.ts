@@ -9,6 +9,8 @@ import { IDepartment } from 'models/api/IDepartment';
 import { ITaskMessage } from 'models/api/ITaskMessage';
 import { ALL_SHOPS } from 'constants/states/shop-states';
 import { ALL_DEPARTMENTS } from 'constants/states/department-states';
+import { ITaskSubtask } from 'models/api/ITaskSubtask';
+import { UpdateTaskSubtaskDto } from 'api/TaskSubtaskAPI/dto/update-task-subtask.dto';
 
 type TaskState = {
   tasks: ITask[];
@@ -30,6 +32,9 @@ type TaskState = {
   iTaskMember: boolean;
   iTaskCreator: boolean;
   archive: boolean;
+  taskSubtasksForCreate: ITaskSubtask[];
+  taskSubtasksForUpdate: UpdateTaskSubtaskDto[];
+  taskSubtasksForDelete: number[];
 };
 
 const initialState: TaskState = {
@@ -52,6 +57,9 @@ const initialState: TaskState = {
   iTaskMember: false,
   iTaskCreator: false,
   archive: false,
+  taskSubtasksForCreate: [],
+  taskSubtasksForUpdate: [],
+  taskSubtasksForDelete: [],
 };
 
 export const taskSlice = createSlice({
@@ -98,17 +106,26 @@ export const taskSlice = createSlice({
       state.task = state.beforeTask;
       state.taskMembersForCreate = [];
       state.taskMembersForDelete = [];
+      state.taskSubtasksForCreate = [];
+      state.taskSubtasksForUpdate = [];
+      state.taskSubtasksForDelete = [];
     },
     clearTask(state) {
       state.task = INITIAL_TASK;
       state.beforeTask = INITIAL_TASK;
       state.taskMembersForCreate = [];
       state.taskMembersForDelete = [];
+      state.taskSubtasksForCreate = [];
+      state.taskSubtasksForUpdate = [];
+      state.taskSubtasksForDelete = [];
     },
     saveTask(state, action: PayloadAction<ITask>) {
       state.beforeTask = action.payload;
       state.taskMembersForCreate = [];
       state.taskMembersForDelete = [];
+      state.taskSubtasksForCreate = [];
+      state.taskSubtasksForUpdate = [];
+      state.taskSubtasksForDelete = [];
     },
     addTaskMember(state, action: PayloadAction<ITaskMember>) {
       state.task.taskMembers?.push(action.payload);
@@ -185,6 +202,58 @@ export const taskSlice = createSlice({
     },
     setArchive(state, action: PayloadAction<boolean>) {
       state.archive = action.payload;
+    },
+    addTaskSubtask(state, action: PayloadAction<ITaskSubtask>) {
+      state.task.taskSubtasks?.push(action.payload);
+    },
+    editTaskSubtaskById(state, action: PayloadAction<Partial<ITaskSubtask>>) {
+      const taskSubtasks = state.task.taskSubtasks?.map((taskSubtask) =>
+        taskSubtask.id === action.payload.id
+          ? { ...taskSubtask, ...action.payload }
+          : taskSubtask
+      );
+      state.task.taskSubtasks = taskSubtasks;
+    },
+    deleteTaskSubtask(state, action: PayloadAction<number | string>) {
+      const taskSubtasks = state.task.taskSubtasks?.filter(
+        (taskSubtask) => taskSubtask.id !== action.payload
+      );
+      state.task.taskSubtasks = taskSubtasks;
+    },
+    addTaskSubtaskForCreate(state, action: PayloadAction<ITaskSubtask>) {
+      state.taskSubtasksForCreate.push(action.payload);
+    },
+    editTaskSubtaskForCreate(
+      state,
+      action: PayloadAction<{ id: number | string; text: string }>
+    ) {
+      const taskSubtasks = state.taskSubtasksForCreate.map((taskSubtask) =>
+        taskSubtask.id === action.payload.id
+          ? { ...taskSubtask, text: action.payload.text }
+          : taskSubtask
+      );
+      state.taskSubtasksForCreate = taskSubtasks;
+    },
+    editTaskSubtaskForUpdate(
+      state,
+      action: PayloadAction<{ id: number; text: string }>
+    ) {
+      const isAdded = state.taskSubtasksForUpdate.some(
+        (taskSubtask) => taskSubtask.id === action.payload.id
+      );
+      if (isAdded) {
+        const taskSubtasks = state.taskSubtasksForUpdate.map((taskSubtask) =>
+          taskSubtask.id === action.payload.id
+            ? { ...taskSubtask, text: action.payload.text }
+            : taskSubtask
+        );
+        state.taskSubtasksForUpdate = taskSubtasks;
+      } else {
+        state.taskSubtasksForUpdate.push(action.payload);
+      }
+    },
+    addTaskSubtaskIdForDelete(state, action: PayloadAction<number>) {
+      state.taskSubtasksForDelete.push(action.payload);
     },
     clearState() {
       return initialState;

@@ -31,6 +31,12 @@
   margin-bottom: 8px;
 }
 
+.subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .items {
   display: flex;
   column-gap: 12px;

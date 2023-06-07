@@ -6,6 +6,7 @@ import { IDepartment } from './IDepartment';
 import { IShop } from './IShop';
 import { ITaskMember } from './ITaskMember';
 import { ITaskMessage } from './ITaskMessage';
+import { ITaskSubtask } from './ITaskSubtask';
 
 export interface ITask {
   id: number;
@@ -24,6 +25,7 @@ export interface ITask {
   executor?: IEmployee;
   taskMessages?: ITaskMessage[];
   taskMembers?: ITaskMember[];
+  taskSubtasks?: ITaskSubtask[];
 }
 
 export type ITaskData = IData<ITask[]>;
