@@ -1,6 +1,7 @@
 .container {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
+  //align-items: center;
   cursor: pointer;
   user-select: none;
 }
@@ -9,8 +10,8 @@
   appearance: none;
   border: 1px solid var(--border-color);
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
   cursor: pointer;
 
   &:hover {
@@ -28,6 +29,7 @@
 
 .label {
   margin-left: 8px;
+  margin-top: 1px;
   font-size: 12px;
   cursor: pointer;
 }
