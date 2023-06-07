@@ -37,8 +37,8 @@ const Textbox: FC<TextboxProps> = memo(
           style={
             isPassword ? { paddingRight: '40px' } : { paddingRight: '12px' }
           }
+          placeholder={label && ' '}
           {...props}
-          placeholder=" "
         />
         {label && <div className={styles.label}>{label}</div>}
       </div>
