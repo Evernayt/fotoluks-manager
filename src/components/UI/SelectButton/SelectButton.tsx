@@ -5,6 +5,8 @@ import { forwardRef, HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ISelectItem } from './SelectButton.types';
 import styles from './SelectButton.module.scss';
+import { IconChevronDown } from 'icons';
+import Tooltip, { TooltipProps } from '../Tooltip/Tooltip';
 
 type SimpleSpread<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
 
@@ -16,10 +18,12 @@ interface SelectButtonProps
   extends SimpleSpread<HTMLAttributes<HTMLDivElement>, PropsExtra> {
   items: ISelectItem[];
   onChange: (item: any, index: number) => void;
+  title?: string;
   defaultSelectedItem?: ISelectItem;
   placement?: Placements;
   disabled?: boolean;
   containerClassName?: string;
+  tooltipProps?: TooltipProps;
 }
 
 const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
@@ -27,10 +31,12 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
     {
       items,
       onChange,
+      title,
       defaultSelectedItem,
       placement = Placements.bottomStart,
       disabled,
       containerClassName,
+      tooltipProps,
       ...props
     },
     ref
@@ -75,15 +81,26 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
         ref={selectBtnRef}
         {...props}
       >
-        <div
-          className={disabled ? styles.disabled : styles.select_btn}
-          onClick={
-            disabled ? () => {} : () => setIsHidden((prevState) => !prevState)
-          }
-          ref={ref}
-        >
-          <div className={styles.name}>{selectedItem?.name}</div>
-        </div>
+        <Tooltip label={title || ''} disabled={!title} {...tooltipProps}>
+          <div
+            className={[styles.select_btn, disabled && styles.disabled].join(
+              ' '
+            )}
+            onClick={
+              disabled ? () => {} : () => setIsHidden((prevState) => !prevState)
+            }
+            ref={ref}
+          >
+            <div className={styles.name}>{selectedItem?.name}</div>
+            <IconChevronDown
+              className={
+                disabled ? 'secondary-disabled-icon' : 'secondary-icon'
+              }
+              size={20}
+            />
+          </div>
+        </Tooltip>
+
         <ul
           className={styles.menu}
           style={{

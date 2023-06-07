@@ -15,15 +15,18 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Tooltip.module.scss';
 
-interface TooltipProps {
-  label: string;
+export interface TooltipProps {
   placement?: Placement;
   delay?: number;
+}
+
+interface PrivateTooltipProps extends TooltipProps {
+  label: string;
   disabled?: boolean;
   children: JSX.Element;
 }
 
-const Tooltip: FC<TooltipProps> = ({
+const Tooltip: FC<PrivateTooltipProps> = ({
   children,
   label,
   placement = 'top',

@@ -18,6 +18,8 @@
 .select_btn {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   height: 36px;
   background-color: var(--secondary-color);
   padding: 0 12px;
@@ -35,11 +37,6 @@
 
 .disabled {
   background-color: var(--disabled-background);
-  display: flex;
-  align-items: center;
-  height: 36px;
-  padding: 0 12px;
-  border-radius: var(--border-radius);
   cursor: no-drop;
 
   .name {

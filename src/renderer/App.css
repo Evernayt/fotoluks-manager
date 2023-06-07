@@ -42,6 +42,7 @@ html[data-theme='LIGHT'] {
   /* COLORS: DISABLED */
   --disabled-background: #ebeae4;
   --disabled-text: #c4c3bc;
+  --disabled-secondary-icon-color: #c4c3bc;
 
   /* OVERLAY */
   --overlay-alpha-80: rgba(244, 244, 244, 0.8);
@@ -94,6 +95,7 @@ html[data-theme='DARK'] {
   /* COLORS: DISABLED */
   --disabled-background: #515150;
   --disabled-text: #848483;
+  --disabled-secondary-icon-color: #848483;
 
   /* OVERLAY */
   --overlay-alpha-80: rgba(11, 11, 11, 0.8);
@@ -161,6 +163,10 @@ b {
 
 .secondary-checked-icon {
   stroke: var(--secondary-checked-icon-color);
+}
+
+.secondary-disabled-icon {
+  stroke: var(--disabled-secondary-icon-color);
 }
 
 .secondary-dark-icon {
