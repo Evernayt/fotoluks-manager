@@ -47,6 +47,10 @@ import IconNotebook from './IconNotebook';
 import IconCurrencyRubel from './IconCurrencyRubel';
 import Icon123 from './Icon123';
 import IconReceiptRefund from './IconReceiptRefund';
+import IconListCheck from './IconListCheck';
+import IconRotate2 from './IconRotate2';
+import IconDeviceFloppy from './IconDeviceFloppy';
+import IconChevronDown from './IconChevronDown';
 
 export {
   IconPlus,
@@ -98,4 +102,8 @@ export {
   IconCurrencyRubel,
   Icon123,
   IconReceiptRefund,
+  IconListCheck,
+  IconRotate2,
+  IconDeviceFloppy,
+  IconChevronDown,
 };
