@@ -1,5 +1,5 @@
 import { DropdownButton, IconButton } from 'components';
-import { Modes } from 'constants/app';
+import { MAIN_FOLDER_NAME, Modes } from 'constants/app';
 import { noImage } from 'constants/images';
 import { Placements } from 'helpers/calcPlacement';
 import { getMainFolder } from 'helpers/localStorage';
@@ -9,6 +9,7 @@ import { IFinishedProduct } from 'models/api/IFinishedProduct';
 import { FC } from 'react';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './OrderDetailService.module.scss';
+import { removeBeforeString } from 'helpers';
 
 interface OrderDetailServiceProps {
   finishedProduct: IFinishedProduct;
@@ -47,7 +48,7 @@ const OrderDetailService: FC<OrderDetailServiceProps> = ({
       const fullPath: string = arg[0][0];
       if (!fullPath) return;
 
-      const folder = fullPath.replace(mainFolder, '');
+      const folder = removeBeforeString(fullPath, MAIN_FOLDER_NAME);
       const updatedFinishedProduct = { ...finishedProduct, folder };
 
       const isNotFoundForCreate =

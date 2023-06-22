@@ -16,6 +16,7 @@ const INPUT_DATE_FORMAT = 'YYYY-MM-DDTHH:mm';
 const DEF_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 const NOT_INDICATED = 'Не указано';
 const NOTIF_LIMIT = 25;
+const MAIN_FOLDER_NAME = 'ФОТОЛЮКС_Текущее';
 
 const THEMES: ITheme[] = [
   {
@@ -69,4 +70,5 @@ export {
   APPS,
   NOT_INDICATED,
   NOTIF_LIMIT,
+  MAIN_FOLDER_NAME,
 };

@@ -1,6 +1,6 @@
 import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { Button, Checkbox, Navmenu, SelectButton } from 'components';
-import { THEMES } from 'constants/app';
+import { MAIN_FOLDER_NAME, THEMES } from 'constants/app';
 import {
   getActiveShop,
   getMainFolder,
@@ -94,7 +94,7 @@ const SettingsPage = () => {
           </div>
           <div>
             <div className={styles.label}>
-              Основная папка (ФОТОЛЮКС_Текущее)
+              {`Основная папка (${MAIN_FOLDER_NAME})`}
             </div>
             <div className={styles.folder_select}>
               <Button onClick={selectFolder}>

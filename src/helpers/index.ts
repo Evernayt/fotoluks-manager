@@ -9,6 +9,7 @@ import getYears from './getYears';
 import getApps from './getApps';
 import getDateDiffDays from './getDateDiffDays';
 import accessCheck from './accessCheck';
+import removeBeforeString from './removeBeforeString';
 
 export {
   calcPlacement,
@@ -22,4 +23,5 @@ export {
   getApps,
   getDateDiffDays,
   accessCheck,
+  removeBeforeString,
 };
