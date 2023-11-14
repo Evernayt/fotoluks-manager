@@ -17,16 +17,10 @@
 .status_select_btn {
   display: flex;
   align-items: center;
-  height: 36px;
-  width: max-content;
-  border: 1px solid var(--talbe-border-color);
-  padding: 0 12px;
-  border-radius: 19px;
+  white-space: nowrap;
+  padding: var(--table-cell-padding);
+  font-size: var(--table-font-size);
   cursor: pointer;
-
-  &:hover {
-    border-color: var(--hover-secondary-color);
-  }
 
   &:active {
     .indicator {

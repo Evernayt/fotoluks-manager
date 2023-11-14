@@ -20,6 +20,12 @@
   background-color: var(--background-color);
   padding-left: 38px;
   padding-right: 12px;
+
+  &:disabled {
+    background-color: var(--disabled-background);
+    color: var(--disabled-text);
+    cursor: no-drop;
+  }
 }
 
 .result_container {

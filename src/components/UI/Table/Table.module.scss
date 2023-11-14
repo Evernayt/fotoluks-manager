@@ -19,9 +19,14 @@
   max-width: 100px;
   border-bottom: 1px solid var(--talbe-border-color);
   color: var(--secondary-text-on-bg-color);
-  font-weight: 400;
+  font-weight: 500;
+  font-size: var(--table-font-size);
   text-align: left;
   cursor: default;
+
+  &:first-child {
+    padding-left: 16px;
+  }
 }
 
 .row {
@@ -31,6 +36,15 @@
 .cell {
   padding: var(--table-cell-padding);
   border-bottom: 1px solid var(--talbe-border-color);
+  font-size: var(--table-font-size);
+
+  &:first-child {
+    padding-left: 16px;
+  }
+
+  &:last-child {
+    padding-right: 16px;
+  }
 }
 
 .custom_cell {

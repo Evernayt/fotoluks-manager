@@ -17,6 +17,7 @@ interface SearchProps
   resultMaxHeight?: number;
   showResults?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 const Search: FC<SearchProps> = ({
@@ -27,6 +28,7 @@ const Search: FC<SearchProps> = ({
   resultMaxHeight = 300,
   showResults = true,
   className,
+  disabled = false,
   ...props
 }) => {
   const [isShowing, setIsShowing] = useState<boolean>(false);
@@ -50,6 +52,7 @@ const Search: FC<SearchProps> = ({
           className={styles.input}
           placeholder={placeholder}
           value={value}
+          disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
         />
       </div>

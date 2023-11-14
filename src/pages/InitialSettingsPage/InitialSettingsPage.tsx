@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { appSlice } from 'store/reducers/AppSlice';
 import styles from './InitialSettingsPage.module.scss';
+import { MAIN_FOLDER_NAME } from 'constants/app';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 
 const InitialSettingsPage = () => {
   const [folder, setFolder] = useState<string>(getMainFolder());
@@ -46,8 +48,16 @@ const InitialSettingsPage = () => {
     window.electron.ipcRenderer.once('select-directory', (arg: any) => {
       const fullPath: string = arg[0][0];
       if (!fullPath) return;
+      const pathArr = fullPath.split('\\');
+      const lastFolder = pathArr[pathArr.length - 1];
 
-      setFolder(fullPath);
+      if (lastFolder === MAIN_FOLDER_NAME) {
+        setFolder(fullPath);
+      } else {
+        showGlobalMessage(
+          `Основная папка должна называться «${MAIN_FOLDER_NAME}»`
+        );
+      }
     });
   };
 
@@ -73,7 +83,7 @@ const InitialSettingsPage = () => {
       <div className={styles.cards}>
         <div className={styles.card}>
           <div className={styles.card_label}>
-            Основная папка (ФОТОЛЮКС_Текущее)
+            {`Основная папка (${MAIN_FOLDER_NAME})`}
           </div>
           <div className={styles.folder_select}>
             <Button onClick={selectFolder}>

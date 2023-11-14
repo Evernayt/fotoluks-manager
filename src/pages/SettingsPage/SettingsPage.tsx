@@ -15,6 +15,7 @@ import { ITheme } from 'models/ITheme';
 import { useEffect, useState } from 'react';
 import { appSlice } from 'store/reducers/AppSlice';
 import styles from './SettingsPage.module.scss';
+import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 
 const SettingsPage = () => {
   const theme = useAppSelector((state) => state.app.theme);
@@ -48,9 +49,17 @@ const SettingsPage = () => {
     window.electron.ipcRenderer.once('select-directory', (arg: any) => {
       const fullPath: string = arg[0][0];
       if (!fullPath) return;
+      const pathArr = fullPath.split('\\');
+      const lastFolder = pathArr[pathArr.length - 1];
 
-      setFolder(fullPath);
-      setMainFolder(fullPath);
+      if (lastFolder === MAIN_FOLDER_NAME) {
+        setFolder(fullPath);
+        setMainFolder(fullPath);
+      } else {
+        showGlobalMessage(
+          `Основная папка должна называться «${MAIN_FOLDER_NAME}»`
+        );
+      }
     });
   };
 

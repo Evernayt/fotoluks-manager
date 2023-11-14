@@ -1,14 +1,14 @@
-import { Button, Loader, Modal, Search } from 'components';
+import { Button, Loader, Modal, PlusMinusButton, Search } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import OrderDetailMemberItem from './OrderDetailMemberItem/OrderDetailMemberItem';
 import { v4 as uuidv4 } from 'uuid';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import { IEmployee } from 'models/api/IEmployee';
 import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
 import { IOrderMember } from 'models/api/IOrderMember';
 import styles from './OrderDetailMembersModal.module.scss';
+import { defaultAvatar } from 'constants/images';
 
 const OrderDetailMembersModal = () => {
   const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -167,18 +167,18 @@ const OrderDetailMembersModal = () => {
               <div className={styles.employees}>
                 {search !== ''
                   ? foundOrderMembers.map((orderMember) => (
-                      <OrderDetailMemberItem
-                        employee={orderMember.employee}
-                        isAdded={true}
-                        onClick={() => deleteOrderMember(orderMember)}
+                      <PlusMinusButton
+                        text={orderMember.employee.name}
+                        image={orderMember.employee.avatar || defaultAvatar}
+                        onPlusMinusClick={() => deleteOrderMember(orderMember)}
                         key={orderMember.employee.id}
                       />
                     ))
                   : order.orderMembers?.map((orderMember) => (
-                      <OrderDetailMemberItem
-                        employee={orderMember.employee}
-                        isAdded={true}
-                        onClick={() => deleteOrderMember(orderMember)}
+                      <PlusMinusButton
+                        text={orderMember.employee.name}
+                        image={orderMember.employee.avatar || defaultAvatar}
+                        onPlusMinusClick={() => deleteOrderMember(orderMember)}
                         key={orderMember.employee.id}
                       />
                     ))}
@@ -193,18 +193,20 @@ const OrderDetailMembersModal = () => {
               <div className={styles.employees}>
                 {search !== ''
                   ? foundEmployees.map((employee) => (
-                      <OrderDetailMemberItem
-                        employee={employee}
-                        isAdded={false}
-                        onClick={() => addOrderMember(employee)}
+                      <PlusMinusButton
+                        text={employee.name}
+                        image={employee.avatar || defaultAvatar}
+                        isPlus
+                        onPlusMinusClick={() => addOrderMember(employee)}
                         key={employee.id}
                       />
                     ))
                   : employees.map((employee) => (
-                      <OrderDetailMemberItem
-                        employee={employee}
-                        isAdded={false}
-                        onClick={() => addOrderMember(employee)}
+                      <PlusMinusButton
+                        text={employee.name}
+                        image={employee.avatar || defaultAvatar}
+                        isPlus
+                        onPlusMinusClick={() => addOrderMember(employee)}
                         key={employee.id}
                       />
                     ))}
@@ -214,6 +216,7 @@ const OrderDetailMembersModal = () => {
           </div>
         </div>
       </div>
+      <Button onClick={close}>Подтвердить</Button>
     </Modal>
   );
 };

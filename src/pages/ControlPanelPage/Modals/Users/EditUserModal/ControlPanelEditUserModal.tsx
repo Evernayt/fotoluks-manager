@@ -150,7 +150,7 @@ const ControlPanelEditUserModal = () => {
           </div>
         )}
 
-        <div className={styles.controls}>
+        <div className={styles.inputs}>
           <Textbox
             label="Имя"
             value={name}
@@ -178,7 +178,7 @@ const ControlPanelEditUserModal = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <div className={styles.controls}>
+        <div className={styles.inputs}>
           <Textbox
             label="ВКонтакте"
             value={vk}

@@ -6,18 +6,19 @@
 
 .item {
   margin-left: -5px;
-  transition: 0.2s transform ease-in-out;
+  transition: 0.2s scale ease-out;
 
   &:hover {
-    transform: translateY(-2px);
     z-index: 2;
+    scale: (1.5);
   }
 }
 
 .image {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   outline: 3px solid var(--card-background);
   outline-offset: -1px;
+  object-fit: cover;
 }

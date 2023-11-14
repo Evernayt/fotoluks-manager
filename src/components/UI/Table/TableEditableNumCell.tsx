@@ -9,13 +9,13 @@ import { Column, Row } from 'react-table';
 import Textbox from '../Textbox/Textbox';
 
 export interface TableEditableNumCellProps {
-  value: string;
+  value: number;
   row: Row;
   column: Column;
   updateMyData: (
     index: number,
     id: string | undefined,
-    value: string
+    value: number
   ) => Promise<any>;
   textboxProps?: InputHTMLAttributes<HTMLInputElement>;
 }
@@ -27,11 +27,11 @@ const TableEditableNumCell: FC<TableEditableNumCellProps> = ({
   updateMyData,
   textboxProps,
 }) => {
-  const [value, setValue] = useState<string>(initialValue);
+  const [value, setValue] = useState<number>(initialValue);
   const [disabled, setDisabled] = useState<boolean>(false);
 
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    setValue(Number(e.target.value));
   };
 
   const onBlur = () => {

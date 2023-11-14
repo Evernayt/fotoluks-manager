@@ -1,5 +1,5 @@
 .base {
-  min-height: 36px;
+  height: 36px;
   min-width: max-content;
   color: var(--primary-text-color);
   padding: 0 12px;
@@ -57,4 +57,11 @@
   &:hover {
     background-color: var(--hover-secondary-dark-color);
   }
+}
+
+.circle {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  padding: 0;
 }

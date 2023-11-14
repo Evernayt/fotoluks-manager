@@ -8,10 +8,12 @@ import styles from './MoyskladAssortmentsSearch.module.scss';
 
 interface MoyskladAssortmentsSearchProps {
   onChange: (assortment: IAssortment) => void;
+  disabled: boolean;
 }
 
 const MoyskladAssortmentsSearch: FC<MoyskladAssortmentsSearchProps> = ({
   onChange,
+  disabled,
 }) => {
   const [search, setSearch] = useState<string>('');
   const [foundAssortments, setFoundAssortments] = useState<IAssortment[]>([]);
@@ -61,6 +63,7 @@ const MoyskladAssortmentsSearch: FC<MoyskladAssortmentsSearchProps> = ({
       value={search}
       onChange={setSearch}
       placeholder="Добавить позицию — введите наименование, код, штрихкод или артикул"
+      disabled={disabled}
     >
       {isLoading ? (
         <Loader />

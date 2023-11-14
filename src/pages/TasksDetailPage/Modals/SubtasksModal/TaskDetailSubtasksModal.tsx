@@ -71,9 +71,12 @@ const TaskDetailSubtasksModal = () => {
             <div>Нет подзадач</div>
           </div>
         )}
-        <Button variant={ButtonVariants.primary} onClick={createSubtask}>
-          Добавить подзадачу
-        </Button>
+        <div className={styles.controls}>
+          <Button onClick={close}>Подтвердить</Button>
+          <Button variant={ButtonVariants.primary} onClick={createSubtask}>
+            Добавить подзадачу
+          </Button>
+        </div>
       </div>
     </Modal>
   );

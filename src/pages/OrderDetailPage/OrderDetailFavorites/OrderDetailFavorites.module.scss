@@ -15,10 +15,18 @@
   white-space: nowrap;
   user-select: none;
   font-weight: 500;
+  padding: 4px;
 
   &:hover .delete_button {
     opacity: 1;
   }
+}
+
+.favorite_image {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .favorite_button {
@@ -26,7 +34,6 @@
   height: 100%;
   display: flex;
   align-items: center;
-  margin-left: 8px;
 
   &:active {
     transform: scale(0.99);
@@ -34,7 +41,6 @@
 }
 
 .delete_button {
-  margin: 4px 4px 4px 0;
   opacity: 0;
   transition: opacity 200ms;
 }

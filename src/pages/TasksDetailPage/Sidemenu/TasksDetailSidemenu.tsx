@@ -10,6 +10,7 @@ import {
   SelectButton,
   Textarea,
   Textbox,
+  Tooltip,
 } from 'components';
 import { IAvatarListItem } from 'components/UI/AvatarList/AvatarList.types';
 import { ButtonVariants } from 'components/UI/Button/Button';
@@ -288,15 +289,23 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
         <div className={styles.controls}>
           {haveUnsavedData ? (
             <>
-              <IconButton
-                icon={<IconRotate2 className="secondary-icon" />}
-                onClick={openCancelModal}
-              />
-              <IconButton
-                variant={IconButtonVariants.primary}
-                icon={<IconDeviceFloppy className="primary-icon" />}
-                onClick={() => saveTask(false)}
-              />
+              <Tooltip label="Отменить изменения">
+                <div>
+                  <IconButton
+                    icon={<IconRotate2 className="secondary-icon" />}
+                    onClick={openCancelModal}
+                  />
+                </div>
+              </Tooltip>
+              <Tooltip label="Сохранить">
+                <div>
+                  <IconButton
+                    variant={IconButtonVariants.primary}
+                    icon={<IconDeviceFloppy className="primary-icon" />}
+                    onClick={() => saveTask(false)}
+                  />
+                </div>
+              </Tooltip>
               <Button
                 variant={ButtonVariants.primary}
                 disabled={!haveUnsavedData}
@@ -308,16 +317,22 @@ const TasksDetailSidemenu: FC<TasksDetailSidemenuProps> = ({
           ) : (
             <>
               {isTaskCreated && (
-                <IconButton
-                  icon={
-                    viewMode ? (
-                      <IconEyeOff className="secondary-icon" />
-                    ) : (
-                      <IconEye className="secondary-icon" />
-                    )
-                  }
-                  onClick={() => setViewMode((prevState) => !prevState)}
-                />
+                <Tooltip
+                  label={viewMode ? 'Режим редактирования' : 'Режим просмотра'}
+                >
+                  <div>
+                    <IconButton
+                      icon={
+                        viewMode ? (
+                          <IconEyeOff className="secondary-icon" />
+                        ) : (
+                          <IconEye className="secondary-icon" />
+                        )
+                      }
+                      onClick={() => setViewMode((prevState) => !prevState)}
+                    />
+                  </div>
+                </Tooltip>
               )}
               <Button
                 variant={ButtonVariants.primary}

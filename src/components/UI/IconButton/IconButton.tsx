@@ -21,24 +21,18 @@ const IconButton: FC<IconButtonProps> = ({
   variant = IconButtonVariants.default,
   className,
   children,
-  circle,
+  circle = false,
   ...props
 }) => {
   return (
     <button
-      className={[styles.base, styles[variant], className].join(' ')}
+      className={[
+        styles.base,
+        styles[variant],
+        circle && styles.circle,
+        className,
+      ].join(' ')}
       {...props}
-      style={
-        circle
-          ? {
-              borderRadius: '50%',
-              height: '40px',
-              width: '40px',
-              padding: 0,
-              ...props.style,
-            }
-          : props.style
-      }
     >
       {icon}
       {children}

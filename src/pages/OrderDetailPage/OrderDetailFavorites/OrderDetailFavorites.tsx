@@ -1,5 +1,5 @@
 import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
-import { IconButton } from 'components';
+import { IconButton, PlusMinusButton } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IconMinus, IconPlus } from 'icons';
 import { IFavorite } from 'models/api/IFavorite';
@@ -72,32 +72,22 @@ const OrderDetailFavorites = () => {
   return (
     <div className={styles.container}>
       <IconButton
+        style={{ height: 40 }}
         icon={<IconPlus className="secondary-icon" />}
         onClick={openOrderDetailAddFavoriteModal}
       />
       {favorites.map((favorite) => (
-        <div className={styles.favorite_container} key={favorite.id}>
-          <div
-            className={styles.favorite_button}
-            onClick={() => addFinishedProduct(favorite)}
-          >
-            {`${
-              favorite.type?.product?.name
-            } ${favorite.type?.name.toLowerCase()} ${favorite.favoriteParams?.map(
-              (favoriteParam) => ' ' + favoriteParam.param.name.toLowerCase()
-            )}`}
-          </div>
-
-          <IconButton
-            className={styles.delete_button}
-            style={{
-              minHeight: '32px',
-              padding: '4px',
-            }}
-            icon={<IconMinus className="secondary-icon" />}
-            onClick={() => deleteFavorite(favorite.id)}
-          />
-        </div>
+        <PlusMinusButton
+          text={`${
+            favorite.type?.product?.name
+          } ${favorite.type?.name.toLowerCase()} ${favorite.favoriteParams?.map(
+            (favoriteParam) => ' ' + favoriteParam.param.name.toLowerCase()
+          )}`}
+          image={favorite.type?.image}
+          onClick={() => addFinishedProduct(favorite)}
+          onPlusMinusClick={() => deleteFavorite(favorite.id)}
+          key={favorite.id}
+        />
       ))}
     </div>
   );

@@ -1,14 +1,14 @@
-import { Button, Loader, Modal, Search } from 'components';
+import { Button, Loader, Modal, PlusMinusButton, Search } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import TaskDetailMemberItem from './TaskDetailMemberItem/TaskDetailMemberItem';
 import { v4 as uuidv4 } from 'uuid';
 import { IEmployee } from 'models/api/IEmployee';
 import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
 import { ITaskMember } from 'models/api/ITaskMember';
 import { taskSlice } from 'store/reducers/TaskSlice';
 import styles from './TaskDetailMembersModal.module.scss';
+import { defaultAvatar } from 'constants/images';
 
 const TaskDetailMembersModal = () => {
   const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -170,18 +170,18 @@ const TaskDetailMembersModal = () => {
               <div className={styles.employees}>
                 {search !== ''
                   ? foundTaskMembers.map((taskMember) => (
-                      <TaskDetailMemberItem
-                        employee={taskMember.employee}
-                        isAdded={true}
-                        onClick={() => deleteTaskMember(taskMember)}
+                      <PlusMinusButton
+                        text={taskMember.employee.name}
+                        image={taskMember.employee.avatar || defaultAvatar}
+                        onPlusMinusClick={() => deleteTaskMember(taskMember)}
                         key={taskMember.employee.id}
                       />
                     ))
                   : task.taskMembers?.map((taskMember) => (
-                      <TaskDetailMemberItem
-                        employee={taskMember.employee}
-                        isAdded={true}
-                        onClick={() => deleteTaskMember(taskMember)}
+                      <PlusMinusButton
+                        text={taskMember.employee.name}
+                        image={taskMember.employee.avatar || defaultAvatar}
+                        onPlusMinusClick={() => deleteTaskMember(taskMember)}
                         key={taskMember.employee.id}
                       />
                     ))}
@@ -196,18 +196,20 @@ const TaskDetailMembersModal = () => {
               <div className={styles.employees}>
                 {search !== ''
                   ? foundEmployees.map((employee) => (
-                      <TaskDetailMemberItem
-                        employee={employee}
-                        isAdded={false}
-                        onClick={() => addTaskMember(employee)}
+                      <PlusMinusButton
+                        text={employee.name}
+                        image={employee.avatar || defaultAvatar}
+                        isPlus
+                        onPlusMinusClick={() => addTaskMember(employee)}
                         key={employee.id}
                       />
                     ))
                   : employees.map((employee) => (
-                      <TaskDetailMemberItem
-                        employee={employee}
-                        isAdded={false}
-                        onClick={() => addTaskMember(employee)}
+                      <PlusMinusButton
+                        text={employee.name}
+                        image={employee.avatar || defaultAvatar}
+                        isPlus
+                        onPlusMinusClick={() => addTaskMember(employee)}
                         key={employee.id}
                       />
                     ))}
@@ -217,6 +219,7 @@ const TaskDetailMembersModal = () => {
           </div>
         </div>
       </div>
+      <Button onClick={close}>Подтвердить</Button>
     </Modal>
   );
 };
