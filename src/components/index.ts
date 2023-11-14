@@ -32,6 +32,8 @@ import Progress from './UI/Progress/Progress';
 import CopiedItem from './UI/CopiedItem/CopiedItem';
 import AvatarList from './UI/AvatarList/AvatarList';
 import ElectronLinkify from './UI/ElectronLinkify/ElectronLinkify';
+import PlusMinusButton from './UI/PlusMinusButton/PlusMinusButton';
+import MessageTextbox from './UI/MessageTextbox/MessageTextbox';
 
 export {
   Navmenu,
@@ -68,4 +70,6 @@ export {
   CopiedItem,
   AvatarList,
   ElectronLinkify,
+  PlusMinusButton,
+  MessageTextbox,
 };
