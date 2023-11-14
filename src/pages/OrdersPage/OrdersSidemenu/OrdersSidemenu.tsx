@@ -22,6 +22,7 @@ const OrdersSidemenu = () => {
   const activeSidemenuIndex = useAppSelector(
     (state) => state.order.activeSidemenuIndex
   );
+  const sidemenuIsOpen = useAppSelector((state) => state.order.sidemenuIsOpen);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -62,6 +63,10 @@ const OrdersSidemenu = () => {
     []
   );
 
+  const toggleSidemenu = () => {
+    dispatch(orderSlice.actions.setSidemenuIsOpen(!sidemenuIsOpen));
+  };
+
   const changeHandler = (item: ISidemenuItem, index: number) => {
     const status: IStatus = {
       id: item.id,
@@ -79,9 +84,11 @@ const OrdersSidemenu = () => {
 
   return (
     <Sidemenu
+      isOpen={sidemenuIsOpen}
       addButton={addButton}
       items={items}
       defaultActiveItem={items[activeSidemenuIndex]}
+      toggle={toggleSidemenu}
       onChange={changeHandler}
     />
   );

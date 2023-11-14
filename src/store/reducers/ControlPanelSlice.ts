@@ -28,6 +28,7 @@ type Filters = {
 
 type ControlPanelState = Filters & {
   activeTableId: number;
+  sidemenuIsOpen: boolean;
   forceUpdate: boolean;
   isLoading: boolean;
   search: string;
@@ -36,6 +37,7 @@ type ControlPanelState = Filters & {
 
 const initialState: ControlPanelState = {
   activeTableId: 1,
+  sidemenuIsOpen: true,
   forceUpdate: false,
   isLoading: false,
   search: '',
@@ -56,6 +58,9 @@ export const controlPanelSlice = createSlice({
   reducers: {
     setActiveTableId(state, action: PayloadAction<number>) {
       state.activeTableId = action.payload;
+    },
+    setSidemenuIsOpen(state, action: PayloadAction<boolean>) {
+      state.sidemenuIsOpen = action.payload;
     },
     setForceUpdate(state, action: PayloadAction<boolean>) {
       state.forceUpdate = action.payload;

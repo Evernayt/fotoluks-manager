@@ -1,4 +1,10 @@
-import { Icon123, IconCurrencyRubel, IconMove, IconReceiptRefund, IconShoppingCart } from 'icons';
+import {
+  Icon123,
+  IconCurrencyRubel,
+  IconMove,
+  IconReceiptRefund,
+  IconShoppingCart,
+} from 'icons';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Sidemenu } from 'components';
 import { useMemo } from 'react';
@@ -8,6 +14,9 @@ import { moyskladSlice } from 'store/reducers/MoyskladSlice';
 const MoyskladSidemenu = () => {
   const activeSidemenuIndex = useAppSelector(
     (state) => state.moysklad.activeSidemenuIndex
+  );
+  const sidemenuIsOpen = useAppSelector(
+    (state) => state.moysklad.sidemenuIsOpen
   );
 
   const dispatch = useAppDispatch();
@@ -43,14 +52,20 @@ const MoyskladSidemenu = () => {
     []
   );
 
+  const toggleSidemenu = () => {
+    dispatch(moyskladSlice.actions.setSidemenuIsOpen(!sidemenuIsOpen));
+  };
+
   const changeHandler = (_item: ISidemenuItem, index: number) => {
     dispatch(moyskladSlice.actions.setActiveSidemenuIndex(index));
   };
 
   return (
     <Sidemenu
+      isOpen={sidemenuIsOpen}
       items={items}
       defaultActiveItem={items[activeSidemenuIndex]}
+      toggle={toggleSidemenu}
       onChange={changeHandler}
     />
   );

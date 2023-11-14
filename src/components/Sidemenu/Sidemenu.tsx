@@ -5,19 +5,22 @@ import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { IconPlus, IconSidemenu, IconSidemenuChecked } from 'icons';
 
 interface SidemenuProps<T extends ISidemenuItem> {
+  isOpen: boolean;
   items?: T[];
   defaultActiveItem?: T;
-  onChange?: (item: T, index: number) => void;
   addButton?: ISidemenuAddButton;
+  toggle: () => void;
+  onChange?: (item: T, index: number) => void;
 }
 
 const Sidemenu = <T extends ISidemenuItem>({
+  isOpen,
   items,
   defaultActiveItem,
-  onChange,
   addButton,
+  toggle,
+  onChange,
 }: SidemenuProps<T>) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeItem, setActiveItem] = useState<T | undefined>(
     defaultActiveItem
   );
@@ -39,10 +42,6 @@ const Sidemenu = <T extends ISidemenuItem>({
     if (!onChange) return;
     const index = items?.indexOf(item) || 0;
     onChange(item, index);
-  };
-
-  const toggleSidemenu = () => {
-    setIsOpen((prevState) => !prevState);
   };
 
   return (
@@ -131,7 +130,7 @@ const Sidemenu = <T extends ISidemenuItem>({
           id="sidemenu_toggle"
           name="sidemenu_toggle"
           type="checkbox"
-          onChange={toggleSidemenu}
+          onChange={toggle}
         />
         <label className={styles.toggle} htmlFor="sidemenu_toggle">
           {isOpen ? (

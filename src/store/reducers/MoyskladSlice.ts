@@ -5,6 +5,7 @@ type MoyskladState = {
   stores: IStore[];
   activeStore: IStore | null;
   activeSidemenuIndex: number;
+  sidemenuIsOpen: boolean;
   isLoading: boolean;
   search: string;
 };
@@ -13,6 +14,7 @@ const initialState: MoyskladState = {
   stores: [],
   activeStore: null,
   activeSidemenuIndex: 0,
+  sidemenuIsOpen: true,
   isLoading: false,
   search: '',
 };
@@ -29,6 +31,9 @@ export const moyskladSlice = createSlice({
     },
     setActiveSidemenuIndex(state, action: PayloadAction<number>) {
       state.activeSidemenuIndex = action.payload;
+    },
+    setSidemenuIsOpen(state, action: PayloadAction<boolean>) {
+      state.sidemenuIsOpen = action.payload;
     },
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;

@@ -17,6 +17,7 @@ type OrderState = {
   beforeOrder: IOrder;
   activeStatus: IStatus | null;
   activeSidemenuIndex: number;
+  sidemenuIsOpen: boolean;
   finishedProductsForCreate: IFinishedProduct[];
   finishedProductsForUpdate: IFinishedProduct[];
   finishedProductsForDelete: number[];
@@ -42,6 +43,7 @@ const initialState: OrderState = {
   beforeOrder: INITIAL_ORDER,
   activeStatus: { id: 0, name: '', color: '#fff' },
   activeSidemenuIndex: 0,
+  sidemenuIsOpen: true,
   finishedProductsForCreate: [],
   finishedProductsForUpdate: [],
   finishedProductsForDelete: [],
@@ -73,6 +75,9 @@ export const orderSlice = createSlice({
     },
     setActiveSidemenuIndex(state, action: PayloadAction<number>) {
       state.activeSidemenuIndex = action.payload;
+    },
+    setSidemenuIsOpen(state, action: PayloadAction<boolean>) {
+      state.sidemenuIsOpen = action.payload;
     },
     setBeforeOrder(state, action: PayloadAction<IOrder>) {
       state.beforeOrder = action.payload;

@@ -27,6 +27,7 @@ type TaskState = {
   search: string;
   activeStatus: number;
   activeSidemenuIndex: number;
+  sidemenuIsOpen: boolean;
   selectedShop: IShop;
   selectedDepartment: IDepartment;
   iTaskMember: boolean;
@@ -52,6 +53,7 @@ const initialState: TaskState = {
   search: '',
   activeStatus: 0,
   activeSidemenuIndex: 0,
+  sidemenuIsOpen: true,
   selectedShop: ALL_SHOPS,
   selectedDepartment: ALL_DEPARTMENTS,
   iTaskMember: false,
@@ -187,6 +189,9 @@ export const taskSlice = createSlice({
     },
     setActiveSidemenuIndex(state, action: PayloadAction<number>) {
       state.activeSidemenuIndex = action.payload;
+    },
+    setSidemenuIsOpen(state, action: PayloadAction<boolean>) {
+      state.sidemenuIsOpen = action.payload;
     },
     setSelectedShop(state, action: PayloadAction<IShop>) {
       state.selectedShop = action.payload;

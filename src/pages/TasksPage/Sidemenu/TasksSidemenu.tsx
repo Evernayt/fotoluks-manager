@@ -12,6 +12,7 @@ const TasksSidemenu = () => {
   const activeSidemenuIndex = useAppSelector(
     (state) => state.task.activeSidemenuIndex
   );
+  const sidemenuIsOpen = useAppSelector((state) => state.task.sidemenuIsOpen);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -40,6 +41,10 @@ const TasksSidemenu = () => {
     []
   );
 
+  const toggleSidemenu = () => {
+    dispatch(taskSlice.actions.setSidemenuIsOpen(!sidemenuIsOpen));
+  };
+
   const changeHandler = (item: ITaskSidemenuItem, index: number) => {
     dispatch(taskSlice.actions.setActiveStatus(item.status));
     dispatch(taskSlice.actions.setActiveSidemenuIndex(index));
@@ -52,9 +57,11 @@ const TasksSidemenu = () => {
 
   return (
     <Sidemenu
+      isOpen={sidemenuIsOpen}
       addButton={addButton}
       items={items}
       defaultActiveItem={items[activeSidemenuIndex]}
+      toggle={toggleSidemenu}
       onChange={changeHandler}
     />
   );

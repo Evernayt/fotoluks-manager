@@ -8,13 +8,17 @@ import {
   IconShop,
   IconUser,
 } from 'icons';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Sidemenu } from 'components';
 import { useMemo } from 'react';
 import { ISidemenuItem } from 'components/Sidemenu/Sidemenu.types';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 
 const ControlPanelSidemenu = () => {
+  const sidemenuIsOpen = useAppSelector(
+    (state) => state.controlPanel.sidemenuIsOpen
+  );
+
   const dispatch = useAppDispatch();
 
   const items = useMemo<ISidemenuItem[]>(
@@ -63,14 +67,20 @@ const ControlPanelSidemenu = () => {
     []
   );
 
+  const toggleSidemenu = () => {
+    dispatch(controlPanelSlice.actions.setSidemenuIsOpen(!sidemenuIsOpen));
+  };
+
   const changeHandler = (item: ISidemenuItem) => {
     dispatch(controlPanelSlice.actions.setActiveTableId(item.id));
   };
 
   return (
     <Sidemenu
+      isOpen={sidemenuIsOpen}
       items={items}
       defaultActiveItem={items[0]}
+      toggle={toggleSidemenu}
       onChange={changeHandler}
     />
   );
