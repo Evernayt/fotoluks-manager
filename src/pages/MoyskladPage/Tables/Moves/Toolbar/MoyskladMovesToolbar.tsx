@@ -11,29 +11,13 @@ import { moveSlice } from 'store/reducers/MoveSlice';
 interface MoyskladMovesToolbarProps {
   reload: () => void;
   onLimitChange: (limit: number) => void;
-  onTargetShopChange: (name: string) => void;
 }
 
 const MoyskladMovesToolbar: FC<MoyskladMovesToolbarProps> = ({
   reload,
   onLimitChange,
-  onTargetShopChange,
 }) => {
-  const shops = useAppSelector((state) => state.app.shops);
-  const activeShop = useAppSelector((state) => state.app.activeShop);
   const employee = useAppSelector((state) => state.employee.employee);
-
-  const targetShopItems = useMemo<ISelectItem[]>(() => {
-    const items: ISelectItem[] = [];
-    const filteredShops = shops.filter((shop) => shop.id !== activeShop.id);
-    filteredShops.forEach((filteredShop) => {
-      items.push({
-        id: filteredShop.id,
-        name: filteredShop.abbreviation,
-      });
-    });
-    return items;
-  }, []);
 
   const limitItems = useMemo<ISelectItem[]>(
     () => [
@@ -81,7 +65,7 @@ const MoyskladMovesToolbar: FC<MoyskladMovesToolbarProps> = ({
   const rightSection = () => {
     return (
       <>
-        {employee?.departments && (
+        {employee?.departments && employee.departments.length > 1 && (
           <SelectButton
             title="Отдел"
             items={employee.departments}
@@ -91,13 +75,6 @@ const MoyskladMovesToolbar: FC<MoyskladMovesToolbarProps> = ({
             tooltipProps={{ delay: 800 }}
           />
         )}
-        <SelectButton
-          title="На склад"
-          items={targetShopItems}
-          defaultSelectedItem={targetShopItems[0]}
-          onChange={(item) => onTargetShopChange(item.name)}
-          placement={Placements.bottomEnd}
-        />
         <SelectButton
           items={limitItems}
           defaultSelectedItem={limitItems[0]}

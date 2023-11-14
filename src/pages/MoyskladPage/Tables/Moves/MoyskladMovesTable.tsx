@@ -16,11 +16,9 @@ const MoyskladMovesTable = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(25);
   const [moves, setMoves] = useState<IMove[]>([]);
-  const [targetShop, setTargetShop] = useState<string>('');
 
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
   const department = useAppSelector((state) => state.move.department);
-  const activeShop = useAppSelector((state) => state.app.activeShop);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -50,16 +48,12 @@ const MoyskladMovesTable = () => {
     const controller = new AbortController();
     fetchMoves(0, controller.signal);
     return () => controller.abort();
-  }, [department, targetShop]);
+  }, [department]);
 
   const fetchMoves = (offset: number, signal?: AbortSignal) => {
-    if (!targetShop) {
-      dispatch(moyskladSlice.actions.setIsLoading(false));
-      return;
-    }
     dispatch(moyskladSlice.actions.setIsLoading(true));
 
-    const description = `[FM] ${activeShop.abbreviation} -> ${targetShop} (Отдел: ${department?.name})`;
+    const description = `(Отдел: ${department?.name}`;
     MoyskladAPI.getMoves({ limit, offset, description }, signal)
       .then((data) => {
         if (!data.rows.length) {
@@ -91,11 +85,7 @@ const MoyskladMovesTable = () => {
 
   return (
     <>
-      <MoyskladMovesToolbar
-        reload={reload}
-        onLimitChange={setLimit}
-        onTargetShopChange={setTargetShop}
-      />
+      <MoyskladMovesToolbar reload={reload} onLimitChange={setLimit} />
       <Table
         columns={columns}
         data={moves}
