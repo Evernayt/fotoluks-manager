@@ -8,8 +8,11 @@ import { Modes } from 'constants/app';
 import ControlPanelCategoriesToolbar from './Toolbar/ControlPanelCategoriesToolbar';
 import { ICategoriesFilter, ICategory } from 'models/api/ICategory';
 import { useDebounce } from 'hooks';
-import CategoryMenuCell from './Cells/CategoryMenuCell';
 import CategoryAPI from 'api/CategoryAPI/CategoryAPI';
+import { useContextMenu } from 'react-contexify';
+import CategoriesContextMenu, {
+  CATEGORIES_MENU_ID,
+} from './ContextMenu/CategoriesContextMenu';
 
 const ControlPanelCategoriesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -38,11 +41,6 @@ const ControlPanelCategoriesTable = () => {
         accessor: 'name',
         style: { width: '100%' },
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: CategoryMenuCell,
-      },
     ],
     []
   );
@@ -66,6 +64,12 @@ const ControlPanelCategoriesTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: CATEGORIES_MENU_ID });
+
+  const handleContextMenu = (row: Row<ICategory>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchCategories = (page: number, filter?: ICategoriesFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -103,6 +107,7 @@ const ControlPanelCategoriesTable = () => {
 
   return (
     <>
+      <CategoriesContextMenu />
       <ControlPanelCategoriesToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -113,6 +118,7 @@ const ControlPanelCategoriesTable = () => {
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );

@@ -5,11 +5,14 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import ControlPanelUsersToolbar from './Toolbar/ControlPanelUsersToolbar';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
-import UserMenuCell from './Cells/UserMenuCell';
 import { IUser, IUsersFilter } from 'models/api/IUser';
 import { useDebounce } from 'hooks';
 import UserAPI from 'api/UserAPI/UserAPI';
 import { Modes } from 'constants/app';
+import UsersContextMenu, {
+  USERS_MENU_ID,
+} from './ContextMenu/UsersContextMenu';
+import { useContextMenu } from 'react-contexify';
 
 const ControlPanelUsersTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -52,11 +55,6 @@ const ControlPanelUsersTable = () => {
         Header: 'Telegram',
         accessor: 'telegram',
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: UserMenuCell,
-      },
     ],
     []
   );
@@ -80,6 +78,12 @@ const ControlPanelUsersTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: USERS_MENU_ID });
+
+  const handleContextMenu = (row: Row<IUser>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchUsers = (page: number, filter?: IUsersFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -117,6 +121,7 @@ const ControlPanelUsersTable = () => {
 
   return (
     <>
+      <UsersContextMenu />
       <ControlPanelUsersToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -127,6 +132,7 @@ const ControlPanelUsersTable = () => {
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );

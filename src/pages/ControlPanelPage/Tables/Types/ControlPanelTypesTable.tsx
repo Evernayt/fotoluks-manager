@@ -7,9 +7,12 @@ import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { Modes } from 'constants/app';
 import { IType, ITypesFilter } from 'models/api/IType';
-import TypeMenuCell from './Cells/TypeMenuCell';
 import { useDebounce } from 'hooks';
 import TypeAPI from 'api/TypeAPI/TypeAPI';
+import { useContextMenu } from 'react-contexify';
+import TypesContextMenu, {
+  TYPES_MENU_ID,
+} from './ContextMenu/TypesContextMenu';
 
 const ControlPanelTypesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -49,11 +52,6 @@ const ControlPanelTypesTable = () => {
         Header: 'Цена',
         accessor: 'price',
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: TypeMenuCell,
-      },
     ],
     []
   );
@@ -79,6 +77,12 @@ const ControlPanelTypesTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: TYPES_MENU_ID });
+
+  const handleContextMenu = (row: Row<IType>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchTypes = (page: number, filter?: ITypesFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -116,6 +120,7 @@ const ControlPanelTypesTable = () => {
 
   return (
     <>
+      <TypesContextMenu />
       <ControlPanelTypesToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -126,6 +131,7 @@ const ControlPanelTypesTable = () => {
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );

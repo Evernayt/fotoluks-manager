@@ -1,5 +1,5 @@
 import Loader from 'components/Loader/Loader';
-import { ReactNode } from 'react';
+import { ReactNode, MouseEvent } from 'react';
 import { Column, Row, useTable } from 'react-table';
 import Pagination, { PaginationProps } from '../Pagination/Pagination';
 import styles from './Table.module.scss';
@@ -17,6 +17,7 @@ interface TableProps<T extends object> {
   pagination?: PaginationProps;
   paginationVisibility?: boolean;
   isHaveToolbar?: boolean;
+  onContextMenu?: (row: Row<T>, e: MouseEvent<HTMLTableRowElement>) => void;
 }
 
 const Table = <T extends object>({
@@ -31,10 +32,19 @@ const Table = <T extends object>({
   pagination,
   paginationVisibility = true,
   isHaveToolbar = true,
+  onContextMenu,
 }: TableProps<T>) => {
   const rowClickHandler = (row: Row<T>) => {
     if (!onRowClick) return;
     onRowClick(row);
+  };
+
+  const contextMenuHandler = (
+    row: Row<T>,
+    e: MouseEvent<HTMLTableRowElement>
+  ) => {
+    if (!onContextMenu) return;
+    onContextMenu(row, e);
   };
 
   const getCustomCell = (cell: any): ReactNode => {
@@ -110,6 +120,7 @@ const Table = <T extends object>({
                         onClick={(e: any) =>
                           e.target.tagName === 'TD' && rowClickHandler(row)
                         }
+                        onContextMenu={(e) => contextMenuHandler(row, e)}
                       >
                         {row.cells.map((cell: any) => {
                           const customCell = getCustomCell(cell);

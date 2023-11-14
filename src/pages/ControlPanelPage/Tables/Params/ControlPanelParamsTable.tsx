@@ -8,8 +8,11 @@ import { Modes } from 'constants/app';
 import ControlPanelParamsToolbar from './Toolbar/ControlPanelParamsToolbar';
 import { IParam, IParamsFilter } from 'models/api/IParam';
 import { useDebounce } from 'hooks';
-import ParamsMenuCell from './Cells/ParamsMenuCell';
 import ParamAPI from 'api/ParamAPI/ParamAPI';
+import { useContextMenu } from 'react-contexify';
+import ParamsContextMenu, {
+  PARAMS_MENU_ID,
+} from './ContextMenu/ParamsContextMenu';
 
 const ControlPanelParamsTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -48,11 +51,6 @@ const ControlPanelParamsTable = () => {
         accessor: 'feature.name',
         style: { width: '40%' },
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: ParamsMenuCell,
-      },
     ],
     []
   );
@@ -76,6 +74,12 @@ const ControlPanelParamsTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: PARAMS_MENU_ID });
+
+  const handleContextMenu = (row: Row<IParam>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchParams = (page: number, filter?: IParamsFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -113,6 +117,7 @@ const ControlPanelParamsTable = () => {
 
   return (
     <>
+      <ParamsContextMenu />
       <ControlPanelParamsToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -123,6 +128,7 @@ const ControlPanelParamsTable = () => {
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );

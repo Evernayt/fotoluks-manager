@@ -7,9 +7,12 @@ import { modalSlice } from 'store/reducers/ModalSlice';
 import { Modes } from 'constants/app';
 import ControlPanelProductsToolbar from './Toolbar/ControlPanelProductsToolbar';
 import { IProduct, IProductsFilter } from 'models/api/IProduct';
-import ProductMenuCell from './Cells/ProductMenuCell';
 import { useDebounce } from 'hooks';
 import ProductAPI from 'api/ProductAPI/ProductAPI';
+import { useContextMenu } from 'react-contexify';
+import ProductsContextMenu, {
+  PRODUCTS_MENU_ID,
+} from './ContextMenu/ProductsContextMenu';
 
 const ControlPanelProductsTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -52,11 +55,6 @@ const ControlPanelProductsTable = () => {
         Header: 'Категория',
         accessor: 'category.name',
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: ProductMenuCell,
-      },
     ],
     []
   );
@@ -82,6 +80,12 @@ const ControlPanelProductsTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: PRODUCTS_MENU_ID });
+
+  const handleContextMenu = (row: Row<IProduct>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchProducts = (page: number, filter?: IProductsFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -119,6 +123,7 @@ const ControlPanelProductsTable = () => {
 
   return (
     <>
+      <ProductsContextMenu />
       <ControlPanelProductsToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -130,6 +135,7 @@ const ControlPanelProductsTable = () => {
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         paginationVisibility={search ? false : true}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );

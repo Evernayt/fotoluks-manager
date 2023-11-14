@@ -8,8 +8,11 @@ import { Modes } from 'constants/app';
 import ControlPanelShopsToolbar from './Toolbar/ControlPanelShopsToolbar';
 import { IShop, IShopsFilter } from 'models/api/IShop';
 import { useDebounce } from 'hooks';
-import ShopMenuCell from './Cells/ShopMenuCell';
 import ShopAPI from 'api/ShopAPI/ShopAPI';
+import { useContextMenu } from 'react-contexify';
+import ShopsContextMenu, {
+  SHOPS_MENU_ID,
+} from './ContextMenu/ShopsContextMenu';
 
 const ControlPanelShopsTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -49,11 +52,6 @@ const ControlPanelShopsTable = () => {
         accessor: 'address',
         style: { whiteSpace: 'nowrap' },
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: ShopMenuCell,
-      },
     ],
     []
   );
@@ -77,6 +75,12 @@ const ControlPanelShopsTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: SHOPS_MENU_ID });
+
+  const handleContextMenu = (row: Row<IShop>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchShops = (page: number, filter?: IShopsFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -114,6 +118,7 @@ const ControlPanelShopsTable = () => {
 
   return (
     <>
+      <ShopsContextMenu />
       <ControlPanelShopsToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -124,6 +129,7 @@ const ControlPanelShopsTable = () => {
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );

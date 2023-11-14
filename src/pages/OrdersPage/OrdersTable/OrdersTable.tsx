@@ -11,13 +11,19 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Cell, Row } from 'react-table';
 import { orderSlice } from 'store/reducers/OrderSlice';
-import OrderMenuCell from './OrdersCells/OrderMenuCell';
 import OrderStatusCell from './OrdersCells/OrderStatusCell';
 import OrdersToolbar from './OrdersToolbar/OrdersToolbar';
-import OrderDeadlineCell from './OrdersCells/OrderDeadlineCell';
 import { useDebounce } from 'hooks';
-import { createServicesName } from './OrdersTable.service';
+import {
+  createServicesName,
+  getEmployeeNameByStatusId,
+} from './OrdersTable.service';
 import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
+import OrderDeadlineCell from './OrdersCells/DeadlineCell/OrderDeadlineCell';
+import { useContextMenu } from 'react-contexify';
+import OrdersContextMenu, {
+  ORDERS_MENU_ID,
+} from './OrdersContextMenu/OrdersContextMenu';
 
 const OrdersTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -46,7 +52,7 @@ const OrdersTable = () => {
       {
         Header: 'Дата создания',
         accessor: 'createdAt',
-        style: { minWidth: '110px' },
+        style: { whiteSpace: 'nowrap' },
         Cell: ({ value }: Cell<IOrder>) =>
           moment(value).format(DEF_DATE_FORMAT),
       },
@@ -66,24 +72,31 @@ const OrdersTable = () => {
       },
       {
         Header: 'Филиал',
-        accessor: 'shop.name',
+        accessor: 'shop.abbreviation',
       },
       {
         Header: 'Срок',
-        style: { minWidth: '110px' },
+        style: { whiteSpace: 'nowrap' },
         accessor: 'deadline',
         Cell: ({ value }: Cell<IOrder>) =>
           value === null ? 'Не указано' : moment(value).format(DEF_DATE_FORMAT),
       },
       {
-        Header: 'Имя клиента',
-        style: { minWidth: '100px' },
+        Header: 'Клиент',
+        style: { whiteSpace: 'nowrap' },
         accessor: 'user.name',
       },
       {
-        Header: '',
-        accessor: 'menu',
-        Cell: OrderMenuCell,
+        Header: 'Принял',
+        style: { whiteSpace: 'nowrap' },
+        accessor: (order: IOrder) =>
+          getEmployeeNameByStatusId(1, order.orderInfos || []),
+      },
+      {
+        Header: 'Отдал',
+        style: { whiteSpace: 'nowrap' },
+        accessor: (order: IOrder) =>
+          getEmployeeNameByStatusId(4, order.orderInfos || []),
       },
     ],
     []
@@ -118,6 +131,12 @@ const OrdersTable = () => {
     }
     dispatch(orderSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: ORDERS_MENU_ID });
+
+  const handleContextMenu = (row: Row<IOrder>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchOrders = (page: number, filter?: IOrdersFilter) => {
     if (!activeStatus) return;
@@ -167,6 +186,7 @@ const OrdersTable = () => {
 
   return (
     <>
+      <OrdersContextMenu />
       <OrdersToolbar reload={() => reload(page)} onLimitChange={setLimit} />
       <Table
         columns={columns}
@@ -175,6 +195,7 @@ const OrdersTable = () => {
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         paginationVisibility={search ? false : true}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
         customCells={[
           {
             accessor: 'status',

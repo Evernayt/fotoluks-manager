@@ -8,8 +8,11 @@ import { Modes } from 'constants/app';
 import ControlPanelFeaturesToolbar from './Toolbar/ControlPanelFeaturesToolbar';
 import { IFeature, IFeaturesFilter } from 'models/api/IFeature';
 import { useDebounce } from 'hooks';
-import FeatureMenuCell from './Cells/FeatureMenuCell';
 import FeatureAPI from 'api/FeatureAPI/FeatureAPI';
+import { useContextMenu } from 'react-contexify';
+import FeaturesContextMenu, {
+  FEATURES_MENU_ID,
+} from './ContextMenu/FeaturesContextMenu';
 
 const ControlPanelFeaturesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -43,11 +46,6 @@ const ControlPanelFeaturesTable = () => {
         accessor: 'pluralName',
         style: { width: '80%' },
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: FeatureMenuCell,
-      },
     ],
     []
   );
@@ -71,6 +69,12 @@ const ControlPanelFeaturesTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: FEATURES_MENU_ID });
+
+  const handleContextMenu = (row: Row<IFeature>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchFeatures = (page: number, filter?: IFeaturesFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -108,6 +112,7 @@ const ControlPanelFeaturesTable = () => {
 
   return (
     <>
+      <FeaturesContextMenu />
       <ControlPanelFeaturesToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -118,6 +123,7 @@ const ControlPanelFeaturesTable = () => {
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );

@@ -6,10 +6,13 @@ import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { useDebounce } from 'hooks';
 import { IEmployee, IEmployeesFilter } from 'models/api/IEmployee';
-import EmployeeMenuCell from './Cells/EmployeeMenuCell';
 import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
 import ControlPanelEmployeesToolbar from './Toolbar/ControlPanelEmployeesToolbar';
 import { Modes } from 'constants/app';
+import { useContextMenu } from 'react-contexify';
+import EmployeesContextMenu, {
+  EMPLOYEES_MENU_ID,
+} from './ContextMenu/EmployeesContextMenu';
 
 const ControlPanelEmployeesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -48,11 +51,6 @@ const ControlPanelEmployeesTable = () => {
         accessor: 'role.name',
         style: { width: '30%' },
       },
-      {
-        Header: '',
-        accessor: 'menu',
-        Cell: EmployeeMenuCell,
-      },
     ],
     []
   );
@@ -78,6 +76,12 @@ const ControlPanelEmployeesTable = () => {
     }
     dispatch(controlPanelSlice.actions.setForceUpdate(false));
   }, [forceUpdate]);
+
+  const { show } = useContextMenu({ id: EMPLOYEES_MENU_ID });
+
+  const handleContextMenu = (row: Row<IEmployee>, event: any) => {
+    show({ event, props: { row } });
+  };
 
   const fetchEmployees = (page: number, filter?: IEmployeesFilter) => {
     dispatch(controlPanelSlice.actions.setIsLoading(true));
@@ -115,6 +119,7 @@ const ControlPanelEmployeesTable = () => {
 
   return (
     <>
+      <EmployeesContextMenu />
       <ControlPanelEmployeesToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
@@ -125,6 +130,7 @@ const ControlPanelEmployeesTable = () => {
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
+        onContextMenu={handleContextMenu}
       />
     </>
   );
