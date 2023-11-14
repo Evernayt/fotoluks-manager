@@ -1,4 +1,5 @@
 import { IOrder } from 'models/api/IOrder';
+import { IOrderInfo } from 'models/api/IOrderInfo';
 
 export const createServicesName = (order: IOrder) => {
   const finishedProducts = order.finishedProducts?.filter(
@@ -16,4 +17,19 @@ export const createServicesName = (order: IOrder) => {
     )
     .join(', ');
   return services ? services : 'Нет услуг';
+};
+
+export const getEmployeeNameByStatusId = (
+  statusId: number,
+  orderInfos: IOrderInfo[]
+): string => {
+  const orderInfoWithStatus = orderInfos.find(
+    (orderInfo) => orderInfo.statusId === statusId
+  );
+
+  if (orderInfoWithStatus && orderInfoWithStatus.employee) {
+    return orderInfoWithStatus.employee.name;
+  } else {
+    return '';
+  }
 };
