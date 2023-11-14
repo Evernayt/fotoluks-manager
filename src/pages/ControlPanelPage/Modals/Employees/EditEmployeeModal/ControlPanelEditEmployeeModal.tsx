@@ -16,7 +16,6 @@ import { useEffect, useState } from 'react';
 import { controlPanelSlice } from 'store/reducers/ControlPanelSlice';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
-import { IEmployee } from 'models/api/IEmployee';
 import styles from './ControlPanelEditEmployeeModal.module.scss';
 import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
 import { UpdateEmployeeDto } from 'api/EmployeeAPI/dto/update-employee.dto';
@@ -42,7 +41,7 @@ const ControlPanelEditEmployeeModal = () => {
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [avatar, setAvatar] = useState<string>('');
-  const [employee, setEmployee] = useState<IEmployee>();
+  const [employeeId, setEmployeeId] = useState<number>();
   const [apps, setApps] = useState<IApp[]>([]);
   const [appOptions, setAppOptions] = useState<IDropdownButtonOption[]>([]);
   const [departments, setDepartments] = useState<IDepartment[]>([]);
@@ -56,6 +55,7 @@ const ControlPanelEditEmployeeModal = () => {
   const editEmployeeModal = useAppSelector(
     (state) => state.modal.controlPanelEditEmployeeModal
   );
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
   const appsAccordion = useModal();
@@ -80,7 +80,7 @@ const ControlPanelEditEmployeeModal = () => {
     setName(data.name);
     setLogin(data.login);
     setAvatar(data.avatar || '');
-    setEmployee(data);
+    setEmployeeId(data.id);
     if (data.role) setSelectedRole(data.role);
     if (data.apps) {
       setApps(data.apps);
@@ -173,7 +173,7 @@ const ControlPanelEditEmployeeModal = () => {
     setLogin('');
     setPassword('');
     setAvatar('');
-    setEmployee(undefined);
+    setEmployeeId(0);
     setApps([]);
     setDepartments([]);
     setAppOptions([]);
@@ -184,13 +184,15 @@ const ControlPanelEditEmployeeModal = () => {
   };
 
   const updateEmployee = () => {
+    if (employeeId === 0) return;
+
     const appIds: number[] = [];
     const departmentIds: number[] = [];
     apps.forEach((app) => appIds.push(app.id));
     departments.forEach((department) => departmentIds.push(department.id));
 
     const updatedEmployee: UpdateEmployeeDto = {
-      id: employee?.id,
+      id: employeeId,
       name,
       login,
       roleId: selectedRole.id,
@@ -236,21 +238,20 @@ const ControlPanelEditEmployeeModal = () => {
   };
 
   const editAvatar = (image: File) => {
+    if (employeeId === 0) return;
     FileAPI.uploadAvatar(image).then((res) => {
       if (res.ok) {
         res.json().then((data) => {
-          if (employee) {
-            const updatedEmployee: UpdateEmployeeDto = {
-              id: employee.id,
-              avatar: data.link,
-            };
-            EmployeeAPI.update(updatedEmployee).then((data2) => {
-              setAvatar(data.link);
-              if (data2.id === employee.id) {
-                dispatch(employeeSlice.actions.updateEmployee(data2));
-              }
-            });
-          }
+          const updatedEmployee: UpdateEmployeeDto = {
+            id: employeeId,
+            avatar: data.link,
+          };
+          EmployeeAPI.update(updatedEmployee).then((data2) => {
+            setAvatar(data.link);
+            if (data2.id === employee?.id) {
+              dispatch(employeeSlice.actions.updateEmployee(data2));
+            }
+          });
         });
       } else {
         res.json().then((data) => {
@@ -284,7 +285,7 @@ const ControlPanelEditEmployeeModal = () => {
                 />
               </div>
             )}
-            <div className={styles.controls}>
+            <div className={styles.inputs}>
               <Textbox
                 label="Имя"
                 value={name}
