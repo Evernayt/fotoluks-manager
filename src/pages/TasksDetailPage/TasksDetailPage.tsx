@@ -21,6 +21,7 @@ import TasksDetailNavmenu from './Navmenu/TasksDetailNavmenu';
 import TasksDetailSidemenu from './Sidemenu/TasksDetailSidemenu';
 import styles from './TasksDetailPage.module.scss';
 import TaskDetailSubtasksModal from './Modals/SubtasksModal/TaskDetailSubtasksModal';
+import TaskDetailEditMessageModal from './Modals/EditMessageModal/TaskDetailEditMessageModal';
 
 type LocationState = {
   state: {
@@ -226,6 +227,7 @@ const TasksDetailPage = () => {
           closeTaskDetail={closeTaskDetail}
         />
       )}
+      <TaskDetailEditMessageModal />
       <TaskDetailSubtasksModal />
       <TaskDetailMembersModal />
       <TasksDetailNavmenu
