@@ -3,6 +3,7 @@ import { IEmployee } from './api/IEmployee';
 import { IFeature } from './api/IFeature';
 import { IOrder } from './api/IOrder';
 import { INotification } from './api/moysklad/INotification';
+import { ITaskMessage } from './api/ITaskMessage';
 
 export interface IModal {
   isShowing?: boolean;
@@ -81,4 +82,8 @@ export interface IEndingGoodsEditProductModal extends IModal {
 export interface IUpdatePriceModal extends IModal {
   id: string;
   name: string;
+}
+
+export interface ITaskEditMessageModal extends IModal {
+  taskMessage: ITaskMessage | null;
 }

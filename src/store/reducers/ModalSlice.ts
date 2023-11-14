@@ -14,6 +14,7 @@ import {
   INITIAL_LOGIN_MODAL,
   INITIAL_MODAL,
   INITIAL_ORDER_MODAL,
+  INITIAL_TASK_EDIT_MESSAGE_MODAL,
   INITIAL_UPDATE_PRICE_MODAL,
   INITIAL_USER_MODAL,
   INITIAL_USER_REGISTRATION_MODAL,
@@ -36,6 +37,7 @@ import {
   IEndingGoodsProductModal,
   IEndingGoodsEditProductModal,
   IUpdatePriceModal,
+  ITaskEditMessageModal,
 } from 'models/IModal';
 
 type ModalState = {
@@ -74,6 +76,7 @@ type ModalState = {
   updatePriceModal: IUpdatePriceModal;
   defectiveGoodsModal: IModal;
   taskSubtasksModal: IModal;
+  taskEditMessageModal: ITaskEditMessageModal;
 };
 
 const initialState: ModalState = {
@@ -112,6 +115,7 @@ const initialState: ModalState = {
   updatePriceModal: INITIAL_UPDATE_PRICE_MODAL,
   defectiveGoodsModal: INITIAL_MODAL,
   taskSubtasksModal: INITIAL_MODAL,
+  taskEditMessageModal: INITIAL_TASK_EDIT_MESSAGE_MODAL,
 };
 
 interface OpenModalProps<K = keyof ModalState> {

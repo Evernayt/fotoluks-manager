@@ -15,6 +15,8 @@ const TaskDetailCommentItemLeft: FC<TaskDetailCommentItemLeftProps> = ({
 }) => {
   const created = moment(taskMessage.createdAt).format(DEF_DATE_FORMAT);
 
+  const getEditedText = taskMessage.edited ? '(изменено)' : '';
+
   return (
     <li className={styles.container}>
       <img
@@ -26,7 +28,9 @@ const TaskDetailCommentItemLeft: FC<TaskDetailCommentItemLeftProps> = ({
         <div className={styles.name}>{taskMessage.employee.name}</div>
         <div className={styles.left_section}>
           <ElectronLinkify>{taskMessage.message}</ElectronLinkify>
-          <div className={styles.date}>{created}</div>
+          <div
+            className={styles.bottom_text}
+          >{`${getEditedText} ${created}`}</div>
         </div>
       </div>
     </li>

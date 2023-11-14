@@ -1,5 +1,6 @@
 import {
   IEndingGoodsEditProductModal,
+  ITaskEditMessageModal,
   IUpdatePriceModal,
 } from './../../models/IModal';
 import { Modes } from 'constants/app';
@@ -116,4 +117,9 @@ export const INITIAL_UPDATE_PRICE_MODAL: IUpdatePriceModal = {
   ...INITIAL_MODAL,
   id: '',
   name: '',
+};
+
+export const INITIAL_TASK_EDIT_MESSAGE_MODAL: ITaskEditMessageModal = {
+  ...INITIAL_MODAL,
+  taskMessage: null,
 };

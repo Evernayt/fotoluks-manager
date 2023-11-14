@@ -7,6 +7,7 @@ export interface ITaskMessage {
   createdAt: string;
   taskId: number;
   employee: IEmployee;
+  edited: boolean;
 }
 
 export type ITaskMessageData = IData<ITaskMessage[]>;

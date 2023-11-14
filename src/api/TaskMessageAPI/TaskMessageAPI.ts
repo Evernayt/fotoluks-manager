@@ -2,6 +2,7 @@ import { $authHost } from 'api';
 import { ITaskMessage, ITaskMessageData } from 'models/api/ITaskMessage';
 import { CreateTaskMessageDto } from './dto/create-task-message.dto';
 import { GetTaskMessagesDto } from './dto/get-task-messages.dto';
+import { UpdateTaskMessageDto } from './dto/update-task-message.dto';
 
 export default class TaskMessageAPI {
   static async create(
@@ -22,6 +23,13 @@ export default class TaskMessageAPI {
       params: getTaskMessagesDto,
       signal,
     });
+    return data;
+  }
+
+  static async update(
+    updateTaskMessageDto?: UpdateTaskMessageDto
+  ): Promise<ITaskMessage> {
+    const { data } = await $authHost.put('task-messages', updateTaskMessageDto);
     return data;
   }
 }
