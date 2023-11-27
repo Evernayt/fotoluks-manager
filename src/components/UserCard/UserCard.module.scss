@@ -38,6 +38,11 @@
 
 .user_phone {
   color: var(--secondary-text-color);
+  cursor: pointer;
+}
+
+.user_no_phone {
+  color: var(--secondary-text-color);
 }
 
 .user_social {

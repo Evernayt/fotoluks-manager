@@ -7,6 +7,7 @@ import { mask } from 'node-masker';
 import { FC, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import styles from './UserCard.module.scss';
+import { NOT_INDICATED } from 'constants/app';
 
 interface UserCardProps {
   user: IUser;
@@ -24,6 +25,10 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 500);
     });
+  };
+
+  const openWhatsApp = () => {
+    window.open(`https://web.whatsapp.com/send/?phone=${user.phone}`);
   };
 
   const openEditUserModal = () => {
@@ -46,11 +51,15 @@ const UserCard: FC<UserCardProps> = ({ user, isEditable = false, close }) => {
           />
           <div className={styles.user_info}>
             <span className={styles.user_name}>{user.name}</span>
-            <span className={styles.user_phone}>
-              {user.phone
-                ? mask(user.phone, '8 (999) 999-99-99')
-                : 'Не указано'}
-            </span>
+            {user.phone ? (
+              <Tooltip label="Открыть в WhatsApp" placement="bottom">
+                <span className={styles.user_phone} onClick={openWhatsApp}>
+                  {mask(user.phone, '8 (999) 999-99-99')}
+                </span>
+              </Tooltip>
+            ) : (
+              <span className={styles.user_no_phone}>{NOT_INDICATED}</span>
+            )}
             <div className={styles.user_social}>
               {user.email && (
                 <Tooltip label="Скопировано" disabled={!isCopied} delay={0}>
