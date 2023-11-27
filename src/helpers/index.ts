@@ -10,6 +10,7 @@ import getApps from './getApps';
 import getDateDiffDays from './getDateDiffDays';
 import accessCheck from './accessCheck';
 import removeBeforeString from './removeBeforeString';
+import correctPhone from './correctPhone';
 
 export {
   calcPlacement,
@@ -24,4 +25,5 @@ export {
   getDateDiffDays,
   accessCheck,
   removeBeforeString,
+  correctPhone,
 };

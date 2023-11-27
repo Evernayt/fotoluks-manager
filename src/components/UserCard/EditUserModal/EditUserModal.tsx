@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { modalSlice } from 'store/reducers/ModalSlice';
 import { orderSlice } from 'store/reducers/OrderSlice';
 import styles from './EditUserModal.module.scss';
+import { correctPhone } from 'helpers';
 
 const EditUserModal = () => {
   const [name, setName] = useState<string>('');
@@ -29,6 +30,10 @@ const EditUserModal = () => {
       isVerified();
     }
   }, [editUserModal.isShowing]);
+
+  const phoneChangeHandler = (phone: string) => {
+    setPhone(correctPhone(phone));
+  };
 
   const isVerified = () => {
     VerificationAPI.isVerified(editUserModal.phone).then((data) => {
@@ -95,7 +100,7 @@ const EditUserModal = () => {
           <MaskedTextbox
             label="Телефон"
             value={phone}
-            setValue={setPhone}
+            setValue={phoneChangeHandler}
             mask="8 (999) 999-99-99"
             disabled={isPhoneVerified}
           />

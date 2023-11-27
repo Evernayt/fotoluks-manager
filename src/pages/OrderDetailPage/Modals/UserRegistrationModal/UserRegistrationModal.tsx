@@ -11,7 +11,7 @@ import {
 } from 'components';
 import { showGlobalMessage } from 'components/GlobalMessage/GlobalMessage.service';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { firstLetterToUpperCase } from 'helpers';
+import { correctPhone, firstLetterToUpperCase } from 'helpers';
 import { useModal } from 'hooks';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IUser } from 'models/api/IUser';
@@ -47,10 +47,8 @@ const UserRegistrationModal = () => {
 
         if (!numbers) {
           numbers = '';
-        } else if (numbers.startsWith('8')) {
-          numbers = numbers.substring(0, 11);
         } else {
-          numbers = '8' + numbers.substring(0, 10);
+          numbers = correctPhone(numbers);
         }
 
         const words = userRegistrationModal.text
@@ -63,6 +61,10 @@ const UserRegistrationModal = () => {
       }
     }
   }, [userRegistrationModal.isShowing]);
+
+  const phoneChangeHandler = (phone: string) => {
+    setPhone(correctPhone(phone));
+  };
 
   const registration = () => {
     UserAPI.getOneByPhone(phone).then((data) => {
@@ -127,7 +129,7 @@ const UserRegistrationModal = () => {
             <MaskedTextbox
               label="Телефон"
               value={phone}
-              setValue={setPhone}
+              setValue={phoneChangeHandler}
               mask="8 (999) 999-99-99"
             />
           </div>
