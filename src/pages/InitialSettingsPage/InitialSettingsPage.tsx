@@ -1,7 +1,7 @@
 import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { Button, SelectButton } from 'components';
 import { ButtonVariants } from 'components/UI/Button/Button';
-import { logo } from 'constants/images';
+import { logoLight } from 'constants/images';
 import { LOGIN_ROUTE } from 'constants/paths';
 import {
   getActiveShop,
@@ -75,7 +75,7 @@ const InitialSettingsPage = () => {
 
   return (
     <div className={styles.container}>
-      <img className={styles.logo} src={logo} />
+      <img className={styles.logo} src={logoLight} />
       <div className={styles.title}>Первый запуск</div>
       <div className={styles.description}>
         Укажите основную папку и текущий филиал.
