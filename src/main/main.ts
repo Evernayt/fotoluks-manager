@@ -93,6 +93,11 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
+  mainWindow.on('close', (e) => {
+    e.preventDefault();
+    mainWindow?.webContents.send('app-close');
+  });
+
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 

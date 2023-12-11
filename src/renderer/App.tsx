@@ -24,7 +24,7 @@ import {
   TasksDetailPage,
   TasksPage,
 } from 'pages';
-import { GlobalMessage, UpdaterModal } from 'components';
+import { AppCloseModal, GlobalMessage, UpdaterModal } from 'components';
 import './App.css';
 import { useLayoutEffect } from 'react';
 import { useAppSelector } from 'hooks/redux';
@@ -42,6 +42,7 @@ export default function App() {
   return (
     <Router>
       <UpdaterModal />
+      <AppCloseModal />
       <GlobalMessage />
       <Routes>
         <Route path={LOGIN_ROUTE} element={<LoginPage />} />

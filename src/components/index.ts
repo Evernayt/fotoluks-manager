@@ -34,6 +34,7 @@ import AvatarList from './UI/AvatarList/AvatarList';
 import ElectronLinkify from './UI/ElectronLinkify/ElectronLinkify';
 import PlusMinusButton from './UI/PlusMinusButton/PlusMinusButton';
 import MessageTextbox from './UI/MessageTextbox/MessageTextbox';
+import AppCloseModal from './AppCloseModal/AppCloseModal';
 
 export {
   Navmenu,
@@ -72,4 +73,5 @@ export {
   ElectronLinkify,
   PlusMinusButton,
   MessageTextbox,
+  AppCloseModal,
 };

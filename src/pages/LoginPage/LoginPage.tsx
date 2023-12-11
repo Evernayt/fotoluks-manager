@@ -8,7 +8,7 @@ import { KeyboardEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { appSlice } from 'store/reducers/AppSlice';
 import socketio from 'socket/socketio';
-import { logo, logoDark } from 'constants/images';
+import { logoLight, logoDark } from 'constants/images';
 import RecentLogin from './RecentLogin/RecentLogin';
 import LoginModal from './Modals/LoginModal/LoginModal';
 import { GlobalMessageVariants } from 'models/IGlobalMessage';
@@ -26,9 +26,11 @@ import {
   getInitialSettingsCompleted,
   getMaximizeScreen,
   getRecentLogins,
+  getToken,
   setActiveShop,
   setRecentLogins,
 } from 'helpers/localStorage';
+import jwtDecode from 'jwt-decode';
 
 const LoginPage = () => {
   const [recentEmployees, setRecentEmployees] = useState<IEmployee[]>([]);
@@ -59,6 +61,8 @@ const LoginPage = () => {
     }
 
     setRecentEmployees(getRecentLogins());
+
+    autoSignIn();
 
     const controller = new AbortController();
     fetchShops(controller.signal);
@@ -93,6 +97,37 @@ const LoginPage = () => {
     setActiveShop(shop);
   };
 
+  const loggedIn = (employee: IEmployee) => {
+    const apps = getApps(employee.apps);
+    if (!apps.length) {
+      showGlobalMessage('Нет доступных приложений');
+      return;
+    }
+
+    socketio.connect();
+    fetchStores();
+
+    dispatch(employeeSlice.actions.signIn(employee));
+    navigate(apps[0].value);
+    addRecentLogin(employee);
+  };
+
+  const autoSignIn = () => {
+    const token = getToken();
+    if (token !== '') {
+      setIsLoading(true);
+      const lastEmployee: IEmployee = jwtDecode(token);
+      AuthAPI.checkAuth(lastEmployee.login)
+        .then((data) => loggedIn(data))
+        .catch((e) =>
+          showGlobalMessage(
+            e.response.data ? e.response.data.message : e.message
+          )
+        )
+        .finally(() => setIsLoading(false));
+    }
+  };
+
   const signIn = () => {
     if (activeShop.id === 0) {
       showGlobalMessage('Выберите филиал', GlobalMessageVariants.warning);
@@ -101,20 +136,7 @@ const LoginPage = () => {
 
     setIsLoading(true);
     AuthAPI.login({ login, password })
-      .then((data) => {
-        const apps = getApps(data.apps);
-        if (!apps.length) {
-          showGlobalMessage('Нет доступных приложений');
-          return;
-        }
-
-        socketio.connect();
-        fetchStores();
-
-        dispatch(employeeSlice.actions.signIn(data));
-        navigate(apps[0].value);
-        addRecentLogin(data);
-      })
+      .then((data) => loggedIn(data))
       .catch((e) => {
         showGlobalMessage(
           e.response.data ? e.response.data.message : e.message
@@ -164,7 +186,7 @@ const LoginPage = () => {
         <div>
           <img
             className={styles.logo}
-            src={theme.value === 'DARK' ? logoDark : logo}
+            src={theme.value === 'DARK' ? logoDark : logoLight}
             alt="logo"
           />
           {recentEmployees.length > 0 ? (

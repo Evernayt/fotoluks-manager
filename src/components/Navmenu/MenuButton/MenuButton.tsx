@@ -3,6 +3,7 @@ import DropdownButton, {
 } from 'components/UI/DropdownButton/DropdownButton';
 import { LOGIN_ROUTE, SETTINGS_ROUTE } from 'constants/paths';
 import { Placements } from 'helpers/calcPlacement';
+import { setToken } from 'helpers/localStorage';
 import { useAppDispatch } from 'hooks/redux';
 import { IconDrop } from 'icons';
 import { useMemo } from 'react';
@@ -22,6 +23,7 @@ const MenuButton = () => {
   const navigate = useNavigate();
 
   const signOut = () => {
+    setToken('');
     dispatch(employeeSlice.actions.clearState());
     dispatch(appSlice.actions.clearState());
     dispatch(controlPanelSlice.actions.clearState());

@@ -14,7 +14,8 @@ export type Channels =
   | 'download-update-success'
   | 'download-update-failure'
   | 'download-update-progress'
-  | 'quit-and-install-update';
+  | 'quit-and-install-update'
+  | 'app-close';
 
 const electronHandler = {
   ipcRenderer: {
@@ -32,6 +33,9 @@ const electronHandler = {
     },
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
+    },
+    removeAllListeners(channel: Channels) {
+      ipcRenderer.removeAllListeners(channel);
     },
   },
 };

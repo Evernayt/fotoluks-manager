@@ -77,6 +77,7 @@ type ModalState = {
   defectiveGoodsModal: IModal;
   taskSubtasksModal: IModal;
   taskEditMessageModal: ITaskEditMessageModal;
+  appCloseModal: IModal;
 };
 
 const initialState: ModalState = {
@@ -116,6 +117,7 @@ const initialState: ModalState = {
   defectiveGoodsModal: INITIAL_MODAL,
   taskSubtasksModal: INITIAL_MODAL,
   taskEditMessageModal: INITIAL_TASK_EDIT_MESSAGE_MODAL,
+  appCloseModal: INITIAL_MODAL,
 };
 
 interface OpenModalProps<K = keyof ModalState> {

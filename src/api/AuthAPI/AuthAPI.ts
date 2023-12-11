@@ -34,4 +34,10 @@ export default class AuthAPI {
     const { data } = await $host.post('auth/registration', createUserDto);
     return jwtDecode(data.token);
   }
+
+  static async checkAuth(login: string): Promise<IEmployee> {
+    const { data } = await $authHost.get('auth/check/employee/' + login);
+    setToken(data.token);
+    return jwtDecode(data.token);
+  }
 }
