@@ -96,7 +96,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(
               className={
                 disabled ? 'secondary-disabled-icon' : 'secondary-icon'
               }
-              size={20}
+              size={16}
             />
           </div>
         </Tooltip>
