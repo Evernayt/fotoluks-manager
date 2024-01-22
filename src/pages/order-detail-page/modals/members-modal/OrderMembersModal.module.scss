@@ -1,0 +1,36 @@
+.loader {
+  position: absolute;
+  z-index: 999;
+  height: 100%;
+  width: 100%;
+  background-color: var(--card-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search {
+  margin-bottom: var(--space-lg);
+}
+
+.employees_container {
+  display: flex;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  flex: 1;
+}
+
+.items_container {
+  overflow: auto;
+  height: 100%;
+}
+
+.employees {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}

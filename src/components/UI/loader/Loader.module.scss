@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex: 1;
+}
+
+.wrapper_container {
+  position: relative;
+}
+
+.loader_wrapper_container {
+  background-color: var(--card-bg-color);
+  position: absolute;
+  height: 100%;
+  top: -2px;
+  left: -2px;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

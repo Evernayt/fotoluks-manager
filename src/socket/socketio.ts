@@ -1,12 +1,13 @@
 import { SERVER_API_URL } from 'constants/api';
 import { INotification } from 'models/api/INotification';
 import { IOrder } from 'models/api/IOrder';
+import { IOnlineEmployee } from 'models/IOnlineEmployee';
 import { IWatcher } from 'models/IWatcher';
 import { io, Socket } from 'socket.io-client';
 import store from 'store';
-import { appSlice } from 'store/reducers/AppSlice';
-import { employeeSlice } from 'store/reducers/EmployeeSlice';
-import { orderSlice } from 'store/reducers/OrderSlice';
+import { appActions } from 'store/reducers/AppSlice';
+import { employeeActions } from 'store/reducers/EmployeeSlice';
+import { orderActions } from 'store/reducers/OrderSlice';
 
 interface INotificationInfo {
   notification: INotification;
@@ -15,12 +16,15 @@ interface INotificationInfo {
 
 let socket: Socket;
 
-const connect = () => {
+const connect = (employeeId: number) => {
   socket = io(SERVER_API_URL);
 
   subscribeToNotifications();
   subscribeToOrderUpdates();
   subscribeToWatchers();
+  subscribeToOnlineEmployees();
+
+  socket.emit('addEmployee', employeeId);
 };
 
 const disconnect = () => {
@@ -31,7 +35,8 @@ const isConnected = () => {
   if (socket) {
     return true;
   } else {
-    connect();
+    const employee = store.getState().employee.employee;
+    connect(employee?.id || 0);
     return false;
   }
 };
@@ -47,21 +52,27 @@ const subscribeToNotifications = () => {
         data.notification.text,
       ]);
 
-      store.dispatch(employeeSlice.actions.addNotification(data.notification));
-      store.dispatch(appSlice.actions.setNoificationsBadge(true));
+      store.dispatch(employeeActions.addNotification(data.notification));
+      store.dispatch(appActions.setNoificationsBadge(true));
     }
   });
 };
 
 const subscribeToOrderUpdates = () => {
   socket.on('getOrder', (order: IOrder) => {
-    store.dispatch(orderSlice.actions.updateOrder(order));
+    store.dispatch(orderActions.updateOrder(order));
   });
 };
 
 const subscribeToWatchers = () => {
   socket.on('getWatchers', (watchers: IWatcher[]) => {
-    store.dispatch(orderSlice.actions.setWatchers(watchers));
+    store.dispatch(orderActions.setWatchers(watchers));
+  });
+};
+
+const subscribeToOnlineEmployees = () => {
+  socket.on('getEmployees', (onlineEmployees: IOnlineEmployee[]) => {
+    store.dispatch(appActions.setOnlineEmployees(onlineEmployees));
   });
 };
 
@@ -86,7 +97,7 @@ const addWatcher = (watcher: IWatcher) => {
 const removeWatcher = (userId: number) => {
   if (!isConnected()) return;
   socket.emit('removeWatcher', userId);
-  store.dispatch(orderSlice.actions.setWatchers([]));
+  store.dispatch(orderActions.setWatchers([]));
 };
 
 export default {

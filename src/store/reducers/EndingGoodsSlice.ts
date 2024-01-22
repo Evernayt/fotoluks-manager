@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { INotification } from 'models/api/moysklad/INotification';
+import { IEndingGood } from 'pages/moysklad-page/components/tables/ending-goods/EndingGoodsTable';
 
 type EndingGoodsState = {
-  endingGoods: INotification[];
+  endingGoods: IEndingGood[];
   orderedGoods: string[];
   notAvailableGoods: string[];
-  forceUpdate: boolean;
   forceUpdateProduct: boolean;
 };
 
@@ -13,7 +12,6 @@ const initialState: EndingGoodsState = {
   endingGoods: [],
   orderedGoods: [],
   notAvailableGoods: [],
-  forceUpdate: false,
   forceUpdateProduct: false,
 };
 
@@ -21,7 +19,7 @@ export const endingGoodsSlice = createSlice({
   name: 'endingGoods',
   initialState,
   reducers: {
-    setEndingGoods(state, action: PayloadAction<INotification[]>) {
+    setEndingGoods(state, action: PayloadAction<IEndingGood[]>) {
       state.endingGoods = action.payload;
     },
     setOrderedGoods(state, action: PayloadAction<string[]>) {
@@ -72,9 +70,6 @@ export const endingGoodsSlice = createSlice({
       );
       state.endingGoods = endingGoods;
     },
-    setForceUpdate(state, action: PayloadAction<boolean>) {
-      state.forceUpdate = action.payload;
-    },
     setForceUpdateProduct(state, action: PayloadAction<boolean>) {
       state.forceUpdateProduct = action.payload;
     },
@@ -84,4 +79,5 @@ export const endingGoodsSlice = createSlice({
   },
 });
 
+export const endingGoodsActions = endingGoodsSlice.actions;
 export default endingGoodsSlice.reducer;

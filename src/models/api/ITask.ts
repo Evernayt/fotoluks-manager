@@ -10,17 +10,17 @@ import { ITaskSubtask } from './ITaskSubtask';
 
 export interface ITask {
   id: number;
-  name: string;
   title: string;
   description: string;
   urgent: boolean;
+  personal: boolean;
   createdAt: string;
   completed: boolean;
   completedDate: string;
   completionNote: string;
   archive: boolean;
-  shop?: IShop;
-  department?: IDepartment;
+  shop?: IShop | null;
+  department?: IDepartment | null;
   creator?: IEmployee;
   executor?: IEmployee;
   taskMessages?: ITaskMessage[];

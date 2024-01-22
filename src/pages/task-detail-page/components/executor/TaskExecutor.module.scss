@@ -1,0 +1,15 @@
+.container {
+  margin-bottom: var(--space-xl);
+}
+
+.completed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.cancel_button {
+  margin-top: 8px;
+  width: 100%;
+}

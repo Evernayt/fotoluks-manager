@@ -1,16 +1,16 @@
 import { $authHost } from 'api';
-import { IFinishedProduct } from 'models/api/IFinishedProduct';
 import { IOrder, IOrderData } from 'models/api/IOrder';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { EditOrderShopDto } from './dto/edit-order-shop.dto';
 import { EditOrderStatusDto } from './dto/edit-order-status.dto';
 import { GetOrdersForExportDto } from './dto/get-orders-for-export.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
+import { IOrderProduct } from 'models/api/IOrderProduct';
 
 export default class OrderAPI {
   static async create(createOrderDto: CreateOrderDto): Promise<{
     order: IOrder;
-    finishedProducts: IFinishedProduct[];
+    orderProducts: IOrderProduct[];
   }> {
     const { data } = await $authHost.post('orders', createOrderDto);
     return data;

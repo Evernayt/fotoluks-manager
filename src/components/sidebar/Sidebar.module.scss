@@ -1,0 +1,44 @@
+.container {
+  background-color: var(--card-bg-color);
+  min-width: 206px;
+  height: calc(100vh - var(--navbar-height));
+  box-shadow: 1px 0 8px var(--shadow-1);
+  padding: var(--space-xl) var(--space-sm);
+  padding-bottom: calc(var(--space-xl) - 11px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: min-width 0.5s ease-in-out;
+}
+
+.toggle_button {
+  width: max-content;
+}
+
+.item_container {
+  position: relative;
+}
+
+.item_text {
+  position: absolute;
+  left: 56px;
+  top: 0;
+  bottom: 0;
+  height: max-content;
+  white-space: nowrap;
+  margin: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0s linear 0.3s;
+  pointer-events: none;
+  font-weight: 500;
+
+  &.item_text_visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.add_button_text {
+  color: var(--primary-text-color);
+}

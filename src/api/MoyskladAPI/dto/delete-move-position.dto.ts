@@ -1,4 +1,4 @@
 export class DeleteMovePositionDto {
   readonly id?: string;
-  readonly positionID?: string;
+  readonly positionId?: string;
 }

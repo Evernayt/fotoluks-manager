@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  height: 100%;
+  margin: var(--page-panel-margin);
+  gap: var(--space-xl);
+}
+
+.panel {
+  height: var(--page-panel-height);
+  padding: var(--space-lg);
+}

@@ -1,0 +1,28 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  overflow: auto;
+  margin-top: auto;
+  padding: var(--space-lg);
+}
+
+.no_comments {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.message_input {
+  padding: var(--space-sm) var(--space-lg);
+}
+
+.sentry {
+  height: 50px;
+}

@@ -1,16 +1,12 @@
-import { THEMES } from 'constants/app';
 import { IEmployee } from 'models/api/IEmployee';
 import { IShop } from 'models/api/IShop';
 import { IDefectiveGood } from 'models/IDefectiveGood';
-import { ITheme } from 'models/ITheme';
 
 const MAIN_FOLDER_KEY = 'MAIN_FOLDER_KEY';
 const SHOP_KEY = 'SHOP_KEY';
 const RECENT_LOGINS_KEY = 'RECENT_LOGINS_KEY';
-const INITIAL_SETTINGS_COMPLETED_KEY = 'INITIAL_SETTINGS_COMPLETED_KEY';
 const MAXIMIZE_SCREEN_KEY = 'MAXIMIZE_SCREEN_KEY';
 const TOKEN_KEY = 'TOKEN_KEY';
-const THEME_KEY = 'THEME_KEY';
 const ORDERED_GOODS_KEY = 'ORDERED_GOODS_KEY';
 const NOT_AVAILABLE_GOODS_KEY = 'NOT_AVAILABLE_GOODS_KEY';
 const DEFECTIVE_GOODS_KEY = 'DEFECTIVE_GOODS_KEY';
@@ -48,14 +44,6 @@ const getRecentLogins = (): IEmployee[] => {
   return recentLogins;
 };
 
-const setInitialSettingsCompleted = (completed: boolean) => {
-  localStorage.setItem(INITIAL_SETTINGS_COMPLETED_KEY, completed.toString());
-};
-
-const getInitialSettingsCompleted = (): boolean => {
-  return localStorage.getItem(INITIAL_SETTINGS_COMPLETED_KEY) === 'true';
-};
-
 const setMaximizeScreen = (maximize: boolean) => {
   localStorage.setItem(MAXIMIZE_SCREEN_KEY, maximize.toString());
 };
@@ -71,19 +59,6 @@ const setToken = (token: string) => {
 const getToken = (): string => {
   const token = localStorage.getItem(TOKEN_KEY);
   return token || '';
-};
-
-const setTheme = (theme: ITheme) => {
-  localStorage.setItem(THEME_KEY, JSON.stringify(theme));
-};
-
-const getTheme = (): ITheme => {
-  const theme = JSON.parse(localStorage.getItem(THEME_KEY) || '{}');
-  if (Object.keys(theme).length) {
-    return theme;
-  } else {
-    return THEMES[0];
-  }
 };
 
 const setOrderedGoods = (orderedGoods: string[]) => {
@@ -137,14 +112,10 @@ export {
   getActiveShop,
   setRecentLogins,
   getRecentLogins,
-  setInitialSettingsCompleted,
-  getInitialSettingsCompleted,
   setMaximizeScreen,
   getMaximizeScreen,
   setToken,
   getToken,
-  setTheme,
-  getTheme,
   setOrderedGoods,
   getOrderedGoods,
   setNotAvailableGoods,

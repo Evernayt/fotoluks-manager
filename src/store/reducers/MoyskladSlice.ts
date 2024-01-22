@@ -4,19 +4,21 @@ import { IStore } from 'models/api/moysklad/IStore';
 type MoyskladState = {
   stores: IStore[];
   activeStore: IStore | null;
-  activeSidemenuIndex: number;
-  sidemenuIsOpen: boolean;
+  activeSidebarIndex: number;
+  sidebarIsOpen: boolean;
   isLoading: boolean;
   search: string;
+  forceUpdate: boolean;
 };
 
 const initialState: MoyskladState = {
   stores: [],
   activeStore: null,
-  activeSidemenuIndex: 0,
-  sidemenuIsOpen: true,
+  activeSidebarIndex: 0,
+  sidebarIsOpen: true,
   isLoading: false,
   search: '',
+  forceUpdate: false,
 };
 
 export const moyskladSlice = createSlice({
@@ -29,11 +31,11 @@ export const moyskladSlice = createSlice({
     setActiveStore(state, action: PayloadAction<IStore>) {
       state.activeStore = action.payload;
     },
-    setActiveSidemenuIndex(state, action: PayloadAction<number>) {
-      state.activeSidemenuIndex = action.payload;
+    setActiveSidebarIndex(state, action: PayloadAction<number>) {
+      state.activeSidebarIndex = action.payload;
     },
-    setSidemenuIsOpen(state, action: PayloadAction<boolean>) {
-      state.sidemenuIsOpen = action.payload;
+    setSidebarIsOpen(state, action: PayloadAction<boolean>) {
+      state.sidebarIsOpen = action.payload;
     },
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
@@ -41,10 +43,14 @@ export const moyskladSlice = createSlice({
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
     },
+    setForceUpdate(state, action: PayloadAction<boolean>) {
+      state.forceUpdate = action.payload;
+    },
     clearState() {
       return initialState;
     },
   },
 });
 
+export const moyskladActions = moyskladSlice.actions;
 export default moyskladSlice.reducer;

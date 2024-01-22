@@ -10,5 +10,6 @@ export interface ISupply {
   incomingDate?: string;
   incomingNumber: string;
   description: string;
+  applicable: boolean;
   agent: IAgent;
 }

@@ -2,6 +2,7 @@ import { $authHost } from 'api';
 import { IFavorite, IFavoriteData } from 'models/api/IFavorite';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { GetFavoritesDto } from './dto/get-favorites.dto';
+import { DeleteFavoriteDto } from './dto/delete-favorite.dto';
 
 export default class FavoriteAPI {
   static async create(
@@ -20,8 +21,10 @@ export default class FavoriteAPI {
     return data;
   }
 
-  static async delete(id: number): Promise<number> {
-    const { data } = await $authHost.delete(`favorites/${id}`);
+  static async delete(deleteFavoriteDto: DeleteFavoriteDto): Promise<number> {
+    const { data } = await $authHost.delete('favorites', {
+      params: deleteFavoriteDto,
+    });
     return data;
   }
 }

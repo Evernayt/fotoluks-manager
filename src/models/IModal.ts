@@ -1,89 +1,101 @@
-import { Modes } from 'constants/app';
 import { IEmployee } from './api/IEmployee';
-import { IFeature } from './api/IFeature';
+import { MODES } from 'constants/app';
+import { IOrderProduct } from './api/IOrderProduct';
 import { IOrder } from './api/IOrder';
-import { INotification } from './api/moysklad/INotification';
+import { IEndingGood } from 'pages/moysklad-page/components/tables/ending-goods/EndingGoodsTable';
 import { ITaskMessage } from './api/ITaskMessage';
 
 export interface IModal {
-  isShowing?: boolean;
+  isOpen: boolean;
 }
 
 export interface ILoginModal extends IModal {
-  employee: IEmployee | null;
+  employee?: IEmployee;
 }
 
-export interface IOrderModal extends IModal {
-  order: IOrder | null;
+export interface IProductsEditModal extends IModal {
+  productId?: number;
+  mode?: MODES;
 }
 
-export interface IUserRegistrationModal extends IModal {
-  text: string;
+export interface IEmployeesEditModal extends IModal {
+  employeeId?: number;
+  mode?: MODES;
 }
 
-export interface IEditUserModal extends IModal {
-  userId: number;
-  mode: Modes;
+export interface IUsersEditModal extends IModal {
+  userId?: number;
+  mode?: MODES;
 }
 
-export interface IEditTypeModal extends IModal {
-  typeId: number;
-  mode: Modes;
+export interface IShopsEditModal extends IModal {
+  shopId?: number;
+  mode?: MODES;
 }
 
-export interface IEditShopModal extends IModal {
-  shopId: number;
-  mode: Modes;
+export interface IOrderClientEditModal extends IModal {
+  phone?: string;
+  searchText?: string;
+  mode?: MODES;
 }
 
-export interface IEditProductModal extends IModal {
-  productId: number;
-  mode: Modes;
+export interface IOrderProductEditModal extends IModal {
+  orderProduct?: IOrderProduct;
+  mode?: MODES;
 }
 
-export interface IEditParamModal extends IModal {
-  paramId: number;
-  mode: Modes;
+export interface IOrdersInfoModal extends IModal {
+  order?: IOrder;
 }
 
-export interface IEditFeatureModal extends IModal {
-  featureId: number;
-  mode: Modes;
-}
-
-export interface IEditCategoryModal extends IModal {
-  categoryId: number;
-  mode: Modes;
-}
-
-export interface IUserModal extends IModal {
-  phone: string;
-}
-
-export interface IEditTypeParamsModal extends IModal {
-  typeId: number;
-  feature: IFeature | null;
-}
-
-export interface IEditEmployeeModal extends IModal {
-  employeeId: number;
-  mode: Modes;
+export interface IOrdersShopModal extends IModal {
+  order?: IOrder;
 }
 
 export interface IEndingGoodsProductModal extends IModal {
-  notification: INotification | null;
+  endingGood?: IEndingGood;
 }
 
-export interface IEndingGoodsEditProductModal extends IModal {
-  productId: string;
-  type: string;
-}
-
-export interface IUpdatePriceModal extends IModal {
-  id: string;
-  name: string;
+export interface IUpdatePricesModal extends IModal {
+  id?: string;
+  name?: string;
 }
 
 export interface ITaskEditMessageModal extends IModal {
-  taskMessage: ITaskMessage | null;
+  taskMessage?: ITaskMessage | null;
 }
+
+// export interface IEditTypeModal extends IModal {
+//   typeId: number;
+//   mode: Modes;
+// }
+
+// export interface IEditParamModal extends IModal {
+//   paramId: number;
+//   mode: Modes;
+// }
+
+// export interface IEditFeatureModal extends IModal {
+//   featureId: number;
+//   mode: Modes;
+// }
+
+// export interface IEditCategoryModal extends IModal {
+//   categoryId: number;
+//   mode: Modes;
+// }
+
+// export interface IEditTypeParamsModal extends IModal {
+//   typeId: number;
+//   feature: IFeature | null;
+// }
+
+// export interface IEditEmployeeModal extends IModal {
+//   employeeId: number;
+//   mode: Modes;
+// }
+
+// export interface IEndingGoodsEditProductModal extends IModal {
+//   productId: string;
+//   type: string;
+// }

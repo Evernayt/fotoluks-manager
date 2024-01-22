@@ -1,29 +1,21 @@
-import calcPlacement from './calcPlacement';
+import getFileImageSrc from './getFileImageSrc';
 import createClone from './createClone';
-import firstLetterToUpperCase from './firstLetterToUpperCase';
-import getDateDiff from './getDateDiff';
-import groupBy from './groupBy';
-import toPercentages from './toPercentages';
-import enterPressHandler from './enterPressHandler';
-import getYears from './getYears';
-import getApps from './getApps';
-import getDateDiffDays from './getDateDiffDays';
-import accessCheck from './accessCheck';
-import removeBeforeString from './removeBeforeString';
 import correctPhone from './correctPhone';
+import firstLetterToUpperCase from './firstLetterToUpperCase';
+import calcDiscount from './calcDiscount';
+import removeBeforeString from './removeBeforeString';
+import toPercentages from './toPercentages';
+import getDateDiffDays from './getDateDiffDays';
+import groupBy from './groupBy';
 
 export {
-  calcPlacement,
+  getFileImageSrc,
   createClone,
-  firstLetterToUpperCase,
-  getDateDiff,
-  groupBy,
-  toPercentages,
-  enterPressHandler,
-  getYears,
-  getApps,
-  getDateDiffDays,
-  accessCheck,
-  removeBeforeString,
   correctPhone,
+  firstLetterToUpperCase,
+  calcDiscount,
+  removeBeforeString,
+  toPercentages,
+  getDateDiffDays,
+  groupBy,
 };

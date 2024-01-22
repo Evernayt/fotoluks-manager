@@ -1,4 +1,5 @@
 const correctPhone = (phone: string) => {
+  if (!phone) return '';
   phone = phone.replace(/\D/g, '');
   let editedPhone = phone;
   if (phone.startsWith('+7') || phone.startsWith('7')) {

@@ -1,16 +1,17 @@
 import { IShop } from 'models/api/IShop';
-import { IFilter } from 'models/IFilter';
-import { INITIAL_FILTER } from 'constants/states/filter-states';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ITask, ITasksFilter } from 'models/api/ITask';
-import { INITIAL_TASK } from 'constants/states/task-states';
+import { ITask } from 'models/api/ITask';
 import { ITaskMember } from 'models/api/ITaskMember';
 import { IDepartment } from 'models/api/IDepartment';
 import { ITaskMessage } from 'models/api/ITaskMessage';
-import { ALL_SHOPS } from 'constants/states/shop-states';
-import { ALL_DEPARTMENTS } from 'constants/states/department-states';
 import { ITaskSubtask } from 'models/api/ITaskSubtask';
 import { UpdateTaskSubtaskDto } from 'api/TaskSubtaskAPI/dto/update-task-subtask.dto';
+import { INITIAL_TASK } from 'constants/initialStates';
+import {
+  INITIAL_TASKS_FILTER_STATE,
+  ITasksFilterState,
+} from 'pages/tasks-page/modals/filter-modal/TasksFilterModal';
+import { FETCH_MORE_LIMIT } from 'constants/app';
 
 type TaskState = {
   tasks: ITask[];
@@ -21,18 +22,12 @@ type TaskState = {
   taskMembersForDelete: number[];
   haveUnsavedData: boolean;
   forceUpdate: boolean;
-  filter: IFilter;
-  disableFilter: boolean;
+  filterState: ITasksFilterState;
   isLoading: boolean;
   search: string;
   activeStatus: number;
-  activeSidemenuIndex: number;
-  sidemenuIsOpen: boolean;
-  selectedShop: IShop;
-  selectedDepartment: IDepartment;
-  iTaskMember: boolean;
-  iTaskCreator: boolean;
-  archive: boolean;
+  activeSidebarIndex: number;
+  sidebarIsOpen: boolean;
   taskSubtasksForCreate: ITaskSubtask[];
   taskSubtasksForUpdate: UpdateTaskSubtaskDto[];
   taskSubtasksForDelete: number[];
@@ -47,18 +42,12 @@ const initialState: TaskState = {
   taskMembersForDelete: [],
   haveUnsavedData: false,
   forceUpdate: false,
-  filter: INITIAL_FILTER,
-  disableFilter: false,
+  filterState: INITIAL_TASKS_FILTER_STATE,
   isLoading: true,
   search: '',
   activeStatus: 0,
-  activeSidemenuIndex: 0,
-  sidemenuIsOpen: true,
-  selectedShop: ALL_SHOPS,
-  selectedDepartment: ALL_DEPARTMENTS,
-  iTaskMember: false,
-  iTaskCreator: false,
-  archive: false,
+  activeSidebarIndex: 0,
+  sidebarIsOpen: true,
   taskSubtasksForCreate: [],
   taskSubtasksForUpdate: [],
   taskSubtasksForDelete: [],
@@ -77,9 +66,6 @@ export const taskSlice = createSlice({
     setTask(state, action: PayloadAction<ITask>) {
       state.task = action.payload;
     },
-    setName(state, action: PayloadAction<string>) {
-      state.task.name = action.payload;
-    },
     setTitle(state, action: PayloadAction<string>) {
       state.task.title = action.payload;
     },
@@ -95,11 +81,20 @@ export const taskSlice = createSlice({
     setUrgent(state, action: PayloadAction<boolean>) {
       state.task.urgent = action.payload;
     },
+    setPersonal(state, action: PayloadAction<boolean>) {
+      state.task.personal = action.payload;
+    },
     setTaskMessages(state, action: PayloadAction<ITaskMessage[]>) {
       state.taskMessages = action.payload;
     },
     addTaskMessage(state, action: PayloadAction<ITaskMessage>) {
-      state.taskMessages.push(action.payload);
+      state.taskMessages.unshift(action.payload);
+      if (state.taskMessages.length > FETCH_MORE_LIMIT) {
+        state.taskMessages.pop();
+      }
+    },
+    addTaskMessages(state, action: PayloadAction<ITaskMessage[]>) {
+      state.taskMessages.push(...action.payload);
     },
     setHaveUnsavedData(state, action: PayloadAction<boolean>) {
       state.haveUnsavedData = action.payload;
@@ -120,6 +115,7 @@ export const taskSlice = createSlice({
       state.taskSubtasksForCreate = [];
       state.taskSubtasksForUpdate = [];
       state.taskSubtasksForDelete = [];
+      state.taskMessages = [];
     },
     saveTask(state, action: PayloadAction<ITask>) {
       state.beforeTask = action.payload;
@@ -131,14 +127,23 @@ export const taskSlice = createSlice({
     },
     addTaskMember(state, action: PayloadAction<ITaskMember>) {
       state.task.taskMembers?.push(action.payload);
+
+      const taskMembersForDelete = state.taskMembersForDelete.filter(
+        (employeeId) => employeeId !== action.payload.employee.id
+      );
+      state.taskMembersForDelete = taskMembersForDelete;
     },
     addTaskMembers(state, action: PayloadAction<ITaskMember[]>) {
       state.task.taskMembers?.push(...action.payload);
+      state.taskMembersForDelete = [];
     },
-    addTaskMemberForCreate(state, action: PayloadAction<number>) {
+    addTaskMemberForCreateByEmployeeId(state, action: PayloadAction<number>) {
       state.taskMembersForCreate.push(action.payload);
     },
-    addTaskMembersForCreate(state, action: PayloadAction<number[]>) {
+    addTaskMembersForCreateByEmployeeIds(
+      state,
+      action: PayloadAction<number[]>
+    ) {
       state.taskMembersForCreate.push(...action.payload);
     },
     deleteTaskMemberByEmployeeId(state, action: PayloadAction<number>) {
@@ -146,9 +151,15 @@ export const taskSlice = createSlice({
         (taskMember) => taskMember.employee.id !== action.payload
       );
       state.task.taskMembers = taskMembers;
+
+      const taskMembersForCreate = state.taskMembersForCreate.filter(
+        (employeeId) => employeeId !== action.payload
+      );
+      state.taskMembersForCreate = taskMembersForCreate;
     },
     deleteTaskMembers(state) {
       state.task.taskMembers = [];
+      state.taskMembersForCreate = [];
     },
     addTaskMemberForDeleteByEmployeeId(state, action: PayloadAction<number>) {
       state.taskMembersForDelete.push(action.payload);
@@ -162,24 +173,11 @@ export const taskSlice = createSlice({
     setForceUpdate(state, action: PayloadAction<boolean>) {
       state.forceUpdate = action.payload;
     },
+    setFilterState(state, action: PayloadAction<ITasksFilterState>) {
+      state.filterState = action.payload;
+    },
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
-    },
-    activeFilter(state, action: PayloadAction<ITasksFilter>) {
-      state.filter = {
-        ...action.payload,
-        isActive: true,
-        isPendingDeactivation: false,
-      };
-    },
-    deactiveFilter(state) {
-      state.filter = INITIAL_FILTER;
-    },
-    clearFilter(state) {
-      state.filter = { ...INITIAL_FILTER, isPendingDeactivation: true };
-    },
-    setDisableFilter(state, action: PayloadAction<boolean>) {
-      state.disableFilter = action.payload;
     },
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
@@ -187,26 +185,11 @@ export const taskSlice = createSlice({
     setActiveStatus(state, action: PayloadAction<number>) {
       state.activeStatus = action.payload;
     },
-    setActiveSidemenuIndex(state, action: PayloadAction<number>) {
-      state.activeSidemenuIndex = action.payload;
+    setActiveSidebarIndex(state, action: PayloadAction<number>) {
+      state.activeSidebarIndex = action.payload;
     },
-    setSidemenuIsOpen(state, action: PayloadAction<boolean>) {
-      state.sidemenuIsOpen = action.payload;
-    },
-    setSelectedShop(state, action: PayloadAction<IShop>) {
-      state.selectedShop = action.payload;
-    },
-    setSelectedDepartment(state, action: PayloadAction<IDepartment>) {
-      state.selectedDepartment = action.payload;
-    },
-    setITaskMember(state, action: PayloadAction<boolean>) {
-      state.iTaskMember = action.payload;
-    },
-    setITaskCreator(state, action: PayloadAction<boolean>) {
-      state.iTaskCreator = action.payload;
-    },
-    setArchive(state, action: PayloadAction<boolean>) {
-      state.archive = action.payload;
+    setSidebarIsOpen(state, action: PayloadAction<boolean>) {
+      state.sidebarIsOpen = action.payload;
     },
     addTaskSubtask(state, action: PayloadAction<ITaskSubtask>) {
       state.task.taskSubtasks?.push(action.payload);
@@ -224,6 +207,11 @@ export const taskSlice = createSlice({
         (taskSubtask) => taskSubtask.id !== action.payload
       );
       state.task.taskSubtasks = taskSubtasks;
+
+      const taskSubtasksForCreate = state.taskSubtasksForCreate.filter(
+        (taskSubtask) => taskSubtask.id !== action.payload
+      );
+      state.taskSubtasksForCreate = taskSubtasksForCreate;
     },
     addTaskSubtaskForCreate(state, action: PayloadAction<ITaskSubtask>) {
       state.taskSubtasksForCreate.push(action.payload);
@@ -266,4 +254,5 @@ export const taskSlice = createSlice({
   },
 });
 
+export const taskActions = taskSlice.actions;
 export default taskSlice.reducer;

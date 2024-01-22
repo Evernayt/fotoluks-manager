@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  gap: var(--space-sm);
+  overflow: hidden;
+  max-width: calc(100vw - 602px);
+  margin: 0 var(--space-xs);
+  scroll-behavior: smooth;
+}
+
+.image {
+  height: 35px;
+  width: 35px;
+  border-radius: var(--border-radius);
+  object-fit: cover;
+}

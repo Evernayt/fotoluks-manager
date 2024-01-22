@@ -1,5 +1,5 @@
 import defaultAvatar from '../../assets/avatar.png';
-import logoBird from '../../assets/logo-bird.png';
+import logoSmall from '../../assets/logo-small.png';
 import email from '../../assets/email.png';
 import vk from '../../assets/vk.png';
 import telegram from '../../assets/telegram.png';
@@ -9,7 +9,7 @@ import logoDark from '../../assets/logo-dark.png';
 
 export {
   defaultAvatar,
-  logoBird,
+  logoSmall,
   email,
   vk,
   telegram,

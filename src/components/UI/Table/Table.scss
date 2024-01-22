@@ -1,0 +1,13 @@
+.row_nowrap {
+  white-space: nowrap;
+  font-size: var(--table-font-size);
+}
+
+.row_full {
+  width: 100%;
+  font-size: var(--table-font-size);
+}
+
+.cell_padding {
+  padding: var(--table-cell-padding);
+}

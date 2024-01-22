@@ -1,0 +1,25 @@
+.container {
+  height: 100%;
+  margin: var(--page-panel-margin);
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.vertical_cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.card {
+  height: max-content;
+  padding: var(--space-lg);
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.folder_container {
+  display: flex;
+  gap: var(--space-sm);
+}

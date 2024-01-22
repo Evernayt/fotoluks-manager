@@ -1,0 +1,18 @@
+.container {
+  height: 100%;
+  overflow: auto;
+}
+
+.tasks {
+  display: grid;
+  grid-gap: var(--space-md);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  padding: var(--space-lg);
+}
+
+.message {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

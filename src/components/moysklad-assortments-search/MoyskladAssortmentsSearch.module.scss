@@ -1,0 +1,13 @@
+.result {
+  background-color: var(--card-bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--border-radius);
+  padding: var(--space-sm);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--hover-card-bg-color);
+  }
+}

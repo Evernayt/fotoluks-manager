@@ -1,0 +1,14 @@
+.container {
+  width: 160px;
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 2px 12px var(--shadow-2);
+  }
+}
+
+.user_name {
+  padding: var(--space-md);
+  text-align: center;
+}

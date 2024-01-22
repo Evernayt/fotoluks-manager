@@ -1,0 +1,16 @@
+.container {
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+}
+
+.image {
+  height: 64px;
+  min-width: 64px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin-right: 12px;
+  margin-bottom: 4px;
+}

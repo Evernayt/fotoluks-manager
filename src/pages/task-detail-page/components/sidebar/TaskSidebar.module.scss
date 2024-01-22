@@ -1,0 +1,75 @@
+.container {
+  background-color: var(--card-bg-color);
+  height: calc(100vh - var(--navbar-height));
+  min-width: 360px;
+  max-width: 360px;
+}
+
+.body {
+  height: calc(100% - 35px - 2 * var(--space-lg));
+  box-shadow: 1px 0 8px var(--shadow-1);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.inputs_container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.items {
+  display: flex;
+  column-gap: var(--space-md);
+  row-gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.item_icon {
+  stroke: var(--secondary-card-text-color);
+  stroke-width: 1.25px;
+  width: 20px;
+  height: 20px;
+}
+
+.item_text {
+  color: var(--secondary-card-text-color);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.text {
+  word-break: break-word;
+  white-space: pre-wrap;
+  margin-top: var(--space-sm);
+}
+
+.footer {
+  position: sticky;
+  padding: var(--space-lg);
+  box-shadow: 0 -2px 12px var(--shadow-2);
+  background-color: var(--card-bg-color);
+  width: 100%;
+  display: flex;
+  gap: var(--space-sm);
+}

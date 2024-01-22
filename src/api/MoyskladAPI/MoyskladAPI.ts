@@ -30,6 +30,9 @@ import { GetSuppliesDto } from './dto/get-supplies.dto';
 import { ISupply } from 'models/api/moysklad/ISupply';
 import { GetSupplyPositionsDto } from './dto/get-supply-positions.dto';
 import { EditSupplyDto } from './dto/edit-supply.dto';
+import { GetCounterpartyDto } from './dto/get-counterparty.dto';
+import { ICounterparty } from 'models/api/moysklad/ICounterparty';
+import { EditMoveDto } from './dto/edit-move.dto';
 
 export default class MoyskladAPI {
   // Loss
@@ -99,12 +102,24 @@ export default class MoyskladAPI {
     return data;
   }
 
+  static async editMove(editMoveDto: EditMoveDto): Promise<IMove> {
+    const { data } = await $authHost.put('moysklad/move', editMoveDto);
+    return data;
+  }
+
   static async getMoves(
     getMovesDto: GetMovesDto,
     signal?: AbortSignal
   ): Promise<IMoyskladData<IMove>> {
     const { data } = await $authHost.get('moysklad/move', {
       params: getMovesDto,
+      signal,
+    });
+    return data;
+  }
+
+  static async getMove(moveId: string, signal?: AbortSignal): Promise<IMove> {
+    const { data } = await $authHost.get(`moysklad/move/one/${moveId}`, {
       signal,
     });
     return data;
@@ -154,7 +169,7 @@ export default class MoyskladAPI {
   static async getAssortment(
     getAssortmentDto: GetAssortmentDto,
     signal?: AbortSignal
-  ): Promise<IMoyskladData<IAssortment>> {
+  ): Promise<IMoyskladData<IAssortment> | undefined> {
     const { data } = await $authHost.get('moysklad/assortment', {
       params: getAssortmentDto,
       signal,
@@ -244,6 +259,18 @@ export default class MoyskladAPI {
 
   static async updateSupply(editSupplyDto: EditSupplyDto): Promise<ISupply> {
     const { data } = await $authHost.put('moysklad/supply', editSupplyDto);
+    return data;
+  }
+
+  // Counterparty
+  static async getCounterparty(
+    getCounterpartyDto: GetCounterpartyDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<ICounterparty> | undefined> {
+    const { data } = await $authHost.get('moysklad/counterparty', {
+      params: getCounterpartyDto,
+      signal,
+    });
     return data;
   }
 }

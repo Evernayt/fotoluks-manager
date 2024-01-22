@@ -1,0 +1,35 @@
+.result {
+  background-color: var(--card-bg-color);
+  display: flex;
+  align-items: center;
+  border-radius: var(--border-radius);
+  padding: var(--space-sm);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--hover-card-bg-color);
+  }
+}
+
+.user_container {
+  display: flex;
+  flex-direction: column;
+  margin-left: var(--space-md);
+}
+
+.create_icon {
+  min-height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create_btn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: var(--space-md);
+}

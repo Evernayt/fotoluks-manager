@@ -23,4 +23,9 @@ export default class UserAPI {
     const { data } = await $authHost.put('users', updateUserDto);
     return data;
   }
+
+  static async syncOne(moyskladId: string): Promise<IUser> {
+    const { data } = await $authHost.get(`users/sync/${moyskladId}`);
+    return data;
+  }
 }

@@ -9,6 +9,7 @@ export interface IAssortment {
   updated: string;
   name: string;
   barcodes: IBarcode[];
+  discountProhibited: boolean;
   article?: string;
   code?: string;
   stock?: number;

@@ -5,17 +5,16 @@ import { IEmployee } from 'models/api/IEmployee';
 import { CreateUserDto } from 'api/UserAPI/dto/create-user.dto';
 import { IUser } from 'models/api/IUser';
 import { setToken } from 'helpers/localStorage';
+import { LoginEmployeeDto } from './dto/login-employee.dto';
 
 export default class AuthAPI {
   static async login(
-    createEmployeeDto: CreateEmployeeDto,
+    loginEmployeeDto: LoginEmployeeDto,
     signal?: AbortSignal
   ): Promise<IEmployee> {
-    const { data } = await $host.post(
-      'auth/login/employee',
-      createEmployeeDto,
-      { signal }
-    );
+    const { data } = await $host.post('auth/login/employee', loginEmployeeDto, {
+      signal,
+    });
     setToken(data.token);
     return jwtDecode(data.token);
   }

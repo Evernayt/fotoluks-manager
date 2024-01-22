@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import AppSlice from './reducers/AppSlice';
-import ControlPanelSlice from './reducers/ControlPanelSlice';
 import DefectiveGoodsSlice from './reducers/DefectiveGoodsSlice';
 import EmployeeSlice from './reducers/EmployeeSlice';
 import EndingGoodsSlice from './reducers/EndingGoodsSlice';
@@ -9,20 +8,21 @@ import MoveSlice from './reducers/MoveSlice';
 import MoyskladSlice from './reducers/MoyskladSlice';
 import OrderSlice from './reducers/OrderSlice';
 import TaskSlice from './reducers/TaskSlice';
-import UpdatePriceSlice from './reducers/UpdatePriceSlice';
+import FilterSlice from './reducers/FilterSlice';
+import ControlSlice from './reducers/ControlSlice';
 
 const store = configureStore({
   reducer: {
     app: AppSlice,
     modal: ModalSlice,
+    filter: FilterSlice,
     employee: EmployeeSlice,
     order: OrderSlice,
-    controlPanel: ControlPanelSlice,
+    control: ControlSlice,
     moysklad: MoyskladSlice,
-    move: MoveSlice,
     endingGoods: EndingGoodsSlice,
-    updatePrice: UpdatePriceSlice,
     task: TaskSlice,
+    move: MoveSlice,
     defectiveGoods: DefectiveGoodsSlice,
   },
 });

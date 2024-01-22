@@ -1,35 +1,31 @@
-import { IconControlPanel, IconMoysklad, IconNote, IconOrders } from 'icons';
-import { ITheme } from 'models/ITheme';
+import { IconMoysklad } from 'icons';
 import {
-  CONTROL_PANEL_ROUTE,
+  CONTROL_ROUTE,
   MOYSKLAD_ROUTE,
   ORDERS_ROUTE,
   TASKS_ROUTE,
 } from './paths';
+import {
+  IconClipboardList,
+  IconNote,
+  IconLayoutGridAdd,
+} from '@tabler/icons-react';
 
-enum Modes {
+enum MODES {
   ADD_MODE = 'ADD_MODE',
   EDIT_MODE = 'EDIT_MODE',
 }
 
-const INPUT_DATE_FORMAT = 'YYYY-MM-DDTHH:mm';
-const DEF_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
+const UI_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 const NOT_INDICATED = 'Не указано';
-const NOTIF_LIMIT = 25;
+const FETCH_MORE_LIMIT = 25;
 const MAIN_FOLDER_NAME = 'ФОТОЛЮКС_Текущее';
-
-const THEMES: ITheme[] = [
-  {
-    id: 1,
-    name: 'Светлая',
-    value: 'LIGHT',
-  },
-  {
-    id: 2,
-    name: 'Темная',
-    value: 'DARK',
-  },
-];
+const ICON_SIZE = 20;
+const ICON_STROKE = 1.5;
+const CONTEXT_MENU_ICON_STYLE = { marginRight: '0.75rem' };
+const REQUIRED_INVALID_MSG = 'Не должно быть пустым';
+const SHOP_INVALID_MSG = 'Нужно выбрать филиал';
+const MIN_INVALID_MSG = 'Не заполнено до конца';
 
 const APPS = [
   {
@@ -37,7 +33,7 @@ const APPS = [
     value: 'ORDERS',
     description: 'Заказы',
     route: ORDERS_ROUTE,
-    Icon: IconOrders,
+    Icon: IconClipboardList,
   },
   {
     id: 4,
@@ -57,18 +53,22 @@ const APPS = [
     id: 2,
     value: 'CONTROL_PANEL',
     description: 'Панель управления',
-    route: CONTROL_PANEL_ROUTE,
-    Icon: IconControlPanel,
+    route: CONTROL_ROUTE,
+    Icon: IconLayoutGridAdd,
   },
 ];
 
 export {
-  Modes,
-  INPUT_DATE_FORMAT,
-  DEF_DATE_FORMAT,
-  THEMES,
-  APPS,
+  MODES,
+  UI_DATE_FORMAT,
   NOT_INDICATED,
-  NOTIF_LIMIT,
+  FETCH_MORE_LIMIT,
   MAIN_FOLDER_NAME,
+  ICON_SIZE,
+  ICON_STROKE,
+  CONTEXT_MENU_ICON_STYLE,
+  APPS,
+  REQUIRED_INVALID_MSG,
+  SHOP_INVALID_MSG,
+  MIN_INVALID_MSG,
 };

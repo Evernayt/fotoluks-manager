@@ -1,0 +1,11 @@
+.container {
+  height: 100%;
+  overflow: auto;
+}
+
+.products {
+  display: grid;
+  grid-gap: var(--space-md);
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  margin-bottom: var(--space-2xl);
+}

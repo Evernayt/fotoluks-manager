@@ -1,0 +1,41 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.form_columns {
+  display: flex;
+}
+
+.form_column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1;
+}
+
+.message {
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-sm);
+  margin: var(--space-modal) 0;
+}
+
+.footer_button {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  gap: var(--space-sm);
+  margin: var(--space-sm) 0;
+}
+
+.header_button {
+  width: 100%;
+}

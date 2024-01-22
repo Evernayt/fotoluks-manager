@@ -8,9 +8,11 @@ import { IRole } from './IRole';
 export interface IEmployee {
   id: number;
   name: string;
+  surname: string;
   login: string;
+  password: string;
   archive: boolean;
-  avatar?: string;
+  avatar: string | null;
   apps?: IApp[];
   departments?: IDepartment[];
   role?: IRole;

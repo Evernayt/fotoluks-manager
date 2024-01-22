@@ -1,0 +1,14 @@
+.container {
+  height: 100%;
+  display: flex;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+  padding: var(--space-xl);
+  padding-bottom: var(--space-lg);
+}

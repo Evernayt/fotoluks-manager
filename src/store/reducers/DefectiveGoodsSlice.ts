@@ -53,4 +53,5 @@ export const defectiveGoodsSlice = createSlice({
   },
 });
 
+export const defectiveGoodsActions = defectiveGoodsSlice.actions;
 export default defectiveGoodsSlice.reducer;

@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-xl) var(--space-sm);
+  background-color: var(--card-bg-color);
+  box-shadow: 1px 0 8px var(--shadow-1);
+  //overflow-y: auto;
+  height: calc(100vh - var(--navbar-height));
+}

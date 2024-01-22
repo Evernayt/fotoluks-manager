@@ -1,16 +1,16 @@
 import {
-  ICreatedFinishedProduct,
+  ICreatedOrderProduct,
   ICreatedOrderMember,
   IOrderBody,
   IOrderInfoBody,
-} from 'pages/OrderDetailPage/OrderDetailPage.service';
+} from 'pages/order-detail-page/OrderDetailPage.service';
 
 export class CreateOrderDto {
   readonly orderBody?: IOrderBody;
   readonly orderInfoBody?: IOrderInfoBody;
-  readonly finishedProductsForCreateBody?: ICreatedFinishedProduct[];
-  readonly finishedProductsForUpdateBody?: ICreatedFinishedProduct[];
-  readonly finishedProductsForDeleteBody?: number[];
+  readonly orderProductsForCreateBody?: ICreatedOrderProduct[];
+  readonly orderProductsForUpdateBody?: ICreatedOrderProduct[];
+  readonly orderProductsForDeleteBody?: number[];
   readonly orderMembersForCreateBody?: ICreatedOrderMember[];
   readonly orderMembersForDeleteBody?: number[];
 }

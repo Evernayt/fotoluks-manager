@@ -1,7 +1,8 @@
 export class CreateProductDto {
   readonly name?: string;
-  readonly pluralName?: string;
-  readonly description?: string;
-  readonly image?: string;
-  readonly categoryId?: number;
+  readonly moyskladId?: string | null;
+  readonly price?: number;
+  readonly discountProhibited?: boolean;
+  readonly moyskladSynchronizedAt?: string | null;
+  readonly image?: string | null;
 }

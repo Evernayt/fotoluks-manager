@@ -1,0 +1,22 @@
+.periods_select {
+  width: 250px;
+}
+
+.status_items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.status_item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.status_item_color {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--border-radius);
+}

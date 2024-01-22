@@ -1,0 +1,15 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.form {
+  width: 100%;
+}
+
+.auth_button {
+  width: 100%;
+  margin: var(--space-modal) 0;
+}

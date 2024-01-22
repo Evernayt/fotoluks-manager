@@ -1,15 +1,19 @@
-import { IconSearch } from 'icons';
 import { FC, HTMLAttributes, ReactNode, useEffect, useState } from 'react';
+import {
+  Card,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Text,
+} from '@chakra-ui/react';
+import { IconSearch, IconX } from '@tabler/icons-react';
+import { ICON_STROKE } from 'constants/app';
+import Loader from '../loader/Loader';
 import styles from './Search.module.scss';
 
-type SimpleSpread<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
-
-interface PropsExtra {
-  onChange: (value: any) => void;
-}
-
-interface SearchProps
-  extends SimpleSpread<HTMLAttributes<HTMLDivElement>, PropsExtra> {
+export interface SearchProps extends HTMLAttributes<HTMLDivElement> {
   value: string;
   onChange: (value: any) => void;
   children?: ReactNode;
@@ -17,7 +21,11 @@ interface SearchProps
   resultMaxHeight?: number;
   showResults?: boolean;
   className?: string;
-  disabled?: boolean;
+  isDisabled?: boolean;
+  isLoading?: boolean;
+  isNotFound?: boolean;
+  isRound?: boolean;
+  footer?: ReactNode;
 }
 
 const Search: FC<SearchProps> = ({
@@ -28,7 +36,11 @@ const Search: FC<SearchProps> = ({
   resultMaxHeight = 300,
   showResults = true,
   className,
-  disabled = false,
+  isDisabled,
+  isLoading,
+  isNotFound,
+  isRound = true,
+  footer,
   ...props
 }) => {
   const [isShowing, setIsShowing] = useState<boolean>(false);
@@ -43,26 +55,50 @@ const Search: FC<SearchProps> = ({
 
   return (
     <div className={[styles.container, className].join(' ')} {...props}>
-      <div className={styles.input_container}>
-        <IconSearch
-          className={[styles.icon, 'link-icon'].join(' ')}
-          size={18}
-        />
-        <input
-          className={styles.input}
-          placeholder={placeholder}
+      <InputGroup>
+        <InputLeftElement ml="1" pointerEvents="none">
+          <IconSearch className="link-icon" size={18} stroke={ICON_STROKE} />
+        </InputLeftElement>
+        <Input
+          className={styles.search_input}
           value={value}
-          disabled={disabled}
+          placeholder={placeholder}
+          isDisabled={isDisabled}
+          variant="filled"
+          borderRadius={isRound ? '999' : undefined}
           onChange={(e) => onChange(e.target.value)}
         />
-      </div>
+        <InputRightElement hidden={!value}>
+          <IconButton
+            icon={<IconX size={18} stroke={ICON_STROKE} />}
+            aria-label="close"
+            variant="link"
+            size="sm"
+            onClick={() => onChange('')}
+          />
+        </InputRightElement>
+      </InputGroup>
       {showResults && isShowing && (
-        <div
+        <Card
           className={styles.result_container}
-          style={{ maxHeight: `${resultMaxHeight}px` }}
+          maxH={`${resultMaxHeight}px`}
+          position="absolute"
         >
-          {children}
-        </div>
+          <div className={styles.results}>
+            {isLoading ? (
+              <Loader size="30px" minHeight="52px" />
+            ) : (
+              <>
+                {isNotFound ? (
+                  <Text className={styles.not_found}>Ничего не найдено</Text>
+                ) : (
+                  children
+                )}
+              </>
+            )}
+          </div>
+          {footer && <div className={styles.footer}>{footer}</div>}
+        </Card>
       )}
     </div>
   );

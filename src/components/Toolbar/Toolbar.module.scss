@@ -1,18 +1,16 @@
 .container {
-  border-bottom: 1px solid var(--separator-color);
-  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: var(--space-sm) var(--space-lg);
 }
 
 .left_section {
   display: flex;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .right_section {
   display: flex;
-  gap: 8px;
+  gap: var(--space-sm);
 }

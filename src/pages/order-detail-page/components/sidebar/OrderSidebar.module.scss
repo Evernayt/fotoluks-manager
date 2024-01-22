@@ -1,0 +1,42 @@
+.container {
+  background-color: var(--card-bg-color);
+  height: calc(100vh - var(--navbar-height));
+  min-width: 300px;
+  max-width: 300px;
+}
+
+.order_info {
+  height: calc(100% - 35px - 2 * var(--space-lg));
+  box-shadow: 1px 0 8px var(--shadow-1);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.sum_container {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.paid_container {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+}
+
+.inputs_container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.footer {
+  position: sticky;
+  padding: var(--space-lg);
+  box-shadow: 0 -2px 12px var(--shadow-2);
+  background-color: var(--card-bg-color);
+  width: 100%;
+  display: flex;
+  gap: var(--space-sm);
+}

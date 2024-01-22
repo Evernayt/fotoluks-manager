@@ -1,0 +1,11 @@
+.container {
+  height: 100%;
+  display: flex;
+}
+
+.comments {
+  width: 100%;
+  height: calc(100vh - var(--navbar-height));
+  padding: var(--space-xl);
+  padding-bottom: var(--space-lg);
+}

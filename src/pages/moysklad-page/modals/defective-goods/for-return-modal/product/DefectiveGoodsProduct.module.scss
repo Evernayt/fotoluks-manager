@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.last {
+  color: var(--success-color);
+}

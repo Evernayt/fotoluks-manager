@@ -2,41 +2,28 @@
   position: relative;
 }
 
-.input_container {
-  display: flex;
-  align-items: center;
-}
-
-.icon {
-  position: absolute;
-  left: 12px;
-}
-
-.input {
-  height: 40px;
-  width: 100%;
-  border-radius: 20px;
-  border: none;
-  background-color: var(--background-color);
-  padding-left: 38px;
-  padding-right: 12px;
-
-  &:disabled {
-    background-color: var(--disabled-background);
-    color: var(--disabled-text);
-    cursor: no-drop;
-  }
+.search_input {
+  padding-left: 37px;
 }
 
 .result_container {
-  margin-top: 12px;
-  background-color: var(--card-background);
-  width: calc(100% - 16px);
+  margin-top: var(--space-md);
   min-height: 52px;
-  position: absolute;
+  width: 100%;
   z-index: 9999;
-  padding: 8px;
-  border-radius: var(--border-radius);
-  box-shadow: 0 4px 12px var(--shadow-2);
+  padding: var(--space-sm);
+}
+
+.results {
   overflow: auto;
+  height: 100%;
+}
+
+.not_found {
+  text-align: center;
+  padding: 15.5px;
+}
+
+.footer {
+  margin-top: var(--space-sm);
 }

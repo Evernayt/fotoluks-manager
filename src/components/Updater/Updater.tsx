@@ -1,89 +1,117 @@
-import IconButton, {
-  IconButtonVariants,
-} from 'components/UI/IconButton/IconButton';
-import Tooltip from 'components/UI/Tooltip/Tooltip';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { IconArrowBarToDown, IconCloudDownload } from 'icons';
-import { modalSlice } from 'store/reducers/ModalSlice';
+import {
+  Button,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  Progress,
+  Text,
+} from '@chakra-ui/react';
+import {
+  IconArrowBarToDown,
+  IconCloudDownload,
+  IconCloudX,
+} from '@tabler/icons-react';
+import { ICON_SIZE, ICON_STROKE } from 'constants/app';
+import { appActions } from 'store/reducers/AppSlice';
 import styles from './Updater.module.scss';
 
 const Updater = () => {
   const checkUpdate = useAppSelector((state) => state.app.checkUpdate);
   const downloadUpdate = useAppSelector((state) => state.app.downloadUpdate);
+  const version = useAppSelector((state) => state.app.version);
+  const downloadingProgress = useAppSelector(
+    (state) => state.app.downloadingProgress
+  );
+
+  const isHide = !checkUpdate.success;
 
   const dispatch = useAppDispatch();
 
-  const openUpdaterModal = () => {
-    dispatch(modalSlice.actions.openModal({ modal: 'updaterModal' }));
+  const repeatDownload = () => {
+    window.electron.ipcRenderer.sendMessage('download-update-pending', []);
+    window.electron.ipcRenderer.sendMessage('download-update-progress', []);
+    dispatch(appActions.setDownloadUpdate({ pending: true }));
   };
 
-  const renderIcon = () => {
-    if (
-      checkUpdate.success &&
-      !downloadUpdate.pending &&
-      !downloadUpdate.success &&
-      !downloadUpdate.failure
-    ) {
-      return (
-        <Tooltip label="Доступна новая версия" placement="left">
-          <div>
-            <IconButton
-              icon={
-                <IconCloudDownload
-                  className="secondary-checked-icon"
-                  size={20}
-                />
-              }
-              variant={IconButtonVariants.primary}
-              circle
-              onClick={openUpdaterModal}
-            />
-          </div>
-        </Tooltip>
-      );
-    } else if (downloadUpdate.pending) {
-      return (
-        <Tooltip label="Скачивание обновлений" placement="left">
-          <div>
-            <IconButton
-              icon={
-                <IconCloudDownload
-                  className={['secondary-checked-icon', styles.animate].join(
-                    ' '
-                  )}
-                  size={20}
-                />
-              }
-              circle
-              onClick={openUpdaterModal}
-            />
-          </div>
-        </Tooltip>
-      );
+  const quitAndInstall = () => {
+    window.electron.ipcRenderer.sendMessage('quit-and-install-update', []);
+  };
+
+  const getDownloadNewVerisonMessage = () => {
+    if (downloadUpdate.pending) {
+      return 'Загрузка обновления...';
     } else if (downloadUpdate.success) {
-      return (
-        <Tooltip label="Обновление скачано" placement="left">
-          <div>
-            <IconButton
-              icon={
-                <IconArrowBarToDown
-                  className="secondary-checked-icon"
-                  size={20}
-                />
-              }
-              variant={IconButtonVariants.primary}
-              circle
-              onClick={openUpdaterModal}
-            />
-          </div>
-        </Tooltip>
-      );
+      return 'Обновление загружено';
+    } else if (downloadUpdate.failure) {
+      return 'Ошибка загрузки обновления';
     } else {
-      return null;
+      return '';
     }
   };
 
-  return renderIcon();
+  const renderIcon = () => {
+    if (downloadUpdate.pending) {
+      return (
+        <IconCloudDownload
+          className={styles.animate}
+          size={ICON_SIZE}
+          stroke={ICON_STROKE}
+        />
+      );
+    } else if (downloadUpdate.success) {
+      return <IconArrowBarToDown size={ICON_SIZE} stroke={ICON_STROKE} />;
+    } else if (downloadUpdate.failure) {
+      return <IconCloudX size={ICON_SIZE} stroke={ICON_STROKE} />;
+    }
+  };
+
+  const renderContent = () => {
+    if (downloadUpdate.pending) {
+      return (
+        <Progress
+          value={downloadingProgress}
+          colorScheme="yellow"
+          w="100%"
+          borderRadius="full"
+        />
+      );
+    } else if (downloadUpdate.success) {
+      return (
+        <Button colorScheme="yellow" w="100%" onClick={quitAndInstall}>
+          Перезапустить
+        </Button>
+      );
+    } else if (downloadUpdate.failure) {
+      return (
+        <Button w="100%" onClick={repeatDownload}>
+          Повторить
+        </Button>
+      );
+    }
+  };
+
+  return !isHide ? (
+    <Menu autoSelect={false}>
+      <MenuButton
+        as={IconButton}
+        icon={renderIcon()}
+        aria-label="downloading"
+        colorScheme={downloadUpdate.success ? 'yellow' : 'gray'}
+        isRound
+      />
+      <MenuList p={0}>
+        <div className={styles.container}>
+          <div>
+            <Text>{`Версия: ${version}`}</Text>
+            <Text>{getDownloadNewVerisonMessage()}</Text>
+          </div>
+          {renderContent()}
+        </div>
+      </MenuList>
+    </Menu>
+  ) : null;
 };
 
 export default Updater;

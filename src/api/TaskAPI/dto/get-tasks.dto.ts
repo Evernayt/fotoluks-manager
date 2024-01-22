@@ -11,4 +11,6 @@ export class GetTasksDto {
   readonly startDate?: string;
   readonly endDate?: string;
   readonly urgent?: boolean;
+  readonly personal?: boolean;
+  readonly personalEmployeeId?: number;
 }

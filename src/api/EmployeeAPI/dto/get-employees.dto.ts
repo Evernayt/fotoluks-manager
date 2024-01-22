@@ -4,4 +4,5 @@ export class GetEmployeesDto {
   readonly archive?: boolean;
   readonly search?: string;
   readonly appId?: number;
+  readonly roleIds?: number[];
 }

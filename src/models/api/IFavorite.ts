@@ -1,11 +1,10 @@
 import { IData } from 'models/IData';
-import { IFavoriteParam } from './IFavoriteParam';
-import { IType } from './IType';
+import { IProduct } from './IProduct';
 
 export interface IFavorite {
   id: number;
-  type?: IType;
-  favoriteParams?: IFavoriteParam[];
+  productId: number;
+  product?: IProduct;
 }
 
 export type IFavoriteData = IData<IFavorite[]>;

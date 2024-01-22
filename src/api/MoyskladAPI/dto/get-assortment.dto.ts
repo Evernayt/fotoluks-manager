@@ -3,4 +3,5 @@ export class GetAssortmentDto {
   readonly offset?: number;
   readonly search?: string;
   readonly stockStore?: string;
+  readonly ids?: string[];
 }

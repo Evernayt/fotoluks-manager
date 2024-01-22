@@ -1,15 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IDepartment } from 'models/api/IDepartment';
 import { IPosition } from 'models/api/moysklad/IPosition';
 
 type MoveState = {
   positions: IPosition[];
-  department: IDepartment | undefined;
 };
 
 const initialState: MoveState = {
   positions: [],
-  department: undefined,
 };
 
 export const moveSlice = createSlice({
@@ -21,9 +18,9 @@ export const moveSlice = createSlice({
     },
     editPosition(
       state,
-      action: PayloadAction<{ index: number; position: IPosition }>
+      action: PayloadAction<{ rowIndex: number; position: IPosition }>
     ) {
-      state.positions[action.payload.index] = action.payload.position;
+      state.positions[action.payload.rowIndex] = action.payload.position;
     },
     deletePosition(state, action: PayloadAction<number>) {
       state.positions.splice(action.payload, 1);
@@ -31,13 +28,11 @@ export const moveSlice = createSlice({
     addPosition(state, action: PayloadAction<IPosition>) {
       state.positions.push(action.payload);
     },
-    setDepartment(state, action: PayloadAction<IDepartment>) {
-      state.department = action.payload;
-    },
     clearState() {
       return initialState;
     },
   },
 });
 
+export const moveActions = moveSlice.actions;
 export default moveSlice.reducer;

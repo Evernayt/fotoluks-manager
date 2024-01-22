@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.panel {
+  width: 100%;
+  height: var(--page-panel-height);
+  margin: var(--page-panel-margin);
+}
