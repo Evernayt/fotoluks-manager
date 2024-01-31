@@ -5,7 +5,7 @@ import { ContextMenu } from 'components';
 import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
 import { IEmployee } from 'models/api/IEmployee';
 import 'react-contexify/ReactContexify.css';
-import { IconArchive } from '@tabler/icons-react';
+import { IconArchive, IconArchiveOff } from '@tabler/icons-react';
 import { CONTEXT_MENU_ICON_STYLE, ICON_SIZE, ICON_STROKE } from 'constants/app';
 
 export const EMPLOYEES_MENU_ID = 'EMPLOYEES_MENU_ID';
@@ -35,15 +35,15 @@ const EmployeesContextMenu = () => {
           stroke={ICON_STROKE}
           style={CONTEXT_MENU_ICON_STYLE}
         />
-        В архив
+        Добавить в архив
       </Item>
       <Item hidden={(e) => !isHidden(e as ItemParams)} onClick={toggleArchive}>
-        <IconArchive
+        <IconArchiveOff
           size={ICON_SIZE}
           stroke={ICON_STROKE}
           style={CONTEXT_MENU_ICON_STYLE}
         />
-        Удалить из архива
+        Убрать из архива
       </Item>
     </ContextMenu>
   );

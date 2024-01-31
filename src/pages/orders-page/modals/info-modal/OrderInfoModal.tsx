@@ -36,7 +36,12 @@ const OrdersInfoModal = () => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} scrollBehavior="inside">
+    <Modal
+      isOpen={isOpen}
+      onClose={closeModal}
+      scrollBehavior="inside"
+      size="md"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{`О заказе № ${order?.id}`}</ModalHeader>

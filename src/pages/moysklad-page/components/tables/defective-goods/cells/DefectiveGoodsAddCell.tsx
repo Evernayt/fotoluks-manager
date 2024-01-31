@@ -2,6 +2,7 @@ import { IconButton, useToast } from '@chakra-ui/react';
 import { IconPlus } from '@tabler/icons-react';
 import { Row } from '@tanstack/react-table';
 import { ICON_SIZE, ICON_STROKE } from 'constants/app';
+import { getSuccessToast } from 'helpers/toast';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { ISupply } from 'models/api/moysklad/ISupply';
 import { IDefectiveGood } from 'models/IDefectiveGood';
@@ -51,12 +52,7 @@ const DefectiveGoodsAddCell: FC<DefectiveGoodsAddCellProps> = ({ row }) => {
       );
     }
 
-    toast({
-      title: 'Добавлено',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+    toast(getSuccessToast('Добавлено'));
   };
 
   return (

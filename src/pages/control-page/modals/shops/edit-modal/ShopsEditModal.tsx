@@ -24,6 +24,7 @@ import * as Yup from 'yup';
 import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { CreateShopDto } from 'api/ShopAPI/dto/create-shop.dto';
 import { UpdateShopDto } from 'api/ShopAPI/dto/update-shop.dto';
+import { getErrorToast } from 'helpers/toast';
 import styles from './ShopsEditModal.module.scss';
 
 interface FormValues {
@@ -71,15 +72,7 @@ const ShopsEditModal = () => {
       .then((data) => {
         setFormState(data);
       })
-      .catch((e) =>
-        toast({
-          title: 'ShopsEditModal.fetchShop',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('ShopsEditModal.fetchShop', e)))
       .finally(() => setIsLoading(false));
   };
 
@@ -90,15 +83,7 @@ const ShopsEditModal = () => {
       .then(() => {
         closeModal(true);
       })
-      .catch((e) =>
-        toast({
-          title: 'ShopsEditModal.createShop',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('ShopsEditModal.createShop', e)))
       .finally(() => setIsLoading(false));
   };
 
@@ -112,15 +97,7 @@ const ShopsEditModal = () => {
       .then(() => {
         closeModal(true);
       })
-      .catch((e) =>
-        toast({
-          title: 'ShopsEditModal.updateShop',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('ShopsEditModal.updateShop', e)))
       .finally(() => setIsLoading(false));
   };
 

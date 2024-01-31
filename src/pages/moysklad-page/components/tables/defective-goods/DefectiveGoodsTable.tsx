@@ -9,6 +9,7 @@ import { moyskladActions } from 'store/reducers/MoyskladSlice';
 import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
 import { ISupply } from 'models/api/moysklad/ISupply';
 import { defectiveGoodsActions } from 'store/reducers/DefectiveGoodsSlice';
+import { getErrorToast } from 'helpers/toast';
 
 const DefectiveGoodsTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -42,23 +43,17 @@ const DefectiveGoodsTable = () => {
     dispatch(moyskladActions.setIsLoading(true));
 
     MoyskladAPI.getAssortment({ search, limit: 1 }).then((data) => {
-      if (data?.rows.length) {
+      if (data?.rows?.length) {
         dispatch(defectiveGoodsActions.setFoundProduct(data.rows[0]));
 
         const productHref = data.rows[0].meta.href;
         MoyskladAPI.getSupplies({ limit, offset, productHref })
           .then((data2) => {
-            setSupplies(data2.rows);
+            setSupplies(data2.rows || []);
             setPageCount(Math.ceil((data2.meta?.size || 0) / limit));
           })
           .catch(() =>
-            toast({
-              title: 'DefectiveGoodsTable.fetchSupplies',
-              description: 'Ошибка',
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('DefectiveGoodsTable.fetchSupplies'))
           )
           .finally(() => dispatch(moyskladActions.setIsLoading(false)));
       } else {

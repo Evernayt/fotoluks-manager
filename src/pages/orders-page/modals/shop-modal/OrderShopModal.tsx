@@ -14,14 +14,14 @@ import {
 } from '@chakra-ui/react';
 import { modalActions } from 'store/reducers/ModalSlice';
 import * as Yup from 'yup';
-import { SHOP_INVALID_MSG } from 'constants/app';
+import { APP_ID, NOTIF_CATEGORY_ID, SHOP_INVALID_MSG } from 'constants/app';
 import { Field, FieldProps, Form, Formik } from 'formik';
 import { SelectField } from 'components/ui/select/Select';
 import OrderAPI from 'api/OrderAPI/OrderAPI';
 import { orderActions } from 'store/reducers/OrderSlice';
 import NotificationAPI from 'api/NotificationAPI/NotificationAPI';
 import socketio from 'socket/socketio';
-import { getEmployeeFullName } from 'helpers/employee';
+import { getEmployeeShortName } from 'helpers/employee';
 import styles from './OrderShopModal.module.scss';
 
 interface FormValues {
@@ -68,15 +68,15 @@ const OrderShopModal = () => {
     });
     const shop = shopsWithGeneral.find((shop) => shop.id === shopId);
     const title = 'Заказ перемещен';
-    const text = `${getEmployeeFullName(employee)} переместил заказ № ${
+    const text = `${getEmployeeShortName(employee)} переместил заказ № ${
       order.id
     } c филиала «${order.shop?.name}» на «${shop?.name}»`;
     NotificationAPI.create({
       title,
       text,
       employeeIds,
-      appId: 1,
-      notificationCategoryId: 5,
+      appId: APP_ID.Заказы,
+      notificationCategoryId: NOTIF_CATEGORY_ID.Изменен_заказ,
     }).then((data) => {
       socketio.sendNotification(data, employeeIds);
     });

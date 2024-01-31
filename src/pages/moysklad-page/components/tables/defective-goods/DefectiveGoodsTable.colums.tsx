@@ -13,7 +13,8 @@ export const defectiveGoodsTableColumns: ColumnDef<ISupply, any>[] = [
   }),
   columnHelper.accessor('incomingDate', {
     header: 'Дата',
-    cell: ({ getValue }) => moment(getValue()).format('DD.MM.YYYY'),
+    cell: ({ getValue }) =>
+      getValue() ? moment(getValue()).format('DD.MM.YYYY') : '',
     meta: { className: 'row_nowrap' },
   }),
   columnHelper.accessor('agent.name', {

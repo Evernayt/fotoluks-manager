@@ -9,6 +9,7 @@ import { modalActions } from 'store/reducers/ModalSlice';
 import { IconMoysklad } from 'icons';
 import ProductAPI from 'api/ProductAPI/ProductAPI';
 import { controlActions } from 'store/reducers/ControlSlice';
+import { getErrorToast } from 'helpers/toast';
 
 interface ProductsToolbarProps {
   reload: () => void;
@@ -61,13 +62,7 @@ const ProductsToolbar: FC<ProductsToolbarProps> = ({
         dispatch(controlActions.setForceUpdate(true));
       })
       .catch((e) =>
-        toast({
-          title: 'ProductsToolbar.syncAllFromMoysklad',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('ProductsToolbar.syncAllFromMoysklad', e))
       )
       .finally(() => dispatch(controlActions.setIsLoading(false)));
   };

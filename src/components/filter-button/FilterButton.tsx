@@ -1,8 +1,4 @@
-import {
-  IconFilter,
-  IconFilterCancel,
-  IconFilterCheck,
-} from '@tabler/icons-react';
+import { IconFilter, IconFilterCheck } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE } from 'constants/app';
 import { IFilter } from 'models/IFilter';
 import { IconButton, Tooltip } from '@chakra-ui/react';
@@ -26,15 +22,6 @@ const FilterButton = <T extends Partial<IFilter>>({
           onClick={onClick}
         />
       </Tooltip>
-    );
-  } else if (filter.isDisabled) {
-    return (
-      <IconButton
-        icon={<IconFilterCancel size={ICON_SIZE} stroke={ICON_STROKE} />}
-        aria-label="filter"
-        isDisabled
-        onClick={onClick}
-      />
     );
   } else {
     return (

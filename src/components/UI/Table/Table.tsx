@@ -16,13 +16,10 @@ import { Divider, Heading, HeadingProps } from '@chakra-ui/react';
 import { CSSProperties, MouseEvent, useState } from 'react';
 import { IconSortAscending, IconSortDescending } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE } from 'constants/app';
+import { IEditor } from 'models/IEditor';
+import { EditableTableRow, TableRow } from './row/TableRow';
 import styles from './Table.module.scss';
 import './Table.scss';
-
-interface IMeta {
-  className?: string;
-  style?: CSSProperties;
-}
 
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -33,6 +30,7 @@ interface TableProps<TData, TValue> {
   containerStyle?: CSSProperties;
   loaderProps?: LoaderProps;
   notFoundTextProps?: HeadingProps;
+  editors?: IEditor[];
   sorting?: SortingState;
   enableRowSelection?: boolean;
   updateData?: (rowIndex: number, columnId: string, value: any) => void;
@@ -43,8 +41,6 @@ interface TableProps<TData, TValue> {
   onContextMenu?: (row: Row<TData>, e: MouseEvent<HTMLTableRowElement>) => void;
 }
 
-const CLICKABLE_TAGES = ['TD', 'SPAN'];
-
 const Table = <TData, TValue>({
   columns,
   data,
@@ -54,6 +50,7 @@ const Table = <TData, TValue>({
   containerStyle,
   loaderProps,
   notFoundTextProps,
+  editors,
   sorting,
   enableRowSelection,
   updateData,
@@ -92,23 +89,15 @@ const Table = <TData, TValue>({
     meta: { updateData },
   });
 
-  const rowClickHandler = (e: any, row: Row<TData>) => {
-    if (
-      CLICKABLE_TAGES.includes(e.target.tagName) ||
-      e.target.getAttribute('data-clickable')
-    ) {
-      if (isClickable) {
-        onRowClick(row);
+  const getEditableRow = (row: Row<TData>) => {
+    if (editors && editors.length > 0) {
+      //@ts-ignore
+      const editor = editors.find((x) => x.targetId === row.original.id);
+      if (editor) {
+        return { isEditable: true, employee: editor.employee };
       }
     }
-  };
-
-  const contextMenuHandler = (
-    row: Row<TData>,
-    e: MouseEvent<HTMLTableRowElement>
-  ) => {
-    if (!onContextMenu) return;
-    onContextMenu(row, e);
+    return { isEditable: false, employee: null };
   };
 
   return (
@@ -168,33 +157,24 @@ const Table = <TData, TValue>({
                   ))}
                 </thead>
                 <tbody>
-                  {table.getRowModel().rows.map((row) => (
-                    <tr
-                      className={[
-                        styles.row,
-                        isClickable && styles.clickable_row,
-                      ].join(' ')}
-                      onClick={(e: any) => rowClickHandler(e, row)}
-                      onContextMenu={(e) => contextMenuHandler(row, e)}
-                      key={row.id}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          className={[
-                            styles.cell,
-                            (cell.column.columnDef.meta as IMeta)?.className,
-                          ].join(' ')}
-                          style={(cell.column.columnDef.meta as IMeta)?.style}
-                          key={cell.id}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                  {table.getRowModel().rows.map((row) => {
+                    const editableRow = getEditableRow(row);
+                    return editableRow.isEditable ? (
+                      <EditableTableRow
+                        row={row}
+                        employee={editableRow.employee}
+                        key={row.id}
+                      />
+                    ) : (
+                      <TableRow
+                        row={row}
+                        isClickable={isClickable}
+                        onRowClick={onRowClick}
+                        onContextMenu={onContextMenu}
+                        key={row.id}
+                      />
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (

@@ -14,6 +14,8 @@ import {
   IEndingGoodsProductModal,
   IUpdatePricesModal,
   ITaskEditMessageModal,
+  IOrdersReasonModal,
+  IChangelogsEditModal,
 } from 'models/IModal';
 
 type ModalState = {
@@ -24,6 +26,7 @@ type ModalState = {
   ordersFilterModal: IModal;
   ordersInfoModal: IOrdersInfoModal;
   ordersShopModal: IOrdersShopModal;
+  ordersReasonModal: IOrdersReasonModal;
   /* order-detail-page */
   orderMembersModal: IModal;
   orderClientEditModal: IOrderClientEditModal;
@@ -39,6 +42,7 @@ type ModalState = {
   employeesFilterModal: IModal;
   shopsEditModal: IShopsEditModal;
   shopsFilterModal: IModal;
+  changelogsEditModal: IChangelogsEditModal;
   /* moysklad-page */
   endingGoodsProductModal: IEndingGoodsProductModal;
   updatePricesModal: IUpdatePricesModal;
@@ -52,6 +56,7 @@ type ModalState = {
   taskEditMessageModal: ITaskEditMessageModal;
   /* global */
   appCloseModal: IModal;
+  reportModal: IModal;
 };
 
 const initialState: ModalState = {
@@ -62,6 +67,7 @@ const initialState: ModalState = {
   ordersFilterModal: INITIAL_MODAL,
   ordersInfoModal: INITIAL_MODAL,
   ordersShopModal: INITIAL_MODAL,
+  ordersReasonModal: INITIAL_MODAL,
   /* order-detail-page */
   orderMembersModal: INITIAL_MODAL,
   orderClientEditModal: INITIAL_MODAL,
@@ -77,6 +83,7 @@ const initialState: ModalState = {
   employeesFilterModal: INITIAL_MODAL,
   shopsEditModal: INITIAL_MODAL,
   shopsFilterModal: INITIAL_MODAL,
+  changelogsEditModal: INITIAL_MODAL,
   /* moysklad-page */
   endingGoodsProductModal: INITIAL_MODAL,
   updatePricesModal: INITIAL_MODAL,
@@ -90,6 +97,7 @@ const initialState: ModalState = {
   taskEditMessageModal: INITIAL_MODAL,
   /* global */
   appCloseModal: INITIAL_MODAL,
+  reportModal: INITIAL_MODAL,
 };
 
 interface OpenModalProps {

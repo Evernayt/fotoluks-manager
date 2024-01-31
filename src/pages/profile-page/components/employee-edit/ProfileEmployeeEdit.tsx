@@ -18,6 +18,7 @@ import { getRecentLogins, setRecentLogins } from 'helpers/localStorage';
 import * as Yup from 'yup';
 import { REQUIRED_INVALID_MSG } from 'constants/app';
 import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
+import { getErrorToast, getSuccessToast } from 'helpers/toast';
 import styles from './ProfileEmployeeEdit.module.scss';
 
 interface EmployeeFormValues {
@@ -67,27 +68,20 @@ const ProfileEmployeeEdit = () => {
               updateEmployeeState(data);
             })
             .catch((e) =>
-              toast({
-                title: 'ProfileEmployeeEdit.editAvatar',
-                description: e.response.data
-                  ? e.response.data.message
-                  : e.message,
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-              })
+              toast(getErrorToast('ProfileEmployeeEdit.editAvatar', e))
             );
         });
       } else {
-        res.json().then((data) =>
-          toast({
-            title: 'ProfileEmployeeEdit.editAvatar.uploadAvatar',
-            description: data.message,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
-        );
+        res
+          .json()
+          .then((data) =>
+            toast(
+              getErrorToast(
+                'ProfileEmployeeEdit.editAvatar.uploadAvatar',
+                data.message
+              )
+            )
+          );
       }
     });
   };
@@ -103,13 +97,7 @@ const ProfileEmployeeEdit = () => {
         updateEmployeeState(data);
       })
       .catch((e) =>
-        toast({
-          title: 'ProfileEmployeeEdit.removeAvatar',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('ProfileEmployeeEdit.removeAvatar', e))
       );
   };
 
@@ -139,21 +127,10 @@ const ProfileEmployeeEdit = () => {
     EmployeeAPI.update(updatedEmployee)
       .then((data) => {
         updateEmployeeState(data);
-        toast({
-          title: 'Данные изменены',
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast(getSuccessToast('Данные изменены'));
       })
       .catch((e) =>
-        toast({
-          title: 'ProfileEmployeeEdit.updateEmployee',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('ProfileEmployeeEdit.updateEmployee', e))
       )
       .finally(() => setSubmitting(false));
   };
@@ -171,21 +148,10 @@ const ProfileEmployeeEdit = () => {
     })
       .then(() => {
         resetForm();
-        toast({
-          title: 'Пароль изменен',
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast(getSuccessToast('Пароль изменен'));
       })
       .catch((e) =>
-        toast({
-          title: 'ProfileEmployeeEdit.updatePassword',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('ProfileEmployeeEdit.updatePassword', e))
       )
       .finally(() => setSubmitting(false));
   };

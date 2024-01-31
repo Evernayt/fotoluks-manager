@@ -16,6 +16,21 @@ enum MODES {
   EDIT_MODE = 'EDIT_MODE',
 }
 
+enum APP_ID {
+  Заказы = 1,
+  Панель_управления = 2,
+  МойСклад = 3,
+  Задачи = 4,
+}
+
+enum NOTIF_CATEGORY_ID {
+  Добавлен_или_удален_из_участников = 1,
+  Комментарии_к_задаче = 2,
+  Изменен_статус_задачи = 3,
+  Изменен_статус_заказа = 4,
+  Изменен_заказ = 5,
+}
+
 const UI_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 const NOT_INDICATED = 'Не указано';
 const FETCH_MORE_LIMIT = 25;
@@ -60,6 +75,8 @@ const APPS = [
 
 export {
   MODES,
+  APP_ID,
+  NOTIF_CATEGORY_ID,
   UI_DATE_FORMAT,
   NOT_INDICATED,
   FETCH_MORE_LIMIT,

@@ -13,6 +13,7 @@ import {
   IconLogout,
   IconMoon,
   IconSun,
+  IconMessageReport,
 } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE } from 'constants/app';
 import { LOGIN_ROUTE, PROFILE_ROUTE, SETTINGS_ROUTE } from 'constants/paths';
@@ -25,6 +26,7 @@ import { appActions } from 'store/reducers/AppSlice';
 import { controlActions } from 'store/reducers/ControlSlice';
 import { employeeActions } from 'store/reducers/EmployeeSlice';
 import { endingGoodsActions } from 'store/reducers/EndingGoodsSlice';
+import { modalActions } from 'store/reducers/ModalSlice';
 import { moveActions } from 'store/reducers/MoveSlice';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
 import { orderActions } from 'store/reducers/OrderSlice';
@@ -47,6 +49,10 @@ const NavbarMenu = () => {
   const openSettingsPage = () => {
     if (location.pathname === SETTINGS_ROUTE) return;
     navigate(SETTINGS_ROUTE);
+  };
+
+  const openReportModal = () => {
+    dispatch(modalActions.openModal({ modal: 'reportModal' }));
   };
 
   const signOut = () => {
@@ -101,6 +107,12 @@ const NavbarMenu = () => {
           onClick={toggleColorMode}
         >
           {colorMode === 'light' ? 'Тема: Светлая' : 'Тема: Темная'}
+        </MenuItem>
+        <MenuItem
+          icon={<IconMessageReport size={ICON_SIZE} stroke={ICON_STROKE} />}
+          onClick={openReportModal}
+        >
+          Оставить отзыв
         </MenuItem>
         <MenuItem
           icon={

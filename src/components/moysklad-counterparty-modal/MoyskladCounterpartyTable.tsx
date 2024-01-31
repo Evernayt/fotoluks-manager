@@ -7,6 +7,7 @@ import { Row } from '@tanstack/react-table';
 import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
 import MoyskladCounterpartyToolbar from './MoyskladCounterpartyToolbar';
 import { ICounterparty } from 'models/api/moysklad/ICounterparty';
+import { getErrorToast } from 'helpers/toast';
 
 interface MoyskladCounterpartyTableProps {
   onCounterpartyClick: (counterparty: ICounterparty) => void;
@@ -43,13 +44,9 @@ const MoyskladCounterpartyTable: FC<MoyskladCounterpartyTableProps> = ({
         setPageCount(Math.ceil((data?.meta?.size || 0) / limit));
       })
       .catch(() =>
-        toast({
-          title: 'MoyskladCounterpartyTable.fetchCounterparties',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(
+          getErrorToast('MoyskladCounterpartyTable.fetchCounterparties')
+        )
       )
       .finally(() => setIsLoading(false));
   };

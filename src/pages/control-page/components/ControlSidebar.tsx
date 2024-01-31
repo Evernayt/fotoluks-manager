@@ -7,6 +7,8 @@ import {
   IconFriends,
   IconBuildingStore,
   IconMug,
+  IconMessageReport,
+  IconVersions,
 } from '@tabler/icons-react';
 import { controlActions } from 'store/reducers/ControlSlice';
 
@@ -39,6 +41,16 @@ const ControlSidebar = () => {
         id: 3,
         Icon: IconBuildingStore,
         name: 'Филиалы',
+      },
+      {
+        id: 4,
+        Icon: IconMessageReport,
+        name: 'Отзывы',
+      },
+      {
+        id: 5,
+        Icon: IconVersions,
+        name: 'История версий',
       },
     ],
     []

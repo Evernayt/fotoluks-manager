@@ -36,9 +36,8 @@ const OrderUnsavedDataModal: FC<OrderUnsavedDataModalProps> = ({
     dispatch(orderActions.clearOrder());
     navigate(-1);
 
-    if (employee) {
-      socketio.removeWatcher(employee.id);
-    }
+    if (!employee) return;
+    socketio.removeOrderEditor(employee.id);
   };
 
   const saveOrderAndClose = () => {

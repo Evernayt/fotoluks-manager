@@ -35,6 +35,7 @@ import { orderActions } from 'store/reducers/OrderSlice';
 import { taskActions } from 'store/reducers/TaskSlice';
 import { moveActions } from 'store/reducers/MoveSlice';
 import socketio from 'socket/socketio';
+import { getErrorToast, getSuccessToast } from 'helpers/toast';
 
 const SettingsPage = () => {
   const [folder, setFolder] = useState<string>(getMainFolder());
@@ -60,12 +61,12 @@ const SettingsPage = () => {
         setFolder(fullPath);
         setMainFolder(fullPath);
       } else {
-        toast({
-          title: `Основная папка должна называться «${MAIN_FOLDER_NAME}»`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast(
+          getErrorToast(
+            `Основная папка должна называться «${MAIN_FOLDER_NAME}»`,
+            ''
+          )
+        );
       }
     });
   };
@@ -99,12 +100,7 @@ const SettingsPage = () => {
     dispatch(taskActions.clearState());
     dispatch(moveActions.clearState());
     socketio.disconnect();
-    toast({
-      title: 'Данные удалены',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+    toast(getSuccessToast('Данные удалены'));
     navigate(LOGIN_ROUTE);
   };
 

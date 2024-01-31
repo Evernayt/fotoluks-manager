@@ -21,9 +21,9 @@ import { Card, Divider, Text } from '@chakra-ui/react';
 import { MessageInput } from 'components';
 import { taskActions } from 'store/reducers/TaskSlice';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import { FETCH_MORE_LIMIT } from 'constants/app';
+import { APP_ID, FETCH_MORE_LIMIT, NOTIF_CATEGORY_ID } from 'constants/app';
 import Loader, { LoaderWrapper } from 'components/ui/loader/Loader';
-import { getEmployeeFullName } from 'helpers/employee';
+import { getEmployeeShortName } from 'helpers/employee';
 import styles from './TaskComments.module.scss';
 
 interface TaskCommentsProps {
@@ -161,14 +161,14 @@ const TaskComments: FC<TaskCommentsProps> = ({ taskId }) => {
       }
     });
 
-    const title = `${getEmployeeFullName(employee)} — Задача № ${task.id}`;
+    const title = `${getEmployeeShortName(employee)} — Задача № ${task.id}`;
 
     NotificationAPI.create({
       title,
       text,
       employeeIds,
-      appId: 4,
-      notificationCategoryId: 2,
+      appId: APP_ID.Задачи,
+      notificationCategoryId: NOTIF_CATEGORY_ID.Комментарии_к_задаче,
     }).then((data) => {
       socketio.sendNotification(data, employeeIds);
     });

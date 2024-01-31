@@ -45,6 +45,7 @@ import { AutoResizableTextarea, EditableImage } from 'components';
 import { getFileImageSrc } from 'helpers';
 import FileAPI from 'api/FileAPI/FileAPI';
 import * as Yup from 'yup';
+import { getErrorToast } from 'helpers/toast';
 import styles from './ProductsEditModal.module.scss';
 
 interface FormValues {
@@ -97,13 +98,7 @@ const ProductsEditModal = () => {
         setFormState({ ...data, price: data.price.toString() });
       })
       .catch((e) =>
-        toast({
-          title: 'ProductsEditModal.fetchProduct',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('ProductsEditModal.fetchProduct', e))
       )
       .finally(() => setIsLoading(false));
   };
@@ -136,13 +131,7 @@ const ProductsEditModal = () => {
         closeModal(true);
       })
       .catch((e) =>
-        toast({
-          title: 'ProductsEditModal.syncOneFromMoysklad',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('ProductsEditModal.syncOneFromMoysklad', e))
       )
       .finally(() => setIsLoading(false));
   };
@@ -223,36 +212,20 @@ const ProductsEditModal = () => {
             setIsLoading(true);
             createProduct(imageLink, values)
               .catch((error) =>
-                toast({
-                  title: 'ProductsEditModal.createProduct',
-                  description: error,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
+                toast(
+                  getErrorToast('ProductsEditModal.createProduct', error)
+                )
               )
               .finally(() => setIsLoading(false));
           })
           .catch((error) =>
-            toast({
-              title: 'ProductsEditModal.uploadImage',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('ProductsEditModal.uploadImage', error))
           )
           .finally(() => setIsLoading(false));
       } else {
         createProduct(null, values)
           .catch((error) =>
-            toast({
-              title: 'ProductsEditModal.createProduct',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('ProductsEditModal.createProduct', error))
           )
           .finally(() => setIsLoading(false));
       }
@@ -263,36 +236,20 @@ const ProductsEditModal = () => {
             setIsLoading(true);
             updateProduct(imageLink, values)
               .catch((error) =>
-                toast({
-                  title: 'ProductsEditModal.updateProduct',
-                  description: error,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
+                toast(
+                  getErrorToast('ProductsEditModal.updateProduct', error)
+                )
               )
               .finally(() => setIsLoading(false));
           })
           .catch((error) =>
-            toast({
-              title: 'ProductsEditModal.uploadImage',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('ProductsEditModal.uploadImage', error))
           )
           .finally(() => setIsLoading(false));
       } else {
         updateProduct(image, values)
           .catch((error) =>
-            toast({
-              title: 'ProductsEditModal.updateProduct',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('ProductsEditModal.updateProduct', error))
           )
           .finally(() => setIsLoading(false));
       }

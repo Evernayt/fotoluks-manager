@@ -12,6 +12,7 @@ import { endingGoodsActions } from 'store/reducers/EndingGoodsSlice';
 import { Row } from '@tanstack/react-table';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { setNotAvailableGoods, setOrderedGoods } from 'helpers/localStorage';
+import { getErrorToast } from 'helpers/toast';
 
 export interface IEndingGood extends INotification {
   ordered: boolean;
@@ -69,7 +70,7 @@ const EndingGoodsTable = () => {
     MoyskladAPI.getNotifications({ limit, offset })
       .then((data) => {
         const endingGoodsData: IEndingGood[] = [];
-        data.rows.forEach((notification) => {
+        data.rows?.forEach((notification) => {
           if (notification.good) {
             const ordered = orderedGoods.some(
               (id) => id === notification.good.id
@@ -96,15 +97,7 @@ const EndingGoodsTable = () => {
         dispatch(endingGoodsActions.setEndingGoods(noDuplicatesEndingGoods));
         setPageCount(Math.ceil(2000 / limit));
       })
-      .catch(() =>
-        toast({
-          title: 'StocksTable.fetchAssortments',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch(() => toast(getErrorToast('StocksTable.fetchAssortments')))
       .finally(() => dispatch(moyskladActions.setIsLoading(false)));
   };
 

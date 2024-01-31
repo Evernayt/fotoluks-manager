@@ -17,6 +17,7 @@ import EmployeesContextMenu, {
 import { modalActions } from 'store/reducers/ModalSlice';
 import { MODES } from 'constants/app';
 import { IEmployeeWithConnection } from './EmployeesTable.types';
+import { getErrorToast } from 'helpers/toast';
 
 const EmployeesTable = () => {
   const [pageCount, setPageCount] = useState<number>(0);
@@ -73,13 +74,7 @@ const EmployeesTable = () => {
         setPageCount(count);
       })
       .catch((e) =>
-        toast({
-          title: 'EmployeesTable.fetchEmployees',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('EmployeesTable.fetchEmployees', e))
       )
       .finally(() => dispatch(controlActions.setIsLoading(false)));
   };

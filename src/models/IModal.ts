@@ -4,6 +4,7 @@ import { IOrderProduct } from './api/IOrderProduct';
 import { IOrder } from './api/IOrder';
 import { IEndingGood } from 'pages/moysklad-page/components/tables/ending-goods/EndingGoodsTable';
 import { ITaskMessage } from './api/ITaskMessage';
+import { IStatus } from './api/IStatus';
 
 export interface IModal {
   isOpen: boolean;
@@ -65,37 +66,14 @@ export interface ITaskEditMessageModal extends IModal {
   taskMessage?: ITaskMessage | null;
 }
 
-// export interface IEditTypeModal extends IModal {
-//   typeId: number;
-//   mode: Modes;
-// }
+export interface IOrdersReasonModal extends IModal {
+  status?: IStatus;
+  order?: IOrder;
+  updateOpenedOrderStatus?: boolean;
+}
 
-// export interface IEditParamModal extends IModal {
-//   paramId: number;
-//   mode: Modes;
-// }
-
-// export interface IEditFeatureModal extends IModal {
-//   featureId: number;
-//   mode: Modes;
-// }
-
-// export interface IEditCategoryModal extends IModal {
-//   categoryId: number;
-//   mode: Modes;
-// }
-
-// export interface IEditTypeParamsModal extends IModal {
-//   typeId: number;
-//   feature: IFeature | null;
-// }
-
-// export interface IEditEmployeeModal extends IModal {
-//   employeeId: number;
-//   mode: Modes;
-// }
-
-// export interface IEndingGoodsEditProductModal extends IModal {
-//   productId: string;
-//   type: string;
-// }
+export interface IChangelogsEditModal extends IModal {
+  changelogId?: number;
+  version?: string;
+  mode?: MODES;
+}

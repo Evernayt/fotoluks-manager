@@ -31,11 +31,6 @@ interface ActiveFilterProps<K = keyof FilterState> {
   props?: FilterState[K];
 }
 
-interface DisableFilterProps<K = keyof FilterState> {
-  filter: K;
-  isDisabled: boolean;
-}
-
 export const filterSlice = createSlice({
   name: 'filter',
   initialState,
@@ -45,7 +40,6 @@ export const filterSlice = createSlice({
         ...action.payload.props,
         isActive: true,
         isPendingDeactivation: false,
-        isDisabled: false,
       };
     },
     deactiveFilter(state, action: PayloadAction<keyof FilterState>) {
@@ -56,9 +50,6 @@ export const filterSlice = createSlice({
         ...initialState[action.payload],
         isPendingDeactivation: true,
       };
-    },
-    setDisableFilter(state, action: PayloadAction<DisableFilterProps>) {
-      state[action.payload.filter].isDisabled = action.payload.isDisabled;
     },
   },
 });

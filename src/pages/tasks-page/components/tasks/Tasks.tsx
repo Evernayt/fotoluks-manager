@@ -10,6 +10,7 @@ import { Loader } from 'components';
 import Pagination from 'components/ui/pagination/Pagination';
 import Task from './task/Task';
 import TasksToolbar from './TasksToolbar';
+import { getErrorToast } from 'helpers/toast';
 import styles from './Tasks.module.scss';
 
 const Tasks = () => {
@@ -35,23 +36,7 @@ const Tasks = () => {
   }, [activeStatus]);
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      dispatch(
-        filterActions.setDisableFilter({
-          filter: 'tasksFilter',
-          isDisabled: true,
-        })
-      );
-      reloadAndChangePage(1);
-    } else {
-      dispatch(
-        filterActions.setDisableFilter({
-          filter: 'tasksFilter',
-          isDisabled: false,
-        })
-      );
-      reload(1);
-    }
+    reloadAndChangePage(1);
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
@@ -82,15 +67,7 @@ const Tasks = () => {
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
-      .catch((e) =>
-        toast({
-          title: 'Tasks.fetchTasks',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('Tasks.fetchTasks', e)))
       .finally(() => dispatch(taskActions.setIsLoading(false)));
   };
 
@@ -129,7 +106,7 @@ const Tasks = () => {
           </>
         )}
       </div>
-      {!search && pageCount > 1 && (
+      {pageCount > 1 && (
         <div>
           <Divider />
           <Pagination

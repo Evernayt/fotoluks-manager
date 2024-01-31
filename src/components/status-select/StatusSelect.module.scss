@@ -1,0 +1,13 @@
+.item {
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--hover-card-bg-color);
+  }
+}
+
+.selected_item {
+  display: none;
+}

@@ -13,6 +13,7 @@ import MoyskladAssortmentsToolbar from './MoyskladAssortmentsToolbar';
 import ProductAPI from 'api/ProductAPI/ProductAPI';
 import { useAppDispatch } from 'hooks/redux';
 import { controlActions } from 'store/reducers/ControlSlice';
+import { getErrorToast } from 'helpers/toast';
 
 interface MoyskladAssortmentsTableProps {
   enableRowSelection: boolean;
@@ -52,13 +53,7 @@ const MoyskladAssortmentsTable: FC<MoyskladAssortmentsTableProps> = ({
         setPageCount(Math.ceil((data?.meta?.size || 0) / limit));
       })
       .catch(() =>
-        toast({
-          title: 'MoyskladAssortmentsTable.fetchAssortments',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('MoyskladAssortmentsTable.fetchAssortments'))
       )
       .finally(() => setIsLoading(false));
   };
@@ -84,13 +79,7 @@ const MoyskladAssortmentsTable: FC<MoyskladAssortmentsTableProps> = ({
         onModalClose();
       })
       .catch((e) => {
-        toast({
-          title: 'MoyskladAssortmentsTable.createProducts',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast(getErrorToast('MoyskladAssortmentsTable.createProducts', e));
       })
       .finally(() => setIsLoading(false));
   };

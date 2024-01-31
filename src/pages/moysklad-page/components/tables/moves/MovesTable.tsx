@@ -11,6 +11,7 @@ import { IMove } from 'models/api/moysklad/IMove';
 import { Row } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 import { MOVES_DETAIL_ROUTE } from 'constants/paths';
+import { getErrorToast } from 'helpers/toast';
 
 const MovesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -20,6 +21,7 @@ const MovesTable = () => {
 
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
   const search = useAppSelector((state) => state.moysklad.search);
+  const moveEditors = useAppSelector((state) => state.move.moveEditors);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
@@ -40,21 +42,13 @@ const MovesTable = () => {
 
     MoyskladAPI.getMoves({ limit, offset, search })
       .then((data) => {
-        if (!data.rows.length) {
+        if (!data.rows?.length) {
           setPageCount(0);
         }
-        setMoves(data.rows);
+        setMoves(data.rows || []);
         setPageCount(Math.ceil((data.meta?.size || 0) / limit));
       })
-      .catch(() =>
-        toast({
-          title: 'MovesTable.fetchMoves',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch(() => toast(getErrorToast('MovesTable.fetchMoves')))
       .finally(() => dispatch(moyskladActions.setIsLoading(false)));
   };
 
@@ -80,6 +74,7 @@ const MovesTable = () => {
         columns={movesTableColumns}
         data={moves}
         isLoading={isLoading}
+        editors={moveEditors}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
       />

@@ -32,6 +32,7 @@ import {
   IconRotate2,
 } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE } from 'constants/app';
+import { getErrorToast } from 'helpers/toast';
 import styles from './TaskSidebar.module.scss';
 
 interface TaskSidebarProps {
@@ -98,13 +99,7 @@ const TaskSidebar: FC<TaskSidebarProps> = ({
 
     dispatch(taskActions.editTaskSubtaskById({ id, completed }));
     TaskSubtaskAPI.update({ id, completed }).catch((e) => {
-      toast({
-        title: 'TaskSidebar.toggleSubtask',
-        description: e.response.data ? e.response.data.message : e.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      });
+      toast(getErrorToast('TaskSidebar.toggleSubtask', e));
       dispatch(taskActions.editTaskSubtaskById({ id, completed: !completed }));
     });
   };

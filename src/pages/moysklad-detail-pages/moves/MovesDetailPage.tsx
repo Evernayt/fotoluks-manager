@@ -23,7 +23,9 @@ import { getShopByStore, getStore, getStoreByShop } from 'helpers/moysklad';
 import { moveActions } from 'store/reducers/MoveSlice';
 import { IStore } from 'models/api/moysklad/IStore';
 import { getEmployeeFullName } from 'helpers/employee';
+import { getErrorToast, getSuccessToast } from 'helpers/toast';
 import styles from './MovesDetailPage.module.scss';
+import socketio from 'socket/socketio';
 
 type LocationState = {
   state: {
@@ -77,15 +79,10 @@ const MovesDetailPage = () => {
           setTargetShop(selectedTargetShop);
           setSearchStore(sourceStore);
         })
-        .catch(() =>
-          toast({
-            title: 'MovesDetailPage.getMove',
-            description: 'Ошибка',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
-        );
+        .catch(() => toast(getErrorToast('MovesDetailPage.getMove')));
+
+      if (!employee) return;
+      socketio.addMoveEditor({ employee, targetId: state.moveId });
     } else {
       const sourceStore = getStoreByShop(activeShop, stores);
       const filteredShops = shops.filter((shop) => shop.id !== activeShop.id);
@@ -96,11 +93,13 @@ const MovesDetailPage = () => {
 
   useEffect(() => {
     if (isDisabled) {
-      toast({
-        title: 'Нельзя провести перемещение со склада на этот же склад.',
-        status: 'error',
-        duration: 9000,
-      });
+      toast(
+        getErrorToast(
+          'Нельзя провести перемещение со склада на этот же склад.',
+          '',
+          false
+        )
+      );
     } else {
       toast.closeAll();
     }
@@ -136,12 +135,10 @@ const MovesDetailPage = () => {
     }).then((data) => {
       setMove(data);
       addAssortment(assortment, data);
-      toast({
-        title: 'Перемещение создано',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
+      toast(getSuccessToast('Перемещение создано'));
+
+      if (!employee) return;
+      socketio.addMoveEditor({ employee, targetId: data.id });
     });
   };
 

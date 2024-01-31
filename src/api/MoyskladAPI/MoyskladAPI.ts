@@ -169,7 +169,7 @@ export default class MoyskladAPI {
   static async getAssortment(
     getAssortmentDto: GetAssortmentDto,
     signal?: AbortSignal
-  ): Promise<IMoyskladData<IAssortment> | undefined> {
+  ): Promise<IMoyskladData<IAssortment>> {
     const { data } = await $authHost.get('moysklad/assortment', {
       params: getAssortmentDto,
       signal,
@@ -266,7 +266,7 @@ export default class MoyskladAPI {
   static async getCounterparty(
     getCounterpartyDto: GetCounterpartyDto,
     signal?: AbortSignal
-  ): Promise<IMoyskladData<ICounterparty> | undefined> {
+  ): Promise<IMoyskladData<ICounterparty>> {
     const { data } = await $authHost.get('moysklad/counterparty', {
       params: getCounterpartyDto,
       signal,

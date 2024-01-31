@@ -16,6 +16,7 @@ import ShopsContextMenu, {
 } from './context-menu/ShopsContextMenu';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { MODES } from 'constants/app';
+import { getErrorToast } from 'helpers/toast';
 
 const ShopsTable = () => {
   const [pageCount, setPageCount] = useState<number>(0);
@@ -58,15 +59,7 @@ const ShopsTable = () => {
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
-      .catch((e) =>
-        toast({
-          title: 'ShopsTable.fetchShops',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('ShopsTable.fetchShops', e)))
       .finally(() => dispatch(controlActions.setIsLoading(false)));
   };
 

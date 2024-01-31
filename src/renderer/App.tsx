@@ -15,7 +15,12 @@ import { LoginPage, OrdersPage, TasksPage } from 'pages';
 import WithNavbar from './WithNavbar';
 import { Suspense, lazy, useLayoutEffect } from 'react';
 import { getMaximizeScreen } from 'helpers/localStorage';
-import { AppCloseModal, Loader, UpdaterListener } from 'components';
+import {
+  AppCloseModal,
+  Loader,
+  ReportModal,
+  UpdaterListener,
+} from 'components';
 import './App.css';
 
 const OrderDetailPage = lazy(
@@ -43,6 +48,7 @@ export default function App() {
     <>
       <UpdaterListener />
       <Router>
+        <ReportModal />
         <AppCloseModal />
         <Suspense fallback={<Loader minHeight="100vh" />}>
           <Routes>

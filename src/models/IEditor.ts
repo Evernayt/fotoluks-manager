@@ -1,7 +1,7 @@
 import { IEmployee } from './api/IEmployee';
 
-export interface IWatcher {
+export interface IEditor {
+  targetId: number | string;
   employee: IEmployee;
-  orderId: number;
   socketId?: string;
 }

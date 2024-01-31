@@ -1,12 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IEditor } from 'models/IEditor';
 import { IPosition } from 'models/api/moysklad/IPosition';
 
 type MoveState = {
   positions: IPosition[];
+  moveEditors: IEditor[];
 };
 
 const initialState: MoveState = {
   positions: [],
+  moveEditors: [],
 };
 
 export const moveSlice = createSlice({
@@ -27,6 +30,14 @@ export const moveSlice = createSlice({
     },
     addPosition(state, action: PayloadAction<IPosition>) {
       state.positions.push(action.payload);
+    },
+    setMoveEditors(state, action: PayloadAction<IEditor[]>) {
+      state.moveEditors = action.payload;
+    },
+    deleteMoveEditorByEmployeeId(state, action: PayloadAction<number>) {
+      state.moveEditors = state.moveEditors.filter(
+        (x) => x.employee.id !== action.payload
+      );
     },
     clearState() {
       return initialState;

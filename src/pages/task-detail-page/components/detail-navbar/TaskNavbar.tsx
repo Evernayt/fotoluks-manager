@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IconButton, Tooltip } from '@chakra-ui/react';
 import { DetailNavbar } from 'components';
-import { IconTrash, IconTrashOff } from '@tabler/icons-react';
+import { IconArchive, IconArchiveOff } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE, UI_DATE_FORMAT } from 'constants/app';
 import moment from 'moment';
 import TaskAPI from 'api/TaskAPI/TaskAPI';
@@ -48,16 +48,16 @@ const TaskNavbar = () => {
       <>
         {task.creator?.id === employee?.id && (
           <Tooltip
-            label={task.archive ? 'Удалить из архива' : 'Добавить в архив'}
+            label={task.archive ? 'Убрать из архива' : 'Добавить в архив'}
             placement="left"
           >
             <IconButton
               variant="ghost"
               icon={
                 task.archive ? (
-                  <IconTrashOff size={ICON_SIZE} stroke={ICON_STROKE} />
+                  <IconArchiveOff size={ICON_SIZE} stroke={ICON_STROKE} />
                 ) : (
-                  <IconTrash size={ICON_SIZE} stroke={ICON_STROKE} />
+                  <IconArchive size={ICON_SIZE} stroke={ICON_STROKE} />
                 )
               }
               aria-label="archive"

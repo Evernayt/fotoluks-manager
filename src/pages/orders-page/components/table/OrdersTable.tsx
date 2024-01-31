@@ -21,6 +21,7 @@ import { useContextMenu } from 'react-contexify';
 import OrdersTableContextMenu, {
   ORDERS_TABLE_MENU_ID,
 } from './context-menu/OrdersTableContextMenu';
+import { getErrorToast } from 'helpers/toast';
 
 const OrdersTable = () => {
   const [pageCount, setPageCount] = useState<number>(0);
@@ -35,6 +36,7 @@ const OrdersTable = () => {
   const search = useAppSelector((state) => state.order.search);
   const forceUpdate = useAppSelector((state) => state.order.forceUpdate);
   const sortings = useAppSelector((state) => state.order.sortings);
+  const orderEditors = useAppSelector((state) => state.order.orderEditors);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
@@ -47,23 +49,7 @@ const OrdersTable = () => {
   }, [activeStatus]);
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      dispatch(
-        filterActions.setDisableFilter({
-          filter: 'ordersFilter',
-          isDisabled: true,
-        })
-      );
-      reloadAndChangePage(1);
-    } else {
-      dispatch(
-        filterActions.setDisableFilter({
-          filter: 'ordersFilter',
-          isDisabled: false,
-        })
-      );
-      reload(1);
-    }
+    reloadAndChangePage(1);
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
@@ -94,15 +80,7 @@ const OrdersTable = () => {
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
-      .catch((e) =>
-        toast({
-          title: 'OrdersTable.fetchOrders',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('OrdersTable.fetchOrders', e)))
       .finally(() => dispatch(orderActions.setIsLoading(false)));
   };
 
@@ -142,15 +120,12 @@ const OrdersTable = () => {
         columns={ordersTableColumns}
         data={orders}
         isLoading={isLoading}
-        pagination={
-          search
-            ? undefined
-            : {
-                page: currentPage,
-                pageCount,
-                onPageChange: reloadAndChangePage,
-              }
-        }
+        pagination={{
+          page: currentPage,
+          pageCount,
+          onPageChange: reloadAndChangePage,
+        }}
+        editors={orderEditors}
         sorting={sortings}
         onSortingChange={sortingChangeHandler}
         onRowClick={rowClickHandler}

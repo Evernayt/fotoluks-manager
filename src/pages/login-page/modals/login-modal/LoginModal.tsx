@@ -37,6 +37,8 @@ import AppAPI from 'api/AppAPI/AppAPI';
 import DepartmentAPI from 'api/DepartmentAPI/DepartmentAPI';
 import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { getStoreByShop } from 'helpers/moysklad';
+import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
+import { getErrorToast } from 'helpers/toast';
 import styles from './LoginModal.module.scss';
 
 interface Values {
@@ -65,8 +67,8 @@ const LoginModal = () => {
 
   const fetchStores = () => {
     MoyskladAPI.getStores().then((data) => {
-      dispatch(moyskladActions.setStores(data.rows));
-      const activeStore = getStoreByShop(activeShop, data.rows);
+      dispatch(moyskladActions.setStores(data.rows || []));
+      const activeStore = getStoreByShop(activeShop, data.rows || []);
       if (activeStore) dispatch(moyskladActions.setActiveStore(activeStore));
     });
   };
@@ -101,18 +103,19 @@ const LoginModal = () => {
     });
   };
 
+  const fetchFavorites = (employeeId: number) => {
+    FavoriteAPI.getAll({ employeeId }).then((data) => {
+      dispatch(orderActions.setFavorites(data.rows));
+    });
+  };
+
   const signIn = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
     const { password } = values;
     AuthAPI.login({ login: employee?.login, password })
       .then((data) => {
         const apps = getEmployeeApps(data.apps);
         if (!apps.length) {
-          toast({
-            description: 'У вас нет доступных приложений',
-            status: 'warning',
-            duration: 9000,
-            isClosable: true,
-          });
+          toast(getErrorToast('У вас нет доступных приложений', ''));
           return;
         }
         socketio.connect(data.id);
@@ -124,21 +127,14 @@ const LoginModal = () => {
         fetchApps();
         fetchDepartments();
         fetchDepartmentsWithGeneral();
+        fetchFavorites(data.id);
 
         dispatch(employeeActions.signIn(data));
         navigate(apps[0].value);
         addRecentLogin(data);
         closeModal();
       })
-      .catch((e) =>
-        toast({
-          title: 'AuthForm.signIn',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('AuthForm.signIn', e)))
       .finally(() => setSubmitting(false));
   };
 

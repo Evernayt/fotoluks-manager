@@ -16,6 +16,7 @@ import { useContextMenu } from 'react-contexify';
 import ProductsContextMenu, {
   PRODUCTS_MENU_ID,
 } from './context-menu/ProductsContextMenu';
+import { getErrorToast } from 'helpers/toast';
 
 const ProductsTable = () => {
   const [pageCount, setPageCount] = useState<number>(0);
@@ -59,15 +60,7 @@ const ProductsTable = () => {
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
-      .catch((e) =>
-        toast({
-          title: 'ProductsTable.fetchProducts',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('ProductsTable.fetchProducts', e)))
       .finally(() => dispatch(controlActions.setIsLoading(false)));
   };
 

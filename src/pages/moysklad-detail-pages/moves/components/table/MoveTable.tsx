@@ -12,6 +12,7 @@ import { IPosition } from 'models/api/moysklad/IPosition';
 import MoveTableContextMenu, {
   MOVE_TABLE_MENU_ID,
 } from './context-menu/MoveTableContextMenu';
+import { getErrorToast } from 'helpers/toast';
 import styles from './MoveTable.module.scss';
 
 interface MoveTableProps {
@@ -39,17 +40,9 @@ const MoveTable: FC<MoveTableProps> = ({ id, setIsLoading, isDisabled }) => {
     setIsLoading(true);
     MoyskladAPI.getMovePositions({ id })
       .then((data) => {
-        dispatch(moveActions.setPositions(data.rows));
+        dispatch(moveActions.setPositions(data.rows || []));
       })
-      .catch(() =>
-        toast({
-          title: 'MoveTable.fetchMovePositions',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch(() => toast(getErrorToast('MoveTable.fetchMovePositions')))
       .finally(() => setIsLoading(false));
   };
 
@@ -71,15 +64,7 @@ const MoveTable: FC<MoveTableProps> = ({ id, setIsLoading, isDisabled }) => {
       .then((data) => {
         dispatch(moveActions.editPosition({ rowIndex, position: data }));
       })
-      .catch(() =>
-        toast({
-          title: 'MoveTable.updateData',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      );
+      .catch(() => toast(getErrorToast('MoveTable.updateData')));
   };
 
   const handleContextMenu = (row: Row<IPosition>, event: any) => {

@@ -33,7 +33,7 @@ const MemberButton: FC<MemberButtonProps> = ({
         )
       }
       variant="ghost"
-      pl="3.5px"
+      px="3.5px"
       onClick={onClick}
     >
       {getEmployeeShortName(employee)}

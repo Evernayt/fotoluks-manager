@@ -10,7 +10,14 @@ import { IEmployee } from 'models/api/IEmployee';
 import { IOrder } from 'models/api/IOrder';
 import NotificationAPI from 'api/NotificationAPI/NotificationAPI';
 import moment from 'moment';
-import { ICON_SIZE, ICON_STROKE, MODES, UI_DATE_FORMAT } from 'constants/app';
+import {
+  APP_ID,
+  ICON_SIZE,
+  ICON_STROKE,
+  MODES,
+  NOTIF_CATEGORY_ID,
+  UI_DATE_FORMAT,
+} from 'constants/app';
 import {
   calcSumWithDiscount,
   createOrderBodyForSave,
@@ -19,7 +26,6 @@ import { createClone } from 'helpers';
 import { Button, Card, CardBody, useToast } from '@chakra-ui/react';
 import OrderCancelModal from './modals/cancel-modal/OrderCancelModal';
 import OrderUnsavedDataModal from './modals/unsaved-data-modal/OrderUnsavedDataModal';
-import OrderFavorites from './components/favorites/OrderFavorites';
 import { IconPlus } from '@tabler/icons-react';
 import { LoaderWrapper } from 'components/ui/loader/Loader';
 import OrderEditProductModal from './modals/edit-product-modal/OrderEditProductModal';
@@ -29,7 +35,9 @@ import { IOrderProduct } from 'models/api/IOrderProduct';
 import OrderMembersModal from './modals/members-modal/OrderMembersModal';
 import OrderClientEditModal from './modals/client-edit-modal/OrderClientEditModal';
 import OrderMembersSidebar from './components/members-sidebar/OrderMembersSidebar';
-import { getEmployeeFullName } from 'helpers/employee';
+import { getEmployeeShortName } from 'helpers/employee';
+import { getErrorToast } from 'helpers/toast';
+import { OrderReasonModal } from 'components';
 import styles from './OrderDetailPage.module.scss';
 
 type LocationState = {
@@ -80,9 +88,8 @@ const OrderDetailPage = () => {
     if (state?.orderId) {
       fetchOrder(state.orderId);
 
-      if (employee) {
-        socketio.addWatcher({ employee, orderId: state.orderId });
-      }
+      if (!employee) return;
+      socketio.addOrderEditor({ employee, targetId: state.orderId });
     }
   }, []);
 
@@ -113,6 +120,7 @@ const OrderDetailPage = () => {
       .then((data) => {
         dispatch(orderActions.setBeforeOrder(data));
         dispatch(orderActions.setOrder(data));
+        dispatch(orderActions.setOpenedOrderStatus(data.status || null));
       })
       .finally(() => setIsLoading(false));
   };
@@ -125,7 +133,7 @@ const OrderDetailPage = () => {
       });
 
       const title = 'Добавлен в участники';
-      const text = `${getEmployeeFullName(
+      const text = `${getEmployeeShortName(
         employee
       )} добавил вас в участники заказа № ${order.id}`;
 
@@ -133,8 +141,9 @@ const OrderDetailPage = () => {
         title,
         text,
         employeeIds,
-        appId: 1,
-        notificationCategoryId: 1,
+        appId: APP_ID.Заказы,
+        notificationCategoryId:
+          NOTIF_CATEGORY_ID.Добавлен_или_удален_из_участников,
       }).then((data) => {
         socketio.sendNotification(data, employeeIds);
       });
@@ -142,7 +151,7 @@ const OrderDetailPage = () => {
 
     if (orderMembersForDelete.length > 0) {
       const title = 'Удален из участников';
-      const text = `${getEmployeeFullName(
+      const text = `${getEmployeeShortName(
         employee
       )} удалил вас из участников заказа № ${order.id}`;
 
@@ -150,8 +159,9 @@ const OrderDetailPage = () => {
         title,
         text,
         employeeIds: orderMembersForDelete,
-        appId: 1,
-        notificationCategoryId: 1,
+        appId: APP_ID.Заказы,
+        notificationCategoryId:
+          NOTIF_CATEGORY_ID.Добавлен_или_удален_из_участников,
       }).then((data) => {
         socketio.sendNotification(data, orderMembersForDelete);
       });
@@ -169,7 +179,7 @@ const OrderDetailPage = () => {
 
     if (orderClone.deadline !== beforeOrderClone.deadline) {
       const title = 'Изменен срок заказа';
-      const text = `${getEmployeeFullName(employee)} изменил срок заказа № ${
+      const text = `${getEmployeeShortName(employee)} изменил срок заказа № ${
         orderClone.id
       } с ${moment(beforeOrderClone.deadline).format(
         UI_DATE_FORMAT
@@ -179,8 +189,8 @@ const OrderDetailPage = () => {
         title,
         text,
         employeeIds,
-        appId: 1,
-        notificationCategoryId: 5,
+        appId: APP_ID.Заказы,
+        notificationCategoryId: NOTIF_CATEGORY_ID.Изменен_заказ,
       }).then((data) => {
         socketio.sendNotification(data, employeeIds);
       });
@@ -196,7 +206,7 @@ const OrderDetailPage = () => {
 
     setIsLoading(true);
 
-    const isOrderCreate = order !== null;
+    const isOrderCreate = order.id === 0;
 
     const body = createOrderBodyForSave(
       orderProductsForCreate,
@@ -236,18 +246,13 @@ const OrderDetailPage = () => {
         socketio.updateOrder(data.order);
 
         if (isOrderCreate) {
-          socketio.addWatcher({ employee, orderId: data.order.id });
+          dispatch(
+            orderActions.setOpenedOrderStatus(data.order.status || null)
+          );
+          socketio.addOrderEditor({ employee, targetId: data.order.id });
         }
       })
-      .catch((e) =>
-        toast({
-          title: 'OrderDetailPage.saveOrder',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('OrderDetailPage.saveOrder', e)))
       .finally(() => setIsLoading(false));
   };
 
@@ -263,6 +268,7 @@ const OrderDetailPage = () => {
   return (
     <>
       <OrderNavbar />
+      <OrderReasonModal />
       <OrderMembersModal />
       <OrderClientEditModal />
       <OrderCancelModal />
@@ -273,14 +279,13 @@ const OrderDetailPage = () => {
           <OrderSidebar sum={deferredSum} saveOrder={saveOrder} />
           <div className={styles.cards}>
             <Card>
-              <CardBody display="flex">
+              <CardBody>
                 <Button
                   leftIcon={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE} />}
                   onClick={openEditProductModal}
                 >
                   Добавить услугу
                 </Button>
-                <OrderFavorites />
               </CardBody>
             </Card>
             <OrderProducts />

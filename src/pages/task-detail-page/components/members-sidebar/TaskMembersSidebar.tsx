@@ -46,18 +46,16 @@ const TaskMembersSidebar = () => {
           )}
         </>
       )}
-      <Tooltip label="Добавить участников" placement="left">
-        <IconButton
-          icon={<IconUserPlus />}
-          aria-label="add"
-          isRound
-          minH="42px"
-          minW="42px"
-          maxH="42px"
-          maxW="42px"
-          onClick={openMembersModal}
-        />
-      </Tooltip>
+      <IconButton
+        icon={<IconUserPlus />}
+        aria-label="add"
+        isRound
+        minH="42px"
+        minW="42px"
+        maxH="42px"
+        maxW="42px"
+        onClick={openMembersModal}
+      />
     </div>
   );
 };

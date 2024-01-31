@@ -42,6 +42,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { calcSumWithDiscount } from 'pages/order-detail-page/OrderDetailPage.service';
 import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
 import { AutoResizableTextarea } from 'components';
+import OrderFavoritesTable from './favorites/OrderFavoritesTable';
+import { getErrorToast } from 'helpers/toast';
 import styles from './OrderEditProductModal.module.scss';
 
 const formSchema = Yup.object({
@@ -162,13 +164,7 @@ const OrderEditProductModal = () => {
         dispatch(orderActions.addFavorite(data));
       })
       .catch((e) =>
-        toast({
-          title: 'OrderEditProductModal.createFavorite',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('OrderEditProductModal.createFavorite', e))
       );
   };
 
@@ -179,13 +175,7 @@ const OrderEditProductModal = () => {
         dispatch(orderActions.deleteFavoriteByProductId(product.id));
       })
       .catch((e) =>
-        toast({
-          title: 'OrderEditProductModal.deleteFavorite',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('OrderEditProductModal.deleteFavorite', e))
       );
   };
 
@@ -208,7 +198,11 @@ const OrderEditProductModal = () => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} size="lg">
+    <Modal
+      isOpen={isOpen}
+      onClose={closeModal}
+      size={favorites.length > 0 ? '4xl' : 'lg'}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -217,8 +211,9 @@ const OrderEditProductModal = () => {
             : 'Редактирование услуги'}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <LoaderWrapper isLoading={isLoading}>
+        <ModalBody className={styles.container}>
+          <OrderFavoritesTable selectProduct={selectProduct} />
+          <LoaderWrapper containerStyle={{ flex: 1.3 }} isLoading={isLoading}>
             <div className={styles.search_container}>
               <OrderProductSearch
                 placeholder={

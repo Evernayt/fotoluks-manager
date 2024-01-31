@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SortingState } from '@tanstack/react-table';
 import { INITIAL_ORDER } from 'constants/initialStates';
-import { IWatcher } from 'models/IWatcher';
+import { IEditor } from 'models/IEditor';
 import { IFavorite } from 'models/api/IFavorite';
 import { IOrder } from 'models/api/IOrder';
 import { IOrderMember } from 'models/api/IOrderMember';
@@ -16,6 +16,7 @@ import {
 type OrderState = {
   orders: IOrder[];
   statuses: IStatus[];
+  openedOrderStatus: IStatus | null;
   activeSidebarIndex: number;
   sidebarIsOpen: boolean;
   activeStatus: IStatus | null;
@@ -31,7 +32,7 @@ type OrderState = {
   orderProductsForDelete: number[];
   orderMembersForCreate: IOrderMember[];
   orderMembersForDelete: number[];
-  watchers: IWatcher[];
+  orderEditors: IEditor[];
   favorites: IFavorite[];
   sortings: SortingState;
 };
@@ -39,6 +40,7 @@ type OrderState = {
 const initialState: OrderState = {
   orders: [],
   statuses: [],
+  openedOrderStatus: null,
   activeSidebarIndex: 0,
   sidebarIsOpen: true,
   activeStatus: null,
@@ -54,7 +56,7 @@ const initialState: OrderState = {
   orderProductsForDelete: [],
   orderMembersForCreate: [],
   orderMembersForDelete: [],
-  watchers: [],
+  orderEditors: [],
   favorites: [],
   sortings: [{ id: 'status', desc: false }],
 };
@@ -84,6 +86,9 @@ export const orderSlice = createSlice({
       );
       state.orders = orders;
     },
+    setOpenedOrderStatus(state, action: PayloadAction<IStatus | null>) {
+      state.openedOrderStatus = action.payload;
+    },
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
     },
@@ -110,6 +115,7 @@ export const orderSlice = createSlice({
       state.orderProductsForDelete = [];
       state.orderMembersForCreate = [];
       state.orderMembersForDelete = [];
+      state.openedOrderStatus = null;
     },
     setHaveUnsavedData(state, action: PayloadAction<boolean>) {
       state.haveUnsavedData = action.payload;
@@ -256,8 +262,13 @@ export const orderSlice = createSlice({
     ) {
       state.orderMembersForDelete.push(...action.payload);
     },
-    setWatchers(state, action: PayloadAction<IWatcher[]>) {
-      state.watchers = action.payload;
+    setOrderEditors(state, action: PayloadAction<IEditor[]>) {
+      state.orderEditors = action.payload;
+    },
+    deleteOrderEditorByEmployeeId(state, action: PayloadAction<number>) {
+      state.orderEditors = state.orderEditors.filter(
+        (x) => x.employee.id !== action.payload
+      );
     },
     setSortings(state, action: PayloadAction<SortingState>) {
       state.sortings = action.payload;

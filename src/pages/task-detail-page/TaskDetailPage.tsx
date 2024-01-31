@@ -19,7 +19,9 @@ import TaskMembersSidebar from './components/members-sidebar/TaskMembersSidebar'
 import TaskSubtasksModal from './modals/subtasks-modal/TaskSubtasksModal';
 import TaskComments from './components/comments/TaskComments';
 import TaskEditMessageModal from './modals/edit-message-modal/TaskEditMessageModal';
-import { getEmployeeFullName } from 'helpers/employee';
+import { getEmployeeShortName } from 'helpers/employee';
+import { APP_ID, NOTIF_CATEGORY_ID } from 'constants/app';
+import { getErrorToast } from 'helpers/toast';
 import styles from './TaskDetailPage.module.scss';
 
 type LocationState = {
@@ -75,15 +77,7 @@ const TaskDetailPage = () => {
         dispatch(taskActions.setTask(data));
         setViewMode(data.personal);
       })
-      .catch((e) =>
-        toast({
-          title: 'TaskDetailPage.fetchTask',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('TaskDetailPage.fetchTask', e)))
       .finally(() => setIsLoading(false));
   };
 
@@ -95,7 +89,7 @@ const TaskDetailPage = () => {
       });
 
       const title = 'Добавлен в участники';
-      const text = `${getEmployeeFullName(
+      const text = `${getEmployeeShortName(
         employee
       )} добавил вас в участники задачи № ${task.id}`;
 
@@ -103,8 +97,9 @@ const TaskDetailPage = () => {
         title,
         text,
         employeeIds,
-        appId: 4,
-        notificationCategoryId: 1,
+        appId: APP_ID.Задачи,
+        notificationCategoryId:
+          NOTIF_CATEGORY_ID.Добавлен_или_удален_из_участников,
       }).then((data) => {
         socketio.sendNotification(data, employeeIds);
       });
@@ -112,7 +107,7 @@ const TaskDetailPage = () => {
 
     if (taskMembersForDelete.length) {
       const title = 'Удален из участников';
-      const text = `${getEmployeeFullName(
+      const text = `${getEmployeeShortName(
         employee
       )} удалил вас из участников задачи № ${task.id}`;
 
@@ -120,8 +115,9 @@ const TaskDetailPage = () => {
         title,
         text,
         employeeIds: taskMembersForDelete,
-        appId: 4,
-        notificationCategoryId: 1,
+        appId: APP_ID.Задачи,
+        notificationCategoryId:
+          NOTIF_CATEGORY_ID.Добавлен_или_удален_из_участников,
       }).then((data) => {
         socketio.sendNotification(data, taskMembersForDelete);
       });
@@ -163,15 +159,7 @@ const TaskDetailPage = () => {
           updateTaskState(data);
           if (close) closeTaskDetail();
         })
-        .catch((e) =>
-          toast({
-            title: 'TaskDetailPage.saveTask',
-            description: e.response.data ? e.response.data.message : e.message,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
-        )
+        .catch((e) => toast(getErrorToast('TaskDetailPage.saveTask', e)))
         .finally(() => setIsLoading(false));
     } else {
       const createBody: CreateTaskDto = {
@@ -193,15 +181,7 @@ const TaskDetailPage = () => {
           updateTaskState(taskClone);
           if (close) closeTaskDetail();
         })
-        .catch((e) =>
-          toast({
-            title: 'TaskDetailPage.saveTask',
-            description: e.response.data ? e.response.data.message : e.message,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
-        )
+        .catch((e) => toast(getErrorToast('TaskDetailPage.saveTask', e)))
         .finally(() => setIsLoading(false));
     }
   };

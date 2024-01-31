@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { getNewSalePrices } from './UpdatesPriceModal.service';
 import { Loader } from 'components';
+import { getErrorToast } from 'helpers/toast';
 
 interface IPositionToUpdate {
   position: IPosition;
@@ -64,10 +65,10 @@ const UpdatePricesModal = () => {
     setMarkedPositionsCount(0);
     MoyskladAPI.getSupplyPositions({ id })
       .then((data) => {
-        setPositions(data.rows);
+        setPositions(data.rows || []);
 
         const toUpdate: IPositionToUpdate[] = [];
-        data.rows.forEach((position) => {
+        data.rows?.forEach((position) => {
           if (position.gtd) {
             if (position.gtd.name === '↑' || position.gtd.name === '↓↓↓') {
               setMarkedPositionsCount((prevState) => prevState + 1);
@@ -86,13 +87,7 @@ const UpdatePricesModal = () => {
         setPositionsToUpdate(toUpdate);
       })
       .catch(() =>
-        toast({
-          title: 'UpdatePricesModal.fetchSupplyPositions',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('UpdatePricesModal.fetchSupplyPositions'))
       )
       .finally(() => setIsLoading(false));
   };
@@ -189,13 +184,9 @@ const UpdatePricesModal = () => {
             if (variantProducts.length === variantsToUpdate.length) {
               MoyskladAPI.updateProducts(variantProducts)
                 .catch(() =>
-                  toast({
-                    title: 'UpdatePricesModal.updatePrices.updatePrices',
-                    description: 'Ошибка',
-                    status: 'error',
-                    duration: 9000,
-                    isClosable: true,
-                  })
+                  toast(
+                    getErrorToast('UpdatePricesModal.updatePrices.updatePrices')
+                  )
                 )
                 .finally(() => setIsLoading(false));
             }
@@ -203,13 +194,7 @@ const UpdatePricesModal = () => {
         });
       })
       .catch(() => {
-        toast({
-          title: 'UpdatePricesModal.updatePrices.updatePrices',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast(getErrorToast('UpdatePricesModal.updatePrices.updatePrices'));
         setIsLoading(false);
       });
 
@@ -241,13 +226,7 @@ const UpdatePricesModal = () => {
           closeModal();
         })
         .catch(() =>
-          toast({
-            title: 'UpdatePricesModal.updatePrices.updateSupply',
-            description: 'Ошибка',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
+          toast(getErrorToast('UpdatePricesModal.updatePrices.updateSupply'))
         )
         .finally(() => setIsLoading(false));
     } else {
@@ -272,15 +251,7 @@ const UpdatePricesModal = () => {
       .then(() => {
         closeModal();
       })
-      .catch(() =>
-        toast({
-          title: 'UpdatePricesModal.clear.updateSupply',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch(() => toast(getErrorToast('UpdatePricesModal.clear.updateSupply')))
       .finally(() => setIsLoading(false));
   };
 

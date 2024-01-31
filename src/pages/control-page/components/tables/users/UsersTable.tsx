@@ -16,6 +16,7 @@ import UsersContextMenu, {
 } from './context-menu/UsersContextMenu';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { MODES } from 'constants/app';
+import { getErrorToast } from 'helpers/toast';
 
 const UsersTable = () => {
   const [pageCount, setPageCount] = useState<number>(0);
@@ -58,15 +59,7 @@ const UsersTable = () => {
         const count = Math.ceil(data.count / limit);
         setPageCount(count);
       })
-      .catch((e) =>
-        toast({
-          title: 'UsersTable.fetchUsers',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('UsersTable.fetchUsers', e)))
       .finally(() => dispatch(controlActions.setIsLoading(false)));
   };
 

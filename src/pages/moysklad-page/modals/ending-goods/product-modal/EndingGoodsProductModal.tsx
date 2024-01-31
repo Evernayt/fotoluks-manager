@@ -23,6 +23,7 @@ import { modalActions } from 'store/reducers/ModalSlice';
 import { CopyWrapper } from 'components';
 import Loader from 'components/ui/loader/Loader';
 import EndingGoodsEditProductModal from '../edit-product-modal/EndingGoodsEditProductModal';
+import { getErrorToast } from 'helpers/toast';
 import styles from './EndingGoodsProductModal.module.scss';
 
 const EndingGoodsProductModal = () => {
@@ -83,6 +84,7 @@ const EndingGoodsProductModal = () => {
       if (productData.variantsCount) {
         MoyskladAPI.getAssortment({ search: endingGood.good.name })
           .then((assortmentData) => {
+            if (!assortmentData?.rows) return;
             const variant = assortmentData?.rows[0];
             if (!variant) return;
             const code = variant.code || NOT_INDICATED;
@@ -99,27 +101,16 @@ const EndingGoodsProductModal = () => {
               productHref: variant.meta.href,
             })
               .then((stockData) => {
+                if (!stockData.rows) return;
                 setStores(stockData.rows[0].stockByStore);
               })
               .catch(() =>
-                toast({
-                  title: 'EndingGoodsProductModal.getStocks',
-                  description: 'Ошибка',
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
+                toast(getErrorToast('EndingGoodsProductModal.getStocks'))
               )
               .finally(() => setIsLoading(false));
           })
           .catch(() =>
-            toast({
-              title: 'EndingGoodsProductModal.getAssortment',
-              description: 'Ошибка',
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('EndingGoodsProductModal.getAssortment'))
           );
       } else {
         setName(productData.name);
@@ -134,16 +125,11 @@ const EndingGoodsProductModal = () => {
           productHref: productData.meta.href,
         })
           .then((stockData) => {
+            if (!stockData.rows) return;
             setStores(stockData.rows[0].stockByStore);
           })
           .catch(() =>
-            toast({
-              title: 'EndingGoodsProductModal.getStocks',
-              description: 'Ошибка',
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('EndingGoodsProductModal.getStocks'))
           )
           .finally(() => setIsLoading(false));
       }

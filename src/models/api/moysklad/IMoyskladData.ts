@@ -7,6 +7,6 @@ interface IDataMeta extends IMeta {
 }
 
 export interface IMoyskladData<T> {
-  rows: T[];
+  rows?: T[];
   meta?: IDataMeta;
 }

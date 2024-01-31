@@ -1,12 +1,13 @@
 import { SERVER_API_URL } from 'constants/api';
 import { INotification } from 'models/api/INotification';
 import { IOrder } from 'models/api/IOrder';
+import { IEditor } from 'models/IEditor';
 import { IOnlineEmployee } from 'models/IOnlineEmployee';
-import { IWatcher } from 'models/IWatcher';
 import { io, Socket } from 'socket.io-client';
 import store from 'store';
 import { appActions } from 'store/reducers/AppSlice';
 import { employeeActions } from 'store/reducers/EmployeeSlice';
+import { moveActions } from 'store/reducers/MoveSlice';
 import { orderActions } from 'store/reducers/OrderSlice';
 
 interface INotificationInfo {
@@ -19,12 +20,13 @@ let socket: Socket;
 const connect = (employeeId: number) => {
   socket = io(SERVER_API_URL);
 
+  subscribeToOnlineEmployees();
   subscribeToNotifications();
   subscribeToOrderUpdates();
-  subscribeToWatchers();
-  subscribeToOnlineEmployees();
+  subscribeToOrderEditors();
+  subscribeToMoveEditors();
 
-  socket.emit('addEmployee', employeeId);
+  socket.emit('addOnlineEmployee', employeeId);
 };
 
 const disconnect = () => {
@@ -64,15 +66,21 @@ const subscribeToOrderUpdates = () => {
   });
 };
 
-const subscribeToWatchers = () => {
-  socket.on('getWatchers', (watchers: IWatcher[]) => {
-    store.dispatch(orderActions.setWatchers(watchers));
+const subscribeToOnlineEmployees = () => {
+  socket.on('getOnlineEmployees', (onlineEmployees: IOnlineEmployee[]) => {
+    store.dispatch(appActions.setOnlineEmployees(onlineEmployees));
   });
 };
 
-const subscribeToOnlineEmployees = () => {
-  socket.on('getEmployees', (onlineEmployees: IOnlineEmployee[]) => {
-    store.dispatch(appActions.setOnlineEmployees(onlineEmployees));
+const subscribeToOrderEditors = () => {
+  socket.on('getOrderEditors', (orderEditors: IEditor[]) => {
+    store.dispatch(orderActions.setOrderEditors(orderEditors));
+  });
+};
+
+const subscribeToMoveEditors = () => {
+  socket.on('getMoveEditors', (moveEditors: IEditor[]) => {
+    store.dispatch(moveActions.setMoveEditors(moveEditors));
   });
 };
 
@@ -89,15 +97,26 @@ const updateOrder = (order: IOrder) => {
   socket.emit('updateOrder', order);
 };
 
-const addWatcher = (watcher: IWatcher) => {
+const addOrderEditor = (orderEditor: IEditor) => {
   if (!isConnected()) return;
-  socket.emit('addWatcher', watcher);
+  socket.emit('addOrderEditor', orderEditor);
 };
 
-const removeWatcher = (userId: number) => {
+const removeOrderEditor = (employeeId: number) => {
   if (!isConnected()) return;
-  socket.emit('removeWatcher', userId);
-  store.dispatch(orderActions.setWatchers([]));
+  socket.emit('removeOrderEditor', employeeId);
+  store.dispatch(orderActions.deleteOrderEditorByEmployeeId(employeeId));
+};
+
+const addMoveEditor = (moveEditor: IEditor) => {
+  if (!isConnected()) return;
+  socket.emit('addMoveEditor', moveEditor);
+};
+
+const removeMoveEditor = (employeeId: number) => {
+  if (!isConnected()) return;
+  socket.emit('removeMoveEditor', employeeId);
+  store.dispatch(moveActions.deleteMoveEditorByEmployeeId(employeeId));
 };
 
 export default {
@@ -105,6 +124,8 @@ export default {
   disconnect,
   sendNotification,
   updateOrder,
-  addWatcher,
-  removeWatcher,
+  addOrderEditor,
+  removeOrderEditor,
+  addMoveEditor,
+  removeMoveEditor,
 };

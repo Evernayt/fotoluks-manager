@@ -10,6 +10,7 @@ import { IAssortment } from 'models/api/moysklad/IAssortment';
 import { IStore } from 'models/api/moysklad/IStore';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
 import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
+import { getErrorToast } from 'helpers/toast';
 
 interface IAssortmentData {
   getAssortment: Promise<IMoyskladData<IAssortment> | undefined>;
@@ -50,7 +51,7 @@ const StocksTable = () => {
     let assortmentsSize = 0;
     MoyskladAPI.getStores().then((data) => {
       const assortmentData: IAssortmentData[] = [];
-      data.rows.forEach((store) => {
+      data.rows?.forEach((store) => {
         const getAssortment = MoyskladAPI.getAssortment({
           limit,
           offset,
@@ -64,7 +65,7 @@ const StocksTable = () => {
         .then((results) => {
           results.forEach((result, i) => {
             assortmentsSize = result?.meta?.size || 0;
-            result?.rows.forEach((assortment, j) => {
+            result?.rows?.forEach((assortment, j) => {
               if (i === 0) {
                 assortmentsWithStore.push({
                   ...assortment,
@@ -90,15 +91,7 @@ const StocksTable = () => {
           setAssortments(assortmentsWithStore);
           setPageCount(Math.ceil(assortmentsSize / limit));
         })
-        .catch(() =>
-          toast({
-            title: 'StocksTable.fetchAssortments',
-            description: 'Ошибка',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
-        )
+        .catch(() => toast(getErrorToast('StocksTable.fetchAssortments')))
         .finally(() => dispatch(moyskladActions.setIsLoading(false)));
     });
   };

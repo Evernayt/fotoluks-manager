@@ -48,6 +48,8 @@ import RoleAPI from 'api/RoleAPI/RoleAPI';
 import AppAPI from 'api/AppAPI/AppAPI';
 import DepartmentAPI from 'api/DepartmentAPI/DepartmentAPI';
 import { getStoreByShop } from 'helpers/moysklad';
+import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
+import { getErrorToast } from 'helpers/toast';
 import styles from './AuthForm.module.scss';
 
 interface FormValues {
@@ -91,15 +93,7 @@ const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
       .then((data) => {
         dispatch(appActions.setShops(data.rows));
       })
-      .catch((e) =>
-        toast({
-          title: 'AuthForm.fetchShops',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('AuthForm.fetchShops', e)))
       .finally(() => setIsLoading(false));
   };
 
@@ -111,8 +105,8 @@ const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
 
   const fetchStores = () => {
     MoyskladAPI.getStores().then((data) => {
-      dispatch(moyskladActions.setStores(data.rows));
-      const activeStore = getStoreByShop(activeShop, data.rows);
+      dispatch(moyskladActions.setStores(data.rows || []));
+      const activeStore = getStoreByShop(activeShop, data.rows || []);
       if (activeStore) dispatch(moyskladActions.setActiveStore(activeStore));
     });
   };
@@ -147,15 +141,16 @@ const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
     });
   };
 
+  const fetchFavorites = (employeeId: number) => {
+    FavoriteAPI.getAll({ employeeId }).then((data) => {
+      dispatch(orderActions.setFavorites(data.rows));
+    });
+  };
+
   const loggedIn = (employee: IEmployee) => {
     const apps = getEmployeeApps(employee.apps);
     if (!apps.length) {
-      toast({
-        description: 'У вас нет доступных приложений',
-        status: 'warning',
-        duration: 9000,
-        isClosable: true,
-      });
+      toast(getErrorToast('У вас нет доступных приложений', ''));
       return;
     }
     socketio.connect(employee.id);
@@ -167,6 +162,7 @@ const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
     fetchApps();
     fetchDepartments();
     fetchDepartmentsWithGeneral();
+    fetchFavorites(employee.id);
 
     dispatch(employeeActions.signIn(employee));
     navigate(apps[0].value);
@@ -180,15 +176,7 @@ const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
     const { login, password } = values;
     AuthAPI.login({ login, password })
       .then((data) => loggedIn(data))
-      .catch((e) =>
-        toast({
-          title: 'AuthForm.signIn',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('AuthForm.signIn', e)))
       .finally(() => setSubmitting(false));
   };
 
@@ -198,15 +186,7 @@ const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
       const { login }: IEmployee = jwtDecode(token);
       AuthAPI.checkAuth(login)
         .then((data) => loggedIn(data))
-        .catch((e) =>
-          toast({
-            title: 'AuthForm.signIn',
-            description: e.response.data ? e.response.data.message : e.message,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
-        )
+        .catch((e) => toast(getErrorToast('AuthForm.signIn', e)))
         .finally(() => setIsAutoSignIn(false));
     } else {
       setIsAutoSignIn(false);

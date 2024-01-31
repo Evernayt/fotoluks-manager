@@ -16,6 +16,7 @@ import {
   IconBoxSeam,
   IconDirectionSign,
   IconArchive,
+  IconPackages,
 } from '@tabler/icons-react';
 
 const OrdersSidebar = () => {
@@ -33,6 +34,11 @@ const OrdersSidebar = () => {
         id: 0,
         Icon: IconInbox,
         name: 'Все заказы',
+      },
+      {
+        id: 6,
+        Icon: IconPackages,
+        name: 'Не отданные',
       },
       {
         id: 1,

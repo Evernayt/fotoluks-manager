@@ -23,6 +23,7 @@ import { SelectField } from 'components/ui/select/Select';
 import { DatePicker } from 'components';
 import * as Yup from 'yup';
 import { getEmployeeFullName } from 'helpers/employee';
+import { getInfoToast } from 'helpers/toast';
 import styles from './OrdersExportModal.module.scss';
 
 interface FormValues {
@@ -85,12 +86,7 @@ const OrdersExportModal = () => {
     })
       .then((data) => {
         if (!data.length) {
-          toast({
-            description: 'Заказов в этот период нет.',
-            status: 'info',
-            duration: 9000,
-            isClosable: true,
-          });
+          toast(getInfoToast('Заказов в этот период нет.'));
           return;
         }
 

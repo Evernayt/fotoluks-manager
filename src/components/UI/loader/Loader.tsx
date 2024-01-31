@@ -1,5 +1,5 @@
 import { Spinner } from '@chakra-ui/react';
-import { FC, ReactNode } from 'react';
+import { CSSProperties, FC, ReactNode } from 'react';
 import styles from './Loader.module.scss';
 
 export interface LoaderProps {
@@ -13,6 +13,7 @@ interface LoaderWrapperProps {
   size?: string;
   width?: string;
   height?: string;
+  containerStyle?: CSSProperties;
 }
 
 const Loader: FC<LoaderProps> = ({ size = '50px', minHeight = '100%' }) => {
@@ -29,9 +30,10 @@ export const LoaderWrapper: FC<LoaderWrapperProps> = ({
   size = '50px',
   width = 'calc(100% + 4px)',
   height = 'calc(100% + 4px)',
+  containerStyle,
 }) => {
   return (
-    <div className={styles.wrapper_container}>
+    <div className={styles.wrapper_container} style={containerStyle}>
       {isLoading && (
         <div
           className={styles.loader_wrapper_container}

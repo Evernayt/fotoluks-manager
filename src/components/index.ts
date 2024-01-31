@@ -1,6 +1,6 @@
 import Select from './ui/select/Select';
 import Table from './ui/table/Table';
-import StatusSelect from './ui/status-select/StatusSelect';
+import StatusSelect from './status-select/StatusSelect';
 import Loader from './ui/loader/Loader';
 import Navbar from './navbar/Navbar';
 import Sidebar from './sidebar/Sidebar';
@@ -26,6 +26,8 @@ import Updater from './updater/Updater';
 import UpdaterListener from './updater/UpdaterListener';
 import AppCloseModal from './app-close-modal/AppCloseModal';
 import PeriodSelect from './ui/period-select/PeriodSelect';
+import ReportModal from './navbar/report-modal/ReportModal';
+import OrderReasonModal from './reason-modal/OrderReasonModal';
 
 export {
   Select,
@@ -56,4 +58,6 @@ export {
   UpdaterListener,
   AppCloseModal,
   PeriodSelect,
+  ReportModal,
+  OrderReasonModal,
 };

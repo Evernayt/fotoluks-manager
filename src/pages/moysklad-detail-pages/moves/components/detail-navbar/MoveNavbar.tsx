@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { FC } from 'react';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { DetailNavbar } from 'components';
 import moment from 'moment';
 import { UI_DATE_FORMAT } from 'constants/app';
 import { MOYSKLAD_ROUTE } from 'constants/paths';
 import { moveActions } from 'store/reducers/MoveSlice';
+import socketio from 'socket/socketio';
 
 interface MoveNavbarProps {
   date: string | undefined;
@@ -13,6 +14,8 @@ interface MoveNavbarProps {
 }
 
 const MoveNavbar: FC<MoveNavbarProps> = ({ date, onClose }) => {
+  const employee = useAppSelector((state) => state.employee.employee);
+
   const title = date
     ? `Перемещение от ${moment(date).format(UI_DATE_FORMAT)}`
     : 'Новое перемещение';
@@ -24,6 +27,9 @@ const MoveNavbar: FC<MoveNavbarProps> = ({ date, onClose }) => {
     navigate(MOYSKLAD_ROUTE);
     dispatch(moveActions.setPositions([]));
     onClose();
+
+    if (!employee) return;
+    socketio.removeMoveEditor(employee.id);
   };
 
   return <DetailNavbar title={title} onClose={closeMoveDetail} />;

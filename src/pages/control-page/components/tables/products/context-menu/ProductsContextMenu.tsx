@@ -5,7 +5,7 @@ import { Item, ItemParams } from 'react-contexify';
 import { controlActions } from 'store/reducers/ControlSlice';
 import { ContextMenu } from 'components';
 import 'react-contexify/ReactContexify.css';
-import { IconArchive } from '@tabler/icons-react';
+import { IconArchive, IconArchiveOff } from '@tabler/icons-react';
 import { CONTEXT_MENU_ICON_STYLE, ICON_SIZE, ICON_STROKE } from 'constants/app';
 
 export const PRODUCTS_MENU_ID = 'PRODUCTS_MENU_ID';
@@ -35,15 +35,15 @@ const ProductsContextMenu = () => {
           stroke={ICON_STROKE}
           style={CONTEXT_MENU_ICON_STYLE}
         />
-        В архив
+        Добавить в архив
       </Item>
       <Item hidden={(e) => !isHidden(e as ItemParams)} onClick={toggleArchive}>
-        <IconArchive
+        <IconArchiveOff
           size={ICON_SIZE}
           stroke={ICON_STROKE}
           style={CONTEXT_MENU_ICON_STYLE}
         />
-        Удалить из архива
+        Убрать из архива
       </Item>
     </ContextMenu>
   );

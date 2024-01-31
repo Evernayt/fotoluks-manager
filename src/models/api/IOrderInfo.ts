@@ -4,6 +4,7 @@ import { IStatus } from './IStatus';
 
 export interface IOrderInfo {
   id: number;
+  description: string;
   createdAt: string;
   statusId?: number;
   status?: IStatus;

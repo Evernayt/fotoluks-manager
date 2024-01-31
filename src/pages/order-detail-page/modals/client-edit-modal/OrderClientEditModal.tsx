@@ -49,6 +49,7 @@ import { getAccumulationDiscount } from 'helpers/moysklad';
 import VerificationAPI from 'api/VerificationAPI/VerificationAPI';
 import { UpdateUserDto } from 'api/UserAPI/dto/update-user.dto';
 import { LoaderWrapper } from 'components/ui/loader/Loader';
+import { getErrorToast } from 'helpers/toast';
 import styles from './OrderClientEditModal.module.scss';
 
 interface FormValues {
@@ -169,15 +170,7 @@ const OrderClientEditModal = () => {
             closeModal();
           })
           .catch((e) =>
-            toast({
-              title: 'OrderClientEditModal.createUser',
-              description: e.response.data
-                ? e.response.data.message
-                : e.message,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('OrderClientEditModal.createUser', e))
           )
           .finally(() => setIsLoading(false));
       }
@@ -204,15 +197,7 @@ const OrderClientEditModal = () => {
         dispatch(orderActions.setDiscount(Number(values.discount)));
         closeModal();
       })
-      .catch((e) =>
-        toast({
-          title: 'OrderClientEditModal.updateUser',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('OrderClientEditModal.updateUser', e)))
       .finally(() => setIsLoading(false));
   };
 
@@ -263,13 +248,7 @@ const OrderClientEditModal = () => {
         closeModal();
       })
       .catch((e) =>
-        toast({
-          title: 'OrderClientEditModal.syncOneFromMoysklad',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('OrderClientEditModal.syncOneFromMoysklad', e))
       )
       .finally(() => setIsLoading(false));
   };

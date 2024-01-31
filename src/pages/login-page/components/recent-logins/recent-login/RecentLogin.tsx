@@ -5,6 +5,7 @@ import { Avatar, Card, IconButton, Text, useToast } from '@chakra-ui/react';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { IconX } from '@tabler/icons-react';
 import { getEmployeeFullName } from 'helpers/employee';
+import { getInfoToast } from 'helpers/toast';
 import styles from './RecentLogin.module.scss';
 
 interface RecentLoginProps {
@@ -21,12 +22,7 @@ const RecentLogin: FC<RecentLoginProps> = memo(
 
     const openLoginModal = () => {
       if (activeShop.id === 0) {
-        toast({
-          description: 'Филиал не выбран',
-          status: 'info',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast(getInfoToast('Филиал не выбран'));
         return;
       }
       dispatch(

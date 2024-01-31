@@ -33,6 +33,7 @@ import { IDepartment } from 'models/api/IDepartment';
 import { employeeActions } from 'store/reducers/EmployeeSlice';
 import { getRecentLogins, setRecentLogins } from 'helpers/localStorage';
 import * as Yup from 'yup';
+import { getErrorToast } from 'helpers/toast';
 import styles from './EmployeeEditModal.module.scss';
 
 interface FormValues {
@@ -108,20 +109,14 @@ const EmployeeEditModal = () => {
         });
       })
       .catch((e) =>
-        toast({
-          title: 'EmployeeEditModal.fetchEmployee',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('EmployeeEditModal.fetchEmployee', e))
       )
       .finally(() => setIsLoading(false));
   };
 
   const uploadAvatar = (image: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      FileAPI.uploadFile(image)
+      FileAPI.uploadAvatar(image)
         .then((res) => {
           if (res.ok) {
             res.json().then((data) => resolve(data.link));
@@ -228,36 +223,20 @@ const EmployeeEditModal = () => {
             setIsLoading(true);
             createEmployee(avatarLink, values)
               .catch((error) =>
-                toast({
-                  title: 'EmployeeEditModal.createEmployee',
-                  description: error,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
+                toast(
+                  getErrorToast('EmployeeEditModal.createEmployee', error)
+                )
               )
               .finally(() => setIsLoading(false));
           })
           .catch((error) =>
-            toast({
-              title: 'EmployeeEditModal.uploadAvatar',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('EmployeeEditModal.uploadAvatar', error))
           )
           .finally(() => setIsLoading(false));
       } else {
         createEmployee(null, values)
           .catch((error) =>
-            toast({
-              title: 'EmployeeEditModal.uploadAvatar',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('EmployeeEditModal.uploadAvatar', error))
           )
           .finally(() => setIsLoading(false));
       }
@@ -268,36 +247,20 @@ const EmployeeEditModal = () => {
             setIsLoading(true);
             updateEmployee(avatarLink, values)
               .catch((error) =>
-                toast({
-                  title: 'EmployeeEditModal.updateEmployee',
-                  description: error,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
+                toast(
+                  getErrorToast('EmployeeEditModal.updateEmployee', error)
+                )
               )
               .finally(() => setIsLoading(false));
           })
           .catch((error) =>
-            toast({
-              title: 'EmployeeEditModal.uploadAvatar',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('EmployeeEditModal.uploadAvatar', error))
           )
           .finally(() => setIsLoading(false));
       } else {
         updateEmployee(avatar, values)
           .catch((error) =>
-            toast({
-              title: 'EmployeeEditModal.updateEmployee',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('EmployeeEditModal.updateEmployee', error))
           )
           .finally(() => setIsLoading(false));
       }

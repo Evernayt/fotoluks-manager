@@ -10,6 +10,7 @@ import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
 import { ISupply } from 'models/api/moysklad/ISupply';
 import { Row } from '@tanstack/react-table';
 import { modalActions } from 'store/reducers/ModalSlice';
+import { getErrorToast } from 'helpers/toast';
 
 const UpdatePricesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -44,15 +45,7 @@ const UpdatePricesTable = () => {
         setSupplies(data.rows);
         setPageCount(Math.ceil((data.meta?.size || 0) / limit));
       })
-      .catch(() =>
-        toast({
-          title: 'UpdatePricesTable.fetchSupplies',
-          description: 'Ошибка',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch(() => toast(getErrorToast('UpdatePricesTable.fetchSupplies')))
       .finally(() => dispatch(moyskladActions.setIsLoading(false)));
   };
 

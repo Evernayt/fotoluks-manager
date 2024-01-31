@@ -6,12 +6,14 @@ import styles from './DetailNavbar.module.scss';
 
 interface DetailNavmenuProps {
   title: string;
+  centerSection?: ReactNode;
   rightSection?: ReactNode;
   onClose: () => void;
 }
 
 const DetailNavbar: FC<DetailNavmenuProps> = ({
   title,
+  centerSection,
   rightSection,
   onClose,
 }) => {
@@ -30,6 +32,7 @@ const DetailNavbar: FC<DetailNavmenuProps> = ({
         <Heading className={styles.title} size="md">
           {title}
         </Heading>
+        {centerSection}
       </div>
       <div className={styles.right_section}>{rightSection}</div>
     </div>

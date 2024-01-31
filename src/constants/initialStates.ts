@@ -30,7 +30,6 @@ const INITIAL_MODAL: IModal = { isOpen: false };
 const INITIAL_FILTER: IFilter = {
   isActive: false,
   isPendingDeactivation: false,
-  isDisabled: false,
 };
 const ALL_SHOPS: IShop = {
   ...INITIAL_SHOP,

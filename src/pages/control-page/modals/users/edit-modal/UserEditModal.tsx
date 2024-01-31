@@ -47,11 +47,12 @@ import { CreateUserDto } from 'api/UserAPI/dto/create-user.dto';
 import { UpdateUserDto } from 'api/UserAPI/dto/update-user.dto';
 import * as Yup from 'yup';
 import VerificationAPI from 'api/VerificationAPI/VerificationAPI';
-import styles from './UserEditModal.module.scss';
 import { ICounterparty } from 'models/api/moysklad/ICounterparty';
 import { getAccumulationDiscount } from 'helpers/moysklad';
 import { IconReplace, IconUnlink } from '@tabler/icons-react';
 import { IconMoysklad } from 'icons';
+import { getErrorToast } from 'helpers/toast';
+import styles from './UserEditModal.module.scss';
 
 interface FormValues {
   name: string;
@@ -126,21 +127,13 @@ const UserEditModal = () => {
           setIsPhoneVerified(data2.phoneVerified);
         });
       })
-      .catch((e) =>
-        toast({
-          title: 'UserEditModal.fetchUser',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      )
+      .catch((e) => toast(getErrorToast('UserEditModal.fetchUser', e)))
       .finally(() => setIsLoading(false));
   };
 
   const uploadAvatar = (image: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      FileAPI.uploadFile(image)
+      FileAPI.uploadAvatar(image)
         .then((res) => {
           if (res.ok) {
             res.json().then((data) => resolve(data.link));
@@ -211,36 +204,18 @@ const UserEditModal = () => {
             setIsLoading(true);
             createUser(avatarLink, values)
               .catch((error) =>
-                toast({
-                  title: 'UserEditModal.createUser',
-                  description: error,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
+                toast(getErrorToast('UserEditModal.createUser', error))
               )
               .finally(() => setIsLoading(false));
           })
           .catch((error) =>
-            toast({
-              title: 'UserEditModal.uploadAvatar',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('UserEditModal.uploadAvatar', error))
           )
           .finally(() => setIsLoading(false));
       } else {
         createUser(null, values)
           .catch((error) =>
-            toast({
-              title: 'UserEditModal.createUser',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('UserEditModal.createUser', error))
           )
           .finally(() => setIsLoading(false));
       }
@@ -251,36 +226,18 @@ const UserEditModal = () => {
             setIsLoading(true);
             updateUser(avatarLink, values)
               .catch((error) =>
-                toast({
-                  title: 'UserEditModal.updateUser',
-                  description: error,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
+                toast(getErrorToast('UserEditModal.updateUser', error))
               )
               .finally(() => setIsLoading(false));
           })
           .catch((error) =>
-            toast({
-              title: 'UserEditModal.uploadAvatar',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('UserEditModal.uploadAvatar', error))
           )
           .finally(() => setIsLoading(false));
       } else {
         updateUser(avatar, values)
           .catch((error) =>
-            toast({
-              title: 'UserEditModal.updateUser',
-              description: error,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
+            toast(getErrorToast('UserEditModal.updateUser', error))
           )
           .finally(() => setIsLoading(false));
       }
@@ -320,13 +277,7 @@ const UserEditModal = () => {
         closeModal();
       })
       .catch((e) =>
-        toast({
-          title: 'UserEditModal.syncOneFromMoysklad',
-          description: e.response.data ? e.response.data.message : e.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
+        toast(getErrorToast('UserEditModal.syncOneFromMoysklad', e))
       )
       .finally(() => setIsLoading(false));
   };

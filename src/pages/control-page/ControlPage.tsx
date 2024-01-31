@@ -11,9 +11,12 @@ import UsersFilterModal from './modals/users/filter-modal/UsersFilterModal';
 import EmployeesFilterModal from './modals/employees/filter-modal/EmployeesFilterModal';
 import ShopsFilterModal from './modals/shops/filter-modal/ShopsFilterModal';
 import EmployeeEditModal from './modals/employees/edit-modal/EmployeeEditModal';
-import styles from './ControlPage.module.scss';
 import UserEditModal from './modals/users/edit-modal/UserEditModal';
 import ShopsEditModal from './modals/shops/edit-modal/ShopsEditModal';
+import ReportsTable from './components/tables/reports/ReportsTable';
+import ChangelogsTable from './components/tables/changelogs/ChangelogsTable';
+import styles from './ControlPage.module.scss';
+import ChangelogsEditModal from './modals/changelogs/edit-modal/ChangelogsEditModal';
 
 const ControlPage = () => {
   const activeSidebarIndex = useAppSelector(
@@ -30,6 +33,10 @@ const ControlPage = () => {
         return <ProductsTable />;
       case 3:
         return <ShopsTable />;
+      case 4:
+        return <ReportsTable />;
+      case 5:
+        return <ChangelogsTable />;
       default:
         return null;
     }
@@ -37,6 +44,7 @@ const ControlPage = () => {
 
   return (
     <div className={styles.container}>
+      <ChangelogsEditModal />
       <EmployeeEditModal />
       <EmployeesFilterModal />
       <UserEditModal />

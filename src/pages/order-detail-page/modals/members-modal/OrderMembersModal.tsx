@@ -147,7 +147,7 @@ const OrderMembersModal = () => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} size="xl">
+    <Modal isOpen={isOpen} onClose={closeModal} size="3xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Участники</ModalHeader>
