@@ -33,11 +33,7 @@ const Tasks = () => {
 
   useEffect(() => {
     reloadAndChangePage(1);
-  }, [activeStatus]);
-
-  useEffect(() => {
-    reloadAndChangePage(1);
-  }, [debouncedSearchTerm]);
+  }, [activeStatus, debouncedSearchTerm]);
 
   useEffect(() => {
     if (tasksFilter.isActive) {

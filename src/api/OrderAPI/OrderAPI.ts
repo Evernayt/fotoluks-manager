@@ -6,13 +6,28 @@ import { EditOrderStatusDto } from './dto/edit-order-status.dto';
 import { GetOrdersForExportDto } from './dto/get-orders-for-export.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
 import { IOrderProduct } from 'models/api/IOrderProduct';
+import { IFileForUpload } from 'models/IFileForUpload';
 
 export default class OrderAPI {
-  static async create(createOrderDto: CreateOrderDto): Promise<{
+  static async create(
+    createOrderDto: CreateOrderDto,
+    filesForUpload: IFileForUpload[]
+  ): Promise<{
     order: IOrder;
     orderProducts: IOrderProduct[];
   }> {
-    const { data } = await $authHost.post('orders', createOrderDto);
+    const formData = new FormData();
+    filesForUpload.forEach((fileForUpload) => {
+      formData.append(
+        'file',
+        new Blob([fileForUpload.file]),
+        `${fileForUpload.filename}:${fileForUpload.targetId}`
+      );
+    });
+    formData.append('createOrderDto', JSON.stringify(createOrderDto));
+    const { data } = await $authHost.post('orders', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return data;
   }
 

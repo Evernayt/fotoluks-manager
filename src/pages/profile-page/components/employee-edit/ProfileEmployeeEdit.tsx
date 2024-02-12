@@ -56,34 +56,23 @@ const ProfileEmployeeEdit = () => {
 
   const editAvatar = (image: File) => {
     if (!employee) return;
-    FileAPI.uploadAvatar(image).then((res) => {
-      if (res.ok) {
-        res.json().then((data) => {
-          const updatedEmployee: UpdateEmployeeDto = {
-            id: employee.id,
-            avatar: data.link,
-          };
-          EmployeeAPI.update(updatedEmployee)
-            .then((data) => {
-              updateEmployeeState(data);
-            })
-            .catch((e) =>
-              toast(getErrorToast('ProfileEmployeeEdit.editAvatar', e))
-            );
-        });
-      } else {
-        res
-          .json()
-          .then((data) =>
-            toast(
-              getErrorToast(
-                'ProfileEmployeeEdit.editAvatar.uploadAvatar',
-                data.message
-              )
-            )
+    FileAPI.uploadAvatar(image)
+      .then((data) => {
+        const updatedEmployee: UpdateEmployeeDto = {
+          id: employee.id,
+          avatar: data.link,
+        };
+        EmployeeAPI.update(updatedEmployee)
+          .then((data2) => {
+            updateEmployeeState(data2);
+          })
+          .catch((e) =>
+            toast(getErrorToast('ProfileEmployeeEdit.editAvatar', e))
           );
-      }
-    });
+      })
+      .catch((e) =>
+        toast(getErrorToast('ProfileEmployeeEdit.editAvatar.uploadAvatar', e))
+      );
   };
 
   const removeAvatar = () => {

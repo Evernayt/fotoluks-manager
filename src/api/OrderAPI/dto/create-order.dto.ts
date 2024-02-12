@@ -13,4 +13,5 @@ export class CreateOrderDto {
   readonly orderProductsForDeleteBody?: number[];
   readonly orderMembersForCreateBody?: ICreatedOrderMember[];
   readonly orderMembersForDeleteBody?: number[];
+  readonly orderFilesForDeleteBody?: number[];
 }

@@ -14,6 +14,18 @@ const UpdaterListener = () => {
     newVerisonDownloadProgressListener();
 
     checkNewVersion();
+
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners('check-update-pending');
+      window.electron.ipcRenderer.removeAllListeners('check-update-success');
+      window.electron.ipcRenderer.removeAllListeners('check-update-failure');
+      window.electron.ipcRenderer.removeAllListeners('download-update-pending');
+      window.electron.ipcRenderer.removeAllListeners(
+        'download-update-progress'
+      );
+      window.electron.ipcRenderer.removeAllListeners('download-update-success');
+      window.electron.ipcRenderer.removeAllListeners('download-update-failure');
+    };
   }, []);
 
   const checkNewVersion = () => {

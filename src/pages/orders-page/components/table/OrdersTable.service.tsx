@@ -2,16 +2,17 @@ import { IOrderInfo } from 'models/api/IOrderInfo';
 import { IOrderProduct } from 'models/api/IOrderProduct';
 
 export const createServicesName = (orderProducts: IOrderProduct[]) => {
-  const orderProductsWithoutDupl = orderProducts?.filter(
-    (orderProduct, index, self) =>
-      self.findIndex((t) => {
-        return t.product?.id === orderProduct.product?.id;
-      }) === index
-  );
-  const services = orderProductsWithoutDupl
-    ?.map((orderProduct) => orderProduct.product?.name)
-    .join(', ');
-  return services ? services : 'Нет услуг';
+  const MAX_SERVICES = 2;
+  const services = [];
+  const orderProductsLenght = orderProducts.length;
+  for (let i = 0; i < orderProductsLenght; i++) {
+    if (i === MAX_SERVICES && orderProductsLenght > MAX_SERVICES) {
+      services.push('...');
+      break;
+    }
+    services.push(orderProducts[i].product?.name);
+  }
+  return services.length ? services.join(', ') : 'Нет услуг';
 };
 
 export const getEmployeeNameByStatusId = (

@@ -5,6 +5,7 @@ import { IDepartment } from 'models/api/IDepartment';
 import { IOrder } from 'models/api/IOrder';
 import { IRole } from 'models/api/IRole';
 import { IShop } from 'models/api/IShop';
+import { IStatus } from 'models/api/IStatus';
 import { ITask } from 'models/api/ITask';
 import moment from 'moment';
 
@@ -56,6 +57,12 @@ const INITIAL_ORDER: IOrder = {
   user: null,
   orderProducts: [],
   orderMembers: [],
+  orderFiles: [],
+};
+const INITIAL_STATUS: IStatus = {
+  id: 0,
+  name: 'Все заказы',
+  color: '',
 };
 const INITIAL_TASK: ITask = {
   id: 0,
@@ -85,5 +92,6 @@ export {
   ALL_DEPARTMENTS,
   ALL_ROLES,
   INITIAL_ORDER,
+  INITIAL_STATUS,
   INITIAL_TASK,
 };

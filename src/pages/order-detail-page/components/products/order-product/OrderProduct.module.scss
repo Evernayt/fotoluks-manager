@@ -9,6 +9,7 @@
 .image {
   height: 64px;
   min-width: 64px;
+  max-width: 64px;
   object-fit: cover;
   border-radius: var(--border-radius);
   margin-right: 12px;

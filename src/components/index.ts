@@ -28,6 +28,7 @@ import AppCloseModal from './app-close-modal/AppCloseModal';
 import PeriodSelect from './ui/period-select/PeriodSelect';
 import ReportModal from './navbar/report-modal/ReportModal';
 import OrderReasonModal from './reason-modal/OrderReasonModal';
+import DownloaderListener from './downloader/DownloaderListener';
 
 export {
   Select,
@@ -60,4 +61,5 @@ export {
   PeriodSelect,
   ReportModal,
   OrderReasonModal,
+  DownloaderListener,
 };

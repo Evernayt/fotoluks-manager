@@ -4,7 +4,7 @@ import { IOrderMember } from 'models/api/IOrderMember';
 import { IOrderProduct } from 'models/api/IOrderProduct';
 
 export interface ICreatedOrderProduct {
-  id: number | null;
+  id: number | string;
   orderId: number | null;
   quantity: number;
   price: number;
@@ -46,7 +46,8 @@ interface ICreateOrderBodyForSave {
     creatorUserId: number,
     activeShopId: number,
     orderMembersForCreate: IOrderMember[],
-    orderMembersForDelete: number[]
+    orderMembersForDelete: number[],
+    orderFilesForDelete: number[]
   ): {
     orderBody: IOrderBody;
     orderInfoBody: IOrderInfoBody;
@@ -55,6 +56,7 @@ interface ICreateOrderBodyForSave {
     orderProductsForDeleteBody: number[];
     orderMembersForCreateBody: ICreatedOrderMember[];
     orderMembersForDeleteBody: number[];
+    orderFilesForDeleteBody: number[];
   };
 }
 
@@ -62,12 +64,8 @@ const createOrderProductBody = (
   orderProduct: IOrderProduct,
   orderId: number
 ): ICreatedOrderProduct => {
-  const orderProductId =
-    typeof orderProduct.id === 'string' ? null : orderProduct.id;
-
   return {
     ...orderProduct,
-    id: orderProductId,
     productId: orderProduct.product?.id,
     orderId,
   };
@@ -82,7 +80,8 @@ export const createOrderBodyForSave: ICreateOrderBodyForSave = (
   creatorEmployeeId,
   activeShopId,
   orderMembersForCreate,
-  orderMembersForDelete
+  orderMembersForDelete,
+  orderFilesForDelete
 ) => {
   const orderBody: IOrderBody = {
     id: order.id,
@@ -136,6 +135,7 @@ export const createOrderBodyForSave: ICreateOrderBodyForSave = (
     orderProductsForDeleteBody: orderProductsForDelete,
     orderMembersForCreateBody,
     orderMembersForDeleteBody: orderMembersForDelete,
+    orderFilesForDeleteBody: orderFilesForDelete,
   };
 };
 

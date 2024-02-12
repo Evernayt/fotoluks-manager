@@ -22,7 +22,6 @@ import {
   calcSumWithDiscount,
   createOrderBodyForSave,
 } from './OrderDetailPage.service';
-import { createClone } from 'helpers';
 import { Button, Card, CardBody, useToast } from '@chakra-ui/react';
 import OrderCancelModal from './modals/cancel-modal/OrderCancelModal';
 import OrderUnsavedDataModal from './modals/unsaved-data-modal/OrderUnsavedDataModal';
@@ -38,6 +37,8 @@ import OrderMembersSidebar from './components/members-sidebar/OrderMembersSideba
 import { getEmployeeShortName } from 'helpers/employee';
 import { getErrorToast } from 'helpers/toast';
 import { OrderReasonModal } from 'components';
+import OrderFilesModal from './modals/files-modal/OrderFilesModal';
+import { IFileForUpload } from 'models/IFileForUpload';
 import styles from './OrderDetailPage.module.scss';
 
 type LocationState = {
@@ -77,6 +78,12 @@ const OrderDetailPage = () => {
   );
   const orderMembersForDelete = useAppSelector(
     (state) => state.order.orderMembersForDelete
+  );
+  const orderFilePathsForUpload = useAppSelector(
+    (state) => state.order.orderFilePathsForUpload
+  );
+  const orderFilesForDelete = useAppSelector(
+    (state) => state.order.orderFilesForDelete
   );
 
   const deferredSum = useDeferredValue(sum);
@@ -198,16 +205,29 @@ const OrderDetailPage = () => {
   };
 
   const saveOrder = () => {
-    if (!haveUnsavedData) {
-      return;
-    }
-
-    if (!employee) return;
-
+    if (!haveUnsavedData) return;
     setIsLoading(true);
 
-    const isOrderCreate = order.id === 0;
+    if (orderFilePathsForUpload.length > 0) {
+      window.electron.ipcRenderer.sendMessage(
+        'get-files-for-upload',
+        orderFilePathsForUpload
+      );
+      window.electron.ipcRenderer.once(
+        'get-files-for-upload',
+        (filesForUpload: IFileForUpload[]) => {
+          createOrder(filesForUpload);
+        }
+      );
+    } else {
+      createOrder([]);
+    }
+  };
 
+  const createOrder = (filesForUpload: IFileForUpload[]) => {
+    if (!employee) return;
+    const isOrderCreate = order.id === 0;
+    //@ts-ignore
     const body = createOrderBodyForSave(
       orderProductsForCreate,
       orderProductsForUpdate,
@@ -217,31 +237,15 @@ const OrderDetailPage = () => {
       employee.id,
       activeShop.id,
       orderMembersForCreate,
-      orderMembersForDelete
+      orderMembersForDelete,
+      //orderFilesForDelete
     );
 
-    OrderAPI.create(body)
+    OrderAPI.create(body, filesForUpload)
       .then((data) => {
-        if (!order || !beforeOrder) return;
-        let orderClone: IOrder = createClone(order);
-        const beforeOrderClone: IOrder = createClone(beforeOrder);
-
-        if (data.orderProducts.length > 0) {
-          orderClone = {
-            ...orderClone,
-            orderProducts: data.orderProducts,
-          };
-        }
-        if (data.order) {
-          orderClone = { ...orderClone, id: data.order.id };
-        }
-
-        dispatch(orderActions.setOrder(orderClone));
-        dispatch(orderActions.saveOrder(orderClone));
+        dispatch(orderActions.setOrder(data.order));
+        dispatch(orderActions.saveOrder(data.order));
         dispatch(orderActions.setHaveUnsavedData(false));
-
-        notifyMembersEdit(employee, data.order);
-        notifyMembers(orderClone, beforeOrderClone);
 
         socketio.updateOrder(data.order);
 
@@ -251,6 +255,9 @@ const OrderDetailPage = () => {
           );
           socketio.addOrderEditor({ employee, targetId: data.order.id });
         }
+
+        notifyMembersEdit(employee, data.order);
+        notifyMembers(data.order, beforeOrder);
       })
       .catch((e) => toast(getErrorToast('OrderDetailPage.saveOrder', e)))
       .finally(() => setIsLoading(false));
@@ -267,7 +274,8 @@ const OrderDetailPage = () => {
 
   return (
     <>
-      <OrderNavbar />
+      <OrderNavbar isDisabled={isLoading} />
+      <OrderFilesModal />
       <OrderReasonModal />
       <OrderMembersModal />
       <OrderClientEditModal />

@@ -6,6 +6,7 @@ import styles from './DetailNavbar.module.scss';
 
 interface DetailNavmenuProps {
   title: string;
+  isDisabled?: boolean;
   centerSection?: ReactNode;
   rightSection?: ReactNode;
   onClose: () => void;
@@ -13,12 +14,14 @@ interface DetailNavmenuProps {
 
 const DetailNavbar: FC<DetailNavmenuProps> = ({
   title,
+  isDisabled,
   centerSection,
   rightSection,
   onClose,
 }) => {
   return (
     <div className={styles.container}>
+      {isDisabled && <div className={styles.disabled} />}
       <div className={styles.left_section}>
         <IconButton
           icon={<IconX className="secondary-dark-icon" />}

@@ -17,6 +17,7 @@ import { Suspense, lazy, useLayoutEffect } from 'react';
 import { getMaximizeScreen } from 'helpers/localStorage';
 import {
   AppCloseModal,
+  DownloaderListener,
   Loader,
   ReportModal,
   UpdaterListener,
@@ -46,6 +47,7 @@ export default function App() {
 
   return (
     <>
+      <DownloaderListener />
       <UpdaterListener />
       <Router>
         <ReportModal />

@@ -1,38 +1,23 @@
-import { SERVER_API_URL } from 'constants/api';
-import { getToken } from 'helpers/localStorage';
-import { UploadFileDto } from './dto/upload-file.dto';
+import { $authHost } from 'api';
 
 export default class FileAPI {
-  static async uploadAvatar(file: File) {
+  static async uploadAvatar(file: File): Promise<{ link: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    const route = `${SERVER_API_URL}files/avatar`;
-    const res = await fetch(route, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        authorization: `Bearer ${getToken()}`,
-      },
+    const { data } = await $authHost.post('files/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
-    return res;
+    return data;
   }
 
-  static async uploadFile(file: File, uploadFileDto?: UploadFileDto) {
+  static async uploadManagerFile(file: File): Promise<{ link: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    for (let key in uploadFileDto) {
-      //@ts-ignore
-      formData.append(key, String(uploadFileDto[key]));
-    }
-
-    const route = `${SERVER_API_URL}files/upload`;
-    const res = await fetch(route, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        authorization: `Bearer ${getToken()}`,
-      },
-    });
-    return res;
+    const { data } = await $authHost.post(
+      'files/upload-manager-file',
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+    return data;
   }
 }

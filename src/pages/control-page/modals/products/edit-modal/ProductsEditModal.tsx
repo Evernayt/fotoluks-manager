@@ -6,7 +6,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -97,9 +96,7 @@ const ProductsEditModal = () => {
         setImage(data.image);
         setFormState({ ...data, price: data.price.toString() });
       })
-      .catch((e) =>
-        toast(getErrorToast('ProductsEditModal.fetchProduct', e))
-      )
+      .catch((e) => toast(getErrorToast('ProductsEditModal.fetchProduct', e)))
       .finally(() => setIsLoading(false));
   };
 
@@ -140,22 +137,6 @@ const ProductsEditModal = () => {
     setMoyskladId(null);
   };
 
-  const uploadImage = (image: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      FileAPI.uploadFile(image, { isManagerFile: true })
-        .then((res) => {
-          if (res.ok) {
-            res.json().then((data) => resolve(data.link));
-          } else {
-            res.json().then((data) => reject(data.message));
-          }
-        })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
-    });
-  };
-
   const createProduct = (imageLink: string | null, values: FormValues) => {
     const createdProduct: CreateProductDto = {
       ...values,
@@ -173,9 +154,7 @@ const ProductsEditModal = () => {
           closeModal(true);
           resolve(data);
         })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
+        .catch((e) => reject(e));
     });
   };
 
@@ -197,9 +176,7 @@ const ProductsEditModal = () => {
           closeModal(true);
           resolve(data);
         })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
+        .catch((e) => reject(e));
     });
   };
 
@@ -207,49 +184,45 @@ const ProductsEditModal = () => {
     setIsLoading(true);
     if (mode === MODES.ADD_MODE) {
       if (imageFile) {
-        uploadImage(imageFile)
-          .then((imageLink) => {
+        FileAPI.uploadManagerFile(imageFile)
+          .then(({ link }) => {
             setIsLoading(true);
-            createProduct(imageLink, values)
-              .catch((error) =>
-                toast(
-                  getErrorToast('ProductsEditModal.createProduct', error)
-                )
+            createProduct(link, values)
+              .catch((e) =>
+                toast(getErrorToast('ProductsEditModal.createProduct', e))
               )
               .finally(() => setIsLoading(false));
           })
-          .catch((error) =>
-            toast(getErrorToast('ProductsEditModal.uploadImage', error))
+          .catch((e) =>
+            toast(getErrorToast('ProductsEditModal.uploadImage', e))
           )
           .finally(() => setIsLoading(false));
       } else {
         createProduct(null, values)
-          .catch((error) =>
-            toast(getErrorToast('ProductsEditModal.createProduct', error))
+          .catch((e) =>
+            toast(getErrorToast('ProductsEditModal.createProduct', e))
           )
           .finally(() => setIsLoading(false));
       }
     } else {
       if (imageFile) {
-        uploadImage(imageFile)
-          .then((imageLink) => {
+        FileAPI.uploadManagerFile(imageFile)
+          .then(({ link }) => {
             setIsLoading(true);
-            updateProduct(imageLink, values)
-              .catch((error) =>
-                toast(
-                  getErrorToast('ProductsEditModal.updateProduct', error)
-                )
+            updateProduct(link, values)
+              .catch((e) =>
+                toast(getErrorToast('ProductsEditModal.updateProduct', e))
               )
               .finally(() => setIsLoading(false));
           })
-          .catch((error) =>
-            toast(getErrorToast('ProductsEditModal.uploadImage', error))
+          .catch((e) =>
+            toast(getErrorToast('ProductsEditModal.uploadImage', e))
           )
           .finally(() => setIsLoading(false));
       } else {
         updateProduct(image, values)
-          .catch((error) =>
-            toast(getErrorToast('ProductsEditModal.updateProduct', error))
+          .catch((e) =>
+            toast(getErrorToast('ProductsEditModal.updateProduct', e))
           )
           .finally(() => setIsLoading(false));
       }

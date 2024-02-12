@@ -20,8 +20,21 @@ import {
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { autoUpdater } from 'electron-updater';
+import * as fspromises from 'fs/promises';
+import { IFileForUpload, IFilePathForUpload } from 'models/IFileForUpload';
+import electronDl from 'electron-dl';
 
 autoUpdater.autoDownload = false;
+electronDl({
+  onCompleted(file) {
+    mainWindow?.webContents.send('download-file-completed', file);
+  },
+  onCancel(item) {
+    mainWindow?.webContents.send('download-file-cancel', item);
+  },
+  errorTitle: 'Ошибка загрузки',
+  errorMessage: 'Загрузка {filename} была прервана',
+});
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -45,24 +58,7 @@ const getAssetPath = (...paths: string[]): string => {
   return path.join(RESOURCES_PATH, ...paths);
 };
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload
-    )
-    .catch(console.log);
-};
-
 const createWindow = async () => {
-  // if (isDebug) {
-  //   await installExtensions();
-  // }
-
   mainWindow = new BrowserWindow({
     show: false,
     width: 1280,
@@ -94,8 +90,10 @@ const createWindow = async () => {
   });
 
   mainWindow.on('close', (e) => {
-    e.preventDefault();
-    mainWindow?.webContents.send('app-close');
+    if (!isDebug) {
+      e.preventDefault();
+      mainWindow?.webContents.send('app-close');
+    }
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -195,6 +193,29 @@ ipcMain.on('open-folder', async (_event, args) => {
 
 ipcMain.on('maximize', async (_event, _args) => {
   mainWindow?.maximize();
+});
+
+ipcMain.on(
+  'get-files-for-upload',
+  async (event, filePathsForUpload: IFilePathForUpload[]) => {
+    const filesForUpload: IFileForUpload[] = [];
+    for (const filePathForUpload of filePathsForUpload) {
+      const targetId = filePathForUpload.targetId;
+      const filename = path.parse(filePathForUpload.filePath).base;
+      const file = await fspromises.readFile(filePathForUpload.filePath);
+      filesForUpload.push({ targetId, filename, file });
+    }
+    event.reply('get-files-for-upload', filesForUpload);
+  }
+);
+
+ipcMain.on('download-file', async (_event, url: string) => {
+  if (!mainWindow) return;
+  try {
+    mainWindow.webContents.downloadURL(url);
+  } catch (error) {
+    mainWindow?.webContents.send('download-file-error', url);
+  }
 });
 
 /**

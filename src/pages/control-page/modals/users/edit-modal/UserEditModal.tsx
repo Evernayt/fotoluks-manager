@@ -131,22 +131,6 @@ const UserEditModal = () => {
       .finally(() => setIsLoading(false));
   };
 
-  const uploadAvatar = (image: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      FileAPI.uploadAvatar(image)
-        .then((res) => {
-          if (res.ok) {
-            res.json().then((data) => resolve(data.link));
-          } else {
-            res.json().then((data) => reject(data.message));
-          }
-        })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
-    });
-  };
-
   const createUser = (avatarLink: string | null, values: FormValues) => {
     const createdUser: CreateUserDto = {
       ...values,
@@ -164,9 +148,7 @@ const UserEditModal = () => {
           closeModal(true);
           resolve(data);
         })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
+        .catch((e) => reject(e));
     });
   };
 
@@ -189,9 +171,7 @@ const UserEditModal = () => {
           closeModal(true);
           resolve(data);
         })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
+        .catch((e) => reject(e));
     });
   };
 
@@ -199,46 +179,34 @@ const UserEditModal = () => {
     setIsLoading(true);
     if (mode === MODES.ADD_MODE) {
       if (avatarFile) {
-        uploadAvatar(avatarFile)
-          .then((avatarLink) => {
+        FileAPI.uploadAvatar(avatarFile)
+          .then(({ link }) => {
             setIsLoading(true);
-            createUser(avatarLink, values)
-              .catch((error) =>
-                toast(getErrorToast('UserEditModal.createUser', error))
-              )
+            createUser(link, values)
+              .catch((e) => toast(getErrorToast('UserEditModal.createUser', e)))
               .finally(() => setIsLoading(false));
           })
-          .catch((error) =>
-            toast(getErrorToast('UserEditModal.uploadAvatar', error))
-          )
+          .catch((e) => toast(getErrorToast('UserEditModal.uploadAvatar', e)))
           .finally(() => setIsLoading(false));
       } else {
         createUser(null, values)
-          .catch((error) =>
-            toast(getErrorToast('UserEditModal.createUser', error))
-          )
+          .catch((e) => toast(getErrorToast('UserEditModal.createUser', e)))
           .finally(() => setIsLoading(false));
       }
     } else {
       if (avatarFile) {
-        uploadAvatar(avatarFile)
-          .then((avatarLink) => {
+        FileAPI.uploadAvatar(avatarFile)
+          .then(({ link }) => {
             setIsLoading(true);
-            updateUser(avatarLink, values)
-              .catch((error) =>
-                toast(getErrorToast('UserEditModal.updateUser', error))
-              )
+            updateUser(link, values)
+              .catch((e) => toast(getErrorToast('UserEditModal.updateUser', e)))
               .finally(() => setIsLoading(false));
           })
-          .catch((error) =>
-            toast(getErrorToast('UserEditModal.uploadAvatar', error))
-          )
+          .catch((e) => toast(getErrorToast('UserEditModal.uploadAvatar', e)))
           .finally(() => setIsLoading(false));
       } else {
         updateUser(avatar, values)
-          .catch((error) =>
-            toast(getErrorToast('UserEditModal.updateUser', error))
-          )
+          .catch((e) => toast(getErrorToast('UserEditModal.updateUser', e)))
           .finally(() => setIsLoading(false));
       }
     }

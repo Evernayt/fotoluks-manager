@@ -25,6 +25,7 @@ const OrderProductContextMenu = () => {
   const orderProductsForCreate = useAppSelector(
     (state) => state.order.orderProductsForCreate
   );
+  const orderFiles = useAppSelector((state) => state.order.order.orderFiles);
 
   const dispatch = useAppDispatch();
 
@@ -87,13 +88,25 @@ const OrderProductContextMenu = () => {
     if (!orderProduct) return;
 
     dispatch(orderActions.deleteOrderProduct(orderProduct.id));
+
     const orderProductForCreate = orderProductsForCreate.find(
       (x) => x.id === orderProduct.id
     );
-
     if (!orderProductForCreate) {
       dispatch(orderActions.addOrderProductsForDelete(Number(orderProduct.id)));
     }
+
+    const createdOrderFiles = orderFiles?.filter(
+      (x) => x.orderProductId === orderProduct.id && typeof x.id === 'number'
+    );
+    if (createdOrderFiles) {
+      const ids = createdOrderFiles.map((x) => x.id);
+      dispatch(orderActions.addOrderFilesForDelete(ids as number[]));
+    }
+    dispatch(
+      orderActions.deleteOrderFilePathForUploadByOrderProductId(orderProduct.id)
+    );
+    dispatch(orderActions.deleteOrderFilesByOrderProductId(orderProduct.id));
   };
 
   const isHidden = (params: ItemParams<IOrderProduct>) => {

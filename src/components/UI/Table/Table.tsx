@@ -30,6 +30,7 @@ interface TableProps<TData, TValue> {
   containerStyle?: CSSProperties;
   loaderProps?: LoaderProps;
   notFoundTextProps?: HeadingProps;
+  hideHeader?: boolean;
   editors?: IEditor[];
   sorting?: SortingState;
   enableRowSelection?: boolean;
@@ -50,6 +51,7 @@ const Table = <TData, TValue>({
   containerStyle,
   loaderProps,
   notFoundTextProps,
+  hideHeader = false,
   editors,
   sorting,
   enableRowSelection,
@@ -109,53 +111,55 @@ const Table = <TData, TValue>({
           <>
             {data?.length ? (
               <table>
-                <thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <th
-                            className={styles.column}
-                            onClick={header.column.getToggleSortingHandler()}
-                            key={header.id}
-                          >
-                            {header.isPlaceholder ? null : (
-                              <div
-                                className={
-                                  sorting && header.column.getCanSort()
-                                    ? styles.sortable_column
-                                    : styles.not_sortable_column
-                                }
-                              >
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                                {{
-                                  asc: (
-                                    <IconSortAscending
-                                      className="link-icon"
-                                      size={ICON_SIZE - 2}
-                                      stroke={ICON_STROKE}
-                                    />
-                                  ),
-                                  desc: (
-                                    <IconSortDescending
-                                      className="link-icon"
-                                      size={ICON_SIZE - 2}
-                                      stroke={ICON_STROKE}
-                                    />
-                                  ),
-                                }[header.column.getIsSorted() as string] ??
-                                  null}
-                              </div>
-                            )}
-                          </th>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </thead>
+                {!hideHeader && (
+                  <thead>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <tr key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => {
+                          return (
+                            <th
+                              className={styles.column}
+                              onClick={header.column.getToggleSortingHandler()}
+                              key={header.id}
+                            >
+                              {header.isPlaceholder ? null : (
+                                <div
+                                  className={
+                                    sorting && header.column.getCanSort()
+                                      ? styles.sortable_column
+                                      : styles.not_sortable_column
+                                  }
+                                >
+                                  {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                                  {{
+                                    asc: (
+                                      <IconSortAscending
+                                        className="link-icon"
+                                        size={ICON_SIZE - 2}
+                                        stroke={ICON_STROKE}
+                                      />
+                                    ),
+                                    desc: (
+                                      <IconSortDescending
+                                        className="link-icon"
+                                        size={ICON_SIZE - 2}
+                                        stroke={ICON_STROKE}
+                                      />
+                                    ),
+                                  }[header.column.getIsSorted() as string] ??
+                                    null}
+                                </div>
+                              )}
+                            </th>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </thead>
+                )}
                 <tbody>
                   {table.getRowModel().rows.map((row) => {
                     const editableRow = getEditableRow(row);

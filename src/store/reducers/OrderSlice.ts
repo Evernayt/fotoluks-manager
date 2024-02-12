@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SortingState } from '@tanstack/react-table';
-import { INITIAL_ORDER } from 'constants/initialStates';
+import { INITIAL_ORDER, INITIAL_STATUS } from 'constants/initialStates';
 import { IEditor } from 'models/IEditor';
+import { IFilePathForUpload } from 'models/IFileForUpload';
 import { IFavorite } from 'models/api/IFavorite';
 import { IOrder } from 'models/api/IOrder';
+import { IOrderFile } from 'models/api/IOrderFile';
 import { IOrderMember } from 'models/api/IOrderMember';
 import { IOrderProduct } from 'models/api/IOrderProduct';
 import { IStatus } from 'models/api/IStatus';
@@ -19,7 +21,7 @@ type OrderState = {
   openedOrderStatus: IStatus | null;
   activeSidebarIndex: number;
   sidebarIsOpen: boolean;
-  activeStatus: IStatus | null;
+  activeStatus: IStatus;
   search: string;
   isLoading: boolean;
   forceUpdate: boolean;
@@ -35,6 +37,8 @@ type OrderState = {
   orderEditors: IEditor[];
   favorites: IFavorite[];
   sortings: SortingState;
+  orderFilePathsForUpload: IFilePathForUpload[];
+  orderFilesForDelete: number[];
 };
 
 const initialState: OrderState = {
@@ -43,7 +47,7 @@ const initialState: OrderState = {
   openedOrderStatus: null,
   activeSidebarIndex: 0,
   sidebarIsOpen: true,
-  activeStatus: null,
+  activeStatus: INITIAL_STATUS,
   search: '',
   isLoading: false,
   forceUpdate: false,
@@ -59,6 +63,8 @@ const initialState: OrderState = {
   orderEditors: [],
   favorites: [],
   sortings: [{ id: 'status', desc: false }],
+  orderFilePathsForUpload: [],
+  orderFilesForDelete: [],
 };
 
 export const orderSlice = createSlice({
@@ -107,16 +113,6 @@ export const orderSlice = createSlice({
     setBeforeOrder(state, action: PayloadAction<IOrder>) {
       state.beforeOrder = action.payload;
     },
-    clearOrder(state) {
-      state.order = INITIAL_ORDER;
-      state.beforeOrder = INITIAL_ORDER;
-      state.orderProductsForCreate = [];
-      state.orderProductsForUpdate = [];
-      state.orderProductsForDelete = [];
-      state.orderMembersForCreate = [];
-      state.orderMembersForDelete = [];
-      state.openedOrderStatus = null;
-    },
     setHaveUnsavedData(state, action: PayloadAction<boolean>) {
       state.haveUnsavedData = action.payload;
     },
@@ -135,6 +131,18 @@ export const orderSlice = createSlice({
     setComment(state, action: PayloadAction<string>) {
       state.order.comment = action.payload;
     },
+    clearOrder(state) {
+      state.order = INITIAL_ORDER;
+      state.beforeOrder = INITIAL_ORDER;
+      state.orderProductsForCreate = [];
+      state.orderProductsForUpdate = [];
+      state.orderProductsForDelete = [];
+      state.orderMembersForCreate = [];
+      state.orderMembersForDelete = [];
+      state.orderFilePathsForUpload = [];
+      state.orderFilesForDelete = [];
+      state.openedOrderStatus = null;
+    },
     undoOrder(state) {
       state.order = state.beforeOrder;
       state.orderProductsForCreate = [];
@@ -142,6 +150,9 @@ export const orderSlice = createSlice({
       state.orderProductsForDelete = [];
       state.orderMembersForCreate = [];
       state.orderMembersForDelete = [];
+      state.orderFilePathsForUpload = [];
+      state.orderFilesForDelete = [];
+      state.haveUnsavedData = false;
     },
     saveOrder(state, action: PayloadAction<IOrder>) {
       state.beforeOrder = action.payload;
@@ -150,6 +161,8 @@ export const orderSlice = createSlice({
       state.orderProductsForDelete = [];
       state.orderMembersForCreate = [];
       state.orderMembersForDelete = [];
+      state.orderFilePathsForUpload = [];
+      state.orderFilesForDelete = [];
     },
     addOrderProduct(state, action: PayloadAction<IOrderProduct>) {
       state.order.orderProducts?.unshift(action.payload);
@@ -272,6 +285,62 @@ export const orderSlice = createSlice({
     },
     setSortings(state, action: PayloadAction<SortingState>) {
       state.sortings = action.payload;
+    },
+    addOrderFiles(state, action: PayloadAction<IOrderFile[]>) {
+      state.order.orderFiles?.push(...action.payload);
+      state.order.orderFiles = state.order.orderFiles?.filter(
+        (orderFile, index, self) =>
+          self.findIndex((t) => {
+            return (
+              t.name === orderFile.name &&
+              t.orderProductId === orderFile.orderProductId
+            );
+          }) === index
+      );
+    },
+    deleteOrderFile(state, action: PayloadAction<number | string>) {
+      state.order.orderFiles = state.order.orderFiles?.filter(
+        (x) => x.id !== action.payload
+      );
+    },
+    deleteOrderFilesByOrderProductId(
+      state,
+      action: PayloadAction<number | string>
+    ) {
+      state.order.orderFiles = state.order.orderFiles?.filter(
+        (x) => x.orderProductId !== action.payload
+      );
+    },
+    addOrderFilePathsForUpload(
+      state,
+      action: PayloadAction<IFilePathForUpload[]>
+    ) {
+      state.orderFilePathsForUpload.push(...action.payload);
+      state.orderFilePathsForUpload = state.orderFilePathsForUpload.filter(
+        (orderFile, index, self) =>
+          self.findIndex((t) => {
+            return (
+              t.filePath === orderFile.filePath &&
+              t.targetId === orderFile.targetId
+            );
+          }) === index
+      );
+    },
+    deleteOrderFilePathForUpload(state, action: PayloadAction<string>) {
+      state.orderFilePathsForUpload = state.orderFilePathsForUpload.filter(
+        (x) => x.id !== action.payload
+      );
+    },
+    deleteOrderFilePathForUploadByOrderProductId(
+      state,
+      action: PayloadAction<string | number>
+    ) {
+      state.orderFilePathsForUpload = state.orderFilePathsForUpload.filter(
+        (x) => x.targetId != action.payload
+      );
+    },
+    addOrderFilesForDelete(state, action: PayloadAction<number[]>) {
+      state.orderFilesForDelete.push(...action.payload);
     },
     clearState() {
       return initialState;

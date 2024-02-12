@@ -16,6 +16,7 @@ import {
   ITaskEditMessageModal,
   IOrdersReasonModal,
   IChangelogsEditModal,
+  IOrderFilesModal,
 } from 'models/IModal';
 
 type ModalState = {
@@ -33,6 +34,7 @@ type ModalState = {
   orderCancelModal: IModal;
   orderUnsavedDataModal: IModal;
   orderProductEditModal: IOrderProductEditModal;
+  orderFilesModal: IOrderFilesModal;
   /* control-page */
   productsEditModal: IProductsEditModal;
   productsFilterModal: IModal;
@@ -74,6 +76,7 @@ const initialState: ModalState = {
   orderCancelModal: INITIAL_MODAL,
   orderUnsavedDataModal: INITIAL_MODAL,
   orderProductEditModal: INITIAL_MODAL,
+  orderFilesModal: INITIAL_MODAL,
   /* control-page */
   productsEditModal: INITIAL_MODAL,
   productsFilterModal: INITIAL_MODAL,

@@ -7,6 +7,7 @@ import { IShop } from './IShop';
 import { IStatus } from './IStatus';
 import { IUser } from './IUser';
 import { IOrderProduct } from './IOrderProduct';
+import { IOrderFile } from './IOrderFile';
 
 export interface IOrder {
   id: number;
@@ -22,6 +23,7 @@ export interface IOrder {
   orderProducts?: IOrderProduct[];
   orderInfos?: IOrderInfo[];
   orderMembers?: IOrderMember[];
+  orderFiles?: IOrderFile[];
 }
 
 export type IOrderData = IData<IOrder[]>;

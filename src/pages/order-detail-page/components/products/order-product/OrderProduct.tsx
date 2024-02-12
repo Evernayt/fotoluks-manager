@@ -54,7 +54,10 @@ const OrderProduct: FC<OrderProductProps> = ({
     >
       <CardBody className={styles.body}>
         <div className={styles.header}>
-          <img className={styles.image} src={noImage} />
+          <img
+            className={styles.image}
+            src={orderProduct.product?.image || noImage}
+          />
           <div>
             <Heading size="sm" mb="var(--space-xs)">
               {orderProduct.product?.name}

@@ -5,6 +5,7 @@ import {
   INITIAL_DOWNLOAD_UPDATE,
   INITIAL_SHOP,
 } from 'constants/initialStates';
+import { IDownloadingFile } from 'models/IDownloadingFile';
 import { IOnlineEmployee } from 'models/IOnlineEmployee';
 import { IApp } from 'models/api/IApp';
 import { IDepartment } from 'models/api/IDepartment';
@@ -25,6 +26,7 @@ type AppState = {
   downloadUpdate: IUpdate;
   version: string;
   downloadingProgress: number;
+  downloadingFiles: IDownloadingFile[];
 };
 
 const initialState: AppState = {
@@ -41,6 +43,7 @@ const initialState: AppState = {
   downloadUpdate: INITIAL_DOWNLOAD_UPDATE,
   version: '0',
   downloadingProgress: 0,
+  downloadingFiles: [],
 };
 
 export const appSlice = createSlice({
@@ -89,6 +92,14 @@ export const appSlice = createSlice({
     },
     setDownloadingProgress(state, action: PayloadAction<number>) {
       state.downloadingProgress = action.payload;
+    },
+    addDownlodingFile(state, action: PayloadAction<IDownloadingFile>) {
+      state.downloadingFiles.push(action.payload);
+    },
+    deleteDownlodingFile(state, action: PayloadAction<string>) {
+      state.downloadingFiles = state.downloadingFiles.filter(
+        (x) => x.link !== action.payload
+      );
     },
     clearState(state) {
       state.notificationsBadge = initialState.notificationsBadge;

@@ -10,6 +10,16 @@
   z-index: 999;
 }
 
+.disabled {
+  position: absolute;
+  height: 100%;
+  z-index: 1;
+  background-color: var(--card-bg-color);
+  opacity: 0.4;
+  left: 0;
+  right: 0;
+}
+
 .left_section {
   display: flex;
   align-items: center;

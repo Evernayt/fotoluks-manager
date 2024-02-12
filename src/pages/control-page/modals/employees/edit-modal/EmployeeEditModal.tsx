@@ -108,26 +108,8 @@ const EmployeeEditModal = () => {
           departments: data.departments || [],
         });
       })
-      .catch((e) =>
-        toast(getErrorToast('EmployeeEditModal.fetchEmployee', e))
-      )
+      .catch((e) => toast(getErrorToast('EmployeeEditModal.fetchEmployee', e)))
       .finally(() => setIsLoading(false));
-  };
-
-  const uploadAvatar = (image: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      FileAPI.uploadAvatar(image)
-        .then((res) => {
-          if (res.ok) {
-            res.json().then((data) => resolve(data.link));
-          } else {
-            res.json().then((data) => reject(data.message));
-          }
-        })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
-    });
   };
 
   const createEmployee = (avatarLink: string | null, values: FormValues) => {
@@ -159,9 +141,7 @@ const EmployeeEditModal = () => {
           closeModal(true);
           resolve(data);
         })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
+        .catch((e) => reject(e));
     });
   };
 
@@ -208,9 +188,7 @@ const EmployeeEditModal = () => {
           closeModal(true);
           resolve(data);
         })
-        .catch((e) =>
-          reject(e.response.data ? e.response.data.message : e.message)
-        );
+        .catch((e) => reject(e));
     });
   };
 
@@ -218,49 +196,45 @@ const EmployeeEditModal = () => {
     setIsLoading(true);
     if (mode === MODES.ADD_MODE) {
       if (avatarFile) {
-        uploadAvatar(avatarFile)
-          .then((avatarLink) => {
+        FileAPI.uploadAvatar(avatarFile)
+          .then(({ link }) => {
             setIsLoading(true);
-            createEmployee(avatarLink, values)
-              .catch((error) =>
-                toast(
-                  getErrorToast('EmployeeEditModal.createEmployee', error)
-                )
+            createEmployee(link, values)
+              .catch((e) =>
+                toast(getErrorToast('EmployeeEditModal.createEmployee', e))
               )
               .finally(() => setIsLoading(false));
           })
-          .catch((error) =>
-            toast(getErrorToast('EmployeeEditModal.uploadAvatar', error))
+          .catch((e) =>
+            toast(getErrorToast('EmployeeEditModal.uploadAvatar', e))
           )
           .finally(() => setIsLoading(false));
       } else {
         createEmployee(null, values)
-          .catch((error) =>
-            toast(getErrorToast('EmployeeEditModal.uploadAvatar', error))
+          .catch((e) =>
+            toast(getErrorToast('EmployeeEditModal.uploadAvatar', e))
           )
           .finally(() => setIsLoading(false));
       }
     } else {
       if (avatarFile) {
-        uploadAvatar(avatarFile)
-          .then((avatarLink) => {
+        FileAPI.uploadAvatar(avatarFile)
+          .then(({ link }) => {
             setIsLoading(true);
-            updateEmployee(avatarLink, values)
-              .catch((error) =>
-                toast(
-                  getErrorToast('EmployeeEditModal.updateEmployee', error)
-                )
+            updateEmployee(link, values)
+              .catch((e) =>
+                toast(getErrorToast('EmployeeEditModal.updateEmployee', e))
               )
               .finally(() => setIsLoading(false));
           })
-          .catch((error) =>
-            toast(getErrorToast('EmployeeEditModal.uploadAvatar', error))
+          .catch((e) =>
+            toast(getErrorToast('EmployeeEditModal.uploadAvatar', e))
           )
           .finally(() => setIsLoading(false));
       } else {
         updateEmployee(avatar, values)
-          .catch((error) =>
-            toast(getErrorToast('EmployeeEditModal.updateEmployee', error))
+          .catch((e) =>
+            toast(getErrorToast('EmployeeEditModal.updateEmployee', e))
           )
           .finally(() => setIsLoading(false));
       }

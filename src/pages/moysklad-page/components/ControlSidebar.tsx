@@ -62,7 +62,7 @@ const MoyskladSidebar = () => {
     <Sidebar
       isOpen={sidebarIsOpen}
       items={items}
-      defaultActiveItem={items[activeSidebarIndex]}
+      selectedItem={items[activeSidebarIndex]}
       toggle={toggleSidebar}
       onChange={itemChangeHandler}
     />

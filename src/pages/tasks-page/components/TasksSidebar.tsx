@@ -77,7 +77,7 @@ const TasksSidebar = () => {
       isOpen={sidebarIsOpen}
       addButton={addButton}
       items={items}
-      defaultActiveItem={items[activeSidebarIndex]}
+      selectedItem={items[activeSidebarIndex]}
       toggle={toggleSidebar}
       onChange={itemChangeHandler}
     />

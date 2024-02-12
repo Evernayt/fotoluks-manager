@@ -5,8 +5,16 @@ import socketio from 'socket/socketio';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { DetailNavbar, StatusSelect } from 'components';
 import { IStatus } from 'models/api/IStatus';
+import { FC } from 'react';
+import { IconButton } from '@chakra-ui/react';
+import { IconFiles } from '@tabler/icons-react';
+import { ICON_SIZE, ICON_STROKE } from 'constants/app';
 
-const OrderNavbar = () => {
+interface OrderNavbarProps {
+  isDisabled: boolean;
+}
+
+const OrderNavbar: FC<OrderNavbarProps> = ({ isDisabled }) => {
   const order = useAppSelector((state) => state.order.order);
   const haveUnsavedData = useAppSelector(
     (state) => state.order.haveUnsavedData
@@ -42,6 +50,15 @@ const OrderNavbar = () => {
     dispatch(modalActions.openModal({ modal: 'orderUnsavedDataModal' }));
   };
 
+  const openOrderFilesModal = () => {
+    dispatch(
+      modalActions.openModal({
+        modal: 'orderFilesModal',
+        props: { orderProductId: null },
+      })
+    );
+  };
+
   const centerSection = () => {
     return isOrderCreated ? (
       <StatusSelect
@@ -52,10 +69,23 @@ const OrderNavbar = () => {
     ) : null;
   };
 
+  const rightSection = () => {
+    return order.orderFiles && order.orderFiles.length > 0 ? (
+      <IconButton
+        icon={<IconFiles size={ICON_SIZE} stroke={ICON_STROKE} />}
+        variant="ghost"
+        aria-label="files"
+        onClick={openOrderFilesModal}
+      />
+    ) : null;
+  };
+
   return (
     <DetailNavbar
       title={title}
+      isDisabled={isDisabled}
       centerSection={centerSection()}
+      rightSection={rightSection()}
       onClose={closeOrderDetail}
     />
   );

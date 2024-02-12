@@ -1,25 +1,19 @@
-const groupBy = (arr: any[], key: any): any[][] => {
-  const groupedArr: any[][] = [];
-  const reducedArr = arr.reduce((rv, x) => {
-    let v = key instanceof Function ? key(x) : x[key];
-    let el = rv.find((r: any) => r && r.key === v);
-    if (el) {
-      el.values.push(x);
-    } else {
-      rv.push({
-        key: v,
-        values: [x],
-      });
-    }
-
-    return rv;
-  }, []);
-
-  for (let i = 0; i < reducedArr.length; i++) {
-    groupedArr.push(reducedArr[i].values);
-  }
-
-  return groupedArr;
-};
+const groupBy = <K, V>(
+  arr: readonly V[],
+  getKey: (cur: V, idx: number, src: readonly V[]) => K
+): V[][] =>
+  arr
+    .reduce((acc, cur, idx, src) => {
+      const key = getKey(cur, idx, src);
+      const item = acc.find(([k]) => k === key);
+      if (item) {
+        const [, v] = item;
+        v.push(cur);
+      } else {
+        acc.push([key, [cur]]);
+      }
+      return acc;
+    }, [] as [K, V[]][])
+    .map(([, v]) => v);
 
 export default groupBy;

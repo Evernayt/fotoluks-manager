@@ -44,6 +44,7 @@ import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
 import { AutoResizableTextarea } from 'components';
 import OrderFavoritesTable from './favorites/OrderFavoritesTable';
 import { getErrorToast } from 'helpers/toast';
+import AttachFiles from './attach-files/AttachFiles';
 import styles from './OrderEditProductModal.module.scss';
 
 const formSchema = Yup.object({
@@ -62,11 +63,14 @@ const OrderEditProductModal = () => {
   const [price, setPrice] = useState<string>('0');
   const [discount, setDiscount] = useState<string | null>(null);
   const [comment, setComment] = useState<string>('');
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const [orderProductId, setOrderProductId] = useState<string | number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { isOpen, mode, orderProduct } = useAppSelector(
     (state) => state.modal.orderProductEditModal
   );
+
   const order = useAppSelector((state) => state.order.order);
   const orderProductsForCreate = useAppSelector(
     (state) => state.order.orderProductsForCreate
@@ -90,6 +94,8 @@ const OrderEditProductModal = () => {
       setPrice(orderProduct.price.toString());
       setDiscount(orderProduct.discount?.toString() || null);
       setComment(orderProduct.comment);
+      setOrderProductId(orderProduct.id);
+      setIsAdded(true);
     }
   }, [isOpen]);
 
@@ -108,12 +114,13 @@ const OrderEditProductModal = () => {
   const selectProduct = (product: IProduct) => {
     setProduct(product);
     setPrice(product.price.toString());
+    setOrderProductId(uuidv4());
   };
 
   const addProduct = () => {
     if (mode === MODES.ADD_MODE) {
       const createdOrderProduct: IOrderProduct = {
-        id: uuidv4(),
+        id: orderProductId,
         price: Number(price),
         quantity: Number(quantity),
         comment,
@@ -151,7 +158,7 @@ const OrderEditProductModal = () => {
       }
     }
 
-    closeModal();
+    closeModal(true);
   };
 
   const createFavorite = () => {
@@ -187,13 +194,24 @@ const OrderEditProductModal = () => {
     }
   };
 
-  const closeModal = () => {
+  const closeModal = (orderProductAdded = isAdded) => {
+    if (!orderProductAdded) {
+      dispatch(
+        orderActions.deleteOrderFilePathForUploadByOrderProductId(
+          orderProductId
+        )
+      );
+      dispatch(orderActions.deleteOrderFilesByOrderProductId(orderProductId));
+    }
+
     setProduct(null);
     setQuantity('1');
     setPrice('0');
     setDiscount(null);
     setComment('');
+    setOrderProductId(0);
     setIsLoading(false);
+    setIsAdded(false);
     dispatch(modalActions.closeModal('orderProductEditModal'));
   };
 
@@ -201,6 +219,7 @@ const OrderEditProductModal = () => {
     <Modal
       isOpen={isOpen}
       onClose={closeModal}
+      blockScrollOnMount={false}
       size={favorites.length > 0 ? '4xl' : 'lg'}
     >
       <ModalOverlay />
@@ -358,20 +377,23 @@ const OrderEditProductModal = () => {
                     sum.toFixed(2)
                   )} руб.`}</Badge>
                   <div className={styles.footer}>
-                    <Button
-                      className={styles.footer_button}
-                      onClick={closeModal}
-                    >
-                      Отмена
-                    </Button>
-                    <Button
-                      className={styles.footer_button}
-                      type="submit"
-                      isDisabled={product === null}
-                      colorScheme="yellow"
-                    >
-                      {mode === MODES.ADD_MODE ? 'Добавить' : 'Сохранить'}
-                    </Button>
+                    {product && <AttachFiles orderProductId={orderProductId} />}
+                    <div className={styles.footer_section}>
+                      <Button
+                        className={styles.footer_button}
+                        onClick={() => closeModal()}
+                      >
+                        Отмена
+                      </Button>
+                      <Button
+                        className={styles.footer_button}
+                        type="submit"
+                        isDisabled={product === null}
+                        colorScheme="yellow"
+                      >
+                        {mode === MODES.ADD_MODE ? 'Добавить' : 'Сохранить'}
+                      </Button>
+                    </div>
                   </div>
                 </Form>
               )}

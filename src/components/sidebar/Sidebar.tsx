@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { ISidebarAddButton, ISidebarItem } from './Sidebar.types';
 import { IconButton } from '@chakra-ui/react';
 import { IconLayoutSidebarRight, IconLayoutSidebar } from '@tabler/icons-react';
@@ -9,7 +8,7 @@ import styles from './Sidebar.module.scss';
 interface SidebarProps<T extends ISidebarItem> {
   isOpen: boolean;
   items?: T[];
-  defaultActiveItem?: T;
+  selectedItem?: T;
   addButton?: ISidebarAddButton;
   toggle: () => void;
   onChange?: (item: T, index: number) => void;
@@ -18,29 +17,12 @@ interface SidebarProps<T extends ISidebarItem> {
 const Sidebar = <T extends ISidebarItem>({
   isOpen,
   items,
-  defaultActiveItem,
+  selectedItem,
   addButton,
   toggle,
   onChange,
 }: SidebarProps<T>) => {
-  const [activeItem, setActiveItem] = useState<T | undefined>(
-    defaultActiveItem
-  );
-
-  useEffect(() => {
-    if (defaultActiveItem) {
-      setActiveItem(defaultActiveItem);
-    }
-  }, [defaultActiveItem]);
-
-  useEffect(() => {
-    if (activeItem) {
-      selectItem(activeItem);
-    }
-  }, [activeItem]);
-
   const selectItem = (item: T) => {
-    setActiveItem(item);
     if (!onChange) return;
     const index = items?.indexOf(item) || 0;
     onChange(item, index);
@@ -59,8 +41,8 @@ const Sidebar = <T extends ISidebarItem>({
           <SidebarItemButton
             item={item}
             isSidebarOpen={isOpen}
-            isSelected={activeItem?.name === item.name}
-            onClick={setActiveItem}
+            isSelected={selectedItem?.name === item.name}
+            onClick={selectItem}
             key={item.id}
           />
         ))}

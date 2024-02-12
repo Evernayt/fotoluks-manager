@@ -6,7 +6,6 @@ import {
 import { ORDER_DETAIL_ROUTE } from 'constants/paths';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IStatus } from 'models/api/IStatus';
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { orderActions } from 'store/reducers/OrderSlice';
 import {
@@ -19,6 +18,44 @@ import {
   IconPackages,
 } from '@tabler/icons-react';
 
+const items: ISidebarItem[] = [
+  {
+    id: 0,
+    Icon: IconInbox,
+    name: 'Все заказы',
+  },
+  {
+    id: 6,
+    Icon: IconPackages,
+    name: 'Не отданные',
+  },
+  {
+    id: 1,
+    Icon: IconBolt,
+    name: 'Новые',
+  },
+  {
+    id: 2,
+    Icon: IconWritingSign,
+    name: 'В работе',
+  },
+  {
+    id: 3,
+    Icon: IconBoxSeam,
+    name: 'Готовые',
+  },
+  {
+    id: 4,
+    Icon: IconDirectionSign,
+    name: 'Отданные',
+  },
+  {
+    id: 5,
+    Icon: IconArchive,
+    name: 'Отмененные',
+  },
+];
+
 const OrdersSidebar = () => {
   const activeSidebarIndex = useAppSelector(
     (state) => state.order.activeSidebarIndex
@@ -27,47 +64,6 @@ const OrdersSidebar = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const items = useMemo<ISidebarItem[]>(
-    () => [
-      {
-        id: 0,
-        Icon: IconInbox,
-        name: 'Все заказы',
-      },
-      {
-        id: 6,
-        Icon: IconPackages,
-        name: 'Не отданные',
-      },
-      {
-        id: 1,
-        Icon: IconBolt,
-        name: 'Новые',
-      },
-      {
-        id: 2,
-        Icon: IconWritingSign,
-        name: 'В работе',
-      },
-      {
-        id: 3,
-        Icon: IconBoxSeam,
-        name: 'Готовые',
-      },
-      {
-        id: 4,
-        Icon: IconDirectionSign,
-        name: 'Отданные',
-      },
-      {
-        id: 5,
-        Icon: IconArchive,
-        name: 'Отмененные',
-      },
-    ],
-    []
-  );
 
   const toggleSidebar = () => {
     dispatch(orderActions.setSidebarIsOpen(!sidebarIsOpen));
@@ -93,7 +89,7 @@ const OrdersSidebar = () => {
       isOpen={sidebarIsOpen}
       addButton={addButton}
       items={items}
-      defaultActiveItem={items[activeSidebarIndex]}
+      selectedItem={items[activeSidebarIndex]}
       toggle={toggleSidebar}
       onChange={itemChangeHandler}
     />

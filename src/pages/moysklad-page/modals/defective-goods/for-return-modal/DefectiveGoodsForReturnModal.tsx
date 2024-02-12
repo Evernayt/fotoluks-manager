@@ -32,8 +32,8 @@ const DefectiveGoodsForReturnModal = () => {
 
   const dispatch = useAppDispatch();
 
-  const groupedDefectiveGoods = useMemo<IDefectiveGood[][]>(
-    () => groupBy(defectiveGoods, 'incomingNumber'),
+  const groupedDefectiveGoods = useMemo(
+    () => groupBy(defectiveGoods, (x) => x.incomingNumber),
     [defectiveGoods]
   );
 

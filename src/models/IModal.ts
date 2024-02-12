@@ -77,3 +77,7 @@ export interface IChangelogsEditModal extends IModal {
   version?: string;
   mode?: MODES;
 }
+
+export interface IOrderFilesModal extends IModal {
+  orderProductId?: number | string | null;
+}
