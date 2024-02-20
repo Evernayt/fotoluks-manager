@@ -2,7 +2,6 @@ import { useToast } from '@chakra-ui/react';
 import { Table } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useEffect, useState } from 'react';
-import { useDebounce } from 'hooks';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
 import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
 import EndingGoodsToolbar from './EndingGoodsToolbar';
@@ -26,7 +25,6 @@ const EndingGoodsTable = () => {
   const [limit, setLimit] = useState<number>(25);
 
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
-  const search = useAppSelector((state) => state.moysklad.search);
   const forceUpdate = useAppSelector((state) => state.moysklad.forceUpdate);
   const endingGoods = useAppSelector((state) => state.endingGoods.endingGoods);
   const orderedGoods = useAppSelector(
@@ -36,17 +34,12 @@ const EndingGoodsTable = () => {
     (state) => state.endingGoods.notAvailableGoods
   );
 
-  const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
   const toast = useToast();
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      fetchEndingGoods(page);
-    } else {
-      reload(page);
-    }
-  }, [debouncedSearchTerm]);
+    fetchEndingGoods(page);
+  }, []);
 
   useEffect(() => {
     if (forceUpdate) {

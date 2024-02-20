@@ -29,6 +29,8 @@ import PeriodSelect from './ui/period-select/PeriodSelect';
 import ReportModal from './navbar/report-modal/ReportModal';
 import OrderReasonModal from './reason-modal/OrderReasonModal';
 import DownloaderListener from './downloader/DownloaderListener';
+import PasswordInput from './ui/password-input/PasswordInput';
+import YoutubePlayer from './ui/youtube-player/YoutubePlayer';
 
 export {
   Select,
@@ -62,4 +64,6 @@ export {
   ReportModal,
   OrderReasonModal,
   DownloaderListener,
+  PasswordInput,
+  YoutubePlayer,
 };

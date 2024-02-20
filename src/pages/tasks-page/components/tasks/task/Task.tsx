@@ -46,7 +46,7 @@ const Task: FC<TaskProps> = ({ task }) => {
             task.completed && styles.title_completed,
           ].join(' ')}
         >
-          {`${task.id}. ${task.title || 'Без загаловка'}`}
+          {`${task.id}. ${task.title || 'Без заголовка'}`}
         </Text>
         {!task.completed && (
           <Text className={styles.description}>{task.description}</Text>

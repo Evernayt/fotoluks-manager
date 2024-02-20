@@ -50,6 +50,7 @@ import DepartmentAPI from 'api/DepartmentAPI/DepartmentAPI';
 import { getStoreByShop } from 'helpers/moysklad';
 import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
 import { getErrorToast } from 'helpers/toast';
+import { PasswordInput } from 'components';
 import styles from './AuthForm.module.scss';
 
 interface FormValues {
@@ -69,6 +70,7 @@ interface AuthFormProps {
 }
 
 const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
+  const [isPassword, setIsPassword] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const shops = useAppSelector((state) => state.app.shops);
@@ -279,10 +281,9 @@ const AuthForm: FC<AuthFormProps> = ({ setIsAutoSignIn }) => {
                           stroke={ICON_STROKE}
                         />
                       </InputLeftElement>
-                      <Input
+                      <PasswordInput
                         {...field}
-                        placeholder="Пароль"
-                        type="password"
+                        pl="35px"
                         isDisabled={props.isSubmitting}
                       />
                     </InputGroup>

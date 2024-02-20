@@ -1,6 +1,7 @@
 .item {
   padding: var(--space-xs) var(--space-md);
   border-radius: var(--border-radius);
+  color: var(--text-color);
   cursor: pointer;
 
   &:hover {

@@ -10,8 +10,9 @@ import {
   PROFILE_ROUTE,
   SETTINGS_ROUTE,
   MOVES_DETAIL_ROUTE,
+  HELP_ROUTE,
 } from 'constants/paths';
-import { LoginPage, OrdersPage, TasksPage } from 'pages';
+import { LoginPage, OrdersPage, TasksPage, MoyskladPage } from 'pages';
 import WithNavbar from './WithNavbar';
 import { Suspense, lazy, useLayoutEffect } from 'react';
 import { getMaximizeScreen } from 'helpers/localStorage';
@@ -33,10 +34,10 @@ const TaskDetailPage = lazy(
 const MovesDetailPage = lazy(
   () => import('../pages/moysklad-detail-pages/moves/MovesDetailPage')
 );
-const MoyskladPage = lazy(() => import('../pages/moysklad-page/MoyskladPage'));
 const ControlPage = lazy(() => import('../pages/control-page/ControlPage'));
 const ProfilePage = lazy(() => import('../pages/profile-page/ProfilePage'));
 const SettingsPage = lazy(() => import('../pages/settings-page/SettingsPage'));
+const HelpPage = lazy(() => import('../pages/help-page/HelpPage'));
 
 export default function App() {
   useLayoutEffect(() => {
@@ -65,6 +66,7 @@ export default function App() {
               <Route path={CONTROL_ROUTE} element={<ControlPage />} />
               <Route path={PROFILE_ROUTE} element={<ProfilePage />} />
               <Route path={SETTINGS_ROUTE} element={<SettingsPage />} />
+              <Route path={HELP_ROUTE} element={<HelpPage />} />
             </Route>
           </Routes>
         </Suspense>

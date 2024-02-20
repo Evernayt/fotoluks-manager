@@ -18,7 +18,7 @@ const DefectiveGoodsTable = () => {
   const [supplies, setSupplies] = useState<ISupply[]>([]);
 
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
-  const search = useAppSelector((state) => state.moysklad.search);
+  const search = useAppSelector((state) => state.moysklad.defectiveGoodsSearch);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();

@@ -1,0 +1,13 @@
+.container {
+  height: calc(100vh - var(--navbar-height));
+  padding: var(--page-panel-margin);
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  overflow-y: auto;
+}
+
+.card {
+  height: max-content;
+  padding-bottom: var(--space-md);
+}

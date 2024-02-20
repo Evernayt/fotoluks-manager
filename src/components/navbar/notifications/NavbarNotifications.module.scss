@@ -2,22 +2,6 @@ $notifications-height: 450px;
 $notifications-width: 450px;
 $sentry-height: 50px;
 
-.button_container {
-  position: relative;
-}
-
-.badge {
-  position: absolute;
-  z-index: 999;
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  background-color: var(--danger-color);
-  border: 2px solid var(--card-bg-color);
-  right: 0px;
-  top: 0px;
-}
-
 .notifications_header {
   display: flex;
   justify-content: space-between;

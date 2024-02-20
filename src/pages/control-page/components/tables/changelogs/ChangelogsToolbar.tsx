@@ -7,6 +7,7 @@ import { ICON_SIZE, ICON_STROKE, MODES } from 'constants/app';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { controlActions } from 'store/reducers/ControlSlice';
 import { modalActions } from 'store/reducers/ModalSlice';
+import { checkAccessByRole } from 'helpers/employee';
 
 interface ChangelogsToolbarProps {
   reload: () => void;
@@ -33,6 +34,7 @@ const ChangelogsToolbar: FC<ChangelogsToolbarProps> = ({
   onLimitChange,
 }) => {
   const search = useAppSelector((state) => state.control.search);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
 
@@ -52,13 +54,15 @@ const ChangelogsToolbar: FC<ChangelogsToolbarProps> = ({
   const leftSection = () => {
     return (
       <>
-        <Button
-          leftIcon={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE} />}
-          colorScheme="yellow"
-          onClick={openChangelogsEditModal}
-        >
-          Добавить
-        </Button>
+        {checkAccessByRole(employee, 'Разработчик') && (
+          <Button
+            leftIcon={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE} />}
+            colorScheme="yellow"
+            onClick={openChangelogsEditModal}
+          >
+            Добавить
+          </Button>
+        )}
         <Button
           leftIcon={<IconRefresh size={ICON_SIZE} stroke={ICON_STROKE} />}
           onClick={() => reload()}

@@ -36,7 +36,7 @@ html[data-theme='dark'] {
   /* COLORS */
   --primary-color: #ffeb8a;
   --primary-deemphasized-color: #fff3b8;
-  --secondary-deemphasized-color: rgba(255, 255, 255, 0.04);
+  --secondary-deemphasized-color: #2f2f2d;
   --card-bg-color: #262624;
   --bg-color: #1a1a18;
   --table-border-color: #42413e;
@@ -117,26 +117,6 @@ html[data-theme='dark'] {
 .primary-icon {
   stroke: var(--primary-icon-color);
 }
-
-/* .primary-checked-icon {
-  stroke: var(--primary-checked-icon-color);
-}
-
-.secondary-icon {
-  stroke: var(--secondary-icon-color);
-}
-
-.secondary-checked-icon {
-  stroke: var(--secondary-checked-icon-color);
-}
-
-.secondary-disabled-icon {
-  stroke: var(--disabled-secondary-icon-color);
-}
-
-.secondary-dark-icon {
-  stroke: var(--secondary-dark-icon-color);
-} */
 
 .link-icon {
   stroke: var(--link-icon-color);

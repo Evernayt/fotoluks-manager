@@ -1,6 +1,10 @@
 .row {
   border-bottom: 0.5px solid var(--table-border-color);
 
+  &:hover {
+    background-color: var(--hover-card-bg-color);
+  }
+
   &:last-child {
     border-bottom: none;
   }
@@ -8,6 +12,10 @@
 
 .clickable_row {
   cursor: pointer;
+}
+
+.active_row {
+  color: var(--success-color);
 }
 
 .editor_row {

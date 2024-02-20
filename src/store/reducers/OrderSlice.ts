@@ -39,6 +39,7 @@ type OrderState = {
   sortings: SortingState;
   orderFilePathsForUpload: IFilePathForUpload[];
   orderFilesForDelete: number[];
+  lastActiveRowId: number;
 };
 
 const initialState: OrderState = {
@@ -65,6 +66,7 @@ const initialState: OrderState = {
   sortings: [{ id: 'status', desc: false }],
   orderFilePathsForUpload: [],
   orderFilesForDelete: [],
+  lastActiveRowId: 0,
 };
 
 export const orderSlice = createSlice({
@@ -341,6 +343,9 @@ export const orderSlice = createSlice({
     },
     addOrderFilesForDelete(state, action: PayloadAction<number[]>) {
       state.orderFilesForDelete.push(...action.payload);
+    },
+    setLastActiveRowId(state, action: PayloadAction<number>) {
+      state.lastActiveRowId = action.payload;
     },
     clearState() {
       return initialState;

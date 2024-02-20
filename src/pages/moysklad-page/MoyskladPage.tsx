@@ -1,6 +1,6 @@
 import { Card } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import MoyskladSidebar from './components/ControlSidebar';
+import MoyskladSidebar from './components/MoyskladSidebar';
 import StocksTable from './components/tables/stocks/StocksTable';
 import EndingGoodsProductModal from './modals/ending-goods/product-modal/EndingGoodsProductModal';
 import { lazy, useEffect } from 'react';
@@ -13,9 +13,10 @@ import { endingGoodsActions } from 'store/reducers/EndingGoodsSlice';
 import UpdatePricesModal from './modals/update-prices/update-prices-modal/UpdatePricesModal';
 import { defectiveGoodsActions } from 'store/reducers/DefectiveGoodsSlice';
 import DefectiveGoodsForReturnModal from './modals/defective-goods/for-return-modal/DefectiveGoodsForReturnModal';
+import AssortmentsTable from './components/tables/assortments/AssortmentsTable';
+import MovesTable from './components/tables/moves/MovesTable';
 import styles from './MoyskladPage.module.scss';
 
-const MovesTable = lazy(() => import('./components/tables/moves/MovesTable'));
 const EndingGoodsTable = lazy(
   () => import('./components/tables/ending-goods/EndingGoodsTable')
 );
@@ -54,14 +55,16 @@ const MoyskladPage = () => {
   const renderTable = () => {
     switch (activeSidebarIndex) {
       case 0:
-        return <StocksTable />;
+        return <AssortmentsTable />;
       case 1:
-        return <MovesTable />;
+        return <StocksTable />;
       case 2:
-        return <EndingGoodsTable />;
+        return <MovesTable />;
       case 3:
-        return <UpdatePricesTable />;
+        return <EndingGoodsTable />;
       case 4:
+        return <UpdatePricesTable />;
+      case 5:
         return <DefectiveGoodsTable />;
       default:
         return null;

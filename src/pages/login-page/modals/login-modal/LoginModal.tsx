@@ -39,6 +39,7 @@ import ShopAPI from 'api/ShopAPI/ShopAPI';
 import { getStoreByShop } from 'helpers/moysklad';
 import FavoriteAPI from 'api/FavoriteAPI/FavoriteAPI';
 import { getErrorToast } from 'helpers/toast';
+import { PasswordInput } from 'components';
 import styles from './LoginModal.module.scss';
 
 interface Values {
@@ -189,10 +190,9 @@ const LoginModal = () => {
                             stroke={ICON_STROKE}
                           />
                         </InputLeftElement>
-                        <Input
+                        <PasswordInput
                           {...field}
-                          placeholder="Пароль"
-                          type="password"
+                          pl="35px"
                           isDisabled={props.isSubmitting}
                         />
                       </InputGroup>

@@ -3,23 +3,21 @@ import { Table } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'hooks';
-import UpdatePricesToolbar from './UpdatePricesToolbar';
-import { updatePricesTableColumns } from './UpdatePricesTable.colums';
+import AssortmentsToolbar from './AssortmentsToolbar';
+import { assortmentsTableColumns } from './AssortmentsTable.colums';
+import { IAssortment } from 'models/api/moysklad/IAssortment';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
 import MoyskladAPI from 'api/MoyskladAPI/MoyskladAPI';
-import { ISupply } from 'models/api/moysklad/ISupply';
-import { Row } from '@tanstack/react-table';
-import { modalActions } from 'store/reducers/ModalSlice';
 import { getErrorToast } from 'helpers/toast';
 
-const UpdatePricesTable = () => {
+const AssortmentsTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(25);
-  const [supplies, setSupplies] = useState<ISupply[]>([]);
+  const [assortments, setAssortments] = useState<IAssortment[]>([]);
 
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
-  const search = useAppSelector((state) => state.moysklad.updatePricesSearch);
+  const search = useAppSelector((state) => state.moysklad.assortmentsSearch);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
@@ -27,27 +25,27 @@ const UpdatePricesTable = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchSupplies(page);
+      fetchAssortments(page);
     } else {
       reload(page);
     }
   }, [debouncedSearchTerm]);
 
-  const fetchSupplies = (page: number) => {
+  const fetchAssortments = (page: number) => {
     const offset = limit * (page - 1);
     dispatch(moyskladActions.setIsLoading(true));
 
-    MoyskladAPI.getSupplies({ limit, offset, search })
+    MoyskladAPI.getAssortment({ limit, offset, search })
       .then((data) => {
-        setSupplies(data.rows || []);
+        setAssortments(data.rows || []);
         setPageCount(Math.ceil((data.meta?.size || 0) / limit));
       })
-      .catch(() => toast(getErrorToast('UpdatePricesTable.fetchSupplies')))
+      .catch(() => toast(getErrorToast('AssortmentsTable.fetchAssortments')))
       .finally(() => dispatch(moyskladActions.setIsLoading(false)));
   };
 
   const reload = (page: number) => {
-    fetchSupplies(page);
+    fetchAssortments(page);
   };
 
   const pageChangeHandler = (page: number) => {
@@ -55,30 +53,20 @@ const UpdatePricesTable = () => {
     reload(page);
   };
 
-  const rowClickHandler = (row: Row<ISupply>) => {
-    dispatch(
-      modalActions.openModal({
-        modal: 'updatePricesModal',
-        props: { id: row.original.id, name: row.original.name },
-      })
-    );
-  };
-
   return (
     <>
-      <UpdatePricesToolbar
+      <AssortmentsToolbar
         reload={() => reload(page)}
         onLimitChange={setLimit}
       />
       <Table
-        columns={updatePricesTableColumns}
-        data={supplies}
+        columns={assortmentsTableColumns}
+        data={assortments}
         isLoading={isLoading}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
-        onRowClick={rowClickHandler}
       />
     </>
   );
 };
 
-export default UpdatePricesTable;
+export default AssortmentsTable;

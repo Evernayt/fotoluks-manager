@@ -83,6 +83,8 @@ const OrderFilesModal = () => {
       dispatch(
         orderActions.addOrderFilePathsForUpload(orderFilePathsForUpload)
       );
+
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 

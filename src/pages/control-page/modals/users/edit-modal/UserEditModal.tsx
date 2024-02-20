@@ -31,6 +31,7 @@ import {
   EditableAvatar,
   MaskedInput,
   MoyskladCounterpartyModal,
+  PasswordInput,
 } from 'components';
 import { correctPhone, getFileImageSrc } from 'helpers';
 import FileAPI from 'api/FileAPI/FileAPI';
@@ -431,11 +432,9 @@ const UserEditModal = () => {
                                     }
                                   >
                                     <FormLabel>Пароль</FormLabel>
-                                    <Input
+                                    <PasswordInput
                                       {...field}
-                                      placeholder="Пароль"
                                       isDisabled={isPhoneVerified}
-                                      type="password"
                                     />
                                     <FormErrorMessage>
                                       {meta.error}

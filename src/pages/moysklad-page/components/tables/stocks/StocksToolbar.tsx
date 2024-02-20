@@ -28,12 +28,12 @@ const limitOptions: ISelectOption[] = [
 ];
 
 const StocksToolbar: FC<StocksToolbarProps> = ({ reload, onLimitChange }) => {
-  const search = useAppSelector((state) => state.moysklad.search);
+  const search = useAppSelector((state) => state.moysklad.stocksSearch);
 
   const dispatch = useAppDispatch();
 
   const searchHandler = (search: string) => {
-    dispatch(moyskladActions.setSearch(search));
+    dispatch(moyskladActions.setStocksSearch(search));
   };
 
   const leftSection = () => {

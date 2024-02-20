@@ -15,7 +15,7 @@ export interface IEmployee {
   avatar: string | null;
   apps?: IApp[];
   departments?: IDepartment[];
-  role?: IRole;
+  roles?: IRole[];
 }
 
 export type IEmployeeData = IData<IEmployee[]>;

@@ -8,6 +8,7 @@ const PROFILE_ROUTE = '/PROFILE';
 const SETTINGS_ROUTE = '/SETTINGS';
 const TASKS_ROUTE = '/TASKS';
 const TASK_DETAIL_ROUTE = '/TASK_DETAIL';
+const HELP_ROUTE = '/HELP';
 
 export {
   LOGIN_ROUTE,
@@ -20,4 +21,5 @@ export {
   SETTINGS_ROUTE,
   TASKS_ROUTE,
   TASK_DETAIL_ROUTE,
+  HELP_ROUTE,
 };

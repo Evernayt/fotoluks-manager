@@ -37,6 +37,9 @@ const OrdersTable = () => {
   const forceUpdate = useAppSelector((state) => state.order.forceUpdate);
   const sortings = useAppSelector((state) => state.order.sortings);
   const orderEditors = useAppSelector((state) => state.order.orderEditors);
+  const lastActiveRowId = useAppSelector(
+    (state) => state.order.lastActiveRowId
+  );
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
@@ -94,6 +97,7 @@ const OrdersTable = () => {
   };
 
   const rowClickHandler = (row: Row<IOrder>) => {
+    dispatch(orderActions.setLastActiveRowId(row.original.id));
     navigate(ORDER_DETAIL_ROUTE, {
       state: { orderId: row.original.id },
     });
@@ -123,6 +127,7 @@ const OrdersTable = () => {
         }}
         editors={orderEditors}
         sorting={sortings}
+        lastActiveRowId={lastActiveRowId}
         onSortingChange={sortingChangeHandler}
         onRowClick={rowClickHandler}
         onContextMenu={handleContextMenu}

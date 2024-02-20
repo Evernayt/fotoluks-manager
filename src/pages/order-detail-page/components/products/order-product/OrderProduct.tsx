@@ -1,14 +1,18 @@
-import { Card, CardBody, Heading, Text } from '@chakra-ui/react';
+import { Card, CardBody, Heading, IconButton, Text } from '@chakra-ui/react';
 import { IOrderProduct } from 'models/api/IOrderProduct';
 import { FC, useDeferredValue } from 'react';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useContextMenu } from 'react-contexify';
 import { ORDER_PRODUCT_MENU_ID } from '../context-menu/OrderProductContextMenu';
 import { modalActions } from 'store/reducers/ModalSlice';
-import { MODES } from 'constants/app';
+import { MAIN_FOLDER_NAME, MODES } from 'constants/app';
 import { noImage } from 'constants/images';
 import { calcSumWithDiscount } from 'pages/order-detail-page/OrderDetailPage.service';
 import styles from './OrderProduct.module.scss';
+import { IconFolderOpen, IconFolderPlus, IconTrash } from '@tabler/icons-react';
+import { getMainFolder } from 'helpers/localStorage';
+import { removeBeforeString } from 'helpers';
+import { orderActions } from 'store/reducers/OrderSlice';
 
 interface OrderProductProps {
   orderProduct: IOrderProduct;
@@ -19,6 +23,10 @@ const OrderProduct: FC<OrderProductProps> = ({
   orderProduct,
   orderDiscount,
 }) => {
+  const orderProductsForCreate = useAppSelector(
+    (state) => state.order.orderProductsForCreate
+  );
+
   const deferredDiscount = useDeferredValue(orderProduct.discount);
 
   const currectDiscount = orderProduct.product?.discountProhibited
@@ -46,13 +54,46 @@ const OrderProduct: FC<OrderProductProps> = ({
     show({ event, props: orderProduct });
   };
 
+  const openFolder = () => {
+    const mainFolder = getMainFolder();
+    const folderPath = mainFolder + orderProduct.folder;
+    window.electron.ipcRenderer.sendMessage('open-folder', [folderPath]);
+  };
+
+  const pinFolder = () => {
+    const mainFolder = getMainFolder();
+
+    window.electron.ipcRenderer.sendMessage('select-directory', [mainFolder]);
+    window.electron.ipcRenderer.once('select-directory', (arg: any) => {
+      const fullPath: string = arg[0][0];
+      if (!fullPath) return;
+
+      const folder = removeBeforeString(fullPath, MAIN_FOLDER_NAME);
+      const updatedOrderProduct = { ...orderProduct, folder };
+
+      const isFoundForCreate = orderProductsForCreate.find(
+        (x) => x.id === orderProduct.id
+      );
+
+      if (isFoundForCreate) {
+        dispatch(orderActions.addOrderProductsForCreate(updatedOrderProduct));
+      } else {
+        dispatch(orderActions.addOrderProductsForUpdate(updatedOrderProduct));
+      }
+
+      dispatch(orderActions.updateOrderProduct(updatedOrderProduct));
+    });
+  };
+
   return (
     <Card
       className={styles.container}
-      onClick={() => openEditProductModal(orderProduct)}
       onContextMenu={(e) => handleContextMenu(orderProduct, e)}
     >
-      <CardBody className={styles.body}>
+      <div
+        className={styles.left_section}
+        onClick={() => openEditProductModal(orderProduct)}
+      >
         <div className={styles.header}>
           <img
             className={styles.image}
@@ -75,7 +116,26 @@ const OrderProduct: FC<OrderProductProps> = ({
         {orderProduct.comment && (
           <Text mt="var(--space-sm)">{orderProduct.comment}</Text>
         )}
-      </CardBody>
+      </div>
+      <div className={styles.right_section}>
+        {orderProduct.folder ? (
+          <IconButton
+            icon={<IconFolderOpen size={14} />}
+            aria-label="open"
+            isRound
+            size="xs"
+            onClick={openFolder}
+          />
+        ) : (
+          <IconButton
+            icon={<IconFolderPlus size={14} />}
+            aria-label="pin"
+            isRound
+            size="xs"
+            onClick={pinFolder}
+          />
+        )}
+      </div>
     </Card>
   );
 };

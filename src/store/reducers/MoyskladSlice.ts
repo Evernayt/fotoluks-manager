@@ -7,8 +7,12 @@ type MoyskladState = {
   activeSidebarIndex: number;
   sidebarIsOpen: boolean;
   isLoading: boolean;
-  search: string;
   forceUpdate: boolean;
+  assortmentsSearch: string;
+  defectiveGoodsSearch: string;
+  movesSearch: string;
+  stocksSearch: string;
+  updatePricesSearch: string;
 };
 
 const initialState: MoyskladState = {
@@ -17,8 +21,12 @@ const initialState: MoyskladState = {
   activeSidebarIndex: 0,
   sidebarIsOpen: true,
   isLoading: false,
-  search: '',
   forceUpdate: false,
+  assortmentsSearch: '',
+  defectiveGoodsSearch: '',
+  movesSearch: '',
+  stocksSearch: '',
+  updatePricesSearch: '',
 };
 
 export const moyskladSlice = createSlice({
@@ -40,11 +48,23 @@ export const moyskladSlice = createSlice({
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
-    setSearch(state, action: PayloadAction<string>) {
-      state.search = action.payload;
-    },
     setForceUpdate(state, action: PayloadAction<boolean>) {
       state.forceUpdate = action.payload;
+    },
+    setAssortmentsSearch(state, action: PayloadAction<string>) {
+      state.assortmentsSearch = action.payload;
+    },
+    setDefectiveGoodsSearch(state, action: PayloadAction<string>) {
+      state.defectiveGoodsSearch = action.payload;
+    },
+    setMovesSearch(state, action: PayloadAction<string>) {
+      state.movesSearch = action.payload;
+    },
+    setStocksSearch(state, action: PayloadAction<string>) {
+      state.stocksSearch = action.payload;
+    },
+    setUpdatePricesSearch(state, action: PayloadAction<string>) {
+      state.updatePricesSearch = action.payload;
     },
     clearState() {
       return initialState;

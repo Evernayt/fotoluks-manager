@@ -29,7 +29,7 @@ const StocksTable = () => {
   const [assortments, setAssortments] = useState<IAssortmentWithStore[]>([]);
 
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
-  const search = useAppSelector((state) => state.moysklad.search);
+  const search = useAppSelector((state) => state.moysklad.stocksSearch);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();

@@ -5,11 +5,13 @@ import { IPosition } from 'models/api/moysklad/IPosition';
 type MoveState = {
   positions: IPosition[];
   moveEditors: IEditor[];
+  lastActiveRowId: string;
 };
 
 const initialState: MoveState = {
   positions: [],
   moveEditors: [],
+  lastActiveRowId: '',
 };
 
 export const moveSlice = createSlice({
@@ -38,6 +40,9 @@ export const moveSlice = createSlice({
       state.moveEditors = state.moveEditors.filter(
         (x) => x.employee.id !== action.payload
       );
+    },
+    setLastActiveRowId(state, action: PayloadAction<string>) {
+      state.lastActiveRowId = action.payload;
     },
     clearState() {
       return initialState;

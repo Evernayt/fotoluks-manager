@@ -69,6 +69,8 @@ const AttachFiles: FC<AttachFilesProps> = ({ orderProductId }) => {
       dispatch(
         orderActions.addOrderFilePathsForUpload(orderFilePathsForUpload)
       );
+
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 

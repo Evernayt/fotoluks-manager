@@ -34,6 +34,7 @@ interface TableProps<TData, TValue> {
   editors?: IEditor[];
   sorting?: SortingState;
   enableRowSelection?: boolean;
+  lastActiveRowId?: number | string;
   updateData?: (rowIndex: number, columnId: string, value: any) => void;
   autoResetPageIndex?: boolean;
   onSortingChange?: (updater: Updater<SortingState>) => void;
@@ -55,6 +56,7 @@ const Table = <TData, TValue>({
   editors,
   sorting,
   enableRowSelection,
+  lastActiveRowId,
   updateData,
   autoResetPageIndex,
   onSortingChange,
@@ -71,6 +73,11 @@ const Table = <TData, TValue>({
     setRowSelection(select);
     if (!onRowSelect) return;
     onRowSelect(select);
+  };
+
+  const rowClickHandler = (row: Row<TData>) => {
+    if (!onRowClick) return;
+    onRowClick(row);
   };
 
   const table = useReactTable({
@@ -173,7 +180,8 @@ const Table = <TData, TValue>({
                       <TableRow
                         row={row}
                         isClickable={isClickable}
-                        onRowClick={onRowClick}
+                        lastActiveRowId={lastActiveRowId}
+                        onRowClick={rowClickHandler}
                         onContextMenu={onContextMenu}
                         key={row.id}
                       />

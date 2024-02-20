@@ -227,7 +227,7 @@ const OrderDetailPage = () => {
   const createOrder = (filesForUpload: IFileForUpload[]) => {
     if (!employee) return;
     const isOrderCreate = order.id === 0;
-    //@ts-ignore
+
     const body = createOrderBodyForSave(
       orderProductsForCreate,
       orderProductsForUpdate,
@@ -238,7 +238,7 @@ const OrderDetailPage = () => {
       activeShop.id,
       orderMembersForCreate,
       orderMembersForDelete,
-      //orderFilesForDelete
+      orderFilesForDelete
     );
 
     OrderAPI.create(body, filesForUpload)

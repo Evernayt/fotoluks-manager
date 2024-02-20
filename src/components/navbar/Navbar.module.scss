@@ -33,7 +33,7 @@
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   background-color: var(--primary-color);
-  transition: height 200ms;
+  transition: height 200ms, opacity 200ms;
 }
 
 .right_section {

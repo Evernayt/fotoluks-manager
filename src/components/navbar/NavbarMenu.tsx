@@ -14,9 +14,15 @@ import {
   IconMoon,
   IconSun,
   IconMessageReport,
+  IconHelp,
 } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE } from 'constants/app';
-import { LOGIN_ROUTE, PROFILE_ROUTE, SETTINGS_ROUTE } from 'constants/paths';
+import {
+  HELP_ROUTE,
+  LOGIN_ROUTE,
+  PROFILE_ROUTE,
+  SETTINGS_ROUTE,
+} from 'constants/paths';
 import { getEmployeeFullName } from 'helpers/employee';
 import { setToken } from 'helpers/localStorage';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
@@ -49,6 +55,11 @@ const NavbarMenu = () => {
   const openSettingsPage = () => {
     if (location.pathname === SETTINGS_ROUTE) return;
     navigate(SETTINGS_ROUTE);
+  };
+
+  const openHelpPage = () => {
+    if (location.pathname === HELP_ROUTE) return;
+    navigate(HELP_ROUTE);
   };
 
   const openReportModal = () => {
@@ -109,11 +120,18 @@ const NavbarMenu = () => {
           {colorMode === 'light' ? 'Тема: Светлая' : 'Тема: Темная'}
         </MenuItem>
         <MenuItem
+          icon={<IconHelp size={ICON_SIZE} stroke={ICON_STROKE} />}
+          onClick={openHelpPage}
+        >
+          Обучение
+        </MenuItem>
+        <MenuItem
           icon={<IconMessageReport size={ICON_SIZE} stroke={ICON_STROKE} />}
           onClick={openReportModal}
         >
           Оставить отзыв
         </MenuItem>
+        <MenuDivider />
         <MenuItem
           icon={
             <IconLogout

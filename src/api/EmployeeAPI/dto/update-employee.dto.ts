@@ -4,6 +4,5 @@ export class UpdateEmployeeDto {
   readonly surname?: string;
   readonly login?: string;
   readonly avatar?: string | null;
-  readonly roleId?: number;
   readonly archive?: boolean;
 }

@@ -19,7 +19,7 @@ import { Field, FieldProps, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { LoaderWrapper } from 'components/ui/loader/Loader';
 import { controlActions } from 'store/reducers/ControlSlice';
-import { EditableAvatar } from 'components';
+import { EditableAvatar, PasswordInput } from 'components';
 import { getFileImageSrc } from 'helpers';
 import FileAPI from 'api/FileAPI/FileAPI';
 import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
@@ -34,6 +34,7 @@ import { employeeActions } from 'store/reducers/EmployeeSlice';
 import { getRecentLogins, setRecentLogins } from 'helpers/localStorage';
 import * as Yup from 'yup';
 import { getErrorToast } from 'helpers/toast';
+import { IRole } from 'models/api/IRole';
 import styles from './EmployeeEditModal.module.scss';
 
 interface FormValues {
@@ -41,7 +42,7 @@ interface FormValues {
   surname: string;
   login: string;
   password: string;
-  roleId: number;
+  roles: IRole[];
   apps: IApp[];
   departments: IDepartment[];
 }
@@ -51,7 +52,7 @@ const INITIAL_FORM_STATE: FormValues = {
   surname: '',
   login: '',
   password: '',
-  roleId: 0,
+  roles: [],
   apps: [],
   departments: [],
 };
@@ -60,9 +61,9 @@ const editFormSchema = Yup.object({
   name: Yup.string().required(REQUIRED_INVALID_MSG),
   surname: Yup.string().required(REQUIRED_INVALID_MSG),
   login: Yup.string().required(REQUIRED_INVALID_MSG),
-  roleId: Yup.number()
-    .min(1, REQUIRED_INVALID_MSG)
-    .required(REQUIRED_INVALID_MSG),
+  roles: Yup.array().min(1, REQUIRED_INVALID_MSG),
+  apps: Yup.array().min(1, REQUIRED_INVALID_MSG),
+  departments: Yup.array().min(1, REQUIRED_INVALID_MSG),
 });
 
 const addFormSchema = editFormSchema.shape({
@@ -103,7 +104,7 @@ const EmployeeEditModal = () => {
           surname: data.surname,
           login: data.login,
           password: '',
-          roleId: data.role?.id || 0,
+          roles: data.roles || [],
           apps: data.apps || [],
           departments: data.departments || [],
         });
@@ -119,11 +120,12 @@ const EmployeeEditModal = () => {
       login: values.login,
       password: values.password,
       avatar: avatarLink,
-      roleId: values.roleId,
     };
 
+    const roleIds: number[] = [];
     const appIds: number[] = [];
     const departmentIds: number[] = [];
+    values.roles.forEach((role) => roleIds.push(role.id));
     values.apps.forEach((app) => appIds.push(app.id));
     values.departments.forEach((department) =>
       departmentIds.push(department.id)
@@ -132,6 +134,9 @@ const EmployeeEditModal = () => {
     return new Promise((resolve, reject) => {
       AuthAPI.registration(createdEmployee)
         .then((data) => {
+          if (roleIds.length) {
+            EmployeeAPI.addRole({ roleIds, employeeId: data.id });
+          }
           if (appIds.length) {
             EmployeeAPI.addApp({ appIds, employeeId: data.id });
           }
@@ -152,11 +157,12 @@ const EmployeeEditModal = () => {
       surname: values.surname,
       login: values.login,
       avatar: avatarLink,
-      roleId: values.roleId,
     };
 
+    const roleIds: number[] = [];
     const appIds: number[] = [];
     const departmentIds: number[] = [];
+    values.roles.forEach((role) => roleIds.push(role.id));
     values.apps.forEach((app) => appIds.push(app.id));
     values.departments.forEach((department) =>
       departmentIds.push(department.id)
@@ -165,6 +171,9 @@ const EmployeeEditModal = () => {
     return new Promise((resolve, reject) => {
       EmployeeAPI.update(updatedEmployee)
         .then(async (data) => {
+          if (roleIds.length) {
+            await EmployeeAPI.addRole({ roleIds, employeeId: data.id });
+          }
           if (appIds.length) {
             await EmployeeAPI.addApp({ appIds, employeeId: data.id });
           }
@@ -336,11 +345,7 @@ const EmployeeEditModal = () => {
                                     isInvalid={!!meta.error && meta.touched}
                                   >
                                     <FormLabel>Пароль</FormLabel>
-                                    <Input
-                                      {...field}
-                                      placeholder="Пароль"
-                                      type="password"
-                                    />
+                                    <PasswordInput {...field} />
                                     <FormErrorMessage>
                                       {meta.error}
                                     </FormErrorMessage>
@@ -353,15 +358,17 @@ const EmployeeEditModal = () => {
                             <Divider orientation="vertical" mx={4} />
                           </div>
                           <div className={styles.form_column}>
-                            <Field name="roleId">
+                            <Field name="roles">
                               {({ field, form, meta }: FieldProps) => (
                                 <FormControl
                                   isInvalid={!!meta.error && meta.touched}
                                 >
-                                  <FormLabel>Роль</FormLabel>
+                                  <FormLabel>Роли</FormLabel>
                                   <SelectField
-                                    placeholder="Роль"
+                                    placeholder="Роли"
                                     options={roles}
+                                    isMulti
+                                    isClearable={false}
                                     getOptionLabel={(option) => option.name}
                                     getOptionValue={(option) => option.id}
                                     fieldProps={field}
@@ -374,8 +381,10 @@ const EmployeeEditModal = () => {
                               )}
                             </Field>
                             <Field name="apps">
-                              {({ field, form }: FieldProps) => (
-                                <FormControl>
+                              {({ field, form, meta }: FieldProps) => (
+                                <FormControl
+                                  isInvalid={!!meta.error && meta.touched}
+                                >
                                   <FormLabel>Доступные приложения</FormLabel>
                                   <SelectField
                                     placeholder="Приложения"
@@ -389,12 +398,17 @@ const EmployeeEditModal = () => {
                                     fieldProps={field}
                                     formProps={form}
                                   />
+                                  <FormErrorMessage>
+                                    {meta.error}
+                                  </FormErrorMessage>
                                 </FormControl>
                               )}
                             </Field>
                             <Field name="departments">
-                              {({ field, form }: FieldProps) => (
-                                <FormControl>
+                              {({ field, form, meta }: FieldProps) => (
+                                <FormControl
+                                  isInvalid={!!meta.error && meta.touched}
+                                >
                                   <FormLabel>Отделы</FormLabel>
                                   <SelectField
                                     placeholder="Отделы"
@@ -406,6 +420,9 @@ const EmployeeEditModal = () => {
                                     fieldProps={field}
                                     formProps={form}
                                   />
+                                  <FormErrorMessage>
+                                    {meta.error}
+                                  </FormErrorMessage>
                                 </FormControl>
                               )}
                             </Field>

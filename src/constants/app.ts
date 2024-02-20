@@ -31,6 +31,13 @@ enum NOTIF_CATEGORY_ID {
   Изменен_заказ = 5,
 }
 
+enum ROLE_ID {
+  Разработчик = 1,
+  Админ = 2,
+  Менеджер = 3,
+  Сотрудник = 4,
+}
+
 const UI_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 const NOT_INDICATED = 'Не указано';
 const FETCH_MORE_LIMIT = 25;
@@ -78,6 +85,7 @@ export {
   MODES,
   APP_ID,
   NOTIF_CATEGORY_ID,
+  ROLE_ID,
   UI_DATE_FORMAT,
   NOT_INDICATED,
   FETCH_MORE_LIMIT,

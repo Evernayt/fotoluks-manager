@@ -35,7 +35,7 @@ const DefectiveGoodsToolbar: FC<DefectiveGoodsToolbarProps> = ({
   const foundProduct = useAppSelector(
     (state) => state.defectiveGoods.foundProduct
   );
-  const search = useAppSelector((state) => state.moysklad.search);
+  const search = useAppSelector((state) => state.moysklad.defectiveGoodsSearch);
 
   const dispatch = useAppDispatch();
 
@@ -44,7 +44,7 @@ const DefectiveGoodsToolbar: FC<DefectiveGoodsToolbarProps> = ({
   };
 
   const searchHandler = (search: string) => {
-    dispatch(moyskladActions.setSearch(search));
+    dispatch(moyskladActions.setDefectiveGoodsSearch(search));
   };
 
   const leftSection = () => {

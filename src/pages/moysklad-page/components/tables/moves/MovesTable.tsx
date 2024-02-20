@@ -12,6 +12,7 @@ import { Row } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 import { MOVES_DETAIL_ROUTE } from 'constants/paths';
 import { getErrorToast } from 'helpers/toast';
+import { moveActions } from 'store/reducers/MoveSlice';
 
 const MovesTable = () => {
   const [pageCount, setPageCount] = useState<number>(1);
@@ -20,8 +21,9 @@ const MovesTable = () => {
   const [moves, setMoves] = useState<IMove[]>([]);
 
   const isLoading = useAppSelector((state) => state.moysklad.isLoading);
-  const search = useAppSelector((state) => state.moysklad.search);
+  const search = useAppSelector((state) => state.moysklad.movesSearch);
   const moveEditors = useAppSelector((state) => state.move.moveEditors);
+  const lastActiveRowId = useAppSelector((state) => state.move.lastActiveRowId);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
@@ -42,9 +44,6 @@ const MovesTable = () => {
 
     MoyskladAPI.getMoves({ limit, offset, search })
       .then((data) => {
-        if (!data.rows?.length) {
-          setPageCount(0);
-        }
         setMoves(data.rows || []);
         setPageCount(Math.ceil((data.meta?.size || 0) / limit));
       })
@@ -62,6 +61,7 @@ const MovesTable = () => {
   };
 
   const rowClickHandler = (row: Row<IMove>) => {
+    dispatch(moveActions.setLastActiveRowId(row.original.id));
     navigate(MOVES_DETAIL_ROUTE, {
       state: { moveId: row.original.id, created: row.original.created },
     });
@@ -75,6 +75,7 @@ const MovesTable = () => {
         data={moves}
         isLoading={isLoading}
         editors={moveEditors}
+        lastActiveRowId={lastActiveRowId}
         pagination={{ page, pageCount, onPageChange: pageChangeHandler }}
         onRowClick={rowClickHandler}
       />

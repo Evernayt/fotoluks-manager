@@ -1,6 +1,7 @@
 import { createColumnHelper, ColumnDef } from '@tanstack/react-table';
 import { IEmployeeWithConnection } from './EmployeesTable.types';
 import EmployeeConnectionState from './cells/EmployeeConnectionState';
+import EmployeeRolesCell from './cells/EmployeeRolesCell';
 
 const columnHelper = createColumnHelper<IEmployeeWithConnection>();
 
@@ -21,8 +22,9 @@ export const employeesTableColumns: ColumnDef<IEmployeeWithConnection, any>[] =
       header: 'Логин',
       meta: { className: 'row_nowrap' },
     }),
-    columnHelper.accessor('role.name', {
-      header: 'Роль',
+    columnHelper.accessor('roles', {
+      header: 'Роли',
+      cell: ({ getValue }) => <EmployeeRolesCell roles={getValue()} />,
       meta: { className: 'row_full' },
     }),
     columnHelper.accessor('connectionStatus', {

@@ -31,12 +31,12 @@ const UpdatePricesToolbar: FC<UpdatePricesToolbarProps> = ({
   reload,
   onLimitChange,
 }) => {
-  const search = useAppSelector((state) => state.moysklad.search);
+  const search = useAppSelector((state) => state.moysklad.updatePricesSearch);
 
   const dispatch = useAppDispatch();
 
   const searchHandler = (search: string) => {
-    dispatch(moyskladActions.setSearch(search));
+    dispatch(moyskladActions.setUpdatePricesSearch(search));
   };
 
   const leftSection = () => {

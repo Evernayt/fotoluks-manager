@@ -107,16 +107,14 @@ const NavbarNotifications = () => {
       autoSelect={false}
       isLazy
     >
-      <div className={styles.button_container}>
-        {notificationsBadge && <div className={styles.badge} />}
-        <MenuButton
-          as={IconButton}
-          icon={<IconBell size={ICON_SIZE} stroke={ICON_STROKE} />}
-          aria-label="bell"
-          isRound
-          onClick={openNotifications}
-        />
-      </div>
+      <MenuButton
+        as={IconButton}
+        icon={<IconBell size={ICON_SIZE} stroke={ICON_STROKE} />}
+        aria-label="bell"
+        colorScheme={notificationsBadge ? 'yellow' : 'gray'}
+        isRound
+        onClick={openNotifications}
+      />
       <MenuList p={0}>
         <div className={styles.notifications_header}>
           <Heading size="md">Уведомления</Heading>

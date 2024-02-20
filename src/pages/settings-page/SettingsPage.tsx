@@ -24,7 +24,6 @@ import { IconFolder } from '@tabler/icons-react';
 import { Select } from 'components';
 import { appActions } from 'store/reducers/AppSlice';
 import packageInfo from '../../../release/app/package.json';
-import styles from './SettingsPage.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN_ROUTE } from 'constants/paths';
 import { employeeActions } from 'store/reducers/EmployeeSlice';
@@ -36,6 +35,7 @@ import { taskActions } from 'store/reducers/TaskSlice';
 import { moveActions } from 'store/reducers/MoveSlice';
 import socketio from 'socket/socketio';
 import { getErrorToast, getSuccessToast } from 'helpers/toast';
+import styles from './SettingsPage.module.scss';
 
 const SettingsPage = () => {
   const [folder, setFolder] = useState<string>(getMainFolder());

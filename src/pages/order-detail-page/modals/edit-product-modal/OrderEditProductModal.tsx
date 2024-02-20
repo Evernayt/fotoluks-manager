@@ -114,7 +114,11 @@ const OrderEditProductModal = () => {
   const selectProduct = (product: IProduct) => {
     setProduct(product);
     setPrice(product.price.toString());
-    setOrderProductId(uuidv4());
+
+    if (!isAdded) {
+      deleteOrderFiles();
+      setOrderProductId(uuidv4());
+    }
   };
 
   const addProduct = () => {
@@ -194,14 +198,16 @@ const OrderEditProductModal = () => {
     }
   };
 
+  const deleteOrderFiles = () => {
+    dispatch(
+      orderActions.deleteOrderFilePathForUploadByOrderProductId(orderProductId)
+    );
+    dispatch(orderActions.deleteOrderFilesByOrderProductId(orderProductId));
+  };
+
   const closeModal = (orderProductAdded = isAdded) => {
     if (!orderProductAdded) {
-      dispatch(
-        orderActions.deleteOrderFilePathForUploadByOrderProductId(
-          orderProductId
-        )
-      );
-      dispatch(orderActions.deleteOrderFilesByOrderProductId(orderProductId));
+      deleteOrderFiles();
     }
 
     setProduct(null);
@@ -236,9 +242,9 @@ const OrderEditProductModal = () => {
             <div className={styles.search_container}>
               <OrderProductSearch
                 placeholder={
-                  mode === MODES.ADD_MODE
-                    ? 'Добавить услугу — введите наименование'
-                    : 'Заменить услугу — введите наименование'
+                  product
+                    ? 'Заменить услугу — введите наименование'
+                    : 'Добавить услугу — введите наименование'
                 }
                 style={{ width: '100%' }}
                 onProductClick={selectProduct}

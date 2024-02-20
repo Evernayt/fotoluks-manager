@@ -5,6 +5,7 @@ import { AddDepartmentDto } from './dto/add-department.dto';
 import { GetEmployeesDto } from './dto/get-employees.dto';
 import { UpdateEmployeePasswordDto } from './dto/update-employee-password.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { AddRoleDto } from './dto/add-role.dto';
 
 export default class EmployeeAPI {
   static async getAll(
@@ -37,6 +38,11 @@ export default class EmployeeAPI {
       'employees/password',
       updateEmployeePasswordDto
     );
+    return data;
+  }
+
+  static async addRole(addRoleDto?: AddRoleDto) {
+    const { data } = await $authHost.post('employees/role', addRoleDto);
     return data;
   }
 

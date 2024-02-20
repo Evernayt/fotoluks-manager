@@ -8,47 +8,60 @@ import {
   IconSquareNumber1,
   IconTruckDelivery,
   IconEggCracked,
+  IconSquareLetterA,
 } from '@tabler/icons-react';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
+import { checkAccessByLevel } from 'helpers/employee';
 
 const MoyskladSidebar = () => {
   const activeSidebarIndex = useAppSelector(
     (state) => state.moysklad.activeSidebarIndex
   );
   const sidebarIsOpen = useAppSelector((state) => state.moysklad.sidebarIsOpen);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const dispatch = useAppDispatch();
 
-  const items = useMemo<ISidebarItem[]>(
-    () => [
+  const items = useMemo<ISidebarItem[]>(() => {
+    const publicItems = [
       {
-        id: 0,
+        id: 1,
+        Icon: IconSquareLetterA,
+        name: 'Ассортимент',
+      },
+      {
+        id: 2,
         Icon: IconSquareNumber1,
         name: 'Остатки',
       },
       {
-        id: 1,
+        id: 3,
         Icon: IconTruckDelivery,
         name: 'Перемещение',
       },
       {
-        id: 2,
+        id: 4,
         Icon: IconShoppingCart,
         name: 'Заканчивающиеся',
       },
-      {
-        id: 3,
-        Icon: IconCurrencyRubel,
-        name: 'Обновить цены',
-      },
-      {
-        id: 4,
-        Icon: IconEggCracked,
-        name: 'Брак',
-      },
-    ],
-    []
-  );
+    ];
+    if (checkAccessByLevel(employee, 3)) {
+      const privateItems = [
+        {
+          id: 5,
+          Icon: IconCurrencyRubel,
+          name: 'Обновить цены',
+        },
+        {
+          id: 6,
+          Icon: IconEggCracked,
+          name: 'Брак',
+        },
+      ];
+      publicItems.push(...privateItems);
+    }
+    return publicItems;
+  }, []);
 
   const toggleSidebar = () => {
     dispatch(moyskladActions.setSidebarIsOpen(!sidebarIsOpen));

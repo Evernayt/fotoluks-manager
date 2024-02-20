@@ -13,6 +13,7 @@ interface IMeta {
 interface TableRowProps<TData> {
   row: Row<TData>;
   isClickable?: boolean;
+  lastActiveRowId?: number | string;
   onRowClick?: (row: Row<TData>) => void;
   onContextMenu?: (row: Row<TData>, e: MouseEvent<HTMLTableRowElement>) => void;
 }
@@ -27,9 +28,13 @@ const CLICKABLE_TAGES = ['TD', 'SPAN'];
 const TableRow = <TData, _TValue>({
   row,
   isClickable,
+  lastActiveRowId,
   onRowClick,
   onContextMenu,
 }: TableRowProps<TData>) => {
+  //@ts-ignore
+  const isLastActiveRow = lastActiveRowId === row.original.id;
+
   const rowClickHandler = (e: any) => {
     if (
       CLICKABLE_TAGES.includes(e.target.tagName) ||
@@ -48,7 +53,11 @@ const TableRow = <TData, _TValue>({
 
   return (
     <tr
-      className={[styles.row, isClickable && styles.clickable_row].join(' ')}
+      className={[
+        styles.row,
+        isClickable && styles.clickable_row,
+        isLastActiveRow && styles.active_row,
+      ].join(' ')}
       onClick={rowClickHandler}
       onContextMenu={contextMenuHandler}
     >

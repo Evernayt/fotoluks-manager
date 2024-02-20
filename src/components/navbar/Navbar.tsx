@@ -48,7 +48,11 @@ const Navbar = () => {
                 />
                 <div
                   className={styles.line}
-                  style={{ height: isSelected ? '3px' : '0' }}
+                  style={
+                    isSelected
+                      ? { height: '3px', opacity: 1 }
+                      : { height: '0', opacity: 0 }
+                  }
                 />
               </div>
             </Tooltip>
