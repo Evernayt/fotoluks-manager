@@ -28,6 +28,7 @@ const EditableImage: FC<EditableImageProps> = ({
     if (event.target.files && event.target.files.length > 0) {
       const image = event.target.files[0];
       onImageSelect(image);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 

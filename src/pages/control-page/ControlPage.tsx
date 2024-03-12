@@ -14,9 +14,9 @@ import EmployeeEditModal from './modals/employees/edit-modal/EmployeeEditModal';
 import UserEditModal from './modals/users/edit-modal/UserEditModal';
 import ShopsEditModal from './modals/shops/edit-modal/ShopsEditModal';
 import ReportsTable from './components/tables/reports/ReportsTable';
-import ChangelogsTable from './components/tables/changelogs/ChangelogsTable';
-import styles from './ControlPage.module.scss';
 import ChangelogsEditModal from './modals/changelogs/edit-modal/ChangelogsEditModal';
+import Changelogs from './components/tables/changelogs/Changelogs';
+import styles from './ControlPage.module.scss';
 
 const ControlPage = () => {
   const activeSidebarIndex = useAppSelector(
@@ -36,7 +36,7 @@ const ControlPage = () => {
       case 4:
         return <ReportsTable />;
       case 5:
-        return <ChangelogsTable />;
+        return <Changelogs />;
       default:
         return null;
     }

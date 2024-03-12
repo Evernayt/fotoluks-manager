@@ -17,6 +17,10 @@ import {
   IOrdersReasonModal,
   IChangelogsEditModal,
   IOrderFilesModal,
+  IChatEditModal,
+  IChatDeleteModal,
+  IChatLeaveModal,
+  IMessengerEditMessageModal,
 } from 'models/IModal';
 
 type ModalState = {
@@ -56,6 +60,11 @@ type ModalState = {
   taskMembersModal: IModal;
   taskSubtasksModal: IModal;
   taskEditMessageModal: ITaskEditMessageModal;
+  /* messenger-page */
+  messengerChatEditModal: IChatEditModal;
+  messengerChatDeleteModal: IChatDeleteModal;
+  messengerChatLeaveModal: IChatLeaveModal;
+  messengerEditMessageModal: IMessengerEditMessageModal;
   /* global */
   appCloseModal: IModal;
   reportModal: IModal;
@@ -98,6 +107,11 @@ const initialState: ModalState = {
   taskMembersModal: INITIAL_MODAL,
   taskSubtasksModal: INITIAL_MODAL,
   taskEditMessageModal: INITIAL_MODAL,
+  /* messenger-page */
+  messengerChatEditModal: INITIAL_MODAL,
+  messengerChatDeleteModal: INITIAL_MODAL,
+  messengerChatLeaveModal: INITIAL_MODAL,
+  messengerEditMessageModal: INITIAL_MODAL,
   /* global */
   appCloseModal: INITIAL_MODAL,
   reportModal: INITIAL_MODAL,

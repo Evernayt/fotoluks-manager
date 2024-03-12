@@ -1,6 +1,7 @@
 import { IconMoysklad } from 'icons';
 import {
   CONTROL_ROUTE,
+  MESSENGER_ROUTE,
   MOYSKLAD_ROUTE,
   ORDERS_ROUTE,
   TASKS_ROUTE,
@@ -9,6 +10,7 @@ import {
   IconClipboardList,
   IconNote,
   IconLayoutGridAdd,
+  IconMessageCircle2,
 } from '@tabler/icons-react';
 
 enum MODES {
@@ -21,6 +23,7 @@ enum APP_ID {
   Панель_управления = 2,
   МойСклад = 3,
   Задачи = 4,
+  Мессенджер = 5,
 }
 
 enum NOTIF_CATEGORY_ID {
@@ -71,6 +74,13 @@ const APPS = [
     description: 'МойСклад',
     route: MOYSKLAD_ROUTE,
     Icon: IconMoysklad,
+  },
+  {
+    id: 5,
+    value: 'MESSENGER',
+    description: 'Мессенджер',
+    route: MESSENGER_ROUTE,
+    Icon: IconMessageCircle2,
   },
   {
     id: 2,

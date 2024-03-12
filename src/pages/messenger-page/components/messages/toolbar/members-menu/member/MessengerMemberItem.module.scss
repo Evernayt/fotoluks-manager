@@ -1,0 +1,10 @@
+.item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--hover-card-bg-color);
+  padding: var(--space-sm) 0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

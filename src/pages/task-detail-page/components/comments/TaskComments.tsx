@@ -1,29 +1,17 @@
-import NotificationAPI from 'api/NotificationAPI/NotificationAPI';
-import { CreateTaskMessageDto } from 'api/TaskMessageAPI/dto/create-task-message.dto';
 import TaskMessageAPI from 'api/TaskMessageAPI/TaskMessageAPI';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { ITaskMessage } from 'models/api/ITaskMessage';
-import {
-  FC,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import socketio from 'socket/socketio';
+import { FC, useEffect, useMemo, useState } from 'react';
 import TaskCommentsContextMenu from './context-menu/TaskCommentsContextMenu';
 import { IconMessageCircle } from '@tabler/icons-react';
 import TaskCommentItemRight from './comment-item/TaskCommentItemRight';
 import TaskCommentItemLeft from './comment-item/TaskCommentItemLeft';
 import { Card, Divider, Text } from '@chakra-ui/react';
-import { MessageInput } from 'components';
 import { taskActions } from 'store/reducers/TaskSlice';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import { APP_ID, FETCH_MORE_LIMIT, NOTIF_CATEGORY_ID } from 'constants/app';
+import { FETCH_MORE_LIMIT } from 'constants/app';
 import Loader, { LoaderWrapper } from 'components/ui/loader/Loader';
-import { getEmployeeShortName } from 'helpers/employee';
+import ScrollableFeed from 'react-scrollable-feed';
+import TaskCommentsSendMessage from './send-message/TaskCommentsSendMessage';
 import styles from './TaskComments.module.scss';
 
 interface TaskCommentsProps {
@@ -31,18 +19,13 @@ interface TaskCommentsProps {
 }
 
 const TaskComments: FC<TaskCommentsProps> = ({ taskId }) => {
-  const [text, setText] = useState<string>('');
   const [pageCount, setPageCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
-  const task = useAppSelector((state) => state.task.task);
   const taskMessages = useAppSelector((state) => state.task.taskMessages);
   const employee = useAppSelector((state) => state.employee.employee);
-
-  const scrollableRootRef = useRef<HTMLDivElement | null>(null);
-  const lastScrollDistanceToBottomRef = useRef<number>();
 
   const reversedTaskMessages = useMemo(
     () => [...taskMessages].reverse(),
@@ -88,91 +71,12 @@ const TaskComments: FC<TaskCommentsProps> = ({ taskId }) => {
     fetchTaskMessages(page + 1);
   };
 
-  const [sentryRef, { rootRef }] = useInfiniteScroll({
+  const [sentryRef] = useInfiniteScroll({
     loading: isLoadingMore,
     hasNextPage,
     onLoadMore: fetchMoreTaskMessages,
     rootMargin: '50px 0px 0px 0px',
   });
-
-  useLayoutEffect(() => {
-    const scrollableRoot = scrollableRootRef.current;
-    const lastScrollDistanceToBottom =
-      lastScrollDistanceToBottomRef.current ?? 0;
-    if (scrollableRoot) {
-      scrollableRoot.scrollTop =
-        scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
-    }
-  }, [reversedTaskMessages, rootRef]);
-
-  const rootRefSetter = useCallback(
-    (node: HTMLDivElement) => {
-      rootRef(node);
-      scrollableRootRef.current = node;
-    },
-    [rootRef]
-  );
-
-  const handleRootScroll = useCallback(() => {
-    const rootNode = scrollableRootRef.current;
-    if (rootNode) {
-      const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop;
-      lastScrollDistanceToBottomRef.current = scrollDistanceToBottom;
-    }
-  }, []);
-
-  const sendMessage = () => {
-    if (text.trim() !== '' && employee) {
-      const message: CreateTaskMessageDto = {
-        message: text,
-        taskId,
-        employeeId: employee.id,
-      };
-      TaskMessageAPI.create(message).then((data) => {
-        const createdMessage: ITaskMessage = {
-          ...data,
-          employee,
-        };
-        dispatch(taskActions.addTaskMessage(createdMessage));
-
-        setTimeout(() => {
-          if (scrollableRootRef.current) {
-            scrollableRootRef.current.scrollTop =
-              scrollableRootRef.current?.scrollHeight;
-          }
-        }, 0);
-
-        notifyMembers(text);
-        setText('');
-      });
-    }
-  };
-
-  const notifyMembers = (text: string) => {
-    if (!task.taskMembers?.length) return;
-
-    const employeeIds: number[] = [];
-    if (task.creator && task.creator.id !== employee?.id) {
-      employeeIds.push(task.creator.id);
-    }
-    task.taskMembers.forEach((taskMember) => {
-      if (taskMember.employee.id !== employee?.id) {
-        employeeIds.push(taskMember.employee.id);
-      }
-    });
-
-    const title = `${getEmployeeShortName(employee)} — Задача № ${task.id}`;
-
-    NotificationAPI.create({
-      title,
-      text,
-      employeeIds,
-      appId: APP_ID.Задачи,
-      notificationCategoryId: NOTIF_CATEGORY_ID.Комментарии_к_задаче,
-    }).then((data) => {
-      socketio.sendNotification(data, employeeIds);
-    });
-  };
 
   return (
     <Card className={styles.container}>
@@ -187,42 +91,41 @@ const TaskComments: FC<TaskCommentsProps> = ({ taskId }) => {
               <Text variant="secondary">Нет комментариев</Text>
             </div>
           ) : (
-            <div
-              className={styles.messages}
-              ref={rootRefSetter}
-              onScroll={handleRootScroll}
-            >
-              {hasNextPage && (
-                <LoaderWrapper isLoading size="30px" width="100%" height="100%">
-                  <div className={styles.sentry} ref={sentryRef} />
-                </LoaderWrapper>
-              )}
-              {reversedTaskMessages.map((taskMessage) => {
-                if (taskMessage.employee.id === employee?.id) {
-                  return (
-                    <TaskCommentItemRight
-                      taskMessage={taskMessage}
-                      key={taskMessage.id}
-                    />
-                  );
-                } else {
-                  return (
-                    <TaskCommentItemLeft
-                      taskMessage={taskMessage}
-                      key={taskMessage.id}
-                    />
-                  );
-                }
-              })}
-            </div>
+            <ScrollableFeed className={styles.messages_container}>
+              <div className={styles.messages}>
+                {hasNextPage && (
+                  <LoaderWrapper
+                    isLoading
+                    size="30px"
+                    width="100%"
+                    height="100%"
+                  >
+                    <div className={styles.sentry} ref={sentryRef} />
+                  </LoaderWrapper>
+                )}
+                {reversedTaskMessages.map((taskMessage) => {
+                  if (taskMessage.employee.id === employee?.id) {
+                    return (
+                      <TaskCommentItemRight
+                        taskMessage={taskMessage}
+                        key={taskMessage.id}
+                      />
+                    );
+                  } else {
+                    return (
+                      <TaskCommentItemLeft
+                        taskMessage={taskMessage}
+                        key={taskMessage.id}
+                      />
+                    );
+                  }
+                })}
+              </div>
+            </ScrollableFeed>
           )}
           <Divider color="var(--divider-color)" />
           <div className={styles.message_input}>
-            <MessageInput
-              onButtonClick={sendMessage}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
+            <TaskCommentsSendMessage taskId={taskId} />
           </div>
         </>
       )}

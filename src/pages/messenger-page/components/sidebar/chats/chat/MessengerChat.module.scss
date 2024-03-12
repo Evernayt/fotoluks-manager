@@ -1,0 +1,79 @@
+.container {
+  padding: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border-top: 1px solid var(--hover-card-bg-color);
+  transition: background-color 120ms;
+  cursor: pointer;
+
+  &:not(.active):hover {
+    background-color: var(--hover-card-bg-color);
+    border-top: 1px solid var(--card-bg-color);
+    border-radius: var(--border-radius);
+  }
+
+  &:hover + .container {
+    border-top: 1px solid var(--card-bg-color);
+  }
+
+  &:first-child {
+    border-top: 1px solid var(--card-bg-color);
+  }
+}
+
+.active {
+  background-color: var(--primary-deemphasized-color);
+  border-top: 1px solid var(--card-bg-color);
+  border-radius: var(--border-radius);
+  cursor: default;
+
+  & + .container {
+    border-top: 1px solid var(--card-bg-color);
+  }
+
+  .name {
+    color: var(--primary-text-color);
+  }
+
+  .last_message {
+    color: var(--secondary-text-color);
+  }
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  width: 210px;
+}
+
+.name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.date {
+  font-size: 11px;
+  color: var(--secondary-text-color);
+  white-space: nowrap;
+  margin-left: var(--space-sm);
+}
+
+.last_message {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.badge {
+  min-width: 12px;
+  min-height: 12px;
+  border-radius: 6px;
+  background-color: var(--success-color);
+  margin-left: var(--space-sm);
+}

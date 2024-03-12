@@ -10,6 +10,7 @@ import OrderSlice from './reducers/OrderSlice';
 import TaskSlice from './reducers/TaskSlice';
 import FilterSlice from './reducers/FilterSlice';
 import ControlSlice from './reducers/ControlSlice';
+import MessengerSlice from './reducers/MessengerSlice';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     task: TaskSlice,
     move: MoveSlice,
     defectiveGoods: DefectiveGoodsSlice,
+    messenger: MessengerSlice,
   },
 });
 

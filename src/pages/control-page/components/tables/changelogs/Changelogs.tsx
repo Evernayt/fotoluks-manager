@@ -1,19 +1,21 @@
-import { useToast } from '@chakra-ui/react';
-import { Table } from 'components';
+import { Divider, Heading, useToast } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'hooks';
 import { controlActions } from 'store/reducers/ControlSlice';
 import ChangelogsToolbar from './ChangelogsToolbar';
-import { changelogsTableColumns } from './ChangelogsTable.colums';
 import { getErrorToast } from 'helpers/toast';
 import { IChangelog } from 'models/api/IChangelog';
 import ChangelogAPI from 'api/ChangelogAPI/ChangelogAPI';
-import { Row } from '@tanstack/react-table';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { MODES } from 'constants/app';
+import { checkAccessByRole } from 'helpers/employee';
+import { Loader } from 'components';
+import Pagination from 'components/ui/pagination/Pagination';
+import Changelog from './changelog/Changelog';
+import styles from './Changelogs.module.scss';
 
-const ChangelogsTable = () => {
+const Changelogs = () => {
   const [pageCount, setPageCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(25);
@@ -22,6 +24,7 @@ const ChangelogsTable = () => {
   const isLoading = useAppSelector((state) => state.control.isLoading);
   const search = useAppSelector((state) => state.control.search);
   const forceUpdate = useAppSelector((state) => state.control.forceUpdate);
+  const employee = useAppSelector((state) => state.employee.employee);
 
   const debouncedSearchTerm = useDebounce(search);
   const dispatch = useAppDispatch();
@@ -60,13 +63,14 @@ const ChangelogsTable = () => {
     reload(page);
   };
 
-  const rowClickHandler = (row: Row<IChangelog>) => {
+  const openChangelogsEditModal = (changelog: IChangelog) => {
+    if (!checkAccessByRole(employee, 'Разработчик')) return;
     dispatch(
       modalActions.openModal({
         modal: 'changelogsEditModal',
         props: {
-          changelogId: row.original.id,
-          version: row.original.version,
+          changelogId: changelog.id,
+          version: changelog.version,
           mode: MODES.EDIT_MODE,
         },
       })
@@ -76,19 +80,41 @@ const ChangelogsTable = () => {
   return (
     <>
       <ChangelogsToolbar reload={reload} onLimitChange={setLimit} />
-      <Table
-        columns={changelogsTableColumns}
-        data={changelogs}
-        isLoading={isLoading}
-        pagination={{
-          page: currentPage,
-          pageCount,
-          onPageChange: reloadAndChangePage,
-        }}
-        onRowClick={rowClickHandler}
-      />
+      <div className={styles.container}>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            {changelogs.length ? (
+              <div className={styles.changelogs}>
+                {changelogs.map((changelog) => (
+                  <Changelog
+                    changelog={changelog}
+                    onClick={openChangelogsEditModal}
+                    key={changelog.id}
+                  />
+                ))}
+              </div>
+            ) : (
+              <Heading className={styles.message} size="md">
+                Ничего не найдено
+              </Heading>
+            )}
+          </>
+        )}
+      </div>
+      {pageCount > 1 && (
+        <div>
+          <Divider />
+          <Pagination
+            page={currentPage}
+            pageCount={pageCount}
+            onPageChange={reloadAndChangePage}
+          />
+        </div>
+      )}
     </>
   );
 };
 
-export default ChangelogsTable;
+export default Changelogs;

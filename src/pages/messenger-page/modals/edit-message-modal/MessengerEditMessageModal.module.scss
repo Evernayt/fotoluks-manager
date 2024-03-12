@@ -1,0 +1,16 @@
+.message_container {
+  overflow: auto;
+  height: 300px;
+  padding-right: var(--space-lg);
+}
+
+.message {
+  margin: 0 0 var(--space-xl) 0;
+}
+
+.message_input {
+  padding: var(--space-sm) var(--space-lg);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+}

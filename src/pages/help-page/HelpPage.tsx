@@ -9,7 +9,12 @@ const HelpPage = () => {
         <CardHeader>
           <Heading size="md">Как создать заказ</Heading>
         </CardHeader>
-        <YoutubePlayer videoId="V_v9ledJdUU" width="592px" height="392px" />
+        <YoutubePlayer
+          videoId="V_v9ledJdUU"
+          width="592px"
+          height="392px"
+          thumbnailQuality="sddefault"
+        />
       </Card>
     </div>
   );

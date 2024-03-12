@@ -11,8 +11,15 @@ import {
   SETTINGS_ROUTE,
   MOVES_DETAIL_ROUTE,
   HELP_ROUTE,
+  MESSENGER_ROUTE,
 } from 'constants/paths';
-import { LoginPage, OrdersPage, TasksPage, MoyskladPage } from 'pages';
+import {
+  LoginPage,
+  OrdersPage,
+  TasksPage,
+  MoyskladPage,
+  MessengerPage,
+} from 'pages';
 import WithNavbar from './WithNavbar';
 import { Suspense, lazy, useLayoutEffect } from 'react';
 import { getMaximizeScreen } from 'helpers/localStorage';
@@ -67,6 +74,7 @@ export default function App() {
               <Route path={PROFILE_ROUTE} element={<ProfilePage />} />
               <Route path={SETTINGS_ROUTE} element={<SettingsPage />} />
               <Route path={HELP_ROUTE} element={<HelpPage />} />
+              <Route path={MESSENGER_ROUTE} element={<MessengerPage />} />
             </Route>
           </Routes>
         </Suspense>

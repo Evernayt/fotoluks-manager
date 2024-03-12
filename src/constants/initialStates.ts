@@ -1,6 +1,7 @@
 import { IFilter } from 'models/IFilter';
 import { IModal } from 'models/IModal';
 import { IUpdate } from 'models/IUpdate';
+import { IChatMessage } from 'models/api/IChatMessage';
 import { IDepartment } from 'models/api/IDepartment';
 import { IOrder } from 'models/api/IOrder';
 import { IRole } from 'models/api/IRole';

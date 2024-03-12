@@ -32,6 +32,7 @@ import { appActions } from 'store/reducers/AppSlice';
 import { controlActions } from 'store/reducers/ControlSlice';
 import { employeeActions } from 'store/reducers/EmployeeSlice';
 import { endingGoodsActions } from 'store/reducers/EndingGoodsSlice';
+import { messengerActions } from 'store/reducers/MessengerSlice';
 import { modalActions } from 'store/reducers/ModalSlice';
 import { moveActions } from 'store/reducers/MoveSlice';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
@@ -76,6 +77,7 @@ const NavbarMenu = () => {
     dispatch(orderActions.clearState());
     dispatch(taskActions.clearState());
     dispatch(moveActions.clearState());
+    dispatch(messengerActions.clearState());
     navigate(LOGIN_ROUTE);
     socketio.disconnect();
   };
@@ -120,16 +122,16 @@ const NavbarMenu = () => {
           {colorMode === 'light' ? 'Тема: Светлая' : 'Тема: Темная'}
         </MenuItem>
         <MenuItem
-          icon={<IconHelp size={ICON_SIZE} stroke={ICON_STROKE} />}
-          onClick={openHelpPage}
-        >
-          Обучение
-        </MenuItem>
-        <MenuItem
           icon={<IconMessageReport size={ICON_SIZE} stroke={ICON_STROKE} />}
           onClick={openReportModal}
         >
           Оставить отзыв
+        </MenuItem>
+        <MenuItem
+          icon={<IconHelp size={ICON_SIZE} stroke={ICON_STROKE} />}
+          onClick={openHelpPage}
+        >
+          Обучение
         </MenuItem>
         <MenuDivider />
         <MenuItem

@@ -31,6 +31,7 @@ import OrderReasonModal from './reason-modal/OrderReasonModal';
 import DownloaderListener from './downloader/DownloaderListener';
 import PasswordInput from './ui/password-input/PasswordInput';
 import YoutubePlayer from './ui/youtube-player/YoutubePlayer';
+import ZoomableImage from './ui/zoomable-image/ZoomableImage';
 
 export {
   Select,
@@ -66,4 +67,5 @@ export {
   DownloaderListener,
   PasswordInput,
   YoutubePlayer,
+  ZoomableImage,
 };

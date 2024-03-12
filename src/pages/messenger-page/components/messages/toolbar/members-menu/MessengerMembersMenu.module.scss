@@ -1,0 +1,13 @@
+.names {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 400px;
+  text-align: start;
+}
+
+.items {
+  padding: 0 var(--space-md);
+  max-height: 300px;
+  overflow: auto;
+}

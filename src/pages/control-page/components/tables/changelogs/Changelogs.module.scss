@@ -1,0 +1,18 @@
+.container {
+  height: 100%;
+  overflow: auto;
+}
+
+.changelogs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+.message {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

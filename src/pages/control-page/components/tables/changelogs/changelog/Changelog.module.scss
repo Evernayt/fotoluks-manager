@@ -1,0 +1,23 @@
+.container {
+  padding: var(--space-lg);
+  border-radius: var(--border-radius);
+  border: 1px dashed var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.date {
+  margin-top: var(--space-xs);
+  font-size: 13px;
+}
+
+.description {
+  white-space: pre-wrap;
+}
+
+.tag {
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}

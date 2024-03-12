@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.form_container {
+  flex: 1;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-sm);
+  margin: var(--space-modal) 0;
+}
+
+.footer_button {
+  width: 100%;
+}

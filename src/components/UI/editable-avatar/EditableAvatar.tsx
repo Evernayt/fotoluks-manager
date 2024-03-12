@@ -27,6 +27,7 @@ const EditableAvatar: FC<EditableAvatarProps> = ({
     if (event.target.files && event.target.files.length > 0) {
       const image = event.target.files[0];
       onAvatarSelect(image);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 

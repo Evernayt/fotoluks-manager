@@ -6,6 +6,7 @@ html[data-theme='light'] {
   --primary-deemphasized-color: #fff3b8;
   --secondary-deemphasized-color: #f5f4f0;
   --card-bg-color: #ffffff;
+  --card-bg-rgb-color: 255, 255, 255;
   --bg-color: #f5f4f0;
   --table-border-color: #e2e1dd;
   --primary-text-color: #000000;
@@ -38,6 +39,7 @@ html[data-theme='dark'] {
   --primary-deemphasized-color: #fff3b8;
   --secondary-deemphasized-color: #2f2f2d;
   --card-bg-color: #262624;
+  --card-bg-rgb-color: 38, 38, 36;
   --bg-color: #1a1a18;
   --table-border-color: #42413e;
   --primary-text-color: #1a1a18;
@@ -112,6 +114,10 @@ html[data-theme='dark'] {
 * {
   font-size: 14px;
   font-family: 'Roboto', sans-serif;
+
+  div[tabindex='-1']:focus {
+    outline: 0;
+  }
 }
 
 .primary-icon {

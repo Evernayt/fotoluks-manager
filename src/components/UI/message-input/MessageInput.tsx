@@ -7,6 +7,7 @@ import {
   KeyboardEvent,
 } from 'react';
 import { IconSend } from '@tabler/icons-react';
+import { ICON_STROKE } from 'constants/app';
 import styles from './MessageInput.module.scss';
 
 interface MessageInputProps extends TextareaProps {
@@ -49,8 +50,8 @@ const MessageInput: FC<MessageInputProps> = ({
   return (
     <div className={styles.container}>
       <Textarea
-        {...props}
         placeholder="Введите комментарий"
+        {...props}
         ref={textareaRef}
         variant="filled"
         rows={1}
@@ -67,7 +68,10 @@ const MessageInput: FC<MessageInputProps> = ({
           icon ? (
             icon
           ) : (
-            <IconSend className={['link-icon', styles.send_icon].join(' ')} />
+            <IconSend
+              className={['link-icon', styles.send_icon].join(' ')}
+              stroke={ICON_STROKE}
+            />
           )
         }
         aria-label="button"

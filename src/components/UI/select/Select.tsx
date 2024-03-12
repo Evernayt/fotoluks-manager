@@ -44,6 +44,7 @@ const Select = <T extends any>({
       selectedOptionStyle="check"
       noOptionsMessage={() => 'Пусто'}
       loadingMessage={() => 'Загрузка...'}
+      placeholder="Выберите..."
       variant="filled"
       isSearchable={false}
       {...props}

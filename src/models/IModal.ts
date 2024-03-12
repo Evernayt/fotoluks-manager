@@ -5,6 +5,7 @@ import { IOrder } from './api/IOrder';
 import { IEndingGood } from 'pages/moysklad-page/components/tables/ending-goods/EndingGoodsTable';
 import { ITaskMessage } from './api/ITaskMessage';
 import { IStatus } from './api/IStatus';
+import { IChatMessage } from './api/IChatMessage';
 
 export interface IModal {
   isOpen: boolean;
@@ -80,4 +81,23 @@ export interface IChangelogsEditModal extends IModal {
 
 export interface IOrderFilesModal extends IModal {
   orderProductId?: number | string | null;
+}
+
+export interface IChatEditModal extends IModal {
+  chatId?: number;
+  mode?: MODES;
+}
+
+export interface IChatDeleteModal extends IModal {
+  chatId?: number;
+}
+
+export interface IChatLeaveModal extends IModal {
+  chatId?: number;
+  employeeId?: number;
+  creatorId?: number;
+}
+
+export interface IMessengerEditMessageModal extends IModal {
+  chatMessage?: IChatMessage | null;
 }
