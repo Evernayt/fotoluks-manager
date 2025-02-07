@@ -3,4 +3,5 @@ export class GetSuppliesDto {
   readonly offset?: number;
   readonly productHref?: string;
   readonly search?: string;
+  readonly expand?: string;
 }

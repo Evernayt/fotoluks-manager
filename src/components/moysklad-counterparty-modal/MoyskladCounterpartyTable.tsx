@@ -38,15 +38,13 @@ const MoyskladCounterpartyTable: FC<MoyskladCounterpartyTableProps> = ({
     const offset = limit * (page - 1);
     setIsLoading(true);
 
-    MoyskladAPI.getCounterparty({ limit, offset, search })
+    MoyskladAPI.getCounterparties({ limit, offset, search })
       .then((data) => {
         setCounterparties(data?.rows || []);
         setPageCount(Math.ceil((data?.meta?.size || 0) / limit));
       })
       .catch(() =>
-        toast(
-          getErrorToast('MoyskladCounterpartyTable.fetchCounterparties')
-        )
+        toast(getErrorToast('MoyskladCounterpartyTable.fetchCounterparties'))
       )
       .finally(() => setIsLoading(false));
   };

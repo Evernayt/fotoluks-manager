@@ -7,7 +7,7 @@ import { ICON_SIZE, ICON_STROKE } from 'constants/app';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
 import { useNavigate } from 'react-router-dom';
-import { MOVES_DETAIL_ROUTE } from 'constants/paths';
+import { MOVE_DETAIL_ROUTE } from 'constants/paths';
 
 interface MovesToolbarProps {
   reload: () => void;
@@ -40,7 +40,7 @@ const MovesToolbar: FC<MovesToolbarProps> = ({ reload, onLimitChange }) => {
   };
 
   const newMove = () => {
-    navigate(MOVES_DETAIL_ROUTE, {
+    navigate(MOVE_DETAIL_ROUTE, {
       state: { moveId: null, created: null },
     });
   };

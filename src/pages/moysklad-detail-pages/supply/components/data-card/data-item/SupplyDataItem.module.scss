@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+
+  p {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+.value {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.required_value {
+  color: var(--danger-color);
+}

@@ -36,7 +36,7 @@ const CopyWrapper: FC<CopyWrapperProps> = ({ text, children, className }) => {
       </PopoverTrigger>
       <PopoverContent w="max-content">
         <PopoverArrow />
-        <PopoverBody>Скопировано</PopoverBody>
+        <PopoverBody color="var(--text-color)">Скопировано</PopoverBody>
       </PopoverContent>
     </Popover>
   );

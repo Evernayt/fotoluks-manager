@@ -13,18 +13,18 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { modalActions } from 'store/reducers/ModalSlice';
-import { AutoResizableTextarea, MaskedInput } from 'components';
 import { useEffect, useState } from 'react';
 import ChangelogAPI from 'api/ChangelogAPI/ChangelogAPI';
-import * as Yup from 'yup';
 import { MIN_INVALID_MSG, MODES, REQUIRED_INVALID_MSG } from 'constants/app';
 import { getErrorToast } from 'helpers/toast';
 import { CreateChangelogDto } from 'api/ChangelogAPI/dto/create-changelog.dto';
 import { controlActions } from 'store/reducers/ControlSlice';
 import { UpdateChangelogDto } from 'api/ChangelogAPI/dto/update-changelog.dto';
 import { LoaderWrapper } from 'components/ui/loader/Loader';
-import { Field, FieldProps, Form, Formik } from 'formik';
 import { mask } from 'node-masker';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { MaskedInputFormField } from 'components/ui/masked-input/MaskedInput';
+import { AutoResizableTextareaFormField } from 'components/ui/auto-resizable-textarea/AutoResizableTextarea';
 import styles from './ChangelogsEditModal.module.scss';
 
 interface FormValues {
@@ -37,11 +37,6 @@ const INITIAL_FORM_STATE: FormValues = {
   description: '',
 };
 
-const formSchema = Yup.object({
-  version: Yup.string().required(REQUIRED_INVALID_MSG).min(5, MIN_INVALID_MSG),
-  description: Yup.string().required(REQUIRED_INVALID_MSG),
-});
-
 const ChangelogsEditModal = () => {
   const [formState, setFormState] = useState<FormValues>(INITIAL_FORM_STATE);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,6 +44,14 @@ const ChangelogsEditModal = () => {
   const { isOpen, changelogId, version, mode } = useAppSelector(
     (state) => state.modal.changelogsEditModal
   );
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    control,
+    reset,
+  } = useForm({ values: formState });
 
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -101,7 +104,7 @@ const ChangelogsEditModal = () => {
       .finally(() => setIsLoading(false));
   };
 
-  const submit = (values: FormValues) => {
+  const onSubmit: SubmitHandler<FormValues> = (values) => {
     setIsLoading(true);
     if (mode === MODES.ADD_MODE) {
       createChangelog(values);
@@ -111,6 +114,7 @@ const ChangelogsEditModal = () => {
   };
 
   const closeModal = (forceUpdate: boolean = false) => {
+    reset();
     setFormState(INITIAL_FORM_STATE);
     dispatch(modalActions.closeModal('changelogsEditModal'));
     if (forceUpdate) dispatch(controlActions.setForceUpdate(true));
@@ -126,60 +130,56 @@ const ChangelogsEditModal = () => {
         <ModalCloseButton />
         <ModalBody>
           <LoaderWrapper isLoading={isLoading}>
-            <Formik
-              initialValues={formState}
-              validationSchema={formSchema}
-              enableReinitialize
-              onSubmit={submit}
+            <form
+              className={styles.form}
+              noValidate
+              onSubmit={handleSubmit(onSubmit)}
             >
-              {() => (
-                <Form className={styles.form}>
-                  <Field name="version">
-                    {({ field, form, meta }: FieldProps) => (
-                      <FormControl isInvalid={!!meta.error && meta.touched}>
-                        <FormLabel>Версия</FormLabel>
-                        <MaskedInput
-                          {...field}
-                          placeholder="Версия"
-                          onChange={(value) =>
-                            form.setFieldValue(field.name, mask(value, '9.9.9'))
-                          }
-                          mask="9.9.9"
-                        />
-                        <FormErrorMessage>{meta.error}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="description">
-                    {({ field, meta }: FieldProps) => (
-                      <FormControl isInvalid={!!meta.error && meta.touched}>
-                        <FormLabel>Что нового</FormLabel>
-                        <AutoResizableTextarea
-                          {...field}
-                          placeholder="Что нового"
-                        />
-                        <FormErrorMessage>{meta.error}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <div className={styles.footer}>
-                    <Button
-                      className={styles.footer_button}
-                      onClick={() => closeModal()}
-                    >
-                      Отмена
-                    </Button>
-                    <Button
-                      className={styles.footer_button}
-                      type="submit"
-                      colorScheme="yellow"
-                    >
-                      {mode === MODES.ADD_MODE ? 'Создать' : 'Сохранить'}
-                    </Button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+              <FormControl isRequired isInvalid={!!errors.version}>
+                <FormLabel>Версия</FormLabel>
+                <MaskedInputFormField
+                  control={control}
+                  name="version"
+                  rules={{
+                    required: REQUIRED_INVALID_MSG,
+                    minLength: { value: 5, message: MIN_INVALID_MSG },
+                  }}
+                  placeholder="Версия"
+                  mask="9.9.9"
+                  onChange={(value) =>
+                    setValue('version', mask(value, '9.9.9'))
+                  }
+                />
+                <FormErrorMessage>{errors.version?.message}</FormErrorMessage>
+              </FormControl>
+              <FormControl isRequired isInvalid={!!errors.version}>
+                <FormLabel>Что нового</FormLabel>
+                <AutoResizableTextareaFormField
+                  control={control}
+                  name="description"
+                  rules={{ required: REQUIRED_INVALID_MSG }}
+                  placeholder="Что нового"
+                />
+                <FormErrorMessage>
+                  {errors.description?.message}
+                </FormErrorMessage>
+              </FormControl>
+              <div className={styles.footer}>
+                <Button
+                  className={styles.footer_button}
+                  onClick={() => closeModal()}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  className={styles.footer_button}
+                  type="submit"
+                  colorScheme="yellow"
+                >
+                  {mode === MODES.ADD_MODE ? 'Создать' : 'Сохранить'}
+                </Button>
+              </div>
+            </form>
           </LoaderWrapper>
         </ModalBody>
       </ModalContent>

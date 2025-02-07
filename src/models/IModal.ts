@@ -6,6 +6,7 @@ import { IEndingGood } from 'pages/moysklad-page/components/tables/ending-goods/
 import { ITaskMessage } from './api/ITaskMessage';
 import { IStatus } from './api/IStatus';
 import { IChatMessage } from './api/IChatMessage';
+import { IPosition } from './api/moysklad/IPosition';
 
 export interface IModal {
   isOpen: boolean;
@@ -100,4 +101,13 @@ export interface IChatLeaveModal extends IModal {
 
 export interface IMessengerEditMessageModal extends IModal {
   chatMessage?: IChatMessage | null;
+}
+
+export interface ISupplyEditProductModal extends IModal {
+  position?: IPosition;
+}
+
+export interface ISubtractFromSuppliesModal extends IModal {
+  id?: string;
+  name?: string;
 }

@@ -21,6 +21,7 @@ import { IRole } from 'models/api/IRole';
 import RoleAPI from 'api/RoleAPI/RoleAPI';
 import { ALL_ROLES } from 'constants/initialStates';
 import styles from './EmployeesFilterModal.module.scss';
+import { useForm } from 'react-hook-form';
 
 export interface IEmployeesFilterState {
   archive: boolean;
@@ -42,6 +43,14 @@ const EmployeesFilterModal = () => {
     (state) => state.control.employeesFilterState
   );
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    control,
+    reset,
+  } = useForm({ values: INITIAL_EMPLOYEES_FILTER_STATE });
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -60,7 +69,7 @@ const EmployeesFilterModal = () => {
     dispatch(modalActions.closeModal('employeesFilterModal'));
   };
 
-  const reset = () => {
+  const resetFilter = () => {
     dispatch(
       controlActions.setEmployeesFilterState(INITIAL_EMPLOYEES_FILTER_STATE)
     );
@@ -70,7 +79,7 @@ const EmployeesFilterModal = () => {
     dispatch(controlActions.setForceUpdate(true));
     dispatch(filterActions.clearFilter('employeesFilter'));
 
-    reset();
+    resetFilter();
     closeModal();
   };
 

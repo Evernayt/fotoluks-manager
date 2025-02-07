@@ -9,9 +9,10 @@ import {
   TASKS_ROUTE,
   PROFILE_ROUTE,
   SETTINGS_ROUTE,
-  MOVES_DETAIL_ROUTE,
+  MOVE_DETAIL_ROUTE,
   HELP_ROUTE,
   MESSENGER_ROUTE,
+  SUPPLY_DETAIL_ROUTE,
 } from 'constants/paths';
 import {
   LoginPage,
@@ -38,8 +39,11 @@ const OrderDetailPage = lazy(
 const TaskDetailPage = lazy(
   () => import('../pages/task-detail-page/TaskDetailPage')
 );
-const MovesDetailPage = lazy(
-  () => import('../pages/moysklad-detail-pages/moves/MovesDetailPage')
+const MoveDetailPage = lazy(
+  () => import('../pages/moysklad-detail-pages/move/MoveDetailPage')
+);
+const SupplyDetailPage = lazy(
+  () => import('../pages/moysklad-detail-pages/supply/SupplyDetailPage')
 );
 const ControlPage = lazy(() => import('../pages/control-page/ControlPage'));
 const ProfilePage = lazy(() => import('../pages/profile-page/ProfilePage'));
@@ -65,7 +69,8 @@ export default function App() {
             <Route path={LOGIN_ROUTE} element={<LoginPage />} />
             <Route path={ORDER_DETAIL_ROUTE} element={<OrderDetailPage />} />
             <Route path={TASK_DETAIL_ROUTE} element={<TaskDetailPage />} />
-            <Route path={MOVES_DETAIL_ROUTE} element={<MovesDetailPage />} />
+            <Route path={MOVE_DETAIL_ROUTE} element={<MoveDetailPage />} />
+            <Route path={SUPPLY_DETAIL_ROUTE} element={<SupplyDetailPage />} />
             <Route element={<WithNavbar />}>
               <Route path={ORDERS_ROUTE} element={<OrdersPage />} />
               <Route path={TASKS_ROUTE} element={<TasksPage />} />

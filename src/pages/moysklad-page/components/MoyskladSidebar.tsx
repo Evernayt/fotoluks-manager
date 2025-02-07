@@ -9,6 +9,7 @@ import {
   IconTruckDelivery,
   IconEggCracked,
   IconSquareLetterA,
+  IconFileMinus,
 } from '@tabler/icons-react';
 import { moyskladActions } from 'store/reducers/MoyskladSlice';
 import { checkAccessByLevel } from 'helpers/employee';
@@ -56,6 +57,16 @@ const MoyskladSidebar = () => {
           id: 6,
           Icon: IconEggCracked,
           name: 'Брак',
+        },
+        // {
+        //   id: 7,
+        //   Icon: IconCheckupList,
+        //   name: 'Приемка',
+        // },
+        {
+          id: 8,
+          Icon: IconFileMinus,
+          name: 'Вычет из приемки',
         },
       ];
       publicItems.push(...privateItems);

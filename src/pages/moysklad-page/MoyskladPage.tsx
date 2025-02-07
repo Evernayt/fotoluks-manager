@@ -15,6 +15,7 @@ import { defectiveGoodsActions } from 'store/reducers/DefectiveGoodsSlice';
 import DefectiveGoodsForReturnModal from './modals/defective-goods/for-return-modal/DefectiveGoodsForReturnModal';
 import AssortmentsTable from './components/tables/assortments/AssortmentsTable';
 import MovesTable from './components/tables/moves/MovesTable';
+import SubtractFromSuppliesModal from './modals/subtract-from-supplies/subtract-from-supplies-modal/SubtractFromSuppliesModal';
 import styles from './MoyskladPage.module.scss';
 
 const EndingGoodsTable = lazy(
@@ -25,6 +26,15 @@ const UpdatePricesTable = lazy(
 );
 const DefectiveGoodsTable = lazy(
   () => import('./components/tables/defective-goods/DefectiveGoodsTable')
+);
+// const SuppliesTable = lazy(
+//   () => import('./components/tables/supplies/SuppliesTable')
+// );
+const SubtractFromSuppliesTable = lazy(
+  () =>
+    import(
+      './components/tables/subtract-from-supplies/SubtractFromSuppliesTable'
+    )
 );
 
 const MoyskladPage = () => {
@@ -66,6 +76,10 @@ const MoyskladPage = () => {
         return <UpdatePricesTable />;
       case 5:
         return <DefectiveGoodsTable />;
+      // case 6:
+      //   return <SuppliesTable />;
+      case 6:
+        return <SubtractFromSuppliesTable />;
       default:
         return null;
     }
@@ -76,6 +90,7 @@ const MoyskladPage = () => {
       <UpdatePricesModal />
       <EndingGoodsProductModal />
       <DefectiveGoodsForReturnModal />
+      <SubtractFromSuppliesModal />
       <MoyskladSidebar />
       <Card className={styles.panel}>{renderTable()}</Card>
     </div>

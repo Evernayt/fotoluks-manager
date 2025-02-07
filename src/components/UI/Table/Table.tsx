@@ -34,6 +34,7 @@ interface TableProps<TData, TValue> {
   editors?: IEditor[];
   sorting?: SortingState;
   enableRowSelection?: boolean;
+  enableMultiRowSelection?: boolean;
   lastActiveRowId?: number | string;
   updateData?: (rowIndex: number, columnId: string, value: any) => void;
   autoResetPageIndex?: boolean;
@@ -56,6 +57,7 @@ const Table = <TData, TValue>({
   editors,
   sorting,
   enableRowSelection,
+  enableMultiRowSelection,
   lastActiveRowId,
   updateData,
   autoResetPageIndex,
@@ -90,6 +92,7 @@ const Table = <TData, TValue>({
     //@ts-ignore
     getRowId: enableRowSelection ? (row) => row.id : undefined,
     enableRowSelection,
+    enableMultiRowSelection,
     onRowSelectionChange: rowSelectHandler,
     onSortingChange,
     getCoreRowModel: getCoreRowModel(),

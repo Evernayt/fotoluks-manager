@@ -1,0 +1,14 @@
+.container {
+  height: calc(100vh - 248px);
+}
+
+.barcodes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 303px;
+  min-width: 303px;
+  overflow: auto;
+  height: calc(100% - 43px);
+  margin-top: var(--space-sm);
+}

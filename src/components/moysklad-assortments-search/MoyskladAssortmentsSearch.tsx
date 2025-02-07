@@ -3,20 +3,23 @@ import { Search } from 'components';
 import { useDebounce } from 'hooks';
 import { useAppSelector } from 'hooks/redux';
 import { IAssortment } from 'models/api/moysklad/IAssortment';
-import { FC, useEffect, useState, HTMLAttributes } from 'react';
+import { FC, useEffect, useState, HTMLAttributes, KeyboardEvent } from 'react';
 import { Tag, Text } from '@chakra-ui/react';
 import { IStore } from 'models/api/moysklad/IStore';
+import { getSellingPrice } from 'helpers/moysklad';
 import styles from './MoyskladAssortmentsSearch.module.scss';
 
 interface MoyskladAssortmentsSearchProps
   extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   isDisabled?: boolean;
+  showPrices?: boolean;
   store?: IStore | null;
   onChange: (assortment: IAssortment) => void;
 }
 
 const MoyskladAssortmentsSearch: FC<MoyskladAssortmentsSearchProps> = ({
   isDisabled,
+  showPrices,
   store,
   onChange,
   ...props
@@ -53,6 +56,26 @@ const MoyskladAssortmentsSearch: FC<MoyskladAssortmentsSearchProps> = ({
     }
   };
 
+  const searchAssortmentByBarcode = () => {
+    if (search.trim()) {
+      setIsLoading(true);
+
+      MoyskladAPI.getAssortment({
+        limit: 1,
+        search,
+        stockStore: store ? store.meta.href : activeStore?.meta.href,
+      })
+        .then((data) => {
+          if (data.rows && data.rows.length > 0) {
+            changeHandler(data.rows[0]);
+          } else {
+            setFoundAssortments([]);
+          }
+        })
+        .finally(() => setIsLoading(false));
+    }
+  };
+
   const clear = () => {
     setIsLoading(true);
     setFoundAssortments([]);
@@ -64,11 +87,28 @@ const MoyskladAssortmentsSearch: FC<MoyskladAssortmentsSearchProps> = ({
     clear();
   };
 
+  const keyDownHandler = (e: KeyboardEvent) => {
+    if (e.code === 'Enter') {
+      searchAssortmentByBarcode();
+    }
+  };
+
+  const getPrices = (assortment: IAssortment) => {
+    const buyPrice = assortment.product
+      ? assortment.product.buyPrice?.value || 0
+      : assortment.buyPrice?.value || 0;
+    const salePrice =
+      getSellingPrice(assortment.salePrices || []).salePrice?.value || 0;
+
+    return `${buyPrice / 100} (${salePrice / 100})`;
+  };
+
   return (
     <Search
       {...props}
       value={search}
       onChange={setSearch}
+      onInputKeyDown={keyDownHandler}
       placeholder="Добавить позицию — введите наименование, код, штрихкод или артикул"
       isRound={false}
       isDisabled={isDisabled}
@@ -84,13 +124,18 @@ const MoyskladAssortmentsSearch: FC<MoyskladAssortmentsSearchProps> = ({
           <Text>
             <Text as="b">{assortment.code}</Text> {assortment.name}
           </Text>
-          <Tag
-            colorScheme={
-              assortment.stock && assortment.stock > 0 ? 'green' : 'red'
-            }
-          >
-            {assortment.stock ? assortment.stock : 0}
-          </Tag>
+          <div className={styles.tags}>
+            {showPrices && (
+              <Tag className={styles.prices}>{getPrices(assortment)}</Tag>
+            )}
+            <Tag
+              colorScheme={
+                assortment.stock && assortment.stock > 0 ? 'green' : 'red'
+              }
+            >
+              {assortment.stock ? assortment.stock : 0}
+            </Tag>
+          </div>
         </div>
       ))}
     </Search>

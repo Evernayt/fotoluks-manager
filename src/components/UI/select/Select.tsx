@@ -4,7 +4,9 @@ import {
   ActionMeta,
   GetOptionLabel,
 } from 'chakra-react-select';
-import { useMemo } from 'react';
+import { CSSProperties, useMemo } from 'react';
+import ClearIndicator from './clear-indicator/ClearIndicator';
+import { Control, Controller, RegisterOptions } from 'react-hook-form';
 import { FieldInputProps, FormikProps } from 'formik';
 
 export interface ISelectOption<T = number> {
@@ -17,12 +19,16 @@ interface SelectProps<T extends any>
   options?: T[];
   onChange?: (option: T, action: ActionMeta<T>) => void;
   getOptionLabel?: GetOptionLabel<T>;
-  getOptionValue?: (option: T) => number | string;
+  getOptionValue?: (option: T) => any;
   isRightMenuPlacement?: boolean;
+  containerStyles?: CSSProperties;
+  dropdownIndicatorStyles?: CSSProperties;
 }
 
 const Select = <T extends any>({
   isRightMenuPlacement,
+  containerStyles,
+  dropdownIndicatorStyles,
   ...props
 }: SelectProps<T>) => {
   const onChangeHandler = (option: any, action: ActionMeta<any>) => {
@@ -44,6 +50,7 @@ const Select = <T extends any>({
       selectedOptionStyle="check"
       noOptionsMessage={() => 'Пусто'}
       loadingMessage={() => 'Загрузка...'}
+      components={{ ClearIndicator }}
       placeholder="Выберите..."
       variant="filled"
       isSearchable={false}
@@ -51,13 +58,15 @@ const Select = <T extends any>({
       chakraStyles={{
         container: (baseStyles) => ({
           ...baseStyles,
-          cursor: 'pointer',
+          cursor: props.isSearchable ? 'text' : 'pointer',
+          ...containerStyles,
         }),
         dropdownIndicator: (baseStyles) => ({
           ...baseStyles,
           p: 0,
           pr: '14px',
           bg: 'transparent',
+          ...dropdownIndicatorStyles,
         }),
         option: (baseStyles) => ({
           ...baseStyles,
@@ -120,10 +129,41 @@ export const SelectField = <T extends any>({
     <Select
       {...props}
       name={fieldProps.name}
-      value={defaultValue}
+      value={defaultValue || props.defaultValue}
       defaultValue={defaultValue}
       onChange={onChangeHandler}
       onBlur={fieldProps.onBlur}
+    />
+  );
+};
+
+interface SelectFormFieldProps<T extends any> extends SelectProps<T> {
+  control: Control<any, any>;
+  name: string;
+  rules?: RegisterOptions;
+}
+
+export const SelectFormField = <T extends any>({
+  control,
+  name,
+  rules,
+  ...props
+}: SelectFormFieldProps<T>) => {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({ field: { onChange, onBlur, value } }) => (
+        <Select
+          {...props}
+          value={value}
+          defaultValue={value}
+          isClearable
+          onChange={onChange}
+          onBlur={onBlur}
+        />
+      )}
     />
   );
 };

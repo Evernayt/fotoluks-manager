@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   Button,
   Text,
-  Input,
   FormControl,
   useToast,
   Avatar,

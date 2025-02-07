@@ -1,4 +1,5 @@
 import { IShop } from 'models/api/IShop';
+import { IAttribute } from 'models/api/moysklad/IAttribute';
 import { IDiscount } from 'models/api/moysklad/IDiscount';
 import { ISalePrice } from 'models/api/moysklad/ISalePrice';
 import { IStore } from 'models/api/moysklad/IStore';
@@ -36,6 +37,10 @@ const getStoreByShop = (shop: IShop | undefined | null, stores: IStore[]) => {
   return stores.find((x) => x.name.includes(shop?.name || '')) || null;
 };
 
+const getAttributeByName = (name: string, attributes: IAttribute[] | undefined) => {
+  return attributes?.find((attribute) => attribute.name === name) || null;
+};
+
 export {
   getSellingPrice,
   getOldPrice,
@@ -43,4 +48,5 @@ export {
   getStore,
   getShopByStore,
   getStoreByShop,
+  getAttributeByName,
 };

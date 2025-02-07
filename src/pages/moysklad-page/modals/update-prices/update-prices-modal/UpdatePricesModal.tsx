@@ -63,7 +63,7 @@ const UpdatePricesModal = () => {
   const fetchSupplyPositions = () => {
     setIsLoading(true);
     setMarkedPositionsCount(0);
-    MoyskladAPI.getSupplyPositions({ id })
+    MoyskladAPI.getSupplyPositions({ id, expand: 'assortment' })
       .then((data) => {
         setPositions(data.rows || []);
 
@@ -221,12 +221,12 @@ const UpdatePricesModal = () => {
         }
       });
 
-      MoyskladAPI.updateSupply({ id, positions: markedPositions })
+      MoyskladAPI.editSupply({ id, positions: markedPositions })
         .then(() => {
           closeModal();
         })
         .catch(() =>
-          toast(getErrorToast('UpdatePricesModal.updatePrices.updateSupply'))
+          toast(getErrorToast('UpdatePricesModal.updatePrices.editSupply'))
         )
         .finally(() => setIsLoading(false));
     } else {
@@ -247,11 +247,11 @@ const UpdatePricesModal = () => {
       });
     });
 
-    MoyskladAPI.updateSupply({ id, positions: clearedPositions })
+    MoyskladAPI.editSupply({ id, positions: clearedPositions })
       .then(() => {
         closeModal();
       })
-      .catch(() => toast(getErrorToast('UpdatePricesModal.clear.updateSupply')))
+      .catch(() => toast(getErrorToast('UpdatePricesModal.clear.editSupply')))
       .finally(() => setIsLoading(false));
   };
 

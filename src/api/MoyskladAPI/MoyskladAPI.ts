@@ -23,16 +23,23 @@ import { INotification } from 'models/api/moysklad/INotification';
 import { GetNotificationsDto } from './dto/get-notifications.dto';
 import { IProduct } from 'models/api/moysklad/IProduct';
 import { GetStocksDto } from './dto/get-stocks.dto';
-import { IStock } from 'models/api/moysklad/IStock';
+import { IStock, IStockByOperation } from 'models/api/moysklad/IStock';
 import { IVariant } from 'models/api/moysklad/IVariant';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetSuppliesDto } from './dto/get-supplies.dto';
 import { ISupply } from 'models/api/moysklad/ISupply';
 import { GetSupplyPositionsDto } from './dto/get-supply-positions.dto';
 import { EditSupplyDto } from './dto/edit-supply.dto';
-import { GetCounterpartyDto } from './dto/get-counterparty.dto';
+import { GetCounterpartiesDto } from './dto/get-counterparties.dto';
 import { ICounterparty } from 'models/api/moysklad/ICounterparty';
 import { EditMoveDto } from './dto/edit-move.dto';
+import { GetCustomentitiesDto } from './dto/get-customentities.dto';
+import { ICustomentity } from 'models/api/moysklad/ICustomentity';
+import { GetStocksByOperationDto } from './dto/get-stocks-by-operation.dto';
+import { CreateSupplyDto } from './dto/create-supply.dto';
+import { CreateSupplyPositionsDto } from './dto/create-supply-positions.dto';
+import { GetProductFoldersDto } from './dto/get-product-folders.dto';
+import { IProductFolder } from 'models/api/moysklad/IProductFolder';
 
 export default class MoyskladAPI {
   // Loss
@@ -234,13 +241,56 @@ export default class MoyskladAPI {
     return data;
   }
 
+  static async getStocksByOperation(
+    getStocksByOperationDto: GetStocksByOperationDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<IStockByOperation>> {
+    const { data } = await $authHost.get('moysklad/stock/byoperation', {
+      params: getStocksByOperationDto,
+      signal,
+    });
+    return data;
+  }
+
   // Supply
+  static async createSupply(
+    createSupplyDto: CreateSupplyDto
+  ): Promise<ISupply> {
+    const { data } = await $authHost.post('moysklad/supply', createSupplyDto);
+    return data;
+  }
+
+  static async createSupplyPosition(
+    createSupplyPositionsDto: CreateSupplyPositionsDto
+  ): Promise<IPosition[]> {
+    const { data } = await $authHost.post(
+      'moysklad/supply/positions',
+      createSupplyPositionsDto
+    );
+    return data;
+  }
+
+  static async editSupply(editSupplyDto: EditSupplyDto): Promise<ISupply> {
+    const { data } = await $authHost.put('moysklad/supply', editSupplyDto);
+    return data;
+  }
+
   static async getSupplies(
     getSuppliesDto: GetSuppliesDto,
     signal?: AbortSignal
   ): Promise<IMoyskladData<ISupply>> {
     const { data } = await $authHost.get('moysklad/supply', {
       params: getSuppliesDto,
+      signal,
+    });
+    return data;
+  }
+
+  static async getSupply(
+    supplyId: string,
+    signal?: AbortSignal
+  ): Promise<ISupply> {
+    const { data } = await $authHost.get(`moysklad/supply/one/${supplyId}`, {
       signal,
     });
     return data;
@@ -257,18 +307,37 @@ export default class MoyskladAPI {
     return data;
   }
 
-  static async updateSupply(editSupplyDto: EditSupplyDto): Promise<ISupply> {
-    const { data } = await $authHost.put('moysklad/supply', editSupplyDto);
-    return data;
-  }
-
   // Counterparty
-  static async getCounterparty(
-    getCounterpartyDto: GetCounterpartyDto,
+  static async getCounterparties(
+    getCounterpartiesDto?: GetCounterpartiesDto,
     signal?: AbortSignal
   ): Promise<IMoyskladData<ICounterparty>> {
     const { data } = await $authHost.get('moysklad/counterparty', {
-      params: getCounterpartyDto,
+      params: getCounterpartiesDto,
+      signal,
+    });
+    return data;
+  }
+
+  // Customentity
+  static async getCustomentities(
+    getCustomentitiesDto?: GetCustomentitiesDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<ICustomentity>> {
+    const { data } = await $authHost.get('moysklad/customentity', {
+      params: getCustomentitiesDto,
+      signal,
+    });
+    return data;
+  }
+
+  // ProductFolder
+  static async getProductFolders(
+    getProductFoldersDto: GetProductFoldersDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<IProductFolder>> {
+    const { data } = await $authHost.get('moysklad/productfolder', {
+      params: getProductFoldersDto,
       signal,
     });
     return data;

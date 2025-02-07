@@ -45,7 +45,7 @@ const MessengerChatLeaveModal = () => {
       <ModalContent>
         <ModalHeader>Выйти из чата</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>Вы уверены? Вы не сможете отменить это действие.</ModalBody>
+        <ModalBody>Вы действительно хотите выйти из чата?</ModalBody>
         <ModalFooter>
           <Button mr="var(--space-sm)" onClick={closeModal}>
             Отмена

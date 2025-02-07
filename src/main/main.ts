@@ -16,6 +16,7 @@ import {
   ipcMain,
   Notification,
   dialog,
+  session,
 } from 'electron';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -23,6 +24,19 @@ import { autoUpdater } from 'electron-updater';
 import * as fspromises from 'fs/promises';
 import { IFileForUpload, IFilePathForUpload } from 'models/IFileForUpload';
 import electronDl from 'electron-dl';
+
+const loadReactDevtools = async () => {
+  if (isDebug) {
+    try {
+      await session.defaultSession.loadExtension(
+        path.join(
+          __dirname,
+          '../../.erb/chrome-extensions/react-devtools-4.25.0'
+        )
+      );
+    } catch (error) {}
+  }
+};
 
 autoUpdater.autoDownload = false;
 electronDl({
@@ -109,6 +123,7 @@ const createWindow = async () => {
     app.setAppUserModelId('Fotoluks Manager');
   }
 
+  loadReactDevtools();
   //mainWindow.webContents.openDevTools();
 };
 

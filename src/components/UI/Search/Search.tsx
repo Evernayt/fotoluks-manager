@@ -1,4 +1,11 @@
-import { FC, HTMLAttributes, ReactNode, useEffect, useState } from 'react';
+import {
+  FC,
+  HTMLAttributes,
+  KeyboardEvent,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Card,
   IconButton,
@@ -16,6 +23,7 @@ import styles from './Search.module.scss';
 export interface SearchProps extends HTMLAttributes<HTMLDivElement> {
   value: string;
   onChange: (value: any) => void;
+  onInputKeyDown?: (e: KeyboardEvent) => void;
   children?: ReactNode;
   placeholder?: string;
   resultMaxHeight?: number;
@@ -31,6 +39,7 @@ export interface SearchProps extends HTMLAttributes<HTMLDivElement> {
 const Search: FC<SearchProps> = ({
   value,
   onChange,
+  onInputKeyDown,
   children,
   placeholder = 'Поиск',
   resultMaxHeight = 300,
@@ -67,6 +76,7 @@ const Search: FC<SearchProps> = ({
           variant="filled"
           borderRadius={isRound ? '999' : undefined}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={onInputKeyDown}
         />
         <InputRightElement hidden={!value}>
           <IconButton

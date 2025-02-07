@@ -13,6 +13,8 @@ type MoyskladState = {
   movesSearch: string;
   stocksSearch: string;
   updatePricesSearch: string;
+  suppliesSearch: string;
+  subtractFromSuppliesSearch: string;
 };
 
 const initialState: MoyskladState = {
@@ -27,6 +29,8 @@ const initialState: MoyskladState = {
   movesSearch: '',
   stocksSearch: '',
   updatePricesSearch: '',
+  suppliesSearch: '',
+  subtractFromSuppliesSearch: '',
 };
 
 export const moyskladSlice = createSlice({
@@ -65,6 +69,12 @@ export const moyskladSlice = createSlice({
     },
     setUpdatePricesSearch(state, action: PayloadAction<string>) {
       state.updatePricesSearch = action.payload;
+    },
+    setSuppliesSearch(state, action: PayloadAction<string>) {
+      state.suppliesSearch = action.payload;
+    },
+    setSubtractFromSuppliesSearch(state, action: PayloadAction<string>) {
+      state.subtractFromSuppliesSearch = action.payload;
     },
     clearState() {
       return initialState;

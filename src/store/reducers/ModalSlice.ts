@@ -21,6 +21,8 @@ import {
   IChatDeleteModal,
   IChatLeaveModal,
   IMessengerEditMessageModal,
+  ISupplyEditProductModal,
+  ISubtractFromSuppliesModal,
 } from 'models/IModal';
 
 type ModalState = {
@@ -53,6 +55,10 @@ type ModalState = {
   endingGoodsProductModal: IEndingGoodsProductModal;
   updatePricesModal: IUpdatePricesModal;
   defectiveGoodsModal: IModal;
+  subtractFromSuppliesModal: ISubtractFromSuppliesModal;
+  /* moysklad-detail-page */
+  supplyDataModal: IModal;
+  supplyEditProductModal: ISupplyEditProductModal;
   /* tasks-page */
   tasksFilterModal: IModal;
   taskCancelModal: IModal;
@@ -100,6 +106,10 @@ const initialState: ModalState = {
   endingGoodsProductModal: INITIAL_MODAL,
   updatePricesModal: INITIAL_MODAL,
   defectiveGoodsModal: INITIAL_MODAL,
+  subtractFromSuppliesModal: INITIAL_MODAL,
+  /* moysklad-detail-page */
+  supplyDataModal: INITIAL_MODAL,
+  supplyEditProductModal: INITIAL_MODAL,
   /* tasks-page */
   tasksFilterModal: INITIAL_MODAL,
   taskCancelModal: INITIAL_MODAL,

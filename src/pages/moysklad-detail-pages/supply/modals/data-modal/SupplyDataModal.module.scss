@@ -1,0 +1,25 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.sections {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1;
+  white-space: nowrap;
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-sm);
+  margin: var(--space-modal) 0;
+  align-self: flex-end;
+}

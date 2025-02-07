@@ -11,6 +11,8 @@ import TaskSlice from './reducers/TaskSlice';
 import FilterSlice from './reducers/FilterSlice';
 import ControlSlice from './reducers/ControlSlice';
 import MessengerSlice from './reducers/MessengerSlice';
+import SupplySlice from './reducers/SupplySlice';
+import SubtractFromSupplySlice from './reducers/SubtractFromSupplySlice';
 
 const store = configureStore({
   reducer: {
@@ -26,6 +28,8 @@ const store = configureStore({
     move: MoveSlice,
     defectiveGoods: DefectiveGoodsSlice,
     messenger: MessengerSlice,
+    supply: SupplySlice,
+    subtractFromSupply: SubtractFromSupplySlice,
   },
 });
 

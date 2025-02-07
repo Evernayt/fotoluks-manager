@@ -32,8 +32,9 @@ const TableRow = <TData, _TValue>({
   onRowClick,
   onContextMenu,
 }: TableRowProps<TData>) => {
-  //@ts-ignore
-  const isLastActiveRow = lastActiveRowId === row.original.id;
+  const isLastActiveRow =
+    //@ts-ignore
+    lastActiveRowId && lastActiveRowId === row.original.id;
 
   const rowClickHandler = (e: any) => {
     if (

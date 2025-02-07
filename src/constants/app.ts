@@ -42,6 +42,7 @@ enum ROLE_ID {
 }
 
 const UI_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
+const MS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSS';
 const NOT_INDICATED = 'Не указано';
 const FETCH_MORE_LIMIT = 25;
 const MAIN_FOLDER_NAME = 'ФОТОЛЮКС_Текущее';
@@ -97,6 +98,7 @@ export {
   NOTIF_CATEGORY_ID,
   ROLE_ID,
   UI_DATE_FORMAT,
+  MS_DATE_FORMAT,
   NOT_INDICATED,
   FETCH_MORE_LIMIT,
   MAIN_FOLDER_NAME,

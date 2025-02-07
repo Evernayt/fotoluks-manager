@@ -47,7 +47,7 @@ const DefectiveGoodsTable = () => {
         dispatch(defectiveGoodsActions.setFoundProduct(data.rows[0]));
 
         const productHref = data.rows[0].meta.href;
-        MoyskladAPI.getSupplies({ limit, offset, productHref })
+        MoyskladAPI.getSupplies({ limit, offset, productHref, expand: 'agent' })
           .then((data2) => {
             setSupplies(data2.rows || []);
             setPageCount(Math.ceil((data2.meta?.size || 0) / limit));

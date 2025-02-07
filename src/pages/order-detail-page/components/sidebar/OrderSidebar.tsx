@@ -169,6 +169,7 @@ const OrderSidebar: FC<OrderSidebarProps> = ({ sum, saveOrder }) => {
               placeholderText="Срок заказа"
               startDate={deadline}
               isClearable
+              showTimeSelect
               onChange={(date) => dispatch(orderActions.setDeadline(date))}
             />
           </FormControl>

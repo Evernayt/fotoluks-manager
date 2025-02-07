@@ -58,6 +58,7 @@ const AppCloseModal = () => {
           <Avatar
             src={employee?.avatar || undefined}
             name={getEmployeeFullName(employee)}
+            ignoreFallback
             size="2xl"
           />
           <Text as="b">{getEmployeeFullName(employee)}</Text>

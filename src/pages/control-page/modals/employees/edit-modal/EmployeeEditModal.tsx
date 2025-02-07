@@ -15,11 +15,10 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { modalActions } from 'store/reducers/ModalSlice';
-import { Field, FieldProps, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { LoaderWrapper } from 'components/ui/loader/Loader';
 import { controlActions } from 'store/reducers/ControlSlice';
-import { EditableAvatar, PasswordInput } from 'components';
+import { EditableAvatar } from 'components';
 import { getFileImageSrc } from 'helpers';
 import FileAPI from 'api/FileAPI/FileAPI';
 import EmployeeAPI from 'api/EmployeeAPI/EmployeeAPI';
@@ -27,14 +26,15 @@ import { CreateEmployeeDto } from 'api/EmployeeAPI/dto/create-employee.dto';
 import AuthAPI from 'api/AuthAPI/AuthAPI';
 import { UpdateEmployeeDto } from 'api/EmployeeAPI/dto/update-employee.dto';
 import { REQUIRED_INVALID_MSG, MODES } from 'constants/app';
-import { SelectField } from 'components/ui/select/Select';
+import { SelectFormField } from 'components/ui/select/Select';
 import { IApp } from 'models/api/IApp';
 import { IDepartment } from 'models/api/IDepartment';
 import { employeeActions } from 'store/reducers/EmployeeSlice';
 import { getRecentLogins, setRecentLogins } from 'helpers/localStorage';
-import * as Yup from 'yup';
 import { getErrorToast } from 'helpers/toast';
 import { IRole } from 'models/api/IRole';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { PasswordInputFormField } from 'components/ui/password-input/PasswordInput';
 import styles from './EmployeeEditModal.module.scss';
 
 interface FormValues {
@@ -57,19 +57,6 @@ const INITIAL_FORM_STATE: FormValues = {
   departments: [],
 };
 
-const editFormSchema = Yup.object({
-  name: Yup.string().required(REQUIRED_INVALID_MSG),
-  surname: Yup.string().required(REQUIRED_INVALID_MSG),
-  login: Yup.string().required(REQUIRED_INVALID_MSG),
-  roles: Yup.array().min(1, REQUIRED_INVALID_MSG),
-  apps: Yup.array().min(1, REQUIRED_INVALID_MSG),
-  departments: Yup.array().min(1, REQUIRED_INVALID_MSG),
-});
-
-const addFormSchema = editFormSchema.shape({
-  password: Yup.string().required(REQUIRED_INVALID_MSG),
-});
-
 const EmployeeEditModal = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -83,6 +70,14 @@ const EmployeeEditModal = () => {
   const roles = useAppSelector((state) => state.app.roles);
   const apps = useAppSelector((state) => state.app.apps);
   const departments = useAppSelector((state) => state.app.departments);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    reset,
+  } = useForm({ values: formState });
 
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -201,7 +196,7 @@ const EmployeeEditModal = () => {
     });
   };
 
-  const submit = (values: FormValues) => {
+  const onSubmit: SubmitHandler<FormValues> = (values) => {
     setIsLoading(true);
     if (mode === MODES.ADD_MODE) {
       if (avatarFile) {
@@ -256,6 +251,7 @@ const EmployeeEditModal = () => {
   };
 
   const closeModal = (forceUpdate: boolean = false) => {
+    reset();
     setAvatarFile(null);
     setAvatar(null);
     setFormState(INITIAL_FORM_STATE);
@@ -284,170 +280,142 @@ const EmployeeEditModal = () => {
                   <Divider orientation="vertical" mx={2} />
                 </div>
                 <div className={styles.form_container}>
-                  <Formik
-                    initialValues={formState}
-                    validationSchema={
-                      mode === MODES.ADD_MODE ? addFormSchema : editFormSchema
-                    }
-                    enableReinitialize
-                    onSubmit={submit}
+                  <form
+                    className={styles.form}
+                    noValidate
+                    onSubmit={handleSubmit(onSubmit)}
                   >
-                    {() => (
-                      <Form className={styles.form}>
-                        <div className={styles.form_columns}>
-                          <div
-                            className={styles.form_column}
-                            style={{ maxWidth: '150px' }}
-                          >
-                            <Field name="name">
-                              {({ field, meta }: FieldProps) => (
-                                <FormControl
-                                  isInvalid={!!meta.error && meta.touched}
-                                >
-                                  <FormLabel>Имя</FormLabel>
-                                  <Input {...field} placeholder="Имя" />
-                                  <FormErrorMessage>
-                                    {meta.error}
-                                  </FormErrorMessage>
-                                </FormControl>
-                              )}
-                            </Field>
-                            <Field name="surname">
-                              {({ field, meta }: FieldProps) => (
-                                <FormControl
-                                  isInvalid={!!meta.error && meta.touched}
-                                >
-                                  <FormLabel>Фамилия</FormLabel>
-                                  <Input {...field} placeholder="Фамилия" />
-                                  <FormErrorMessage>
-                                    {meta.error}
-                                  </FormErrorMessage>
-                                </FormControl>
-                              )}
-                            </Field>
-                            <Field name="login">
-                              {({ field, meta }: FieldProps) => (
-                                <FormControl
-                                  isInvalid={!!meta.error && meta.touched}
-                                >
-                                  <FormLabel>Логин</FormLabel>
-                                  <Input {...field} placeholder="Логин" />
-                                  <FormErrorMessage>
-                                    {meta.error}
-                                  </FormErrorMessage>
-                                </FormControl>
-                              )}
-                            </Field>
-                            {mode === MODES.ADD_MODE && (
-                              <Field name="password">
-                                {({ field, meta }: FieldProps) => (
-                                  <FormControl
-                                    isInvalid={!!meta.error && meta.touched}
-                                  >
-                                    <FormLabel>Пароль</FormLabel>
-                                    <PasswordInput {...field} />
-                                    <FormErrorMessage>
-                                      {meta.error}
-                                    </FormErrorMessage>
-                                  </FormControl>
-                                )}
-                              </Field>
-                            )}
-                          </div>
-                          <div>
-                            <Divider orientation="vertical" mx={4} />
-                          </div>
-                          <div className={styles.form_column}>
-                            <Field name="roles">
-                              {({ field, form, meta }: FieldProps) => (
-                                <FormControl
-                                  isInvalid={!!meta.error && meta.touched}
-                                >
-                                  <FormLabel>Роли</FormLabel>
-                                  <SelectField
-                                    placeholder="Роли"
-                                    options={roles}
-                                    isMulti
-                                    isClearable={false}
-                                    getOptionLabel={(option) => option.name}
-                                    getOptionValue={(option) => option.id}
-                                    fieldProps={field}
-                                    formProps={form}
-                                  />
-                                  <FormErrorMessage>
-                                    {meta.error}
-                                  </FormErrorMessage>
-                                </FormControl>
-                              )}
-                            </Field>
-                            <Field name="apps">
-                              {({ field, form, meta }: FieldProps) => (
-                                <FormControl
-                                  isInvalid={!!meta.error && meta.touched}
-                                >
-                                  <FormLabel>Доступные приложения</FormLabel>
-                                  <SelectField
-                                    placeholder="Приложения"
-                                    options={apps}
-                                    isMulti
-                                    isClearable={false}
-                                    getOptionLabel={(option) =>
-                                      option.description
-                                    }
-                                    getOptionValue={(option) => option.id}
-                                    fieldProps={field}
-                                    formProps={form}
-                                  />
-                                  <FormErrorMessage>
-                                    {meta.error}
-                                  </FormErrorMessage>
-                                </FormControl>
-                              )}
-                            </Field>
-                            <Field name="departments">
-                              {({ field, form, meta }: FieldProps) => (
-                                <FormControl
-                                  isInvalid={!!meta.error && meta.touched}
-                                >
-                                  <FormLabel>Отделы</FormLabel>
-                                  <SelectField
-                                    placeholder="Отделы"
-                                    options={departments}
-                                    isMulti
-                                    isClearable={false}
-                                    getOptionLabel={(option) => option.name}
-                                    getOptionValue={(option) => option.id}
-                                    fieldProps={field}
-                                    formProps={form}
-                                  />
-                                  <FormErrorMessage>
-                                    {meta.error}
-                                  </FormErrorMessage>
-                                </FormControl>
-                              )}
-                            </Field>
-                          </div>
-                        </div>
-                        <div className={styles.footer}>
-                          <Button
-                            className={styles.footer_button}
-                            onClick={() => closeModal()}
-                          >
-                            Отмена
-                          </Button>
-                          <Button
-                            className={styles.footer_button}
-                            type="submit"
-                            colorScheme="yellow"
-                          >
-                            {mode === MODES.ADD_MODE
-                              ? 'Зарегистрировать'
-                              : 'Сохранить'}
-                          </Button>
-                        </div>
-                      </Form>
-                    )}
-                  </Formik>
+                    <div className={styles.form_columns}>
+                      <div
+                        className={styles.form_column}
+                        style={{ maxWidth: '150px' }}
+                      >
+                        <FormControl isRequired isInvalid={!!errors.name}>
+                          <FormLabel>Имя</FormLabel>
+                          <Input
+                            {...register('name', {
+                              required: REQUIRED_INVALID_MSG,
+                            })}
+                            placeholder="Имя"
+                          />
+                          <FormErrorMessage>
+                            {errors.name?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+                        <FormControl isRequired isInvalid={!!errors.surname}>
+                          <FormLabel>Фамилия</FormLabel>
+                          <Input
+                            {...register('surname', {
+                              required: REQUIRED_INVALID_MSG,
+                            })}
+                            placeholder="Фамилия"
+                          />
+                          <FormErrorMessage>
+                            {errors.surname?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+                        <FormControl isRequired isInvalid={!!errors.login}>
+                          <FormLabel>Логин</FormLabel>
+                          <Input
+                            {...register('login', {
+                              required: REQUIRED_INVALID_MSG,
+                            })}
+                            placeholder="Логин"
+                          />
+                          <FormErrorMessage>
+                            {errors.login?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+                        {mode === MODES.ADD_MODE && (
+                          <FormControl isRequired isInvalid={!!errors.password}>
+                            <FormLabel>Пароль</FormLabel>
+                            <PasswordInputFormField
+                              control={control}
+                              name="password"
+                              rules={{ required: REQUIRED_INVALID_MSG }}
+                              placeholder="Пароль"
+                            />
+                            <FormErrorMessage>
+                              {errors.password?.message}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </div>
+                      <div>
+                        <Divider orientation="vertical" mx={4} />
+                      </div>
+                      <div className={styles.form_column}>
+                        <FormControl isRequired isInvalid={!!errors.roles}>
+                          <FormLabel>Роли</FormLabel>
+                          <SelectFormField
+                            control={control}
+                            name="roles"
+                            placeholder="Роли"
+                            rules={{ required: REQUIRED_INVALID_MSG }}
+                            options={roles}
+                            isMulti
+                            getOptionLabel={(option: any) => option.name}
+                            getOptionValue={(option: any) => option.id}
+                          />
+                          <FormErrorMessage>
+                            {errors.roles?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+                        <FormControl isRequired isInvalid={!!errors.apps}>
+                          <FormLabel>Доступные приложения</FormLabel>
+                          <SelectFormField
+                            control={control}
+                            name="apps"
+                            placeholder="Приложения"
+                            rules={{ required: REQUIRED_INVALID_MSG }}
+                            options={apps}
+                            isMulti
+                            getOptionLabel={(option: any) => option.description}
+                            getOptionValue={(option: any) => option.id}
+                          />
+                          <FormErrorMessage>
+                            {errors.apps?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+                        <FormControl
+                          isRequired
+                          isInvalid={!!errors.departments}
+                        >
+                          <FormLabel>Отделы</FormLabel>
+                          <SelectFormField
+                            control={control}
+                            name="departments"
+                            placeholder="Отделы"
+                            rules={{ required: REQUIRED_INVALID_MSG }}
+                            options={departments}
+                            isMulti
+                            getOptionLabel={(option: any) => option.name}
+                            getOptionValue={(option: any) => option.id}
+                          />
+                          <FormErrorMessage>
+                            {errors.departments?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+                      </div>
+                    </div>
+                    <div className={styles.footer}>
+                      <Button
+                        className={styles.footer_button}
+                        onClick={() => closeModal()}
+                      >
+                        Отмена
+                      </Button>
+                      <Button
+                        className={styles.footer_button}
+                        type="submit"
+                        colorScheme="yellow"
+                      >
+                        {mode === MODES.ADD_MODE
+                          ? 'Зарегистрировать'
+                          : 'Сохранить'}
+                      </Button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </LoaderWrapper>

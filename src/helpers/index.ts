@@ -13,6 +13,7 @@ import getBytesByMb from './getBytesByMb';
 import getFileNameByURL from './getFileNameByURL';
 import getDateDiff from './getDateDiff';
 import isImageURL from './isImageURL';
+import getPathFromUrl from './getPathFromUrl';
 
 export {
   getFileImageSrc,
@@ -30,4 +31,5 @@ export {
   getFileNameByURL,
   getDateDiff,
   isImageURL,
+  getPathFromUrl,
 };

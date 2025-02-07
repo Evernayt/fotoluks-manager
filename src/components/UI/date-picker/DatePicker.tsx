@@ -1,9 +1,9 @@
 import { FC, forwardRef } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
 import ReactDatePicker, {
   ReactDatePickerProps,
   registerLocale,
 } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { IconCalendar } from '@tabler/icons-react';
 import { isWeekday } from './DatePicker.service';
@@ -12,6 +12,7 @@ import ru from 'date-fns/locale/ru';
 registerLocale('ru', ru);
 import './DatePicker.scss';
 import moment from 'moment';
+import { Control, Controller, RegisterOptions } from 'react-hook-form';
 
 const CustomInput = forwardRef<any, any>((props, ref) => {
   return (
@@ -102,10 +103,62 @@ const DatePicker: FC<DatePickerProps> = ({
       showPopperArrow={false}
       customInput={<CustomInput />}
       locale="ru"
-      showTimeSelect
       dateFormat={selectsRange ? 'P' : 'Pp'}
       peekNextMonth
       showYearDropdown
+    />
+  );
+};
+
+interface DatePickerFormFieldProps extends Partial<DatePickerProps> {
+  control: Control<any, any>;
+  name: string;
+  rules?: RegisterOptions;
+}
+
+export const DatePickerFormField = ({
+  control,
+  name,
+  rules,
+  ...props
+}: DatePickerFormFieldProps) => {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({ field: { onChange, value } }) => (
+        <DatePicker
+          {...props}
+          startDate={value}
+          onChange={onChange}
+          selectsRange={false}
+        />
+      )}
+    />
+  );
+};
+
+export const RangeDatePickerFormField = ({
+  control,
+  name,
+  rules,
+  ...props
+}: DatePickerFormFieldProps) => {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({ field: { onChange, value } }) => (
+        <DatePicker
+          {...props}
+          startDate={value.startDate}
+          endDate={value.endDate}
+          onChange={(startDate, endDate) => onChange({ startDate, endDate })}
+          selectsRange
+        />
+      )}
     />
   );
 };

@@ -10,7 +10,7 @@ import { movesTableColumns } from './MovesTable.colums';
 import { IMove } from 'models/api/moysklad/IMove';
 import { Row } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
-import { MOVES_DETAIL_ROUTE } from 'constants/paths';
+import { MOVE_DETAIL_ROUTE } from 'constants/paths';
 import { getErrorToast } from 'helpers/toast';
 import { moveActions } from 'store/reducers/MoveSlice';
 
@@ -62,7 +62,7 @@ const MovesTable = () => {
 
   const rowClickHandler = (row: Row<IMove>) => {
     dispatch(moveActions.setLastActiveRowId(row.original.id));
-    navigate(MOVES_DETAIL_ROUTE, {
+    navigate(MOVE_DETAIL_ROUTE, {
       state: { moveId: row.original.id, created: row.original.created },
     });
   };
