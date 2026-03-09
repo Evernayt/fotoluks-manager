@@ -56,6 +56,7 @@ type ModalState = {
   updatePricesModal: IUpdatePricesModal;
   defectiveGoodsModal: IModal;
   subtractFromSuppliesModal: ISubtractFromSuppliesModal;
+  updateRetailshiftsModal: IModal;
   /* moysklad-detail-page */
   supplyDataModal: IModal;
   supplyEditProductModal: ISupplyEditProductModal;
@@ -107,6 +108,7 @@ const initialState: ModalState = {
   updatePricesModal: INITIAL_MODAL,
   defectiveGoodsModal: INITIAL_MODAL,
   subtractFromSuppliesModal: INITIAL_MODAL,
+  updateRetailshiftsModal: INITIAL_MODAL,
   /* moysklad-detail-page */
   supplyDataModal: INITIAL_MODAL,
   supplyEditProductModal: INITIAL_MODAL,

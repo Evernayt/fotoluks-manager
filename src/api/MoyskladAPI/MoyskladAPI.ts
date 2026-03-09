@@ -40,6 +40,10 @@ import { CreateSupplyDto } from './dto/create-supply.dto';
 import { CreateSupplyPositionsDto } from './dto/create-supply-positions.dto';
 import { GetProductFoldersDto } from './dto/get-product-folders.dto';
 import { IProductFolder } from 'models/api/moysklad/IProductFolder';
+import { GetRetailshiftsDto } from './dto/get-retailshifts.dto';
+import { IRetailshift } from 'models/api/moysklad/IRetailshift';
+import { UpdateRetailshiftDto } from './dto/update-retailshift.dto';
+import { IMoyskladEmployee } from 'models/api/moysklad/IMoyskladEmployee';
 
 export default class MoyskladAPI {
   // Loss
@@ -338,6 +342,39 @@ export default class MoyskladAPI {
   ): Promise<IMoyskladData<IProductFolder>> {
     const { data } = await $authHost.get('moysklad/productfolder', {
       params: getProductFoldersDto,
+      signal,
+    });
+    return data;
+  }
+
+  // Retailshift
+  static async getRetailshifts(
+    getRetailshiftsDto: GetRetailshiftsDto,
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<IRetailshift>> {
+    const { data } = await $authHost.get('moysklad/retailshift', {
+      params: getRetailshiftsDto,
+      signal,
+    });
+    return data;
+  }
+
+  static async updateRetailshift(
+    updateRetailshiftDto: UpdateRetailshiftDto
+  ): Promise<boolean> {
+    const { data } = await $authHost.put(
+      'moysklad/retailshift',
+      updateRetailshiftDto,
+      { timeout: 30000 }
+    );
+    return data;
+  }
+
+  // Employee
+  static async getEmployees(
+    signal?: AbortSignal
+  ): Promise<IMoyskladData<IMoyskladEmployee>> {
+    const { data } = await $authHost.get('moysklad/employee', {
       signal,
     });
     return data;

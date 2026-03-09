@@ -16,7 +16,9 @@ import DefectiveGoodsForReturnModal from './modals/defective-goods/for-return-mo
 import AssortmentsTable from './components/tables/assortments/AssortmentsTable';
 import MovesTable from './components/tables/moves/MovesTable';
 import SubtractFromSuppliesModal from './modals/subtract-from-supplies/subtract-from-supplies-modal/SubtractFromSuppliesModal';
+import RetailshiftsTable from './components/tables/retailshifts/RetailshiftsTable';
 import styles from './MoyskladPage.module.scss';
+import UpdateRetailshiftsModel from './modals/retailshifts/update-retailshifts-model/UpdateRetailshiftsModel';
 
 const EndingGoodsTable = lazy(
   () => import('./components/tables/ending-goods/EndingGoodsTable')
@@ -80,6 +82,8 @@ const MoyskladPage = () => {
       //   return <SuppliesTable />;
       case 6:
         return <SubtractFromSuppliesTable />;
+      case 7:
+        return <RetailshiftsTable />;
       default:
         return null;
     }
@@ -91,6 +95,7 @@ const MoyskladPage = () => {
       <EndingGoodsProductModal />
       <DefectiveGoodsForReturnModal />
       <SubtractFromSuppliesModal />
+      <UpdateRetailshiftsModel />
       <MoyskladSidebar />
       <Card className={styles.panel}>{renderTable()}</Card>
     </div>
